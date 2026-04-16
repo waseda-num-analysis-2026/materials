@@ -21,5 +21,5 @@ Materials are organized by lecture number:
 
 | # | Exercise | Link | Deadline |
 |---|----------|------|----------|
-| 1.1 | Hello GitHub | [Accept](https://classroom.github.com/a/oobb4OWM) | TBD |
+| 1.1 | Hello GitHub | [Access](https://classroom.github.com/a/oobb4OWM) | Apr 17, 23:59 |
 | 1.2 | (coming soon) | — | TBD |
