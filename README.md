@@ -16,3 +16,10 @@ Materials are organized by lecture number:
 | `010/` | Orientation and Guidance |
 | `020/` | (to be added) |
 | ...    | ... |
+
+## Exercises
+
+| # | Exercise | Link | Deadline |
+|---|----------|------|----------|
+| 1.1 | Hello GitHub | [Accept](https://classroom.github.com/a/oobb4OWM) | TBD |
+| 1.2 | (coming soon) | — | TBD |
