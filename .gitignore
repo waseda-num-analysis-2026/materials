@@ -1,0 +1,6 @@
+# Quarto render output (regenerated from .qmd)
+*_files/
+*.html
+
+# OS files
+.DS_Store
