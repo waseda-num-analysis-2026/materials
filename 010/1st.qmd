@@ -1,0 +1,290 @@
+---
+title: "Numerical Analysis"
+subtitle: "Foundations and Exercises"
+author: 
+  - name: "TANAKA, Kazuaki (田中 一成)"
+    email: "k.tanaka@aoni.waseda.jp"
+    affiliations:
+      - name: "Institute for Mathematical Science, Waseda University"
+format: 
+  revealjs:
+    theme: [default, custom.scss]
+    slide-number: true
+    title-slide-attributes:
+      data-background-image: "images/image1.png"
+      data-background-size: "contain"
+      data-background-opacity: "0.15"
+---
+
+## Attention! {.smaller}
+
+::: {.attention-hero}
+<div class="attention-icon">⚠️</div>
+<div class="attention-content">
+The 2nd period **"Foundations of Numerical Analysis"** and 3rd period **"Exercises in Numerical Analysis"** are designed to be taken **together**.
+
+<span class="highlight-warning">It is possible to take only the 2nd period class, but it is **very cost-ineffective**.</span>
+</div>
+:::
+
+## Schedule {.smaller}
+
+<p class="schedule-note">* Schedule may change depending on the situation</p>
+
+::: {.schedule-table}
+| Week | Topic |
+|:-----|:------|
+| **1st** | Orientation and Guidance |
+| **2nd-3rd** | Errors in Numerical Computation / Floating-Point Numbers |
+| **4th** | Vector Norms and Matrix Norms |
+| **5th-6th** | System of Linear Equations |
+| **7th-8th** | Nonlinear Equations |
+| **9th** | **Midterm Examination (June 12th)** |
+| **10th** | Review and Feedback |
+| **11th-14th** | Numerical Integration / **<span style="color: #d84315;">Discussion for final presentation</span>** |
+:::
+
+## Grade Evaluation {.smaller}
+
+::: {.grade-table}
+| Evaluation Items | Foundations | Exercises |
+|:---|:---:|:---:|
+| Exercises (including Homework) | 20% | 40% |
+| Midterm Examination | 40% | 20% |
+| Group Project & Presentation or Alternative Assignment | 40% | 40% |
+| **Total (Base points)** | **100%** | **100%** |
+:::
+
+<div class="extra-points-badge">
+  <strong>Note:</strong> Some extra points or deductions will be applied.
+</div>
+
+## What is Numerical Analysis? {.smaller}
+
+```{=html}
+<div class="na-hero">
+  <div class="na-hero-symbols">
+    <span class="glyph-int">∫</span>
+    <span class="glyph-sigma">Σ</span>
+    <span class="glyph-partial">∂</span>
+  </div>
+  <div class="na-hero-tagline">
+    <div class="na-hero-main-title">A Branch of Mathematics</div>
+    Algorithms for solving mathematical problems<br>that <strong>cannot be solved analytically</strong>
+  </div>
+</div>
+
+<div class="na-cards">
+  <div class="na-card">
+    <div class="na-card-icon">🏛️</div>
+    <div class="na-card-title">Deep Historical Roots</div>
+    <div class="na-card-desc">Dating back to <strong>1800 BCE</strong>, with significant contributions from renowned mathematicians throughout history</div>
+  </div>
+  <div class="na-card">
+    <div class="na-card-icon">🌍</div>
+    <div class="na-card-title">Wide Applications</div>
+    <div class="na-card-desc">Across <strong>natural sciences</strong>, <strong>engineering</strong>, and even humanities &amp; social sciences</div>
+  </div>
+  <div class="na-card">
+    <div class="na-card-icon">💻</div>
+    <div class="na-card-title">Computer-Driven</div>
+    <div class="na-card-desc">Modern numerical analysis relies on <strong>computer technology</strong> for practical computation</div>
+  </div>
+</div>
+```
+
+## Process of Numerical Analysis {.smaller}
+
+![](images/NumericalAnalysisProcess.png){fig-align="center"}
+
+## Support & Tools {.smaller}
+
+```{=html}
+<div class="tools-grid">
+  <div class="tool-card">
+    <div class="tool-icon">👥</div>
+    <div class="tool-content">
+      <div class="tool-title">Teaching Assistants</div>
+      <div class="tool-desc"><strong>Chenjian XU</strong> (M2)<br><strong>Audrey CHEN</strong> (M1)</div>
+    </div>
+  </div>
+  <div class="tool-card">
+    <div class="tool-icon">💬</div>
+    <div class="tool-content">
+      <div class="tool-title">Mattermost</div>
+      <div class="tool-desc">For questions, discussions, and direct messages</div>
+    </div>
+  </div>
+  <div class="tool-card tool-card-ai">
+    <div class="tool-icon">🤖</div>
+    <div class="tool-content">
+      <div class="tool-title">LLMs &amp; AI Agents</div>
+      <div class="tool-desc">For coding assistance, debugging, and learning support</div>
+    </div>
+  </div>
+  <div class="tool-card">
+    <div class="tool-icon" style="color: #24292e;"><svg viewBox="0 0 16 16" width="1em" height="1em" fill="currentColor" style="display: inline-block; vertical-align: middle;"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg></div>
+    <div class="tool-content">
+      <div class="tool-title">GitHub Classroom</div>
+      <div class="tool-desc">For programming assignments and submission</div>
+    </div>
+  </div>
+</div>
+```
+
+## AI Tools {.smaller}
+
+```{=html}
+<div class="ai-tools-container">
+  <div class="ai-tool-category">
+    <div class="ai-category-header">💬 Chat-Based Generative AI</div>
+    <div class="ai-tool-item"><strong>ChatGPT</strong> <span class="ai-tool-vendor">(OpenAI)</span></div>
+    <div class="ai-tool-item"><strong>Gemini</strong> <span class="ai-tool-vendor">(Google)</span></div>
+    <div class="ai-tool-item"><strong>Claude</strong> <span class="ai-tool-vendor">(Anthropic)</span></div>
+    <div class="ai-tool-item"><strong>Perplexity</strong> <span class="ai-tool-vendor">(Perplexity AI)</span></div>
+    <div class="ai-tool-item"><strong>Copilot</strong> <span class="ai-tool-vendor">(Microsoft)</span></div>
+    <div class="ai-tool-item">and more...</div>
+  </div>
+  <div class="ai-tool-category">
+    <div class="ai-category-header">💻 Editor-Based AI Agents</div>
+    <div class="ai-tool-item">
+      <strong>Cursor</strong>
+      <div class="ai-tool-desc">AI code editor (fork of VS Code)</div>
+    </div>
+    <div class="ai-tool-item">
+      <strong>Antigravity</strong> <span class="ai-tool-vendor">(Google)</span>
+      <div class="ai-tool-desc">AI-powered dev environment (very similar to Cursor)</div>
+    </div>
+    <div class="ai-tool-item ai-tool-highlight">
+      <div class="ai-tool-highlight-badge">Free for Students</div>
+      <strong>VS Code + GitHub Copilot</strong>
+      <div class="ai-tool-desc">AI assistant as an extension</div>
+    </div>
+  </div>
+</div>
+```
+
+## Using AI: Key Cautions {.smaller}
+
+AI is **extremely powerful and useful**, but keep these in mind.
+
+```{=html}
+<div class="cautions-grid">
+  <div class="caution-card">
+    <div class="caution-icon">🎯</div>
+    <div class="caution-content">
+      <div class="caution-title">1. Think Based on Purpose</div>
+      <div class="caution-desc">Is this AI usage truly optimal for your objective?</div>
+    </div>
+  </div>
+  <div class="caution-card">
+    <div class="caution-icon">🕵️</div>
+    <div class="caution-content">
+      <div class="caution-title">2. Don't Trust the Output (Always Verify)</div>
+      <div class="caution-desc">AI frequently states things that are contrary to facts; always cross-check with primary sources.</div>
+    </div>
+  </div>
+  <div class="caution-card">
+    <div class="caution-icon">⚠️</div>
+    <div class="caution-content">
+      <div class="caution-title">3. Recognize the Risks</div>
+      <div class="caution-desc">Personal data leakage, plagiarism, intellectual laziness.</div>
+    </div>
+  </div>
+</div>
+```
+
+## Mission 1 — Mattermost {.smaller .mission-slide}
+
+1. Open [Mattermost](https://class.s-top.dev/signup_user_complete/?id=b4j4cjiertbr3g9id6cuwg668r) and sign in with your **Waseda email address**
+2. Find **TANAKA, Kazuaki** in the member list (use the search bar if needed)
+3. Send a direct message containing:
+   - Your **Name**
+   - First Name in **HIRAGANA or KATAKANA** (if possible)
+   - **Student ID**
+   - Any other comments (optional)
+
+## Mission 2 — GitHub Account {.smaller .mission-slide}
+
+1. Go to [github.com](https://github.com/) and click **Sign up**
+2. Register with your email address and choose a professional username
+3. After sign-up, go to [github.com/settings/copilot](https://github.com/settings/copilot)
+4. Enable **GitHub Copilot Free** (no payment is required)
+
+## Mission 3 — GitHub Student Developer Pack {.smaller .mission-slide}
+
+1. Go to [education.github.com/pack](https://education.github.com/pack)
+2. Click **Sign up for Student Developer Pack**
+3. Verify your student status (Waseda email or student ID card)
+4. Once approved, **Copilot Pro** and many other premium tools become free!
+
+```{=html}
+<div class="mission-tip">
+  <div class="mission-tip-icon">⚠️</div>
+  <div class="mission-tip-content">
+    <strong>This process can be tricky!</strong> Feel free to ask <strong>AI</strong> or <strong>TAs</strong> for help.<br>
+    <em>(Approval may take a few days — proceed with the other missions in the meantime)</em>
+  </div>
+</div>
+```
+
+## Mission 4 — VS Code + GitHub Copilot {.smaller .mission-slide}
+
+1. Download VS Code from [code.visualstudio.com](https://code.visualstudio.com/) and install it
+2. Launch VS Code and open the **Extensions** panel (`Cmd+Shift+X` / `Ctrl+Shift+X`)
+3. Search for **GitHub Copilot** and install it
+4. Click **Sign in to GitHub** when prompted — authorize with your GitHub account
+5. Copilot is now ready — try typing some code and see suggestions appear!
+
+```{=html}
+<div class="mission-tip">
+  <div class="mission-tip-icon">💡</div>
+  <div class="mission-tip-content">
+    <strong>With this setup, AI can assist you with many tasks</strong>, including environment setup and debugging.
+  </div>
+</div>
+```
+
+## Mission 5 — Clone the Course Materials {.smaller .mission-slide}
+
+<div style="padding-left: 2em; margin-top: 1.5em; margin-bottom: 1em;">
+  <strong>Repository:</strong> <a href="https://github.com/waseda-num-analysis-2026/materials">github.com/waseda-num-analysis-2026/materials</a>
+</div>
+
+1. Try asking **GitHub Copilot** to do it for you! *(e.g., "How do I clone this repository in VS Code?")*
+2. Follow the AI's instructions to clone the repository to a folder on your PC
+3. After it's done, ask Copilot to **explain what it did** step by step — so you can do it yourself next time.
+
+## Exercise 1.1 — Hello GitHub {.smaller .exercise-slide}
+
+<div style="padding-left: 2em; margin-top: 1em; margin-bottom: 0.6em;">
+  <strong>Assignment Link:</strong> <a href="https://classroom.github.com/a/oobb4OWM">Ex 1.1 — GitHub Classroom</a>
+</div>
+
+1. Access the assignment link above to accept the task
+2. Clone the repository to your local machine
+3. Edit `README.md` (add your Student ID and Name)
+4. Commit & push your changes
+5. Confirm your changes appear on GitHub
+
+## Exercise 1.2 — Summarize How to Use GitHub {.smaller .exercise-slide}
+
+<div style="padding-left: 2em; margin-top: 0.5em; margin-bottom: 0.4em;">
+  <strong>Assignment Link:</strong> <a href="https://classroom.github.com/a/TeNDgSNv">Ex 1.2 — GitHub Classroom</a>
+</div>
+
+1. Create **your own reference document** on how to use GitHub (clone, commit, push, pull, etc.)
+2. Ensure it meets the **Requirements**:
+   - **AI-friendly file format** — OK: `tex` & `pdf`, `md`, `qmd`, `html` / NG: `docx`, `xlsx`, `pptx`
+   - **The best explanation for yourself** — maximally clear and useful *for you*
+3. Submit via **GitHub Classroom** (commit & push to your assignment repository)
+
+```{=html}
+<div class="exercise-tip">
+  <div class="exercise-tip-icon">💡</div>
+  <div class="exercise-tip-content">
+    <strong>Tips:</strong> Use AI aggressively! (ChatGPT, Gemini, GitHub Copilot, etc.)<br>
+    <span style="color: #d84315; font-weight: 600;">⚠️ Always cross-check with multiple AIs and verify with primary sources.</span>
+  </div>
+</div>
+```

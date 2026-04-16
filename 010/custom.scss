@@ -1,0 +1,524 @@
+/*-- scss:defaults --*/
+$presentation-heading-color: #0070C0;
+$body-color: #44546A;
+$link-color: #4472C4;
+$font-family-sans-serif: "Calibri", "Meiryo", sans-serif;
+
+/*-- scss:rules --*/
+
+.reveal .slide-background-content {
+  opacity: 0.15;
+}
+
+.reveal .slides h2 {
+  font-size: 1.2em !important;
+  font-weight: 700;
+  border-bottom: 3px solid #4472C4;
+  padding-bottom: 0.2em;
+}
+
+.reveal .subtitle {
+  color: #44546A;
+}
+
+.reveal section.title-slide {
+  text-align: left;
+}
+
+.reveal section.title-slide h1 {
+  font-size: 1.8em;
+  border-bottom: none;
+}
+
+.reveal table {
+  font-size: 0.85em;
+}
+
+.reveal table thead th {
+  background-color: #4472C4;
+  color: white;
+  font-weight: 600;
+}
+
+.reveal table tbody tr:nth-child(even) {
+  background-color: #f0f4fa;
+}
+
+/* Grade Table (p4) */
+.reveal .grade-table table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  font-size: 0.85em;
+  margin-bottom: 1em;
+}
+
+.reveal .grade-table th {
+  background: linear-gradient(90deg, #4472C4, #3b5998);
+  color: white;
+  padding: 0.5em 1em;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+
+.reveal .grade-table td {
+  padding: 0.5em 1em;
+  border-bottom: 1px solid #eef2f5;
+}
+
+.reveal .grade-table tbody tr:nth-child(even) {
+  background-color: #f8faff;
+}
+
+.reveal .grade-table tbody tr:last-child {
+  font-weight: 700;
+  background-color: #e8f0fe !important;
+}
+
+.reveal .grade-table tbody tr:last-child td {
+  border-top: 2px solid #4472C4;
+  border-bottom: none;
+}
+
+.extra-points-badge {
+  display: inline-block;
+  background: linear-gradient(135deg, #fff3e0, #ffe0b2);
+  color: #d84315;
+  padding: 0.5em 1em;
+  border-radius: 20px;
+  font-size: 0.85em;
+  font-weight: 600;
+  border: 1px solid #ffcc80;
+  box-shadow: 0 2px 6px rgba(216, 67, 21, 0.1);
+  margin-top: 0.5em;
+}
+
+/* Support & Tools Grid (p5) */
+.tools-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1em;
+  margin-top: 1em;
+}
+
+.tool-card {
+  background: white;
+  border: 1px solid #d6e4f0;
+  border-radius: 12px;
+  padding: 1.2em;
+  display: flex;
+  align-items: center;
+  gap: 1em;
+  box-shadow: 0 4px 12px rgba(68, 114, 196, 0.06);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.tool-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 16px rgba(68, 114, 196, 0.12);
+}
+
+.tool-icon {
+  font-size: 2.8em;
+  flex-shrink: 0;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+}
+
+.tool-content {
+  text-align: left;
+}
+
+.tool-title {
+  font-weight: 700;
+  color: #0070C0;
+  font-size: 1.1em;
+  margin-bottom: 0.2em;
+}
+
+.tool-desc {
+  font-size: 0.85em;
+  color: #555;
+  line-height: 1.3;
+}
+
+.tool-card-ai {
+  border: 1.5px solid #a8c7fa;
+  background: linear-gradient(135deg, #ffffff 0%, #f4f8ff 100%);
+  box-shadow: 0 4px 12px rgba(43, 124, 233, 0.12);
+}
+
+.tool-card-ai .tool-title {
+  color: #1a73e8;
+}
+
+/* Attention Hero (p2) */
+.attention-hero {
+  display: flex;
+  align-items: center;
+  gap: 1.2em;
+  background: linear-gradient(135deg, #fff8e1 0%, #ffecb3 100%);
+  border: 1px solid #ffe082;
+  border-left: 8px solid #ff9800;
+  border-radius: 12px;
+  padding: 1em 1.5em;
+  margin-top: 1em;
+  box-shadow: 0 4px 15px rgba(255, 152, 0, 0.15);
+}
+
+.attention-icon {
+  font-size: 2.5em;
+  line-height: 1;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+}
+
+.attention-content {
+  font-size: 0.95em;
+  color: #44546A;
+  line-height: 1.4;
+  text-align: left;
+}
+
+.highlight-warning {
+  display: block;
+  margin-top: 0.6em;
+  color: #d84315;
+  font-weight: 600;
+  font-size: 0.95em;
+}
+
+/* Schedule Table (p3) */
+.schedule-note {
+  text-align: right;
+  font-size: 0.7em;
+  color: #7f8c8d;
+  font-style: italic;
+  margin-bottom: 0.2em;
+  margin-top: -0.2em;
+}
+
+.reveal .schedule-table table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  font-size: 0.8em;
+}
+
+.reveal .schedule-table th {
+  background: linear-gradient(90deg, #4472C4, #3b5998);
+  color: white;
+  padding: 0.4em 0.8em;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+
+.reveal .schedule-table td {
+  padding: 0.4em 0.8em;
+  border-bottom: 1px solid #eef2f5;
+}
+
+.reveal .schedule-table tbody tr:nth-child(even) {
+  background-color: #f8faff;
+}
+
+.reveal .schedule-table tbody tr:hover {
+  background-color: #f0f4fa;
+}
+
+/* Highlight the 9th week (Midterm) */
+.reveal .schedule-table tbody tr:nth-child(6) {
+  background-color: #fff3e0 !important;
+}
+
+.reveal .schedule-table tbody tr:nth-child(6) td {
+  color: #d84315;
+  font-weight: bold;
+}
+
+.attention-box {
+  background: linear-gradient(135deg, #fff3e0, #ffe0b2);
+  border-left: 5px solid #ED7D31;
+  border-radius: 8px;
+  padding: 1em 1.5em;
+  margin: 1em 0;
+}
+
+/* Mission Slides (p10-p14) */
+.reveal .mission-slide ol {
+  margin-top: 0.5em;
+  padding-left: 2em; /* Indent to match exercises */
+}
+
+.reveal .mission-slide ol > li {
+  margin-bottom: 0.8em;
+  line-height: 1.4;
+}
+
+.reveal .mission-slide ul {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+  padding-left: 1.5em;
+}
+
+.mission-tip {
+  background: #fff8e1;
+  border-left: 4px solid #ffb300;
+  padding: 0.8em 1.2em;
+  border-radius: 6px;
+  margin-top: 1.5em;
+  margin-left: 2em; /* Indent to match exercises */
+  font-size: 0.9em;
+  color: #555;
+  display: flex;
+  gap: 0.8em;
+  align-items: flex-start;
+}
+
+.mission-tip-icon {
+  font-size: 1.4em;
+  line-height: 1;
+}
+
+.mission-tip-content {
+  line-height: 1.4;
+}
+
+/* Exercise Slides */
+.reveal .slides section.exercise-slide h2 {
+  color: #d84315; /* Warm orange/red */
+  border-bottom: 3px solid #d84315;
+}
+
+.reveal .exercise-slide ol {
+  margin-top: 0.2em;
+  padding-left: 2em;
+}
+
+.reveal .exercise-slide ol > li {
+  margin-bottom: 0.4em;
+  line-height: 1.4;
+}
+
+.reveal .exercise-slide ul {
+  margin-top: 0.2em;
+  margin-bottom: 0.2em;
+  padding-left: 1.5em;
+}
+
+.exercise-tip {
+  background: #fff8e1;
+  border-left: 4px solid #ffb300;
+  padding: 0.5em 1em;
+  border-radius: 6px;
+  margin-top: 0.5em;
+  margin-left: 2em;
+  font-size: 0.85em;
+  color: #555;
+  display: flex;
+  gap: 0.8em;
+  align-items: flex-start;
+}
+
+.exercise-tip-icon {
+  font-size: 1.4em;
+  line-height: 1;
+}
+
+.exercise-tip-content {
+  line-height: 1.4;
+}
+
+/* "What is Numerical Analysis?" hero + cards */
+.na-hero {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5em;
+  background: linear-gradient(135deg, #e8f0fe 0%, #f5f8ff 100%);
+  border-radius: 12px;
+  padding: 0.6em 1.4em;
+  margin-bottom: 0.6em;
+}
+
+.na-hero-symbols {
+  font-family: "STIX Two Math", "Cambria Math", "Times New Roman", serif;
+  display: flex;
+  gap: 0.15em;
+  user-select: none;
+}
+
+.na-hero-symbols span {
+  color: #2b7ce9;
+  text-shadow: 0 2px 12px rgba(43, 124, 233, 0.3);
+}
+
+.na-hero-symbols .glyph-int    { font-size: 2.8rem; }
+.na-hero-symbols .glyph-sigma  { font-size: 2.6rem; }
+.na-hero-symbols .glyph-partial { font-size: 2.4rem; }
+
+.na-hero-tagline {
+  font-size: 1.0em;
+  color: #44546A;
+  line-height: 1.3;
+  text-align: left;
+}
+
+.na-hero-main-title {
+  font-size: 1.2em;
+  font-weight: 800;
+  color: #0070C0;
+  margin-bottom: 0.1em;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.na-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.8em;
+}
+
+.na-card {
+  background: white;
+  border: 1px solid #d6e4f0;
+  border-radius: 10px;
+  padding: 0.8em 0.8em;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(68, 114, 196, 0.08);
+}
+
+.na-card-icon {
+  font-size: 1.8em;
+  margin-bottom: 0.2em;
+}
+
+.na-card-title {
+  font-weight: 700;
+  color: #0070C0;
+  font-size: 0.95em;
+  margin-bottom: 0.4em;
+}
+
+.na-card-desc {
+  font-size: 0.8em;
+  color: #555;
+  line-height: 1.35;
+}
+
+/* AI Tools (p8) */
+.ai-tools-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5em;
+  margin-top: 0.5em;
+}
+
+.ai-tool-category {
+  background: #f8faff;
+  border: 1px solid #d6e4f0;
+  border-radius: 12px;
+  padding: 1em;
+}
+
+.ai-category-header {
+  font-weight: 700;
+  color: #0070C0;
+  font-size: 1em;
+  margin-bottom: 0.8em;
+  border-bottom: 2px solid #a8c7fa;
+  padding-bottom: 0.4em;
+}
+
+.ai-tool-item {
+  background: white;
+  border: 1px solid #eef2f5;
+  border-radius: 8px;
+  padding: 0.6em 0.8em;
+  margin-bottom: 0.5em;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+  font-size: 0.9em;
+}
+
+.ai-tool-vendor {
+  color: #7f8c8d;
+  font-size: 0.85em;
+  margin-left: 0.3em;
+}
+
+.ai-tool-desc {
+  font-size: 0.8em;
+  color: #666;
+  margin-top: 0.2em;
+  line-height: 1.3;
+}
+
+.ai-tool-highlight {
+  position: relative;
+  background: linear-gradient(135deg, #ffffff 0%, #fff8e1 100%);
+  border: 2px solid #ffb300;
+  box-shadow: 0 4px 12px rgba(255, 152, 0, 0.15);
+  transform: scale(1.02);
+  margin-top: 1.2em;
+  padding-top: 1.2em;
+}
+
+.ai-tool-highlight-badge {
+  position: absolute;
+  top: -10px;
+  left: 10px;
+  background: #ff9800;
+  color: white;
+  font-size: 0.65em;
+  font-weight: bold;
+  padding: 0.2em 0.8em;
+  border-radius: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.ai-tool-highlight strong {
+  color: #d84315;
+  font-size: 1.05em;
+}
+
+/* Cautions (p9) */
+.cautions-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8em;
+  margin-top: 1em;
+}
+
+.caution-card {
+  display: flex;
+  align-items: center;
+  gap: 1.2em;
+  background: white;
+  border-left: 6px solid #e74c3c;
+  border-radius: 8px;
+  padding: 1em 1.5em;
+  box-shadow: 0 3px 10px rgba(231, 76, 60, 0.1);
+}
+
+.caution-icon {
+  font-size: 2.5em;
+  flex-shrink: 0;
+}
+
+.caution-title {
+  font-weight: 700;
+  color: #c0392b;
+  font-size: 1.0em;
+  margin-bottom: 0.2em;
+}
+
+.caution-desc {
+  font-size: 0.85em;
+  color: #44546A;
+  line-height: 1.4;
+}
