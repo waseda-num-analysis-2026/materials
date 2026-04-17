@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 340" encoding="UTF-8">
+  <defs>
+    <marker id="arrowBlue" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#4472C4"/>
+    </marker>
+    <marker id="arrowGreen" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#2ea44f"/>
+    </marker>
+    <filter id="shadow" x="-5%" y="-5%" width="115%" height="115%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.1"/>
+    </filter>
+  </defs>
+
+  <rect width="900" height="340" rx="16" fill="#f8faff"/>
+
+  <text x="450" y="35" text-anchor="middle" font-family="Calibri, sans-serif" font-size="18" font-weight="700" fill="#0070C0">Git Workflow Overview</text>
+
+  <!-- Working Directory -->
+  <rect x="30" y="60" width="170" height="110" rx="12" fill="white" stroke="#4472C4" stroke-width="2" filter="url(#shadow)"/>
+  <rect x="75" y="75" width="80" height="30" rx="6" fill="#e8f0fe"/>
+  <text x="115" y="96" text-anchor="middle" font-family="Calibri, sans-serif" font-size="18" fill="#4472C4">[ ]</text>
+  <text x="115" y="128" text-anchor="middle" font-family="Calibri, sans-serif" font-size="13" font-weight="700" fill="#333">Working Directory</text>
+  <text x="115" y="148" text-anchor="middle" font-family="Calibri, sans-serif" font-size="10" fill="#777">Edit your files here</text>
+
+  <!-- Staging Area -->
+  <rect x="260" y="60" width="170" height="110" rx="12" fill="white" stroke="#ff9800" stroke-width="2" filter="url(#shadow)"/>
+  <rect x="305" y="75" width="80" height="30" rx="6" fill="#fff3e0"/>
+  <text x="345" y="96" text-anchor="middle" font-family="Calibri, sans-serif" font-size="18" fill="#ff9800">+</text>
+  <text x="345" y="128" text-anchor="middle" font-family="Calibri, sans-serif" font-size="13" font-weight="700" fill="#333">Staging Area</text>
+  <text x="345" y="148" text-anchor="middle" font-family="Calibri, sans-serif" font-size="10" fill="#777">Prepare your snapshot</text>
+
+  <!-- Local Repository -->
+  <rect x="490" y="60" width="170" height="110" rx="12" fill="white" stroke="#2ea44f" stroke-width="2" filter="url(#shadow)"/>
+  <rect x="535" y="75" width="80" height="30" rx="6" fill="#e8f5e9"/>
+  <text x="575" y="96" text-anchor="middle" font-family="monospace" font-size="14" fill="#2ea44f">*.git</text>
+  <text x="575" y="128" text-anchor="middle" font-family="Calibri, sans-serif" font-size="13" font-weight="700" fill="#333">Local Repository</text>
+  <text x="575" y="148" text-anchor="middle" font-family="Calibri, sans-serif" font-size="10" fill="#777">Saved on your machine</text>
+
+  <!-- Remote Repository (GitHub) -->
+  <rect x="710" y="60" width="170" height="110" rx="12" fill="#f0fff4" stroke="#2ea44f" stroke-width="2.5" filter="url(#shadow)"/>
+  <rect x="750" y="75" width="90" height="30" rx="6" fill="#d4edda"/>
+  <text x="795" y="96" text-anchor="middle" font-family="Calibri, sans-serif" font-size="14" font-weight="700" fill="#2ea44f">GitHub</text>
+  <text x="795" y="128" text-anchor="middle" font-family="Calibri, sans-serif" font-size="13" font-weight="700" fill="#333">Remote</text>
+  <text x="795" y="148" text-anchor="middle" font-family="Calibri, sans-serif" font-size="10" fill="#777">Cloud repository</text>
+
+  <!-- Arrow: Working to Staging -->
+  <line x1="200" y1="112" x2="255" y2="112" stroke="#4472C4" stroke-width="2.5" marker-end="url(#arrowBlue)"/>
+  <text x="228" y="104" text-anchor="middle" font-family="Calibri, sans-serif" font-size="11" font-weight="700" fill="#4472C4">add</text>
+
+  <!-- Arrow: Staging to Local -->
+  <line x1="430" y1="112" x2="485" y2="112" stroke="#4472C4" stroke-width="2.5" marker-end="url(#arrowBlue)"/>
+  <text x="458" y="104" text-anchor="middle" font-family="Calibri, sans-serif" font-size="11" font-weight="700" fill="#4472C4">commit</text>
+
+  <!-- Arrow: Local to Remote (push) -->
+  <line x1="660" y1="100" x2="705" y2="100" stroke="#4472C4" stroke-width="2.5" marker-end="url(#arrowBlue)"/>
+  <text x="683" y="93" text-anchor="middle" font-family="Calibri, sans-serif" font-size="11" font-weight="700" fill="#4472C4">push</text>
+
+  <!-- Arrow: Remote to Local (pull) -->
+  <line x1="710" y1="130" x2="665" y2="130" stroke="#2ea44f" stroke-width="2.5" marker-end="url(#arrowGreen)"/>
+  <text x="688" y="152" text-anchor="middle" font-family="Calibri, sans-serif" font-size="11" font-weight="700" fill="#2ea44f">pull</text>
+
+  <!-- Clone arrow (curved, from Remote to Working) -->
+  <path d="M 795 175 C 795 270, 115 270, 115 175" fill="none" stroke="#8b5cf6" stroke-width="2" stroke-dasharray="6,4"/>
+  <polygon points="115,175 110,185 120,185" fill="#8b5cf6"/>
+  <text x="455" y="265" text-anchor="middle" font-family="Calibri, sans-serif" font-size="12" font-weight="700" fill="#8b5cf6">clone (first-time download)</text>
+
+  <!-- Legend -->
+  <rect x="30" y="295" width="840" height="35" rx="8" fill="#eef2fa"/>
+  <text x="65" y="317" font-family="Calibri, sans-serif" font-size="11" fill="#555">
+    <tspan font-weight="700" fill="#4472C4">add</tspan><tspan> = stage files</tspan>
+  </text>
+  <text x="225" y="317" font-family="Calibri, sans-serif" font-size="11" fill="#555">
+    <tspan font-weight="700" fill="#4472C4">commit</tspan><tspan> = save snapshot</tspan>
+  </text>
+  <text x="415" y="317" font-family="Calibri, sans-serif" font-size="11" fill="#555">
+    <tspan font-weight="700" fill="#4472C4">push</tspan><tspan> = upload to GitHub</tspan>
+  </text>
+  <text x="590" y="317" font-family="Calibri, sans-serif" font-size="11" fill="#555">
+    <tspan font-weight="700" fill="#2ea44f">pull</tspan><tspan> = download latest</tspan>
+  </text>
+  <text x="750" y="317" font-family="Calibri, sans-serif" font-size="11" fill="#555">
+    <tspan font-weight="700" fill="#8b5cf6">clone</tspan><tspan> = first-time copy</tspan>
+  </text>
+</svg>

@@ -334,3 +334,23 @@ AI is **extremely powerful and useful**, but keep these in mind.
   </div>
 </div>
 ```
+
+## Exercise 1.2 — Suggested Workflow {.smaller .exercise-slide}
+
+**Step 1.** Ask a browser-based AI to draft a summary
+
+::: {.mission-box}
+Prompt example:\
+*"Explain how to use Git and GitHub step by step: clone, commit, push, pull. Write it as a beginner-friendly guide."*
+:::
+
+**Step 2.** Save the output as a local file (e.g. `draft.txt` or `draft.md`)
+
+**Step 3.** Open it in VS Code and ask **GitHub Copilot** to enhance it with diagrams
+
+::: {.mission-box}
+Prompt examples:
+
+- *"Create an SVG diagram showing the Git workflow: working directory → staging area → local repo → remote repo."*
+- *"Embed this SVG into a Markdown file and reorganize my draft into a well-structured `README.md` with sections and the diagram."*
+:::
