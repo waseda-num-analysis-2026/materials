@@ -11,11 +11,11 @@ This repository contains course materials for Numerical Analysis 2026 (Foundatio
 
 Materials are organized by lecture number:
 
-| Folder | Topic |
-|--------|-------|
-| `010/` | Orientation and Guidance |
-| `020/` | (to be added) |
-| ...    | ... |
+| Folder | Topic | Slides |
+|--------|-------|--------|
+| `010/` | Orientation and Guidance | [View Slides](https://waseda-num-analysis-2026.github.io/materials/010/1st.html) |
+| `020/` | (to be added) | — |
+| ...    | ... | ... |
 
 ## Exercises
 
