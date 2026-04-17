@@ -305,6 +305,7 @@ AI is **extremely powerful and useful**, but keep these in mind.
 
 <div style="padding-left: 2em; margin-top: 1em; margin-bottom: 0.6em;">
   <strong>Assignment Link:</strong> <a href="https://classroom.github.com/a/oobb4OWM">Ex 1.1 — GitHub Classroom</a>
+  &nbsp;&nbsp;|&nbsp;&nbsp; <strong style="color: #d84315;">Deadline: Apr 17, 23:59</strong>
 </div>
 
 1. Access the assignment link above to accept the task
@@ -317,6 +318,7 @@ AI is **extremely powerful and useful**, but keep these in mind.
 
 <div style="padding-left: 2em; margin-top: 0.5em; margin-bottom: 0.4em;">
   <strong>Assignment Link:</strong> <a href="https://classroom.github.com/a/TeNDgSNv">Ex 1.2 — GitHub Classroom</a>
+  &nbsp;&nbsp;|&nbsp;&nbsp; <strong style="color: #d84315;">Deadline: Apr 23, 23:59</strong>
 </div>
 
 1. Create **your own reference document** on how to use GitHub (clone, commit, push, pull, etc.)
