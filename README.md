@@ -14,7 +14,7 @@ Materials are organized by lecture number:
 | Folder | Topic | Slides | Video |
 |--------|-------|--------|-------|
 | `010/` | Orientation and Guidance | [View Slides](https://waseda-num-analysis-2026.github.io/materials/010/1st.html) | [Watch](https://youtu.be/AS3yAQUdcLc) |
-| `020/` | (to be added) | — | — |
+| `020/` | Python Guidelines | [View](https://waseda-num-analysis-2026.github.io/materials/020/python_guidelines/python_guidelines.html) | — |
 | ...    | ... | ... | ... |
 
 ## Exercises
