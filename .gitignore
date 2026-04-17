@@ -5,5 +5,8 @@
 *.quarto_ipynb
 *.quarto_ipynb_*
 
+# Instructor private workspace
+020/python_guidelines/tanaka-workplace/
+
 # OS files
 .DS_Store
