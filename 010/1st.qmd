@@ -352,5 +352,7 @@ Prompt example:\
 Prompt examples:
 
 - *"Create an SVG diagram showing the Git workflow: working directory → staging area → local repo → remote repo."*
-- *"Embed this SVG into a Markdown file and reorganize my draft into a well-structured `README.md` with sections and the diagram."*
+- *"Embed this SVG into a Markdown file and reorganize my draft into a well-structured `github-beginners-guide.md` with sections and the diagram."*
 :::
+
+*(An example I ran is in `ex1.2-sample/` in this repository.)*
