@@ -1,5 +1,9 @@
 # Archive (unused files)
 **/archive/
 
+# Quarto intermediate files
+*.quarto_ipynb
+*.quarto_ipynb_*
+
 # OS files
 .DS_Store
