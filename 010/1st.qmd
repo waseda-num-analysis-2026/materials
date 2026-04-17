@@ -205,6 +205,49 @@ AI is **extremely powerful and useful**, but keep these in mind.
    - **Student ID**
    - Any other comments (optional)
 
+## What is GitHub? {.smaller}
+
+```{=html}
+<div class="github-explain">
+  <div class="github-points">
+    <div class="gh-point"><strong>Git</strong> — A version control system that tracks every change to your files</div>
+    <div class="gh-point"><strong>GitHub</strong> — A cloud platform to store, share, and collaborate on Git repositories</div>
+    <div class="gh-point"><strong>Key actions:</strong> <code>clone</code> (download) → <code>edit</code> → <code>commit</code> (save) → <code>push</code> (upload)</div>
+  </div>
+  <div class="github-diagram">
+    <div class="github-flow">
+      <div class="gh-node gh-local">
+        <div class="gh-node-icon">💻</div>
+        <div class="gh-node-label">Your PC</div>
+        <div class="gh-node-sub">Local Repository</div>
+      </div>
+      <div class="gh-arrows">
+        <div class="gh-arrow-push">push →</div>
+        <div class="gh-arrow-pull">← pull / clone</div>
+      </div>
+      <div class="gh-node gh-remote">
+        <div class="gh-node-icon">☁️</div>
+        <div class="gh-node-label">GitHub</div>
+        <div class="gh-node-sub">Remote Repository</div>
+      </div>
+      <div class="gh-arrows">
+        <div class="gh-arrow-push">pull / clone →</div>
+        <div class="gh-arrow-pull">← push</div>
+      </div>
+      <div class="gh-node gh-collab">
+        <div class="gh-node-icon">👥</div>
+        <div class="gh-node-label">Teammates</div>
+        <div class="gh-node-sub">Their Local Repos</div>
+      </div>
+    </div>
+  </div>
+  <div class="github-access">
+    <span class="gh-access-item gh-public">🌐 <strong>Public</strong> — Anyone can view</span>
+    <span class="gh-access-item gh-private">🔒 <strong>Private</strong> — Only you and invited members</span>
+  </div>
+</div>
+```
+
 ## Mission 2 — GitHub Account {.smaller .mission-slide}
 
 1. Go to [github.com](https://github.com/) and click **Sign up**
