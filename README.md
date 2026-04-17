@@ -13,8 +13,8 @@ Materials are organized by lecture number:
 
 | Folder | Topic | Materials | Video |
 |--------|-------|-----------|-------|
-| `010/` | Orientation and Guidance | [Slides →](https://waseda-num-analysis-2026.github.io/materials/010/1st.html) | [Watch](https://youtu.be/AS3yAQUdcLc) |
-| `020/` | Python Guidelines | [Document →](https://waseda-num-analysis-2026.github.io/materials/020/python_guidelines/python_guidelines.html) | — |
+| `010/` | Orientation and Guidance | [Slides](https://waseda-num-analysis-2026.github.io/materials/010/1st.html) | [Watch](https://youtu.be/AS3yAQUdcLc) |
+| `020/` | Python Guidelines | [Document](https://waseda-num-analysis-2026.github.io/materials/020/python_guidelines/python_guidelines.html) | — |
 | ...    | ... | ... | ... |
 
 ## Exercises
