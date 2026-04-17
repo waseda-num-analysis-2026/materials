@@ -196,7 +196,8 @@ AI is **extremely powerful and useful**, but keep these in mind.
 
 ## Mission 1 — Mattermost {.smaller .mission-slide}
 
-1. Open [Mattermost](https://class.s-top.dev/signup_user_complete/?id=b4j4cjiertbr3g9id6cuwg668r) and sign in with your **Waseda email address**
+1. Open [Mattermost](https://class.s-top.dev/signup_user_complete/?id=b4j4cjiertbr3g9id6cuwg668r) and sign in with your **Waseda email address**\
+   Apps: [mattermost.com/apps](https://mattermost.com/apps/)
 2. Find **TANAKA, Kazuaki** in the member list (use the search bar if needed)
 3. Send a direct message containing:
    - Your **Name**
