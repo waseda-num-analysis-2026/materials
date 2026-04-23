@@ -1,0 +1,462 @@
+---
+title: "Lecture 2 — Errors in Numerical Computation"
+subtitle: "Handout: Foundations of and Exercises in Numerical Analysis"
+date: today
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    toc-title: "Contents"
+    number-sections: true
+    html-math-method: mathjax
+    theme: cosmo
+    code-fold: false
+    code-tools: true
+    highlight-style: github
+execute:
+  echo: true
+  eval: true
+---
+
+::: {.callout-tip collapse="true"}
+## How to use this handout — Evolving Study Notes with an AI Tutor
+
+This handout is designed to **grow with you**. Whenever a line confuses you,
+ask the AI tutor (e.g. **GitHub Copilot Chat** in VS Code) and it will
+insert a **Q&A block** directly into this file, exactly where the
+question lives. Over the semester, your copy of this handout becomes
+*your own annotated textbook*.
+
+**The 30-second workflow**
+
+1. Open this file in VS Code with GitHub Copilot installed.
+2. Find a line you don't understand.
+3. Open Copilot Chat and paste:
+
+    ```
+    @workspace Read AI_TUTOR.md and 2nd-handout.qmd.
+    I don't understand this line:
+
+    > "<paste the line you're stuck on>"
+
+    Please add a Q&A block following AI_TUTOR.md rules.
+    ```
+
+4. Re-render: `quarto render 2nd-handout.qmd` — your question and its
+   answer are now part of the handout (collapsed by default; click to expand).
+
+See [`AI_TUTOR.md`](../../../AI_TUTOR.md) at the repo root for the full
+rule set the AI follows, and for more prompt templates (follow-ups,
+concept questions, Q&A index).
+
+**What does an inserted Q&A block look like?** &nbsp;See the sample at
+[Q&A *(Example)* — What does "~1800 BCE" actually refer to?](#qa-example-ybc),
+appended to the end of the *Background* section below.
+
+You can of course also edit this file by hand, run/modify the code cells,
+and add freeform notes anywhere — the AI Q&A workflow is **one option,
+not a requirement**.
+:::
+
+::: {.callout-tip collapse="true"}
+## First time? Install the required packages
+
+The code cells in this handout depend on `mpmath`, `numpy`, etc.
+From the `materials/` folder, run **once**:
+
+```bash
+# Recommended: use a virtual environment (keeps your system Python clean)
+python3 -m venv .venv
+source .venv/bin/activate          # Windows: .venv\Scripts\activate
+pip install -r requirements.txt
+```
+
+If you'd rather skip the virtual environment for now, just run
+`pip install -r requirements.txt` directly — but a venv is the standard
+Python practice and avoids version conflicts later.
+See [README.md](../../../README.md#setup-one-time) for details.
+:::
+
+---
+
+## Background: What is Numerical Analysis?
+
+Numerical analysis is a branch of mathematics concerned with designing **algorithms for solving mathematical problems that cannot be solved analytically**.
+
+- **Deep historical roots** — dating back to ~1800 BCE
+- **Wide applications** — natural sciences, engineering, social sciences
+- **Computer-driven** — modern numerical analysis relies on computers for practical computation
+
+The central challenge: computers can only handle **finite digits**, so real numbers are always *approximated*.
+
+::: {#qa-example-ybc .callout-tip collapse="true"}
+## Q&A *(Example)* — What does "~1800 BCE" actually refer to?
+
+> **This is a sample Q&A block written by the instructor**, included so you
+> (and the AI) can see the expected format. Your own Q&A blocks, generated
+> via Copilot following [`AI_TUTOR.md`](../../../AI_TUTOR.md), will look
+> just like this and be appended at the end of the relevant subsection.
+
+**Date:** 2026-04-24  
+**Anchor:** Background: What is Numerical Analysis? — "dating back to ~1800 BCE"
+
+**Question.**  
+The handout says *"Deep historical roots — dating back to ~1800 BCE."*
+What **concretely** existed around 1800 BCE? Was there really anything
+deserving the name "numerical analysis" that long ago?
+
+**Answer.**
+
+1. **TL;DR** — A Babylonian (Mesopotamian) clay tablet known as
+   **YBC 7289** (ca. 1800–1600 BCE) records an **approximation of $\sqrt{2}$**.
+   It is one of the oldest surviving examples of what we today call
+   **numerical approximation**.
+
+2. **Why / How** — On YBC 7289, $\sqrt{2}$ is written in **base 60** as
+   $$
+   1;\ 24,\ 51,\ 10 \;=\; 1 + \frac{24}{60} + \frac{51}{60^{2}} + \frac{10}{60^{3}}
+   \;\approx\; 1.41421296\ldots
+   $$
+   The true value is $\sqrt{2} = 1.41421356\ldots$, so the **absolute
+   error is about $6\times 10^{-7}$**, and the **relative error is also
+   about $4\times 10^{-7}$**. Achieving this precision **by hand**, with
+   no calculators or computers, is remarkable.
+   - In other words, **"numerical analysis"** is the craft of
+     *representing numbers with finite digits and using them effectively* —
+     and its history is far older than computers.
+   - The tablet is now held by the **Yale Babylonian Collection** (Yale
+     University) and is referenced under its catalog name **YBC 7289**.
+
+3. **See also** — [YBC 7289 — Wikipedia](https://en.wikipedia.org/wiki/YBC_7289)
+   / Section *Absolute and Relative Error* (definitions) /
+   Section *Floating-Point Representation* (the modern, computer-era
+   version of "finite digits").
+
+::: {.callout-note collapse="true"}
+### Optional: code to verify
+```python
+from decimal import Decimal, getcontext
+getcontext().prec = 30
+
+# YBC 7289 records sqrt(2) as 1; 24, 51, 10  (sexagesimal, base 60)
+ybc = Decimal(1) + Decimal(24)/60 + Decimal(51)/(60**2) + Decimal(10)/(60**3)
+true_sqrt2 = Decimal(2).sqrt()
+
+print(f"YBC value : {ybc}")
+print(f"true  sqrt(2): {true_sqrt2}")
+print(f"abs err   : {abs(true_sqrt2 - ybc):.3e}")
+print(f"rel err   : {abs(true_sqrt2 - ybc) / true_sqrt2:.3e}")
+```
+:::
+:::
+
+---
+
+## Floating-Point Numbers and Errors
+
+### Floating-Point Representation
+
+A real number can be represented as:
+
+$$
+\pm \left(\frac{d_0}{\beta^0} + \frac{d_1}{\beta^1} + \frac{d_2}{\beta^2} + \cdots\right)\cdot \beta^{e}
+$$
+
+where $\beta \geq 2$ is the **base**, $0 \leq d_i \leq \beta - 1$ are **digits**, and $e$ is the **exponent**.
+
+**Example.** $7.375$ in base 10 and base 2:
+
+$$
+7.375 = + \left(\frac{7}{10^0} + \frac{3}{10^1} + \frac{7}{10^2} + \frac{5}{10^3}\right)\cdot 10^{0} \quad (\beta = 10)
+$$
+
+$$
+7.375 = + \left(\frac{1}{2^0} + \frac{1}{2^1} + \frac{1}{2^2} + \frac{0}{2^3} + \frac{1}{2^4} + \frac{1}{2^5}\right)\cdot 2^{2} \quad (\beta = 2)
+$$
+
+**Key observation.** Some numbers are finite in one base but infinite in another:
+
+$$
+0.2 = +\left(\frac{2}{10^0}\right)\cdot 10^{-1} \quad (\beta=10) \quad\text{[finite]}
+$$
+
+$$
+0.2 = +\left(\frac{1}{2^0} + \frac{1}{2^1} + \frac{0}{2^2} + \frac{0}{2^3} + \frac{1}{2^4} + \frac{1}{2^5} + \cdots\right)\cdot 2^{-3} \quad (\beta=2) \quad\textbf{[infinite!]}
+$$
+
+> **Consequence:** Computers store only a finite number of bits, so most real numbers are stored as *approximations*. This is the root cause of all floating-point errors.
+
+---
+
+### Verifying in Python
+
+```{python}
+#| code-fold: true
+#| code-summary: "Helper: to_binary_scientific(f)"
+import struct
+
+def to_binary_scientific(f):
+    """Display f as  1.xxxx...₂ × 2^e  (normalized IEEE 754 form)."""
+    bits = struct.pack('>d', f)
+    b = int.from_bytes(bits, 'big')
+    exp_biased = (b >> 52) & 0x7FF
+    mantissa_bits = f"{b & ((1 << 52) - 1):052b}"
+
+    e = exp_biased - 1023          # true exponent
+    frac = mantissa_bits.rstrip('0')   # drop trailing zeros
+
+    if not frac:
+        frac_str = ""              # exactly 1.0 × 2^e
+    elif len(mantissa_bits.rstrip('0')) < 52:
+        frac_str = frac            # finite — shows all significant bits
+    else:
+        frac_str = mantissa_bits[:24] + "..."   # infinite — show pattern
+
+    mantissa_str = f"1.{frac_str}" if frac_str else "1"
+    return f"{mantissa_str}₂ × 2^{e}"
+```
+
+```{python}
+for v in [1.25, 7.375, 0.2]:
+    print(f"  {v:6}  =  {to_binary_scientific(v)}")
+```
+
+---
+
+### Examples of Floating-Point Errors
+
+**Example 1: Small numbers ignored**
+
+$$10^{40} + 500 - 10^{40} = \;?$$
+
+The 500 "disappears" because it is negligible relative to $10^{40}$ in floating point.
+
+**Example 2: Rounding error**
+
+$$8.3 - 8 = \;?$$
+
+The result is *not* exactly $0.3$ — see the Excel screenshot in the slides.
+
+```{python}
+# Try it in Python
+print(f"10**40 + 500 - 10**40 = {10**40 + 500 - 10**40}")
+print(f"8.3 - 8 = {8.3 - 8}")
+print(f"8.3 - 8 == 0.3? {8.3 - 8 == 0.3}")
+print(f"8.3 - 8 - 0.3   = {8.3 - 8 - 0.3}")
+```
+
+---
+
+### Quiz: What is the value of x?
+
+```{python}
+import math
+
+x = 100
+for _ in range(60):
+    x = math.sqrt(x)
+for _ in range(60):
+    x = x ** 2
+
+print(f"Result: x = {x}")
+print(f"Expected: 100")
+```
+
+> **Q:** Why does this happen? What does the result tell us about floating-point arithmetic?
+
+::: {.callout-note}
+## Your answer
+
+*(Explain what is happening in your own words.)*
+:::
+
+---
+
+## Absolute and Relative Error
+
+### Definitions
+
+Let $x$ be the **true value** and $\hat{x}$ be its **approximation**.
+
+$$
+\text{Absolute Error} = |x - \hat{x}|
+$$
+
+$$
+\text{Relative Error} = \left|\frac{x - \hat{x}}{x}\right| \quad (x \neq 0) \quad \approx \left|\frac{x - \hat{x}}{\hat{x}}\right|
+$$
+
+**Applied to the examples:**
+
+| Subject | Absolute Error | Relative Error |
+|---|---|---|
+| 🦖 Dinosaur | $\|67{,}100{,}000 - 67{,}000{,}000\| = 100{,}000$ | $\frac{100{,}000}{67{,}000{,}000} \approx 0.00149$ |
+| 🧑 Person | $\|100{,}037 - 37\| = 100{,}000$ | $\frac{100{,}000}{37} \approx 2702$ |
+
+---
+
+### Error Propagation
+
+**Setup.** Let $x$ and $y$ be true values, and $\hat{x}$, $\hat{y}$ their approximations. Define the errors:
+
+$$
+e_x := x - \hat{x}, \qquad e_y := y - \hat{y}
+$$
+
+so that $x = \hat{x} + e_x$ and $y = \hat{y} + e_y$.
+
+#### Addition / Subtraction
+
+::: {.callout-tip icon=false}
+## Proposition
+
+The **absolute error bound** for $x + y$ (or $x - y$) is given by the **sum of absolute errors** of $x$ and $y$:
+
+$$
+\bigl|(x+y) - (\hat{x}+\hat{y})\bigr| \leq |e_x| + |e_y|
+$$
+:::
+
+**Proof.**
+
+$$
+(x + y) - (\hat{x} + \hat{y})
+= (x - \hat{x}) + (y - \hat{y})
+= e_x + e_y
+$$
+
+By the triangle inequality:
+
+$$
+|e_x + e_y| \leq |e_x| + |e_y|
+$$
+
+#### Multiplication / Division
+
+::: {.callout-tip icon=false}
+## Proposition
+
+Assuming $|e_x|, |e_y|$ are sufficiently small (so that $e_x e_y \ll |e_x|, |e_y|$), the **relative error bound** for $x \cdot y$ (or $x/y$, $y \neq 0$) is given approximately by the **sum of relative errors** of $x$ and $y$:
+
+$$
+\frac{|xy - \hat{x}\hat{y}|}{|xy|}
+\approx \left|\frac{e_x}{x}\right| + \left|\frac{e_y}{y}\right|
+$$
+:::
+
+**Proof.**
+
+$$
+xy - \hat{x}\hat{y}
+= (\hat{x} + e_x)(\hat{y} + e_y) - \hat{x}\hat{y}
+= \hat{x}e_y + \hat{y}e_x + e_xe_y
+$$
+
+So the relative error of the product is:
+
+$$
+\frac{|xy - \hat{x}\hat{y}|}{|xy|}
+= \frac{|\hat{x}e_y + \hat{y}e_x + e_xe_y|}{|xy|}
+$$
+
+When the errors $e_x, e_y$ are small, the cross term $e_x e_y$ is negligible ($e_xe_y \ll e_x, e_y$), and $\hat{x} \approx x$, $\hat{y} \approx y$, so:
+
+$$
+\approx \frac{|xe_y + ye_x|}{|xy|}
+\leq \frac{|x|\,|e_y| + |y|\,|e_x|}{|xy|}
+= \left|\frac{e_x}{x}\right| + \left|\frac{e_y}{y}\right|
+$$
+
+---
+
+## Loss of Significant Digits (Cancellation)
+
+> ⚠️ **Be careful when subtracting two values that are close to each other.**
+
+Relative error in subtraction:
+
+$$
+E := \left|\frac{(x - y) - (\hat{x} - \hat{y})}{x - y}\right|
+= \left|\frac{x}{x-y}\cdot \frac{e_x}{x} + \frac{y}{x-y}\cdot \frac{e_y}{y}\right|
+$$
+
+If $|x - y| \ll |x|$ and $|x - y| \ll |y|$, the factors $\frac{x}{x-y}$ and $\frac{y}{x-y}$ become huge → **$E$ can be very large**.
+
+### Worked Example: $\sqrt{1001} - \sqrt{999}$
+
+**Naive (7 significant digits):**
+
+$$\sqrt{1001} \approx 31.63858, \quad \sqrt{999} \approx 31.60696$$
+
+$$\sqrt{1001} - \sqrt{999} \approx 0.03162 \quad \text{(only ~4 significant digits)}$$
+
+**Improved (rationalize the numerator):**
+
+$$\sqrt{1001} - \sqrt{999}
+= \frac{(\sqrt{1001} - \sqrt{999})(\sqrt{1001} + \sqrt{999})}{\sqrt{1001} + \sqrt{999}}
+= \frac{2}{\sqrt{1001} + \sqrt{999}}$$
+
+```{python}
+import numpy as np
+
+# float32 has ~7 significant decimal digits.
+# Use a = 10^6 + 1, b = 10^6 - 1  (√values ≈ 10^3 → share ~4 leading digits)
+# → naive subtraction loses ~4 significant digits out of 7.
+a32, b32 = np.float32(10**6 + 1), np.float32(10**6 - 1)
+a64, b64 = np.float64(10**6 + 1), np.float64(10**6 - 1)
+
+naive32    = np.sqrt(a32) - np.sqrt(b32)
+improved32 = (a32 - b32) / (np.sqrt(a32) + np.sqrt(b32))    # = 2 / (√a + √b)
+ref64      = np.sqrt(a64) - np.sqrt(b64)                    # treat as "true" value
+
+print(f"a = {int(a32)},  b = {int(b32)}")
+print()
+print(f"√a − √b        =  {naive32:.8e}    (naive,    float32)")
+print(f"2 / (√a + √b)  =  {improved32:.8e}    (improved, float32)")
+print(f"√a − √b        =  {ref64:.16e}   (reference, float64)")
+print()
+print(f"Error (naive):    {abs(ref64 - float(naive32)):.2e}")
+print(f"Error (improved): {abs(ref64 - float(improved32)):.2e}")
+```
+
+---
+
+## Appendix: Interval Arithmetic *(for your information)*
+
+Instead of a single approximate number, **interval arithmetic tracks an interval guaranteed to contain the true value**.
+
+$$\pi \in [3.14,\, 3.15], \quad \sqrt{2} \in [1.41,\, 1.42]
+\quad\Longrightarrow\quad
+\pi + \sqrt{2} \in [4.55,\, 4.57]$$
+
+- **Lower bound**: computed with **round-down**
+- **Upper bound**: computed with **round-up**
+
+```{python}
+# Requires:  pip install mpmath
+# mpmath.iv provides rigorous interval arithmetic with directed rounding,
+# so the resulting interval is *guaranteed* to contain the true value.
+from mpmath import iv
+
+iv.dps = 10   # decimal precision (controls bound width)
+
+pi_iv  = iv.pi
+sq2_iv = iv.sqrt(2)
+sum_iv = pi_iv + sq2_iv
+
+print(f"π      ∈ {pi_iv}")
+print(f"√2     ∈ {sq2_iv}")
+print(f"π + √2 ∈ {sum_iv}")
+```
+
+---
+
+## Summary
+
+| Concept | Key formula |
+|---|---|
+| Absolute error | $\|x - \hat{x}\|$ |
+| Relative error | $\left\|\frac{x - \hat{x}}{x}\right\|$ |
+| Error in addition | $\leq \|e_x\| + \|e_y\|$ (absolute) |
+| Error in multiplication | $\approx \left\|\frac{e_x}{x}\right\| + \left\|\frac{e_y}{y}\right\|$ (relative) |
+| Cancellation | Occurs when subtracting two close values |

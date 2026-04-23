@@ -1,0 +1,1586 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.37">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="dcterms.date" content="2026-04-24">
+
+<title>Lecture 2 — Errors in Numerical Computation</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="2nd-handout_files/libs/clipboard/clipboard.min.js"></script>
+<script src="2nd-handout_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="2nd-handout_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="2nd-handout_files/libs/quarto-html/popper.min.js"></script>
+<script src="2nd-handout_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="2nd-handout_files/libs/quarto-html/anchor.min.js"></script>
+<link href="2nd-handout_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="2nd-handout_files/libs/quarto-html/quarto-syntax-highlighting-acf12a64177840b8d86f2d4f01b2e9fb.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="2nd-handout_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="2nd-handout_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="2nd-handout_files/libs/bootstrap/bootstrap-f93d581b41f20e53031fef139986cb6a.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="quarto-light">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Contents</h2>
+   
+  <ul>
+  <li><a href="#background-what-is-numerical-analysis" id="toc-background-what-is-numerical-analysis" class="nav-link active" data-scroll-target="#background-what-is-numerical-analysis"><span class="header-section-number">1</span> Background: What is Numerical Analysis?</a></li>
+  <li><a href="#floating-point-numbers-and-errors" id="toc-floating-point-numbers-and-errors" class="nav-link" data-scroll-target="#floating-point-numbers-and-errors"><span class="header-section-number">2</span> Floating-Point Numbers and Errors</a>
+  <ul class="collapse">
+  <li><a href="#floating-point-representation" id="toc-floating-point-representation" class="nav-link" data-scroll-target="#floating-point-representation"><span class="header-section-number">2.1</span> Floating-Point Representation</a></li>
+  <li><a href="#verifying-in-python" id="toc-verifying-in-python" class="nav-link" data-scroll-target="#verifying-in-python"><span class="header-section-number">2.2</span> Verifying in Python</a></li>
+  <li><a href="#examples-of-floating-point-errors" id="toc-examples-of-floating-point-errors" class="nav-link" data-scroll-target="#examples-of-floating-point-errors"><span class="header-section-number">2.3</span> Examples of Floating-Point Errors</a></li>
+  <li><a href="#quiz-what-is-the-value-of-x" id="toc-quiz-what-is-the-value-of-x" class="nav-link" data-scroll-target="#quiz-what-is-the-value-of-x"><span class="header-section-number">2.4</span> Quiz: What is the value of x?</a></li>
+  </ul></li>
+  <li><a href="#absolute-and-relative-error" id="toc-absolute-and-relative-error" class="nav-link" data-scroll-target="#absolute-and-relative-error"><span class="header-section-number">3</span> Absolute and Relative Error</a>
+  <ul class="collapse">
+  <li><a href="#definitions" id="toc-definitions" class="nav-link" data-scroll-target="#definitions"><span class="header-section-number">3.1</span> Definitions</a></li>
+  <li><a href="#error-propagation" id="toc-error-propagation" class="nav-link" data-scroll-target="#error-propagation"><span class="header-section-number">3.2</span> Error Propagation</a></li>
+  </ul></li>
+  <li><a href="#loss-of-significant-digits-cancellation" id="toc-loss-of-significant-digits-cancellation" class="nav-link" data-scroll-target="#loss-of-significant-digits-cancellation"><span class="header-section-number">4</span> Loss of Significant Digits (Cancellation)</a>
+  <ul class="collapse">
+  <li><a href="#worked-example-sqrt1001---sqrt999" id="toc-worked-example-sqrt1001---sqrt999" class="nav-link" data-scroll-target="#worked-example-sqrt1001---sqrt999"><span class="header-section-number">4.1</span> Worked Example: <span class="math inline">\(\sqrt{1001} - \sqrt{999}\)</span></a></li>
+  </ul></li>
+  <li><a href="#appendix-interval-arithmetic-for-your-information" id="toc-appendix-interval-arithmetic-for-your-information" class="nav-link" data-scroll-target="#appendix-interval-arithmetic-for-your-information"><span class="header-section-number">5</span> Appendix: Interval Arithmetic <em>(for your information)</em></a></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">6</span> Summary</a></li>
+  </ul>
+</nav>
+</div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<div class="quarto-title-block"><div><h1 class="title">Lecture 2 — Errors in Numerical Computation</h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li><li><hr class="dropdown-divider"></li><li><a id="quarto-view-source" class="dropdown-item" href="javascript:void(0)" role="button">View Source</a></li></ul></div></div>
+<p class="subtitle lead">Handout: Foundations of and Exercises in Numerical Analysis</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">April 24, 2026</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>How to use this handout — Evolving Study Notes with an AI Tutor
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>This handout is designed to <strong>grow with you</strong>. Whenever a line confuses you, ask the AI tutor (e.g.&nbsp;<strong>GitHub Copilot Chat</strong> in VS Code) and it will insert a <strong>Q&amp;A block</strong> directly into this file, exactly where the question lives. Over the semester, your copy of this handout becomes <em>your own annotated textbook</em>.</p>
+<p><strong>The 30-second workflow</strong></p>
+<ol type="1">
+<li><p>Open this file in VS Code with GitHub Copilot installed.</p></li>
+<li><p>Find a line you don’t understand.</p></li>
+<li><p>Open Copilot Chat and paste:</p>
+<pre><code>@workspace Read AI_TUTOR.md and 2nd-handout.qmd.
+I don't understand this line:
+
+&gt; "&lt;paste the line you're stuck on&gt;"
+
+Please add a Q&amp;A block following AI_TUTOR.md rules.</code></pre></li>
+<li><p>Re-render: <code>quarto render 2nd-handout.qmd</code> — your question and its answer are now part of the handout (collapsed by default; click to expand).</p></li>
+</ol>
+<p>See <a href="../../../AI_TUTOR.md"><code>AI_TUTOR.md</code></a> at the repo root for the full rule set the AI follows, and for more prompt templates (follow-ups, concept questions, Q&amp;A index).</p>
+<p><strong>What does an inserted Q&amp;A block look like?</strong> &nbsp;See the sample at <a href="#qa-example-ybc">Q&amp;A <em>(Example)</em> — What does “~1800 BCE” actually refer to?</a>, appended to the end of the <em>Background</em> section below.</p>
+<p>You can of course also edit this file by hand, run/modify the code cells, and add freeform notes anywhere — the AI Q&amp;A workflow is <strong>one option, not a requirement</strong>.</p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>First time? Install the required packages
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>The code cells in this handout depend on <code>mpmath</code>, <code>numpy</code>, etc. From the <code>materials/</code> folder, run <strong>once</strong>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Recommended: use a virtual environment (keeps your system Python clean)</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> <span class="at">-m</span> venv .venv</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="bu">source</span> .venv/bin/activate          <span class="co"># Windows: .venv\Scripts\activate</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install <span class="at">-r</span> requirements.txt</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>If you’d rather skip the virtual environment for now, just run <code>pip install -r requirements.txt</code> directly — but a venv is the standard Python practice and avoids version conflicts later. See <a href="../../../README.md#setup-one-time">README.md</a> for details.</p>
+</div>
+</div>
+</div>
+<hr>
+<section id="background-what-is-numerical-analysis" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="background-what-is-numerical-analysis"><span class="header-section-number">1</span> Background: What is Numerical Analysis?</h2>
+<p>Numerical analysis is a branch of mathematics concerned with designing <strong>algorithms for solving mathematical problems that cannot be solved analytically</strong>.</p>
+<ul>
+<li><strong>Deep historical roots</strong> — dating back to ~1800 BCE</li>
+<li><strong>Wide applications</strong> — natural sciences, engineering, social sciences</li>
+<li><strong>Computer-driven</strong> — modern numerical analysis relies on computers for practical computation</li>
+</ul>
+<p>The central challenge: computers can only handle <strong>finite digits</strong>, so real numbers are always <em>approximated</em>.</p>
+<div id="qa-example-ybc" class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Q&amp;A <em>(Example)</em> — What does “~1800 BCE” actually refer to?
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<blockquote class="blockquote">
+<p><strong>This is a sample Q&amp;A block written by the instructor</strong>, included so you (and the AI) can see the expected format. Your own Q&amp;A blocks, generated via Copilot following <a href="../../../AI_TUTOR.md"><code>AI_TUTOR.md</code></a>, will look just like this and be appended at the end of the relevant subsection.</p>
+</blockquote>
+<p><strong>Date:</strong> 2026-04-24<br>
+<strong>Anchor:</strong> Background: What is Numerical Analysis? — “dating back to ~1800 BCE”</p>
+<p><strong>Question.</strong><br>
+The handout says <em>“Deep historical roots — dating back to ~1800 BCE.”</em> What <strong>concretely</strong> existed around 1800 BCE? Was there really anything deserving the name “numerical analysis” that long ago?</p>
+<p><strong>Answer.</strong></p>
+<ol type="1">
+<li><p><strong>TL;DR</strong> — A Babylonian (Mesopotamian) clay tablet known as <strong>YBC 7289</strong> (ca. 1800–1600 BCE) records an <strong>approximation of <span class="math inline">\(\sqrt{2}\)</span></strong>. It is one of the oldest surviving examples of what we today call <strong>numerical approximation</strong>.</p></li>
+<li><p><strong>Why / How</strong> — On YBC 7289, <span class="math inline">\(\sqrt{2}\)</span> is written in <strong>base 60</strong> as <span class="math display">\[
+1;\ 24,\ 51,\ 10 \;=\; 1 + \frac{24}{60} + \frac{51}{60^{2}} + \frac{10}{60^{3}}
+\;\approx\; 1.41421296\ldots
+\]</span> The true value is <span class="math inline">\(\sqrt{2} = 1.41421356\ldots\)</span>, so the <strong>absolute error is about <span class="math inline">\(6\times 10^{-7}\)</span></strong>, and the <strong>relative error is also about <span class="math inline">\(4\times 10^{-7}\)</span></strong>. Achieving this precision <strong>by hand</strong>, with no calculators or computers, is remarkable.</p>
+<ul>
+<li>In other words, <strong>“numerical analysis”</strong> is the craft of <em>representing numbers with finite digits and using them effectively</em> — and its history is far older than computers.</li>
+<li>The tablet is now held by the <strong>Yale Babylonian Collection</strong> (Yale University) and is referenced under its catalog name <strong>YBC 7289</strong>.</li>
+</ul></li>
+<li><p><strong>See also</strong> — <a href="https://en.wikipedia.org/wiki/YBC_7289">YBC 7289 — Wikipedia</a> / Section <em>Absolute and Relative Error</em> (definitions) / Section <em>Floating-Point Representation</em> (the modern, computer-era version of “finite digits”).</p></li>
+</ol>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Optional: code to verify
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-3" class="callout-3-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> decimal <span class="im">import</span> Decimal, getcontext</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>getcontext().prec <span class="op">=</span> <span class="dv">30</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># YBC 7289 records sqrt(2) as 1; 24, 51, 10  (sexagesimal, base 60)</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>ybc <span class="op">=</span> Decimal(<span class="dv">1</span>) <span class="op">+</span> Decimal(<span class="dv">24</span>)<span class="op">/</span><span class="dv">60</span> <span class="op">+</span> Decimal(<span class="dv">51</span>)<span class="op">/</span>(<span class="dv">60</span><span class="op">**</span><span class="dv">2</span>) <span class="op">+</span> Decimal(<span class="dv">10</span>)<span class="op">/</span>(<span class="dv">60</span><span class="op">**</span><span class="dv">3</span>)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>true_sqrt2 <span class="op">=</span> Decimal(<span class="dv">2</span>).sqrt()</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"YBC value : </span><span class="sc">{</span>ybc<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"true  sqrt(2): </span><span class="sc">{</span>true_sqrt2<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"abs err   : </span><span class="sc">{</span><span class="bu">abs</span>(true_sqrt2 <span class="op">-</span> ybc)<span class="sc">:.3e}</span><span class="ss">"</span>)</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"rel err   : </span><span class="sc">{</span><span class="bu">abs</span>(true_sqrt2 <span class="op">-</span> ybc) <span class="op">/</span> true_sqrt2<span class="sc">:.3e}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</section>
+<section id="floating-point-numbers-and-errors" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="floating-point-numbers-and-errors"><span class="header-section-number">2</span> Floating-Point Numbers and Errors</h2>
+<section id="floating-point-representation" class="level3" data-number="2.1">
+<h3 data-number="2.1" class="anchored" data-anchor-id="floating-point-representation"><span class="header-section-number">2.1</span> Floating-Point Representation</h3>
+<p>A real number can be represented as:</p>
+<p><span class="math display">\[
+\pm \left(\frac{d_0}{\beta^0} + \frac{d_1}{\beta^1} + \frac{d_2}{\beta^2} + \cdots\right)\cdot \beta^{e}
+\]</span></p>
+<p>where <span class="math inline">\(\beta \geq 2\)</span> is the <strong>base</strong>, <span class="math inline">\(0 \leq d_i \leq \beta - 1\)</span> are <strong>digits</strong>, and <span class="math inline">\(e\)</span> is the <strong>exponent</strong>.</p>
+<p><strong>Example.</strong> <span class="math inline">\(7.375\)</span> in base 10 and base 2:</p>
+<p><span class="math display">\[
+7.375 = + \left(\frac{7}{10^0} + \frac{3}{10^1} + \frac{7}{10^2} + \frac{5}{10^3}\right)\cdot 10^{0} \quad (\beta = 10)
+\]</span></p>
+<p><span class="math display">\[
+7.375 = + \left(\frac{1}{2^0} + \frac{1}{2^1} + \frac{1}{2^2} + \frac{0}{2^3} + \frac{1}{2^4} + \frac{1}{2^5}\right)\cdot 2^{2} \quad (\beta = 2)
+\]</span></p>
+<p><strong>Key observation.</strong> Some numbers are finite in one base but infinite in another:</p>
+<p><span class="math display">\[
+0.2 = +\left(\frac{2}{10^0}\right)\cdot 10^{-1} \quad (\beta=10) \quad\text{[finite]}
+\]</span></p>
+<p><span class="math display">\[
+0.2 = +\left(\frac{1}{2^0} + \frac{1}{2^1} + \frac{0}{2^2} + \frac{0}{2^3} + \frac{1}{2^4} + \frac{1}{2^5} + \cdots\right)\cdot 2^{-3} \quad (\beta=2) \quad\textbf{[infinite!]}
+\]</span></p>
+<blockquote class="blockquote">
+<p><strong>Consequence:</strong> Computers store only a finite number of bits, so most real numbers are stored as <em>approximations</em>. This is the root cause of all floating-point errors.</p>
+</blockquote>
+<hr>
+</section>
+<section id="verifying-in-python" class="level3" data-number="2.2">
+<h3 data-number="2.2" class="anchored" data-anchor-id="verifying-in-python"><span class="header-section-number">2.2</span> Verifying in Python</h3>
+<div id="0b058511" class="cell" data-execution_count="1">
+<details class="code-fold">
+<summary>Helper: to_binary_scientific(f)</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> struct</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> to_binary_scientific(f):</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Display f as  1.xxxx...₂ × 2^e  (normalized IEEE 754 form)."""</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    bits <span class="op">=</span> struct.pack(<span class="st">'&gt;d'</span>, f)</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    b <span class="op">=</span> <span class="bu">int</span>.from_bytes(bits, <span class="st">'big'</span>)</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    exp_biased <span class="op">=</span> (b <span class="op">&gt;&gt;</span> <span class="dv">52</span>) <span class="op">&amp;</span> <span class="bn">0x7FF</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    mantissa_bits <span class="op">=</span> <span class="ss">f"</span><span class="sc">{</span>b <span class="op">&amp;</span> ((<span class="dv">1</span> <span class="op">&lt;&lt;</span> <span class="dv">52</span>) <span class="op">-</span> <span class="dv">1</span>)<span class="sc">:052b}</span><span class="ss">"</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    e <span class="op">=</span> exp_biased <span class="op">-</span> <span class="dv">1023</span>          <span class="co"># true exponent</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    frac <span class="op">=</span> mantissa_bits.rstrip(<span class="st">'0'</span>)   <span class="co"># drop trailing zeros</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="kw">not</span> frac:</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>        frac_str <span class="op">=</span> <span class="st">""</span>              <span class="co"># exactly 1.0 × 2^e</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> <span class="bu">len</span>(mantissa_bits.rstrip(<span class="st">'0'</span>)) <span class="op">&lt;</span> <span class="dv">52</span>:</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>        frac_str <span class="op">=</span> frac            <span class="co"># finite — shows all significant bits</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>        frac_str <span class="op">=</span> mantissa_bits[:<span class="dv">24</span>] <span class="op">+</span> <span class="st">"..."</span>   <span class="co"># infinite — show pattern</span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>    mantissa_str <span class="op">=</span> <span class="ss">f"1.</span><span class="sc">{</span>frac_str<span class="sc">}</span><span class="ss">"</span> <span class="cf">if</span> frac_str <span class="cf">else</span> <span class="st">"1"</span></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="ss">f"</span><span class="sc">{</span>mantissa_str<span class="sc">}</span><span class="ss">₂ × 2^</span><span class="sc">{</span>e<span class="sc">}</span><span class="ss">"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<div id="9cbe7c4a" class="cell" data-execution_count="2">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> v <span class="kw">in</span> [<span class="fl">1.25</span>, <span class="fl">7.375</span>, <span class="fl">0.2</span>]:</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"  </span><span class="sc">{</span>v<span class="sc">:6}</span><span class="ss">  =  </span><span class="sc">{</span>to_binary_scientific(v)<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    1.25  =  1.01₂ × 2^0
+   7.375  =  1.11011₂ × 2^2
+     0.2  =  1.100110011001100110011001100110011001100110011001101₂ × 2^-3</code></pre>
+</div>
+</div>
+<hr>
+</section>
+<section id="examples-of-floating-point-errors" class="level3" data-number="2.3">
+<h3 data-number="2.3" class="anchored" data-anchor-id="examples-of-floating-point-errors"><span class="header-section-number">2.3</span> Examples of Floating-Point Errors</h3>
+<p><strong>Example 1: Small numbers ignored</strong></p>
+<p><span class="math display">\[10^{40} + 500 - 10^{40} = \;?\]</span></p>
+<p>The 500 “disappears” because it is negligible relative to <span class="math inline">\(10^{40}\)</span> in floating point.</p>
+<p><strong>Example 2: Rounding error</strong></p>
+<p><span class="math display">\[8.3 - 8 = \;?\]</span></p>
+<p>The result is <em>not</em> exactly <span class="math inline">\(0.3\)</span> — see the Excel screenshot in the slides.</p>
+<div id="8a58ee6b" class="cell" data-execution_count="3">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Try it in Python</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"10**40 + 500 - 10**40 = </span><span class="sc">{</span><span class="dv">10</span><span class="op">**</span><span class="dv">40</span> <span class="op">+</span> <span class="dv">500</span> <span class="op">-</span> <span class="dv">10</span><span class="op">**</span><span class="dv">40</span><span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"8.3 - 8 = </span><span class="sc">{</span><span class="fl">8.3</span> <span class="op">-</span> <span class="dv">8</span><span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"8.3 - 8 == 0.3? </span><span class="sc">{</span><span class="fl">8.3</span> <span class="op">-</span> <span class="dv">8</span> <span class="op">==</span> <span class="fl">0.3</span><span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"8.3 - 8 - 0.3   = </span><span class="sc">{</span><span class="fl">8.3</span> <span class="op">-</span> <span class="dv">8</span> <span class="op">-</span> <span class="fl">0.3</span><span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>10**40 + 500 - 10**40 = 500
+8.3 - 8 = 0.3000000000000007
+8.3 - 8 == 0.3? False
+8.3 - 8 - 0.3   = 7.216449660063518e-16</code></pre>
+</div>
+</div>
+<hr>
+</section>
+<section id="quiz-what-is-the-value-of-x" class="level3" data-number="2.4">
+<h3 data-number="2.4" class="anchored" data-anchor-id="quiz-what-is-the-value-of-x"><span class="header-section-number">2.4</span> Quiz: What is the value of x?</h3>
+<div id="f416fbe8" class="cell" data-execution_count="4">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> math</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> <span class="dv">100</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">60</span>):</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> math.sqrt(x)</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">60</span>):</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> x <span class="op">**</span> <span class="dv">2</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Result: x = </span><span class="sc">{</span>x<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Expected: 100"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Result: x = 1.0
+Expected: 100</code></pre>
+</div>
+</div>
+<blockquote class="blockquote">
+<p><strong>Q:</strong> Why does this happen? What does the result tell us about floating-point arithmetic?</p>
+</blockquote>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Your answer
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><em>(Explain what is happening in your own words.)</em></p>
+</div>
+</div>
+<hr>
+</section>
+</section>
+<section id="absolute-and-relative-error" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="absolute-and-relative-error"><span class="header-section-number">3</span> Absolute and Relative Error</h2>
+<section id="definitions" class="level3" data-number="3.1">
+<h3 data-number="3.1" class="anchored" data-anchor-id="definitions"><span class="header-section-number">3.1</span> Definitions</h3>
+<p>Let <span class="math inline">\(x\)</span> be the <strong>true value</strong> and <span class="math inline">\(\hat{x}\)</span> be its <strong>approximation</strong>.</p>
+<p><span class="math display">\[
+\text{Absolute Error} = |x - \hat{x}|
+\]</span></p>
+<p><span class="math display">\[
+\text{Relative Error} = \left|\frac{x - \hat{x}}{x}\right| \quad (x \neq 0) \quad \approx \left|\frac{x - \hat{x}}{\hat{x}}\right|
+\]</span></p>
+<p><strong>Applied to the examples:</strong></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Subject</th>
+<th>Absolute Error</th>
+<th>Relative Error</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>🦖 Dinosaur</td>
+<td><span class="math inline">\(\|67{,}100{,}000 - 67{,}000{,}000\| = 100{,}000\)</span></td>
+<td><span class="math inline">\(\frac{100{,}000}{67{,}000{,}000} \approx 0.00149\)</span></td>
+</tr>
+<tr class="even">
+<td>🧑 Person</td>
+<td><span class="math inline">\(\|100{,}037 - 37\| = 100{,}000\)</span></td>
+<td><span class="math inline">\(\frac{100{,}000}{37} \approx 2702\)</span></td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+<section id="error-propagation" class="level3" data-number="3.2">
+<h3 data-number="3.2" class="anchored" data-anchor-id="error-propagation"><span class="header-section-number">3.2</span> Error Propagation</h3>
+<p><strong>Setup.</strong> Let <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span> be true values, and <span class="math inline">\(\hat{x}\)</span>, <span class="math inline">\(\hat{y}\)</span> their approximations. Define the errors:</p>
+<p><span class="math display">\[
+e_x := x - \hat{x}, \qquad e_y := y - \hat{y}
+\]</span></p>
+<p>so that <span class="math inline">\(x = \hat{x} + e_x\)</span> and <span class="math inline">\(y = \hat{y} + e_y\)</span>.</p>
+<section id="addition-subtraction" class="level4" data-number="3.2.1">
+<h4 data-number="3.2.1" class="anchored" data-anchor-id="addition-subtraction"><span class="header-section-number">3.2.1</span> Addition / Subtraction</h4>
+<div class="callout callout-style-default callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Proposition
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The <strong>absolute error bound</strong> for <span class="math inline">\(x + y\)</span> (or <span class="math inline">\(x - y\)</span>) is given by the <strong>sum of absolute errors</strong> of <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span>:</p>
+<p><span class="math display">\[
+\bigl|(x+y) - (\hat{x}+\hat{y})\bigr| \leq |e_x| + |e_y|
+\]</span></p>
+</div>
+</div>
+<p><strong>Proof.</strong></p>
+<p><span class="math display">\[
+(x + y) - (\hat{x} + \hat{y})
+= (x - \hat{x}) + (y - \hat{y})
+= e_x + e_y
+\]</span></p>
+<p>By the triangle inequality:</p>
+<p><span class="math display">\[
+|e_x + e_y| \leq |e_x| + |e_y|
+\]</span></p>
+</section>
+<section id="multiplication-division" class="level4" data-number="3.2.2">
+<h4 data-number="3.2.2" class="anchored" data-anchor-id="multiplication-division"><span class="header-section-number">3.2.2</span> Multiplication / Division</h4>
+<div class="callout callout-style-default callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Proposition
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Assuming <span class="math inline">\(|e_x|, |e_y|\)</span> are sufficiently small (so that <span class="math inline">\(e_x e_y \ll |e_x|, |e_y|\)</span>), the <strong>relative error bound</strong> for <span class="math inline">\(x \cdot y\)</span> (or <span class="math inline">\(x/y\)</span>, <span class="math inline">\(y \neq 0\)</span>) is given approximately by the <strong>sum of relative errors</strong> of <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span>:</p>
+<p><span class="math display">\[
+\frac{|xy - \hat{x}\hat{y}|}{|xy|}
+\approx \left|\frac{e_x}{x}\right| + \left|\frac{e_y}{y}\right|
+\]</span></p>
+</div>
+</div>
+<p><strong>Proof.</strong></p>
+<p><span class="math display">\[
+xy - \hat{x}\hat{y}
+= (\hat{x} + e_x)(\hat{y} + e_y) - \hat{x}\hat{y}
+= \hat{x}e_y + \hat{y}e_x + e_xe_y
+\]</span></p>
+<p>So the relative error of the product is:</p>
+<p><span class="math display">\[
+\frac{|xy - \hat{x}\hat{y}|}{|xy|}
+= \frac{|\hat{x}e_y + \hat{y}e_x + e_xe_y|}{|xy|}
+\]</span></p>
+<p>When the errors <span class="math inline">\(e_x, e_y\)</span> are small, the cross term <span class="math inline">\(e_x e_y\)</span> is negligible (<span class="math inline">\(e_xe_y \ll e_x, e_y\)</span>), and <span class="math inline">\(\hat{x} \approx x\)</span>, <span class="math inline">\(\hat{y} \approx y\)</span>, so:</p>
+<p><span class="math display">\[
+\approx \frac{|xe_y + ye_x|}{|xy|}
+\leq \frac{|x|\,|e_y| + |y|\,|e_x|}{|xy|}
+= \left|\frac{e_x}{x}\right| + \left|\frac{e_y}{y}\right|
+\]</span></p>
+<hr>
+</section>
+</section>
+</section>
+<section id="loss-of-significant-digits-cancellation" class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="loss-of-significant-digits-cancellation"><span class="header-section-number">4</span> Loss of Significant Digits (Cancellation)</h2>
+<blockquote class="blockquote">
+<p>⚠️ <strong>Be careful when subtracting two values that are close to each other.</strong></p>
+</blockquote>
+<p>Relative error in subtraction:</p>
+<p><span class="math display">\[
+E := \left|\frac{(x - y) - (\hat{x} - \hat{y})}{x - y}\right|
+= \left|\frac{x}{x-y}\cdot \frac{e_x}{x} + \frac{y}{x-y}\cdot \frac{e_y}{y}\right|
+\]</span></p>
+<p>If <span class="math inline">\(|x - y| \ll |x|\)</span> and <span class="math inline">\(|x - y| \ll |y|\)</span>, the factors <span class="math inline">\(\frac{x}{x-y}\)</span> and <span class="math inline">\(\frac{y}{x-y}\)</span> become huge → <strong><span class="math inline">\(E\)</span> can be very large</strong>.</p>
+<section id="worked-example-sqrt1001---sqrt999" class="level3" data-number="4.1">
+<h3 data-number="4.1" class="anchored" data-anchor-id="worked-example-sqrt1001---sqrt999"><span class="header-section-number">4.1</span> Worked Example: <span class="math inline">\(\sqrt{1001} - \sqrt{999}\)</span></h3>
+<p><strong>Naive (7 significant digits):</strong></p>
+<p><span class="math display">\[\sqrt{1001} \approx 31.63858, \quad \sqrt{999} \approx 31.60696\]</span></p>
+<p><span class="math display">\[\sqrt{1001} - \sqrt{999} \approx 0.03162 \quad \text{(only ~4 significant digits)}\]</span></p>
+<p><strong>Improved (rationalize the numerator):</strong></p>
+<p><span class="math display">\[\sqrt{1001} - \sqrt{999}
+= \frac{(\sqrt{1001} - \sqrt{999})(\sqrt{1001} + \sqrt{999})}{\sqrt{1001} + \sqrt{999}}
+= \frac{2}{\sqrt{1001} + \sqrt{999}}\]</span></p>
+<div id="083c224c" class="cell" data-execution_count="5">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co"># float32 has ~7 significant decimal digits.</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Use a = 10^6 + 1, b = 10^6 - 1  (√values ≈ 10^3 → share ~4 leading digits)</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="co"># → naive subtraction loses ~4 significant digits out of 7.</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>a32, b32 <span class="op">=</span> np.float32(<span class="dv">10</span><span class="op">**</span><span class="dv">6</span> <span class="op">+</span> <span class="dv">1</span>), np.float32(<span class="dv">10</span><span class="op">**</span><span class="dv">6</span> <span class="op">-</span> <span class="dv">1</span>)</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>a64, b64 <span class="op">=</span> np.float64(<span class="dv">10</span><span class="op">**</span><span class="dv">6</span> <span class="op">+</span> <span class="dv">1</span>), np.float64(<span class="dv">10</span><span class="op">**</span><span class="dv">6</span> <span class="op">-</span> <span class="dv">1</span>)</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>naive32    <span class="op">=</span> np.sqrt(a32) <span class="op">-</span> np.sqrt(b32)</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>improved32 <span class="op">=</span> (a32 <span class="op">-</span> b32) <span class="op">/</span> (np.sqrt(a32) <span class="op">+</span> np.sqrt(b32))    <span class="co"># = 2 / (√a + √b)</span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>ref64      <span class="op">=</span> np.sqrt(a64) <span class="op">-</span> np.sqrt(b64)                    <span class="co"># treat as "true" value</span></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"a = </span><span class="sc">{</span><span class="bu">int</span>(a32)<span class="sc">}</span><span class="ss">,  b = </span><span class="sc">{</span><span class="bu">int</span>(b32)<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>()</span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"√a − √b        =  </span><span class="sc">{</span>naive32<span class="sc">:.8e}</span><span class="ss">    (naive,    float32)"</span>)</span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"2 / (√a + √b)  =  </span><span class="sc">{</span>improved32<span class="sc">:.8e}</span><span class="ss">    (improved, float32)"</span>)</span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"√a − √b        =  </span><span class="sc">{</span>ref64<span class="sc">:.16e}</span><span class="ss">   (reference, float64)"</span>)</span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>()</span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Error (naive):    </span><span class="sc">{</span><span class="bu">abs</span>(ref64 <span class="op">-</span> <span class="bu">float</span>(naive32))<span class="sc">:.2e}</span><span class="ss">"</span>)</span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Error (improved): </span><span class="sc">{</span><span class="bu">abs</span>(ref64 <span class="op">-</span> <span class="bu">float</span>(improved32))<span class="sc">:.2e}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>a = 1000001,  b = 999999
+
+√a − √b        =  9.76562500e-04    (naive,    float32)
+2 / (√a + √b)  =  1.00000005e-03    (improved, float32)
+√a − √b        =  1.0000000000900400e-03   (reference, float64)
+
+Error (naive):    2.34e-05
+Error (improved): 4.74e-11</code></pre>
+</div>
+</div>
+<hr>
+</section>
+</section>
+<section id="appendix-interval-arithmetic-for-your-information" class="level2" data-number="5">
+<h2 data-number="5" class="anchored" data-anchor-id="appendix-interval-arithmetic-for-your-information"><span class="header-section-number">5</span> Appendix: Interval Arithmetic <em>(for your information)</em></h2>
+<p>Instead of a single approximate number, <strong>interval arithmetic tracks an interval guaranteed to contain the true value</strong>.</p>
+<p><span class="math display">\[\pi \in [3.14,\, 3.15], \quad \sqrt{2} \in [1.41,\, 1.42]
+\quad\Longrightarrow\quad
+\pi + \sqrt{2} \in [4.55,\, 4.57]\]</span></p>
+<ul>
+<li><strong>Lower bound</strong>: computed with <strong>round-down</strong></li>
+<li><strong>Upper bound</strong>: computed with <strong>round-up</strong></li>
+</ul>
+<div id="c05c6ccc" class="cell" data-execution_count="6">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Requires:  pip install mpmath</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="co"># mpmath.iv provides rigorous interval arithmetic with directed rounding,</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="co"># so the resulting interval is *guaranteed* to contain the true value.</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> mpmath <span class="im">import</span> iv</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>iv.dps <span class="op">=</span> <span class="dv">10</span>   <span class="co"># decimal precision (controls bound width)</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>pi_iv  <span class="op">=</span> iv.pi</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>sq2_iv <span class="op">=</span> iv.sqrt(<span class="dv">2</span>)</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>sum_iv <span class="op">=</span> pi_iv <span class="op">+</span> sq2_iv</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"π      ∈ </span><span class="sc">{</span>pi_iv<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"√2     ∈ </span><span class="sc">{</span>sq2_iv<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"π + √2 ∈ </span><span class="sc">{</span>sum_iv<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>π      ∈ [3.14159265358467, 3.14159265361377]
+√2     ∈ [1.4142135623697, 1.41421356238425]
+π + √2 ∈ [4.55580621591071, 4.55580621602712]</code></pre>
+</div>
+</div>
+<hr>
+</section>
+<section id="summary" class="level2" data-number="6">
+<h2 data-number="6" class="anchored" data-anchor-id="summary"><span class="header-section-number">6</span> Summary</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Concept</th>
+<th>Key formula</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Absolute error</td>
+<td><span class="math inline">\(\|x - \hat{x}\|\)</span></td>
+</tr>
+<tr class="even">
+<td>Relative error</td>
+<td><span class="math inline">\(\left\|\frac{x - \hat{x}}{x}\right\|\)</span></td>
+</tr>
+<tr class="odd">
+<td>Error in addition</td>
+<td><span class="math inline">\(\leq \|e_x\| + \|e_y\|\)</span> (absolute)</td>
+</tr>
+<tr class="even">
+<td>Error in multiplication</td>
+<td><span class="math inline">\(\approx \left\|\frac{e_x}{x}\right\| + \left\|\frac{e_y}{y}\right\|\)</span> (relative)</td>
+</tr>
+<tr class="odd">
+<td>Cancellation</td>
+<td>Occurs when subtracting two close values</td>
+</tr>
+</tbody>
+</table>
+<!-- -->
+
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+    const viewSource = window.document.getElementById('quarto-view-source') ||
+                       window.document.getElementById('quarto-code-tools-source');
+    if (viewSource) {
+      const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+      viewSource.addEventListener("click", function(e) {
+        if (sourceUrl) {
+          // rstudio viewer pane
+          if (/\bcapabilities=\b/.test(window.location)) {
+            window.open(sourceUrl);
+          } else {
+            window.location.href = sourceUrl;
+          }
+        } else {
+          const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+          modal.show();
+        }
+        return false;
+      });
+    }
+    function toggleCodeHandler(show) {
+      return function(e) {
+        const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+        for (let i=0; i<detailsSrc.length; i++) {
+          const details = detailsSrc[i].parentElement;
+          if (show) {
+            details.open = true;
+          } else {
+            details.removeAttribute("open");
+          }
+        }
+        const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+        const fromCls = show ? "hidden" : "unhidden";
+        const toCls = show ? "unhidden" : "hidden";
+        for (let i=0; i<cellCodeDivs.length; i++) {
+          const codeDiv = cellCodeDivs[i];
+          if (codeDiv.classList.contains(fromCls)) {
+            codeDiv.classList.remove(fromCls);
+            codeDiv.classList.add(toCls);
+          } 
+        }
+        return false;
+      }
+    }
+    const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+    if (hideAllCode) {
+      hideAllCode.addEventListener("click", toggleCodeHandler(false));
+    }
+    const showAllCode = window.document.getElementById("quarto-show-all-code");
+    if (showAllCode) {
+      showAllCode.addEventListener("click", toggleCodeHandler(true));
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Lecture 2 — Errors in Numerical Computation"</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="an">subtitle:</span><span class="co"> "Handout: Foundations of and Exercises in Numerical Analysis"</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="an">date:</span><span class="co"> today</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="co">  html:</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="co">    toc: true</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a><span class="co">    toc-depth: 3</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a><span class="co">    toc-title: "Contents"</span></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a><span class="co">    number-sections: true</span></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a><span class="co">    html-math-method: mathjax</span></span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a><span class="co">    theme: cosmo</span></span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a><span class="co">    code-fold: false</span></span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a><span class="co">    code-tools: true</span></span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a><span class="co">    highlight-style: github</span></span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a><span class="an">execute:</span></span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a><span class="co">  echo: true</span></span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a><span class="co">  eval: true</span></span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a>::: {.callout-tip collapse="true"}</span>
+<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a><span class="fu">## How to use this handout — Evolving Study Notes with an AI Tutor</span></span>
+<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a>This handout is designed to **grow with you**. Whenever a line confuses you,</span>
+<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a>ask the AI tutor (e.g. **GitHub Copilot Chat** in VS Code) and it will</span>
+<span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a>insert a **Q&amp;A block** directly into this file, exactly where the</span>
+<span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a>question lives. Over the semester, your copy of this handout becomes</span>
+<span id="cb15-28"><a href="#cb15-28" aria-hidden="true" tabindex="-1"></a>*your own annotated textbook*.</span>
+<span id="cb15-29"><a href="#cb15-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-30"><a href="#cb15-30" aria-hidden="true" tabindex="-1"></a>**The 30-second workflow**</span>
+<span id="cb15-31"><a href="#cb15-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-32"><a href="#cb15-32" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>Open this file in VS Code with GitHub Copilot installed.</span>
+<span id="cb15-33"><a href="#cb15-33" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>Find a line you don't understand.</span>
+<span id="cb15-34"><a href="#cb15-34" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>Open Copilot Chat and paste:</span>
+<span id="cb15-35"><a href="#cb15-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-36"><a href="#cb15-36" aria-hidden="true" tabindex="-1"></a>    <span class="in">```</span></span>
+<span id="cb15-37"><a href="#cb15-37" aria-hidden="true" tabindex="-1"></a><span class="in">    @workspace Read AI_TUTOR.md and 2nd-handout.qmd.</span></span>
+<span id="cb15-38"><a href="#cb15-38" aria-hidden="true" tabindex="-1"></a><span class="in">    I don't understand this line:</span></span>
+<span id="cb15-39"><a href="#cb15-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-40"><a href="#cb15-40" aria-hidden="true" tabindex="-1"></a><span class="in">    &gt; "&lt;paste the line you're stuck on&gt;"</span></span>
+<span id="cb15-41"><a href="#cb15-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-42"><a href="#cb15-42" aria-hidden="true" tabindex="-1"></a><span class="in">    Please add a Q&amp;A block following AI_TUTOR.md rules.</span></span>
+<span id="cb15-43"><a href="#cb15-43" aria-hidden="true" tabindex="-1"></a><span class="in">    ```</span></span>
+<span id="cb15-44"><a href="#cb15-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-45"><a href="#cb15-45" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span>Re-render: <span class="in">`quarto render 2nd-handout.qmd`</span> — your question and its</span>
+<span id="cb15-46"><a href="#cb15-46" aria-hidden="true" tabindex="-1"></a>   answer are now part of the handout (collapsed by default; click to expand).</span>
+<span id="cb15-47"><a href="#cb15-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-48"><a href="#cb15-48" aria-hidden="true" tabindex="-1"></a>See <span class="co">[</span><span class="ot">`AI_TUTOR.md`</span><span class="co">](../../../AI_TUTOR.md)</span> at the repo root for the full</span>
+<span id="cb15-49"><a href="#cb15-49" aria-hidden="true" tabindex="-1"></a>rule set the AI follows, and for more prompt templates (follow-ups,</span>
+<span id="cb15-50"><a href="#cb15-50" aria-hidden="true" tabindex="-1"></a>concept questions, Q&amp;A index).</span>
+<span id="cb15-51"><a href="#cb15-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-52"><a href="#cb15-52" aria-hidden="true" tabindex="-1"></a>**What does an inserted Q&amp;A block look like?** <span class="dv">&amp;nbsp;</span>See the sample at</span>
+<span id="cb15-53"><a href="#cb15-53" aria-hidden="true" tabindex="-1"></a><span class="co">[</span><span class="ot">Q&amp;A *(Example)* — What does "~1800 BCE" actually refer to?</span><span class="co">](#qa-example-ybc)</span>,</span>
+<span id="cb15-54"><a href="#cb15-54" aria-hidden="true" tabindex="-1"></a>appended to the end of the *Background* section below.</span>
+<span id="cb15-55"><a href="#cb15-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-56"><a href="#cb15-56" aria-hidden="true" tabindex="-1"></a>You can of course also edit this file by hand, run/modify the code cells,</span>
+<span id="cb15-57"><a href="#cb15-57" aria-hidden="true" tabindex="-1"></a>and add freeform notes anywhere — the AI Q&amp;A workflow is **one option,</span>
+<span id="cb15-58"><a href="#cb15-58" aria-hidden="true" tabindex="-1"></a>not a requirement**.</span>
+<span id="cb15-59"><a href="#cb15-59" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb15-60"><a href="#cb15-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-61"><a href="#cb15-61" aria-hidden="true" tabindex="-1"></a>::: {.callout-tip collapse="true"}</span>
+<span id="cb15-62"><a href="#cb15-62" aria-hidden="true" tabindex="-1"></a><span class="fu">## First time? Install the required packages</span></span>
+<span id="cb15-63"><a href="#cb15-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-64"><a href="#cb15-64" aria-hidden="true" tabindex="-1"></a>The code cells in this handout depend on <span class="in">`mpmath`</span>, <span class="in">`numpy`</span>, etc.</span>
+<span id="cb15-65"><a href="#cb15-65" aria-hidden="true" tabindex="-1"></a>From the <span class="in">`materials/`</span> folder, run **once**:</span>
+<span id="cb15-66"><a href="#cb15-66" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-67"><a href="#cb15-67" aria-hidden="true" tabindex="-1"></a><span class="in">```bash</span></span>
+<span id="cb15-68"><a href="#cb15-68" aria-hidden="true" tabindex="-1"></a><span class="co"># Recommended: use a virtual environment (keeps your system Python clean)</span></span>
+<span id="cb15-69"><a href="#cb15-69" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> <span class="at">-m</span> venv .venv</span>
+<span id="cb15-70"><a href="#cb15-70" aria-hidden="true" tabindex="-1"></a><span class="bu">source</span> .venv/bin/activate          <span class="co"># Windows: .venv\Scripts\activate</span></span>
+<span id="cb15-71"><a href="#cb15-71" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install <span class="at">-r</span> requirements.txt</span>
+<span id="cb15-72"><a href="#cb15-72" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-73"><a href="#cb15-73" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-74"><a href="#cb15-74" aria-hidden="true" tabindex="-1"></a>If you'd rather skip the virtual environment for now, just run</span>
+<span id="cb15-75"><a href="#cb15-75" aria-hidden="true" tabindex="-1"></a><span class="in">`pip install -r requirements.txt`</span> directly — but a venv is the standard</span>
+<span id="cb15-76"><a href="#cb15-76" aria-hidden="true" tabindex="-1"></a>Python practice and avoids version conflicts later.</span>
+<span id="cb15-77"><a href="#cb15-77" aria-hidden="true" tabindex="-1"></a>See <span class="co">[</span><span class="ot">README.md</span><span class="co">](../../../README.md#setup-one-time)</span> for details.</span>
+<span id="cb15-78"><a href="#cb15-78" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb15-79"><a href="#cb15-79" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-80"><a href="#cb15-80" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb15-81"><a href="#cb15-81" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-82"><a href="#cb15-82" aria-hidden="true" tabindex="-1"></a><span class="fu">## Background: What is Numerical Analysis?</span></span>
+<span id="cb15-83"><a href="#cb15-83" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-84"><a href="#cb15-84" aria-hidden="true" tabindex="-1"></a>Numerical analysis is a branch of mathematics concerned with designing **algorithms for solving mathematical problems that cannot be solved analytically**.</span>
+<span id="cb15-85"><a href="#cb15-85" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-86"><a href="#cb15-86" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Deep historical roots** — dating back to ~1800 BCE</span>
+<span id="cb15-87"><a href="#cb15-87" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Wide applications** — natural sciences, engineering, social sciences</span>
+<span id="cb15-88"><a href="#cb15-88" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Computer-driven** — modern numerical analysis relies on computers for practical computation</span>
+<span id="cb15-89"><a href="#cb15-89" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-90"><a href="#cb15-90" aria-hidden="true" tabindex="-1"></a>The central challenge: computers can only handle **finite digits**, so real numbers are always *approximated*.</span>
+<span id="cb15-91"><a href="#cb15-91" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-92"><a href="#cb15-92" aria-hidden="true" tabindex="-1"></a>::: {#qa-example-ybc .callout-tip collapse="true"}</span>
+<span id="cb15-93"><a href="#cb15-93" aria-hidden="true" tabindex="-1"></a><span class="fu">## Q&amp;A *(Example)* — What does "~1800 BCE" actually refer to?</span></span>
+<span id="cb15-94"><a href="#cb15-94" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-95"><a href="#cb15-95" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; **This is a sample Q&amp;A block written by the instructor**, included so you</span></span>
+<span id="cb15-96"><a href="#cb15-96" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; (and the AI) can see the expected format. Your own Q&amp;A blocks, generated</span></span>
+<span id="cb15-97"><a href="#cb15-97" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; via Copilot following </span><span class="co">[</span><span class="ot">`AI_TUTOR.md`</span><span class="co">](../../../AI_TUTOR.md)</span><span class="at">, will look</span></span>
+<span id="cb15-98"><a href="#cb15-98" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; just like this and be appended at the end of the relevant subsection.</span></span>
+<span id="cb15-99"><a href="#cb15-99" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-100"><a href="#cb15-100" aria-hidden="true" tabindex="-1"></a>**Date:** 2026-04-24  </span>
+<span id="cb15-101"><a href="#cb15-101" aria-hidden="true" tabindex="-1"></a>**Anchor:** Background: What is Numerical Analysis? — "dating back to ~1800 BCE"</span>
+<span id="cb15-102"><a href="#cb15-102" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-103"><a href="#cb15-103" aria-hidden="true" tabindex="-1"></a>**Question.**  </span>
+<span id="cb15-104"><a href="#cb15-104" aria-hidden="true" tabindex="-1"></a>The handout says *"Deep historical roots — dating back to ~1800 BCE."*</span>
+<span id="cb15-105"><a href="#cb15-105" aria-hidden="true" tabindex="-1"></a>What **concretely** existed around 1800 BCE? Was there really anything</span>
+<span id="cb15-106"><a href="#cb15-106" aria-hidden="true" tabindex="-1"></a>deserving the name "numerical analysis" that long ago?</span>
+<span id="cb15-107"><a href="#cb15-107" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-108"><a href="#cb15-108" aria-hidden="true" tabindex="-1"></a>**Answer.**</span>
+<span id="cb15-109"><a href="#cb15-109" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-110"><a href="#cb15-110" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>**TL;DR** — A Babylonian (Mesopotamian) clay tablet known as</span>
+<span id="cb15-111"><a href="#cb15-111" aria-hidden="true" tabindex="-1"></a>   **YBC 7289** (ca. 1800–1600 BCE) records an **approximation of $\sqrt{2}$**.</span>
+<span id="cb15-112"><a href="#cb15-112" aria-hidden="true" tabindex="-1"></a>   It is one of the oldest surviving examples of what we today call</span>
+<span id="cb15-113"><a href="#cb15-113" aria-hidden="true" tabindex="-1"></a>   **numerical approximation**.</span>
+<span id="cb15-114"><a href="#cb15-114" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-115"><a href="#cb15-115" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>**Why / How** — On YBC 7289, $\sqrt{2}$ is written in **base 60** as</span>
+<span id="cb15-116"><a href="#cb15-116" aria-hidden="true" tabindex="-1"></a>   $$</span>
+<span id="cb15-117"><a href="#cb15-117" aria-hidden="true" tabindex="-1"></a>   1;\ 24,\ 51,\ 10 \;=\; 1 + \frac{24}{60} + \frac{51}{60^{2}} + \frac{10}{60^{3}}</span>
+<span id="cb15-118"><a href="#cb15-118" aria-hidden="true" tabindex="-1"></a>   \;\approx\; 1.41421296\ldots</span>
+<span id="cb15-119"><a href="#cb15-119" aria-hidden="true" tabindex="-1"></a>   $$</span>
+<span id="cb15-120"><a href="#cb15-120" aria-hidden="true" tabindex="-1"></a>   The true value is $\sqrt{2} = 1.41421356\ldots$, so the **absolute</span>
+<span id="cb15-121"><a href="#cb15-121" aria-hidden="true" tabindex="-1"></a>   error is about $6\times 10^{-7}$**, and the **relative error is also</span>
+<span id="cb15-122"><a href="#cb15-122" aria-hidden="true" tabindex="-1"></a>   about $4\times 10^{-7}$**. Achieving this precision **by hand**, with</span>
+<span id="cb15-123"><a href="#cb15-123" aria-hidden="true" tabindex="-1"></a>   no calculators or computers, is remarkable.</span>
+<span id="cb15-124"><a href="#cb15-124" aria-hidden="true" tabindex="-1"></a><span class="ss">   - </span>In other words, **"numerical analysis"** is the craft of</span>
+<span id="cb15-125"><a href="#cb15-125" aria-hidden="true" tabindex="-1"></a>     *representing numbers with finite digits and using them effectively* —</span>
+<span id="cb15-126"><a href="#cb15-126" aria-hidden="true" tabindex="-1"></a>     and its history is far older than computers.</span>
+<span id="cb15-127"><a href="#cb15-127" aria-hidden="true" tabindex="-1"></a><span class="ss">   - </span>The tablet is now held by the **Yale Babylonian Collection** (Yale</span>
+<span id="cb15-128"><a href="#cb15-128" aria-hidden="true" tabindex="-1"></a>     University) and is referenced under its catalog name **YBC 7289**.</span>
+<span id="cb15-129"><a href="#cb15-129" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-130"><a href="#cb15-130" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>**See also** — <span class="co">[</span><span class="ot">YBC 7289 — Wikipedia</span><span class="co">](https://en.wikipedia.org/wiki/YBC_7289)</span></span>
+<span id="cb15-131"><a href="#cb15-131" aria-hidden="true" tabindex="-1"></a>   / Section *Absolute and Relative Error* (definitions) /</span>
+<span id="cb15-132"><a href="#cb15-132" aria-hidden="true" tabindex="-1"></a>   Section *Floating-Point Representation* (the modern, computer-era</span>
+<span id="cb15-133"><a href="#cb15-133" aria-hidden="true" tabindex="-1"></a>   version of "finite digits").</span>
+<span id="cb15-134"><a href="#cb15-134" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-135"><a href="#cb15-135" aria-hidden="true" tabindex="-1"></a>::: {.callout-note collapse="true"}</span>
+<span id="cb15-136"><a href="#cb15-136" aria-hidden="true" tabindex="-1"></a><span class="fu">### Optional: code to verify</span></span>
+<span id="cb15-137"><a href="#cb15-137" aria-hidden="true" tabindex="-1"></a><span class="in">```python</span></span>
+<span id="cb15-138"><a href="#cb15-138" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> decimal <span class="im">import</span> Decimal, getcontext</span>
+<span id="cb15-139"><a href="#cb15-139" aria-hidden="true" tabindex="-1"></a>getcontext().prec <span class="op">=</span> <span class="dv">30</span></span>
+<span id="cb15-140"><a href="#cb15-140" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-141"><a href="#cb15-141" aria-hidden="true" tabindex="-1"></a><span class="co"># YBC 7289 records sqrt(2) as 1; 24, 51, 10  (sexagesimal, base 60)</span></span>
+<span id="cb15-142"><a href="#cb15-142" aria-hidden="true" tabindex="-1"></a>ybc <span class="op">=</span> Decimal(<span class="dv">1</span>) <span class="op">+</span> Decimal(<span class="dv">24</span>)<span class="op">/</span><span class="dv">60</span> <span class="op">+</span> Decimal(<span class="dv">51</span>)<span class="op">/</span>(<span class="dv">60</span><span class="op">**</span><span class="dv">2</span>) <span class="op">+</span> Decimal(<span class="dv">10</span>)<span class="op">/</span>(<span class="dv">60</span><span class="op">**</span><span class="dv">3</span>)</span>
+<span id="cb15-143"><a href="#cb15-143" aria-hidden="true" tabindex="-1"></a>true_sqrt2 <span class="op">=</span> Decimal(<span class="dv">2</span>).sqrt()</span>
+<span id="cb15-144"><a href="#cb15-144" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-145"><a href="#cb15-145" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"YBC value : </span><span class="sc">{</span>ybc<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb15-146"><a href="#cb15-146" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"true  sqrt(2): </span><span class="sc">{</span>true_sqrt2<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb15-147"><a href="#cb15-147" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"abs err   : </span><span class="sc">{</span><span class="bu">abs</span>(true_sqrt2 <span class="op">-</span> ybc)<span class="sc">:.3e}</span><span class="ss">"</span>)</span>
+<span id="cb15-148"><a href="#cb15-148" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"rel err   : </span><span class="sc">{</span><span class="bu">abs</span>(true_sqrt2 <span class="op">-</span> ybc) <span class="op">/</span> true_sqrt2<span class="sc">:.3e}</span><span class="ss">"</span>)</span>
+<span id="cb15-149"><a href="#cb15-149" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-150"><a href="#cb15-150" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb15-151"><a href="#cb15-151" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb15-152"><a href="#cb15-152" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-153"><a href="#cb15-153" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb15-154"><a href="#cb15-154" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-155"><a href="#cb15-155" aria-hidden="true" tabindex="-1"></a><span class="fu">## Floating-Point Numbers and Errors</span></span>
+<span id="cb15-156"><a href="#cb15-156" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-157"><a href="#cb15-157" aria-hidden="true" tabindex="-1"></a><span class="fu">### Floating-Point Representation</span></span>
+<span id="cb15-158"><a href="#cb15-158" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-159"><a href="#cb15-159" aria-hidden="true" tabindex="-1"></a>A real number can be represented as:</span>
+<span id="cb15-160"><a href="#cb15-160" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-161"><a href="#cb15-161" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb15-162"><a href="#cb15-162" aria-hidden="true" tabindex="-1"></a>\pm \left(\frac{d_0}{\beta^0} + \frac{d_1}{\beta^1} + \frac{d_2}{\beta^2} + \cdots\right)\cdot \beta^{e}</span>
+<span id="cb15-163"><a href="#cb15-163" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb15-164"><a href="#cb15-164" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-165"><a href="#cb15-165" aria-hidden="true" tabindex="-1"></a>where $\beta \geq 2$ is the **base**, $0 \leq d_i \leq \beta - 1$ are **digits**, and $e$ is the **exponent**.</span>
+<span id="cb15-166"><a href="#cb15-166" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-167"><a href="#cb15-167" aria-hidden="true" tabindex="-1"></a>**Example.** $7.375$ in base 10 and base 2:</span>
+<span id="cb15-168"><a href="#cb15-168" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-169"><a href="#cb15-169" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb15-170"><a href="#cb15-170" aria-hidden="true" tabindex="-1"></a>7.375 = + \left(\frac{7}{10^0} + \frac{3}{10^1} + \frac{7}{10^2} + \frac{5}{10^3}\right)\cdot 10^{0} \quad (\beta = 10)</span>
+<span id="cb15-171"><a href="#cb15-171" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb15-172"><a href="#cb15-172" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-173"><a href="#cb15-173" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb15-174"><a href="#cb15-174" aria-hidden="true" tabindex="-1"></a>7.375 = + \left(\frac{1}{2^0} + \frac{1}{2^1} + \frac{1}{2^2} + \frac{0}{2^3} + \frac{1}{2^4} + \frac{1}{2^5}\right)\cdot 2^{2} \quad (\beta = 2)</span>
+<span id="cb15-175"><a href="#cb15-175" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb15-176"><a href="#cb15-176" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-177"><a href="#cb15-177" aria-hidden="true" tabindex="-1"></a>**Key observation.** Some numbers are finite in one base but infinite in another:</span>
+<span id="cb15-178"><a href="#cb15-178" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-179"><a href="#cb15-179" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb15-180"><a href="#cb15-180" aria-hidden="true" tabindex="-1"></a>0.2 = +\left(\frac{2}{10^0}\right)\cdot 10^{-1} \quad (\beta=10) \quad\text{<span class="co">[</span><span class="ot">finite</span><span class="co">]</span>}</span>
+<span id="cb15-181"><a href="#cb15-181" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb15-182"><a href="#cb15-182" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-183"><a href="#cb15-183" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb15-184"><a href="#cb15-184" aria-hidden="true" tabindex="-1"></a>0.2 = +\left(\frac{1}{2^0} + \frac{1}{2^1} + \frac{0}{2^2} + \frac{0}{2^3} + \frac{1}{2^4} + \frac{1}{2^5} + \cdots\right)\cdot 2^{-3} \quad (\beta=2) \quad\textbf{<span class="co">[</span><span class="ot">infinite!</span><span class="co">]</span>}</span>
+<span id="cb15-185"><a href="#cb15-185" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb15-186"><a href="#cb15-186" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-187"><a href="#cb15-187" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; **Consequence:** Computers store only a finite number of bits, so most real numbers are stored as *approximations*. This is the root cause of all floating-point errors.</span></span>
+<span id="cb15-188"><a href="#cb15-188" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-189"><a href="#cb15-189" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb15-190"><a href="#cb15-190" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-191"><a href="#cb15-191" aria-hidden="true" tabindex="-1"></a><span class="fu">### Verifying in Python</span></span>
+<span id="cb15-192"><a href="#cb15-192" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-195"><a href="#cb15-195" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb15-196"><a href="#cb15-196" aria-hidden="true" tabindex="-1"></a><span class="co">#| code-fold: true</span></span>
+<span id="cb15-197"><a href="#cb15-197" aria-hidden="true" tabindex="-1"></a><span class="co">#| code-summary: "Helper: to_binary_scientific(f)"</span></span>
+<span id="cb15-198"><a href="#cb15-198" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> struct</span>
+<span id="cb15-199"><a href="#cb15-199" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-200"><a href="#cb15-200" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> to_binary_scientific(f):</span>
+<span id="cb15-201"><a href="#cb15-201" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Display f as  1.xxxx...₂ × 2^e  (normalized IEEE 754 form)."""</span></span>
+<span id="cb15-202"><a href="#cb15-202" aria-hidden="true" tabindex="-1"></a>    bits <span class="op">=</span> struct.pack(<span class="st">'&gt;d'</span>, f)</span>
+<span id="cb15-203"><a href="#cb15-203" aria-hidden="true" tabindex="-1"></a>    b <span class="op">=</span> <span class="bu">int</span>.from_bytes(bits, <span class="st">'big'</span>)</span>
+<span id="cb15-204"><a href="#cb15-204" aria-hidden="true" tabindex="-1"></a>    exp_biased <span class="op">=</span> (b <span class="op">&gt;&gt;</span> <span class="dv">52</span>) <span class="op">&amp;</span> <span class="bn">0x7FF</span></span>
+<span id="cb15-205"><a href="#cb15-205" aria-hidden="true" tabindex="-1"></a>    mantissa_bits <span class="op">=</span> <span class="ss">f"</span><span class="sc">{</span>b <span class="op">&amp;</span> ((<span class="dv">1</span> <span class="op">&lt;&lt;</span> <span class="dv">52</span>) <span class="op">-</span> <span class="dv">1</span>)<span class="sc">:052b}</span><span class="ss">"</span></span>
+<span id="cb15-206"><a href="#cb15-206" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-207"><a href="#cb15-207" aria-hidden="true" tabindex="-1"></a>    e <span class="op">=</span> exp_biased <span class="op">-</span> <span class="dv">1023</span>          <span class="co"># true exponent</span></span>
+<span id="cb15-208"><a href="#cb15-208" aria-hidden="true" tabindex="-1"></a>    frac <span class="op">=</span> mantissa_bits.rstrip(<span class="st">'0'</span>)   <span class="co"># drop trailing zeros</span></span>
+<span id="cb15-209"><a href="#cb15-209" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-210"><a href="#cb15-210" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="kw">not</span> frac:</span>
+<span id="cb15-211"><a href="#cb15-211" aria-hidden="true" tabindex="-1"></a>        frac_str <span class="op">=</span> <span class="st">""</span>              <span class="co"># exactly 1.0 × 2^e</span></span>
+<span id="cb15-212"><a href="#cb15-212" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> <span class="bu">len</span>(mantissa_bits.rstrip(<span class="st">'0'</span>)) <span class="op">&lt;</span> <span class="dv">52</span>:</span>
+<span id="cb15-213"><a href="#cb15-213" aria-hidden="true" tabindex="-1"></a>        frac_str <span class="op">=</span> frac            <span class="co"># finite — shows all significant bits</span></span>
+<span id="cb15-214"><a href="#cb15-214" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb15-215"><a href="#cb15-215" aria-hidden="true" tabindex="-1"></a>        frac_str <span class="op">=</span> mantissa_bits[:<span class="dv">24</span>] <span class="op">+</span> <span class="st">"..."</span>   <span class="co"># infinite — show pattern</span></span>
+<span id="cb15-216"><a href="#cb15-216" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-217"><a href="#cb15-217" aria-hidden="true" tabindex="-1"></a>    mantissa_str <span class="op">=</span> <span class="ss">f"1.</span><span class="sc">{</span>frac_str<span class="sc">}</span><span class="ss">"</span> <span class="cf">if</span> frac_str <span class="cf">else</span> <span class="st">"1"</span></span>
+<span id="cb15-218"><a href="#cb15-218" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="ss">f"</span><span class="sc">{</span>mantissa_str<span class="sc">}</span><span class="ss">₂ × 2^</span><span class="sc">{</span>e<span class="sc">}</span><span class="ss">"</span></span>
+<span id="cb15-219"><a href="#cb15-219" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-220"><a href="#cb15-220" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-223"><a href="#cb15-223" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb15-224"><a href="#cb15-224" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> v <span class="kw">in</span> [<span class="fl">1.25</span>, <span class="fl">7.375</span>, <span class="fl">0.2</span>]:</span>
+<span id="cb15-225"><a href="#cb15-225" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"  </span><span class="sc">{</span>v<span class="sc">:6}</span><span class="ss">  =  </span><span class="sc">{</span>to_binary_scientific(v)<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb15-226"><a href="#cb15-226" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-227"><a href="#cb15-227" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-228"><a href="#cb15-228" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb15-229"><a href="#cb15-229" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-230"><a href="#cb15-230" aria-hidden="true" tabindex="-1"></a><span class="fu">### Examples of Floating-Point Errors</span></span>
+<span id="cb15-231"><a href="#cb15-231" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-232"><a href="#cb15-232" aria-hidden="true" tabindex="-1"></a>**Example 1: Small numbers ignored**</span>
+<span id="cb15-233"><a href="#cb15-233" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-234"><a href="#cb15-234" aria-hidden="true" tabindex="-1"></a>$$10^{40} + 500 - 10^{40} = \;?$$</span>
+<span id="cb15-235"><a href="#cb15-235" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-236"><a href="#cb15-236" aria-hidden="true" tabindex="-1"></a>The 500 "disappears" because it is negligible relative to $10^{40}$ in floating point.</span>
+<span id="cb15-237"><a href="#cb15-237" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-238"><a href="#cb15-238" aria-hidden="true" tabindex="-1"></a>**Example 2: Rounding error**</span>
+<span id="cb15-239"><a href="#cb15-239" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-240"><a href="#cb15-240" aria-hidden="true" tabindex="-1"></a>$$8.3 - 8 = \;?$$</span>
+<span id="cb15-241"><a href="#cb15-241" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-242"><a href="#cb15-242" aria-hidden="true" tabindex="-1"></a>The result is *not* exactly $0.3$ — see the Excel screenshot in the slides.</span>
+<span id="cb15-243"><a href="#cb15-243" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-246"><a href="#cb15-246" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb15-247"><a href="#cb15-247" aria-hidden="true" tabindex="-1"></a><span class="co"># Try it in Python</span></span>
+<span id="cb15-248"><a href="#cb15-248" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"10**40 + 500 - 10**40 = </span><span class="sc">{</span><span class="dv">10</span><span class="op">**</span><span class="dv">40</span> <span class="op">+</span> <span class="dv">500</span> <span class="op">-</span> <span class="dv">10</span><span class="op">**</span><span class="dv">40</span><span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb15-249"><a href="#cb15-249" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"8.3 - 8 = </span><span class="sc">{</span><span class="fl">8.3</span> <span class="op">-</span> <span class="dv">8</span><span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb15-250"><a href="#cb15-250" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"8.3 - 8 == 0.3? </span><span class="sc">{</span><span class="fl">8.3</span> <span class="op">-</span> <span class="dv">8</span> <span class="op">==</span> <span class="fl">0.3</span><span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb15-251"><a href="#cb15-251" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"8.3 - 8 - 0.3   = </span><span class="sc">{</span><span class="fl">8.3</span> <span class="op">-</span> <span class="dv">8</span> <span class="op">-</span> <span class="fl">0.3</span><span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb15-252"><a href="#cb15-252" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-253"><a href="#cb15-253" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-254"><a href="#cb15-254" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb15-255"><a href="#cb15-255" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-256"><a href="#cb15-256" aria-hidden="true" tabindex="-1"></a><span class="fu">### Quiz: What is the value of x?</span></span>
+<span id="cb15-257"><a href="#cb15-257" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-260"><a href="#cb15-260" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb15-261"><a href="#cb15-261" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> math</span>
+<span id="cb15-262"><a href="#cb15-262" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-263"><a href="#cb15-263" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> <span class="dv">100</span></span>
+<span id="cb15-264"><a href="#cb15-264" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">60</span>):</span>
+<span id="cb15-265"><a href="#cb15-265" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> math.sqrt(x)</span>
+<span id="cb15-266"><a href="#cb15-266" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">60</span>):</span>
+<span id="cb15-267"><a href="#cb15-267" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> x <span class="op">**</span> <span class="dv">2</span></span>
+<span id="cb15-268"><a href="#cb15-268" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-269"><a href="#cb15-269" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Result: x = </span><span class="sc">{</span>x<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb15-270"><a href="#cb15-270" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Expected: 100"</span>)</span>
+<span id="cb15-271"><a href="#cb15-271" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-272"><a href="#cb15-272" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-273"><a href="#cb15-273" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; **Q:** Why does this happen? What does the result tell us about floating-point arithmetic?</span></span>
+<span id="cb15-274"><a href="#cb15-274" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-275"><a href="#cb15-275" aria-hidden="true" tabindex="-1"></a>::: {.callout-note}</span>
+<span id="cb15-276"><a href="#cb15-276" aria-hidden="true" tabindex="-1"></a><span class="fu">## Your answer</span></span>
+<span id="cb15-277"><a href="#cb15-277" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-278"><a href="#cb15-278" aria-hidden="true" tabindex="-1"></a>*(Explain what is happening in your own words.)*</span>
+<span id="cb15-279"><a href="#cb15-279" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb15-280"><a href="#cb15-280" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-281"><a href="#cb15-281" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb15-282"><a href="#cb15-282" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-283"><a href="#cb15-283" aria-hidden="true" tabindex="-1"></a><span class="fu">## Absolute and Relative Error</span></span>
+<span id="cb15-284"><a href="#cb15-284" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-285"><a href="#cb15-285" aria-hidden="true" tabindex="-1"></a><span class="fu">### Definitions</span></span>
+<span id="cb15-286"><a href="#cb15-286" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-287"><a href="#cb15-287" aria-hidden="true" tabindex="-1"></a>Let $x$ be the **true value** and $\hat{x}$ be its **approximation**.</span>
+<span id="cb15-288"><a href="#cb15-288" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-289"><a href="#cb15-289" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb15-290"><a href="#cb15-290" aria-hidden="true" tabindex="-1"></a>\text{Absolute Error} = |x - \hat{x}|</span>
+<span id="cb15-291"><a href="#cb15-291" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb15-292"><a href="#cb15-292" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-293"><a href="#cb15-293" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb15-294"><a href="#cb15-294" aria-hidden="true" tabindex="-1"></a>\text{Relative Error} = \left|\frac{x - \hat{x}}{x}\right| \quad (x \neq 0) \quad \approx \left|\frac{x - \hat{x}}{\hat{x}}\right|</span>
+<span id="cb15-295"><a href="#cb15-295" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb15-296"><a href="#cb15-296" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-297"><a href="#cb15-297" aria-hidden="true" tabindex="-1"></a>**Applied to the examples:**</span>
+<span id="cb15-298"><a href="#cb15-298" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-299"><a href="#cb15-299" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Subject <span class="pp">|</span> Absolute Error <span class="pp">|</span> Relative Error <span class="pp">|</span></span>
+<span id="cb15-300"><a href="#cb15-300" aria-hidden="true" tabindex="-1"></a><span class="pp">|---|---|---|</span></span>
+<span id="cb15-301"><a href="#cb15-301" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> 🦖 Dinosaur <span class="pp">|</span> $<span class="sc">\|</span>67{,}100{,}000 - 67{,}000{,}000<span class="sc">\|</span> = 100{,}000$ <span class="pp">|</span> $\frac{100{,}000}{67{,}000{,}000} \approx 0.00149$ <span class="pp">|</span></span>
+<span id="cb15-302"><a href="#cb15-302" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> 🧑 Person <span class="pp">|</span> $<span class="sc">\|</span>100{,}037 - 37<span class="sc">\|</span> = 100{,}000$ <span class="pp">|</span> $\frac{100{,}000}{37} \approx 2702$ <span class="pp">|</span></span>
+<span id="cb15-303"><a href="#cb15-303" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-304"><a href="#cb15-304" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb15-305"><a href="#cb15-305" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-306"><a href="#cb15-306" aria-hidden="true" tabindex="-1"></a><span class="fu">### Error Propagation</span></span>
+<span id="cb15-307"><a href="#cb15-307" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-308"><a href="#cb15-308" aria-hidden="true" tabindex="-1"></a>**Setup.** Let $x$ and $y$ be true values, and $\hat{x}$, $\hat{y}$ their approximations. Define the errors:</span>
+<span id="cb15-309"><a href="#cb15-309" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-310"><a href="#cb15-310" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb15-311"><a href="#cb15-311" aria-hidden="true" tabindex="-1"></a>e_x := x - \hat{x}, \qquad e_y := y - \hat{y}</span>
+<span id="cb15-312"><a href="#cb15-312" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb15-313"><a href="#cb15-313" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-314"><a href="#cb15-314" aria-hidden="true" tabindex="-1"></a>so that $x = \hat{x} + e_x$ and $y = \hat{y} + e_y$.</span>
+<span id="cb15-315"><a href="#cb15-315" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-316"><a href="#cb15-316" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Addition / Subtraction</span></span>
+<span id="cb15-317"><a href="#cb15-317" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-318"><a href="#cb15-318" aria-hidden="true" tabindex="-1"></a>::: {.callout-tip icon=false}</span>
+<span id="cb15-319"><a href="#cb15-319" aria-hidden="true" tabindex="-1"></a><span class="fu">## Proposition</span></span>
+<span id="cb15-320"><a href="#cb15-320" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-321"><a href="#cb15-321" aria-hidden="true" tabindex="-1"></a>The **absolute error bound** for $x + y$ (or $x - y$) is given by the **sum of absolute errors** of $x$ and $y$:</span>
+<span id="cb15-322"><a href="#cb15-322" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-323"><a href="#cb15-323" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb15-324"><a href="#cb15-324" aria-hidden="true" tabindex="-1"></a>\bigl|(x+y) - (\hat{x}+\hat{y})\bigr| \leq |e_x| + |e_y|</span>
+<span id="cb15-325"><a href="#cb15-325" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb15-326"><a href="#cb15-326" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb15-327"><a href="#cb15-327" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-328"><a href="#cb15-328" aria-hidden="true" tabindex="-1"></a>**Proof.**</span>
+<span id="cb15-329"><a href="#cb15-329" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-330"><a href="#cb15-330" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb15-331"><a href="#cb15-331" aria-hidden="true" tabindex="-1"></a>(x + y) - (\hat{x} + \hat{y})</span>
+<span id="cb15-332"><a href="#cb15-332" aria-hidden="true" tabindex="-1"></a>= (x - \hat{x}) + (y - \hat{y})</span>
+<span id="cb15-333"><a href="#cb15-333" aria-hidden="true" tabindex="-1"></a>= e_x + e_y</span>
+<span id="cb15-334"><a href="#cb15-334" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb15-335"><a href="#cb15-335" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-336"><a href="#cb15-336" aria-hidden="true" tabindex="-1"></a>By the triangle inequality:</span>
+<span id="cb15-337"><a href="#cb15-337" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-338"><a href="#cb15-338" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb15-339"><a href="#cb15-339" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span>e_x + e_y<span class="pp">|</span> \leq <span class="pp">|</span>e_x<span class="pp">|</span> + <span class="pp">|</span>e_y<span class="pp">|</span></span>
+<span id="cb15-340"><a href="#cb15-340" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb15-341"><a href="#cb15-341" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-342"><a href="#cb15-342" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Multiplication / Division</span></span>
+<span id="cb15-343"><a href="#cb15-343" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-344"><a href="#cb15-344" aria-hidden="true" tabindex="-1"></a>::: {.callout-tip icon=false}</span>
+<span id="cb15-345"><a href="#cb15-345" aria-hidden="true" tabindex="-1"></a><span class="fu">## Proposition</span></span>
+<span id="cb15-346"><a href="#cb15-346" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-347"><a href="#cb15-347" aria-hidden="true" tabindex="-1"></a>Assuming $|e_x|, |e_y|$ are sufficiently small (so that $e_x e_y \ll |e_x|, |e_y|$), the **relative error bound** for $x \cdot y$ (or $x/y$, $y \neq 0$) is given approximately by the **sum of relative errors** of $x$ and $y$:</span>
+<span id="cb15-348"><a href="#cb15-348" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-349"><a href="#cb15-349" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb15-350"><a href="#cb15-350" aria-hidden="true" tabindex="-1"></a>\frac{|xy - \hat{x}\hat{y}|}{|xy|}</span>
+<span id="cb15-351"><a href="#cb15-351" aria-hidden="true" tabindex="-1"></a>\approx \left|\frac{e_x}{x}\right| + \left|\frac{e_y}{y}\right|</span>
+<span id="cb15-352"><a href="#cb15-352" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb15-353"><a href="#cb15-353" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb15-354"><a href="#cb15-354" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-355"><a href="#cb15-355" aria-hidden="true" tabindex="-1"></a>**Proof.**</span>
+<span id="cb15-356"><a href="#cb15-356" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-357"><a href="#cb15-357" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb15-358"><a href="#cb15-358" aria-hidden="true" tabindex="-1"></a>xy - \hat{x}\hat{y}</span>
+<span id="cb15-359"><a href="#cb15-359" aria-hidden="true" tabindex="-1"></a>= (\hat{x} + e_x)(\hat{y} + e_y) - \hat{x}\hat{y}</span>
+<span id="cb15-360"><a href="#cb15-360" aria-hidden="true" tabindex="-1"></a>= \hat{x}e_y + \hat{y}e_x + e_xe_y</span>
+<span id="cb15-361"><a href="#cb15-361" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb15-362"><a href="#cb15-362" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-363"><a href="#cb15-363" aria-hidden="true" tabindex="-1"></a>So the relative error of the product is:</span>
+<span id="cb15-364"><a href="#cb15-364" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-365"><a href="#cb15-365" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb15-366"><a href="#cb15-366" aria-hidden="true" tabindex="-1"></a>\frac{|xy - \hat{x}\hat{y}|}{|xy|}</span>
+<span id="cb15-367"><a href="#cb15-367" aria-hidden="true" tabindex="-1"></a>= \frac{|\hat{x}e_y + \hat{y}e_x + e_xe_y|}{|xy|}</span>
+<span id="cb15-368"><a href="#cb15-368" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb15-369"><a href="#cb15-369" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-370"><a href="#cb15-370" aria-hidden="true" tabindex="-1"></a>When the errors $e_x, e_y$ are small, the cross term $e_x e_y$ is negligible ($e_xe_y \ll e_x, e_y$), and $\hat{x} \approx x$, $\hat{y} \approx y$, so:</span>
+<span id="cb15-371"><a href="#cb15-371" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-372"><a href="#cb15-372" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb15-373"><a href="#cb15-373" aria-hidden="true" tabindex="-1"></a>\approx \frac{|xe_y + ye_x|}{|xy|}</span>
+<span id="cb15-374"><a href="#cb15-374" aria-hidden="true" tabindex="-1"></a>\leq \frac{|x|\,|e_y| + |y|\,|e_x|}{|xy|}</span>
+<span id="cb15-375"><a href="#cb15-375" aria-hidden="true" tabindex="-1"></a>= \left|\frac{e_x}{x}\right| + \left|\frac{e_y}{y}\right|</span>
+<span id="cb15-376"><a href="#cb15-376" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb15-377"><a href="#cb15-377" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-378"><a href="#cb15-378" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb15-379"><a href="#cb15-379" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-380"><a href="#cb15-380" aria-hidden="true" tabindex="-1"></a><span class="fu">## Loss of Significant Digits (Cancellation)</span></span>
+<span id="cb15-381"><a href="#cb15-381" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-382"><a href="#cb15-382" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; ⚠️ **Be careful when subtracting two values that are close to each other.**</span></span>
+<span id="cb15-383"><a href="#cb15-383" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-384"><a href="#cb15-384" aria-hidden="true" tabindex="-1"></a>Relative error in subtraction:</span>
+<span id="cb15-385"><a href="#cb15-385" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-386"><a href="#cb15-386" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb15-387"><a href="#cb15-387" aria-hidden="true" tabindex="-1"></a>E := \left|\frac{(x - y) - (\hat{x} - \hat{y})}{x - y}\right|</span>
+<span id="cb15-388"><a href="#cb15-388" aria-hidden="true" tabindex="-1"></a>= \left|\frac{x}{x-y}\cdot \frac{e_x}{x} + \frac{y}{x-y}\cdot \frac{e_y}{y}\right|</span>
+<span id="cb15-389"><a href="#cb15-389" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb15-390"><a href="#cb15-390" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-391"><a href="#cb15-391" aria-hidden="true" tabindex="-1"></a>If $|x - y| \ll |x|$ and $|x - y| \ll |y|$, the factors $\frac{x}{x-y}$ and $\frac{y}{x-y}$ become huge → **$E$ can be very large**.</span>
+<span id="cb15-392"><a href="#cb15-392" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-393"><a href="#cb15-393" aria-hidden="true" tabindex="-1"></a><span class="fu">### Worked Example: $\sqrt{1001} - \sqrt{999}$</span></span>
+<span id="cb15-394"><a href="#cb15-394" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-395"><a href="#cb15-395" aria-hidden="true" tabindex="-1"></a>**Naive (7 significant digits):**</span>
+<span id="cb15-396"><a href="#cb15-396" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-397"><a href="#cb15-397" aria-hidden="true" tabindex="-1"></a>$$\sqrt{1001} \approx 31.63858, \quad \sqrt{999} \approx 31.60696$$</span>
+<span id="cb15-398"><a href="#cb15-398" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-399"><a href="#cb15-399" aria-hidden="true" tabindex="-1"></a>$$\sqrt{1001} - \sqrt{999} \approx 0.03162 \quad \text{(only ~4 significant digits)}$$</span>
+<span id="cb15-400"><a href="#cb15-400" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-401"><a href="#cb15-401" aria-hidden="true" tabindex="-1"></a>**Improved (rationalize the numerator):**</span>
+<span id="cb15-402"><a href="#cb15-402" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-403"><a href="#cb15-403" aria-hidden="true" tabindex="-1"></a>$$\sqrt{1001} - \sqrt{999}</span>
+<span id="cb15-404"><a href="#cb15-404" aria-hidden="true" tabindex="-1"></a>= \frac{(\sqrt{1001} - \sqrt{999})(\sqrt{1001} + \sqrt{999})}{\sqrt{1001} + \sqrt{999}}</span>
+<span id="cb15-405"><a href="#cb15-405" aria-hidden="true" tabindex="-1"></a>= \frac{2}{\sqrt{1001} + \sqrt{999}}$$</span>
+<span id="cb15-406"><a href="#cb15-406" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-409"><a href="#cb15-409" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb15-410"><a href="#cb15-410" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb15-411"><a href="#cb15-411" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-412"><a href="#cb15-412" aria-hidden="true" tabindex="-1"></a><span class="co"># float32 has ~7 significant decimal digits.</span></span>
+<span id="cb15-413"><a href="#cb15-413" aria-hidden="true" tabindex="-1"></a><span class="co"># Use a = 10^6 + 1, b = 10^6 - 1  (√values ≈ 10^3 → share ~4 leading digits)</span></span>
+<span id="cb15-414"><a href="#cb15-414" aria-hidden="true" tabindex="-1"></a><span class="co"># → naive subtraction loses ~4 significant digits out of 7.</span></span>
+<span id="cb15-415"><a href="#cb15-415" aria-hidden="true" tabindex="-1"></a>a32, b32 <span class="op">=</span> np.float32(<span class="dv">10</span><span class="op">**</span><span class="dv">6</span> <span class="op">+</span> <span class="dv">1</span>), np.float32(<span class="dv">10</span><span class="op">**</span><span class="dv">6</span> <span class="op">-</span> <span class="dv">1</span>)</span>
+<span id="cb15-416"><a href="#cb15-416" aria-hidden="true" tabindex="-1"></a>a64, b64 <span class="op">=</span> np.float64(<span class="dv">10</span><span class="op">**</span><span class="dv">6</span> <span class="op">+</span> <span class="dv">1</span>), np.float64(<span class="dv">10</span><span class="op">**</span><span class="dv">6</span> <span class="op">-</span> <span class="dv">1</span>)</span>
+<span id="cb15-417"><a href="#cb15-417" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-418"><a href="#cb15-418" aria-hidden="true" tabindex="-1"></a>naive32    <span class="op">=</span> np.sqrt(a32) <span class="op">-</span> np.sqrt(b32)</span>
+<span id="cb15-419"><a href="#cb15-419" aria-hidden="true" tabindex="-1"></a>improved32 <span class="op">=</span> (a32 <span class="op">-</span> b32) <span class="op">/</span> (np.sqrt(a32) <span class="op">+</span> np.sqrt(b32))    <span class="co"># = 2 / (√a + √b)</span></span>
+<span id="cb15-420"><a href="#cb15-420" aria-hidden="true" tabindex="-1"></a>ref64      <span class="op">=</span> np.sqrt(a64) <span class="op">-</span> np.sqrt(b64)                    <span class="co"># treat as "true" value</span></span>
+<span id="cb15-421"><a href="#cb15-421" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-422"><a href="#cb15-422" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"a = </span><span class="sc">{</span><span class="bu">int</span>(a32)<span class="sc">}</span><span class="ss">,  b = </span><span class="sc">{</span><span class="bu">int</span>(b32)<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb15-423"><a href="#cb15-423" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>()</span>
+<span id="cb15-424"><a href="#cb15-424" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"√a − √b        =  </span><span class="sc">{</span>naive32<span class="sc">:.8e}</span><span class="ss">    (naive,    float32)"</span>)</span>
+<span id="cb15-425"><a href="#cb15-425" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"2 / (√a + √b)  =  </span><span class="sc">{</span>improved32<span class="sc">:.8e}</span><span class="ss">    (improved, float32)"</span>)</span>
+<span id="cb15-426"><a href="#cb15-426" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"√a − √b        =  </span><span class="sc">{</span>ref64<span class="sc">:.16e}</span><span class="ss">   (reference, float64)"</span>)</span>
+<span id="cb15-427"><a href="#cb15-427" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>()</span>
+<span id="cb15-428"><a href="#cb15-428" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Error (naive):    </span><span class="sc">{</span><span class="bu">abs</span>(ref64 <span class="op">-</span> <span class="bu">float</span>(naive32))<span class="sc">:.2e}</span><span class="ss">"</span>)</span>
+<span id="cb15-429"><a href="#cb15-429" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Error (improved): </span><span class="sc">{</span><span class="bu">abs</span>(ref64 <span class="op">-</span> <span class="bu">float</span>(improved32))<span class="sc">:.2e}</span><span class="ss">"</span>)</span>
+<span id="cb15-430"><a href="#cb15-430" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-431"><a href="#cb15-431" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-432"><a href="#cb15-432" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb15-433"><a href="#cb15-433" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-434"><a href="#cb15-434" aria-hidden="true" tabindex="-1"></a><span class="fu">## Appendix: Interval Arithmetic *(for your information)*</span></span>
+<span id="cb15-435"><a href="#cb15-435" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-436"><a href="#cb15-436" aria-hidden="true" tabindex="-1"></a>Instead of a single approximate number, **interval arithmetic tracks an interval guaranteed to contain the true value**.</span>
+<span id="cb15-437"><a href="#cb15-437" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-438"><a href="#cb15-438" aria-hidden="true" tabindex="-1"></a>$$\pi \in <span class="co">[</span><span class="ot">3.14,\, 3.15</span><span class="co">]</span>, \quad \sqrt{2} \in <span class="co">[</span><span class="ot">1.41,\, 1.42</span><span class="co">]</span></span>
+<span id="cb15-439"><a href="#cb15-439" aria-hidden="true" tabindex="-1"></a>\quad\Longrightarrow\quad</span>
+<span id="cb15-440"><a href="#cb15-440" aria-hidden="true" tabindex="-1"></a>\pi + \sqrt{2} \in <span class="co">[</span><span class="ot">4.55,\, 4.57</span><span class="co">]</span>$$</span>
+<span id="cb15-441"><a href="#cb15-441" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-442"><a href="#cb15-442" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Lower bound**: computed with **round-down**</span>
+<span id="cb15-443"><a href="#cb15-443" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Upper bound**: computed with **round-up**</span>
+<span id="cb15-444"><a href="#cb15-444" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-447"><a href="#cb15-447" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb15-448"><a href="#cb15-448" aria-hidden="true" tabindex="-1"></a><span class="co"># Requires:  pip install mpmath</span></span>
+<span id="cb15-449"><a href="#cb15-449" aria-hidden="true" tabindex="-1"></a><span class="co"># mpmath.iv provides rigorous interval arithmetic with directed rounding,</span></span>
+<span id="cb15-450"><a href="#cb15-450" aria-hidden="true" tabindex="-1"></a><span class="co"># so the resulting interval is *guaranteed* to contain the true value.</span></span>
+<span id="cb15-451"><a href="#cb15-451" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> mpmath <span class="im">import</span> iv</span>
+<span id="cb15-452"><a href="#cb15-452" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-453"><a href="#cb15-453" aria-hidden="true" tabindex="-1"></a>iv.dps <span class="op">=</span> <span class="dv">10</span>   <span class="co"># decimal precision (controls bound width)</span></span>
+<span id="cb15-454"><a href="#cb15-454" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-455"><a href="#cb15-455" aria-hidden="true" tabindex="-1"></a>pi_iv  <span class="op">=</span> iv.pi</span>
+<span id="cb15-456"><a href="#cb15-456" aria-hidden="true" tabindex="-1"></a>sq2_iv <span class="op">=</span> iv.sqrt(<span class="dv">2</span>)</span>
+<span id="cb15-457"><a href="#cb15-457" aria-hidden="true" tabindex="-1"></a>sum_iv <span class="op">=</span> pi_iv <span class="op">+</span> sq2_iv</span>
+<span id="cb15-458"><a href="#cb15-458" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-459"><a href="#cb15-459" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"π      ∈ </span><span class="sc">{</span>pi_iv<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb15-460"><a href="#cb15-460" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"√2     ∈ </span><span class="sc">{</span>sq2_iv<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb15-461"><a href="#cb15-461" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"π + √2 ∈ </span><span class="sc">{</span>sum_iv<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb15-462"><a href="#cb15-462" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-463"><a href="#cb15-463" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-464"><a href="#cb15-464" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb15-465"><a href="#cb15-465" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-466"><a href="#cb15-466" aria-hidden="true" tabindex="-1"></a><span class="fu">## Summary</span></span>
+<span id="cb15-467"><a href="#cb15-467" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-468"><a href="#cb15-468" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Concept <span class="pp">|</span> Key formula <span class="pp">|</span></span>
+<span id="cb15-469"><a href="#cb15-469" aria-hidden="true" tabindex="-1"></a><span class="pp">|---|---|</span></span>
+<span id="cb15-470"><a href="#cb15-470" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Absolute error <span class="pp">|</span> $<span class="sc">\|</span>x - \hat{x}<span class="sc">\|</span>$ <span class="pp">|</span></span>
+<span id="cb15-471"><a href="#cb15-471" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Relative error <span class="pp">|</span> $\left<span class="sc">\|</span>\frac{x - \hat{x}}{x}\right<span class="sc">\|</span>$ <span class="pp">|</span></span>
+<span id="cb15-472"><a href="#cb15-472" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Error in addition <span class="pp">|</span> $\leq <span class="sc">\|</span>e_x<span class="sc">\|</span> + <span class="sc">\|</span>e_y<span class="sc">\|</span>$ (absolute) <span class="pp">|</span></span>
+<span id="cb15-473"><a href="#cb15-473" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Error in multiplication <span class="pp">|</span> $\approx \left<span class="sc">\|</span>\frac{e_x}{x}\right<span class="sc">\|</span> + \left<span class="sc">\|</span>\frac{e_y}{y}\right<span class="sc">\|</span>$ (relative) <span class="pp">|</span></span>
+<span id="cb15-474"><a href="#cb15-474" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Cancellation <span class="pp">|</span> Occurs when subtracting two close values <span class="pp">|</span></span>
+</code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
+</div></div></div></div></div>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
