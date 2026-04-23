@@ -639,31 +639,22 @@ git pull</code></pre>
 </section>
 <section id="exercise-2.3-quadratic-equation-without-cancellation" class="slide level2 smaller exercise-slide">
 <h2>Exercise 2.3 — Quadratic Equation without Cancellation</h2>
-<div style="padding-left: 2em; margin-top: 0.4em; margin-bottom: 0.6em; font-size: 0.9em;">
-<p><strong>Edit:</strong> <code>ex2-3.qmd</code> (same repo as Ex 2.1) &nbsp;&nbsp;|&nbsp;&nbsp; <strong style="color: #d84315;">Deadline: Apr 30 (Wed), 23:59</strong></p>
+<div style="padding-left: 2em; margin-top: 0.5em; margin-bottom: 0.4em;">
+<p><strong>Repository:</strong> same as Ex 2.1 &nbsp;&nbsp;|&nbsp;&nbsp; <strong>Edit:</strong> <code>ex2-3.qmd</code> &nbsp;&nbsp;|&nbsp;&nbsp; <strong style="color: #d84315;">Deadline: Apr 30 (Wed), 23:59</strong></p>
 </div>
-<div style="display:grid; grid-template-columns:1.15fr 1fr; gap:1.2em; padding:0 1em;">
-<div>
-<p>Implement <code>solve_quadeq(a, b, c)</code> returning the two solutions of <span class="math inline">\(ax^2 + bx + c = 0\ (a \neq 0)\)</span>, <strong>avoiding cancellation</strong> as much as possible.</p>
-<p>Apply to: <span class="math display">\[
-\begin{aligned}
-&amp;a = 1,\ b = 10^{15},\ c = 10^{14} \\
-&amp;a = 1,\ b = -10^{15},\ c = 10^{14}
-\end{aligned}
+<p>Write a Python function <code>solve_quadeq(a, b, c)</code> that returns the two solutions of <span class="math inline">\(ax^2 + bx + c = 0\ (a \neq 0)\)</span>, <strong>avoiding cancellation as much as possible</strong>.</p>
+<p>Apply your function to:</p>
+<p><span class="math display">\[
+a = 1,\ b = 10^{15},\ c = 10^{14}
+\qquad\text{and}\qquad
+a = 1,\ b = -10^{15},\ c = 10^{14}
 \]</span></p>
-</div>
-<div>
-<p><strong>Then discuss:</strong></p>
+<p>Discuss in your notebook:</p>
 <ol type="1">
-<li><strong>Why</strong> the standard formula suffers from cancellation here</li>
-<li><strong>How</strong> your implementation avoids it</li>
-<li><strong>Compare</strong> accuracy with the direct formula</li>
+<li><strong>Why</strong> the standard quadratic formula suffers from cancellation in these cases.</li>
+<li><strong>How</strong> your implementation avoids it.</li>
+<li><strong>Compare</strong> the accuracy of your method with the direct formula.</li>
 </ol>
-<div style="margin-top:0.7em; padding:0.5em 0.7em; background:#f3e5f5; border-left:3px solid #6a1b9a; border-radius:6px; font-size:0.82em;">
-<p>📝 <strong>Plus:</strong> a 5-min video — upload to <strong>YouTube unlisted</strong> (recommended) or any link-shareable service (Drive / Dropbox / OneDrive / …) and paste the URL into <code>ex2-3.qmd</code>.<br> Peer-reviewed next class — see next slide for the rubric.</p>
-</div>
-</div>
-</div>
 </section>
 <section id="assignments-and-preparation-for-next-lecture" class="slide level2 smaller">
 <h2>Assignments and Preparation for Next Lecture</h2>
