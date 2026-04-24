@@ -238,8 +238,16 @@ $$8.3 - 8 = \;?$$
 The result is *not* exactly $0.3$ — see the Excel screenshot in the slides.
 
 ```{python}
-# Try it in Python
+# Note: 10  is an integer  → 10**40 is exact (Python int has arbitrary precision)
+#       10.0 is float64   → 10.0**40 is a floating-point number (finite precision)
+# The two behave very differently!
+
+# integer version  — exact arithmetic, no floating-point error
+print(f"10  **40 + 500   - 10  **40 = {10**40   + 500   - 10**40}")
+
+# float64 version  — 500.0 is lost because it is tiny relative to 10.0**40
 print(f"10.0**40 + 500.0 - 10.0**40 = {10.0**40 + 500.0 - 10.0**40}")
+
 print(f"8.3 - 8 = {8.3 - 8}")
 print(f"8.3 - 8 == 0.3? {8.3 - 8 == 0.3}")
 print(f"8.3 - 8 - 0.3   = {8.3 - 8 - 0.3}")
