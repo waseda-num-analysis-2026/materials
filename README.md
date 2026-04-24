@@ -14,8 +14,16 @@ Materials are organized by lecture number:
 | Folder | Topic | Materials | Video |
 |--------|-------|-----------|-------|
 | `010/` | Orientation and Guidance | [Slides](https://waseda-num-analysis-2026.github.io/materials/010/1st.html) | [Watch](https://youtu.be/AS3yAQUdcLc) |
-| `020/` | Errors and Cancellation | [Slides](https://waseda-num-analysis-2026.github.io/materials/020/2nd.html) · [Handout](https://waseda-num-analysis-2026.github.io/materials/020/2nd-handout.html) · [Python Guidelines](https://waseda-num-analysis-2026.github.io/materials/020/python_guidelines/python_guidelines.html) | TBD |
+| `020/` | Errors and Cancellation | [Slides](https://waseda-num-analysis-2026.github.io/materials/020/2nd.html) · [Handout](https://waseda-num-analysis-2026.github.io/materials/020/2nd-handout.html) · [Python Guidelines](https://waseda-num-analysis-2026.github.io/materials/020/python_guidelines/python_guidelines.html) | [Watch](https://youtu.be/SKz0dKh1vtI) |
 | ...    | ... | ... | ... |
+
+## Tutorial Videos
+
+Short how-to videos to help you get started:
+
+| Title | Link |
+|-------|------|
+| How to Use AI Chat? — Using Python Guidelines as an Example | [Watch](https://youtu.be/9gljhM3yI7Q) |
 
 ## Exercises
 
@@ -23,8 +31,8 @@ Materials are organized by lecture number:
 |---|----------|------|----------|
 | 1.1 | Hello GitHub | [Access](https://classroom.github.com/a/oobb4OWM) | Apr 17, 23:59 |
 | 1.2 | Summarize How to Use GitHub | [Access](https://classroom.github.com/a/TeNDgSNv) | Apr 23, 23:59 |
-| 2.0 | Evolve the Handout with AI (≥ 3 Q&A in `2nd-handout.qmd`, see [`AI_TUTOR.md`](AI_TUTOR.md)) | same repo as 2.1 | Apr 30, 23:59 |
 | 2.1, 2.2 | Errors (one repo) | [Access](https://classroom.github.com/a/Xj_QQlK9) | Apr 24, 23:59 |
+| 2.0 | Evolve the Handout with AI (≥ 3 Q&A in `2nd-handout.qmd`, see [`AI_TUTOR.md`](AI_TUTOR.md)) | same repo as 2.1 | Apr 30, 23:59 |
 | 2.3 | Cancellation in Quadratic Equation | same repo as 2.1 | Apr 30, 23:59 |
 
 ## Setup (one-time)
