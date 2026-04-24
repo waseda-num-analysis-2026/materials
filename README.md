@@ -23,8 +23,9 @@ Materials are organized by lecture number:
 |---|----------|------|----------|
 | 1.1 | Hello GitHub | [Access](https://classroom.github.com/a/oobb4OWM) | Apr 17, 23:59 |
 | 1.2 | Summarize How to Use GitHub | [Access](https://classroom.github.com/a/TeNDgSNv) | Apr 23, 23:59 |
+| 2.0 | Evolve the Handout with AI (≥ 3 Q&A in `2nd-handout.qmd`, see [`AI_TUTOR.md`](AI_TUTOR.md)) | same repo as 2.1 | Apr 30, 23:59 |
 | 2.1, 2.2 | Errors (one repo) | [Access](https://classroom.github.com/a/Xj_QQlK9) | Apr 24, 23:59 |
-| 2.3 | Cancellation in Quadratic Equation (same repo as 2.1) | [Access](https://classroom.github.com/a/Xj_QQlK9) | Apr 30, 23:59 |
+| 2.3 | Cancellation in Quadratic Equation | same repo as 2.1 | Apr 30, 23:59 |
 
 ## Setup (one-time)
 

@@ -441,6 +441,32 @@ $$
 </div>
 ```
 
+## Exercise 2.0 — Evolve the Handout with AI {.smaller .exercise-slide}
+
+<div style="padding-left: 2em; margin-top: 0.5em; margin-bottom: 0.4em;">
+  <strong>Repository:</strong> same as Ex 2.1
+  &nbsp;&nbsp;|&nbsp;&nbsp; <strong>Submit:</strong> <code>2nd-handout.qmd</code> (your edited copy)
+  &nbsp;&nbsp;|&nbsp;&nbsp; <strong style="color: #d84315;">Deadline: Apr 30 (Wed), 23:59</strong>
+</div>
+
+While studying `2nd-handout.qmd`, **insert at least 3 Q&A blocks** of your
+own — questions you actually had while reading, answered with the help of
+GitHub Copilot (or another AI) following the protocol in
+[`AI_TUTOR.md`](https://github.com/waseda-num-analysis-2026/materials/blob/main/AI_TUTOR.md).
+
+**How to submit**
+
+1. Copy `materials/020/2nd-handout.qmd` into the root of your **Ex 2** repository
+2. Open it in VS Code, then for each question:
+   - Highlight the line you don't understand
+   - Ask Copilot using the prompt in `AI_TUTOR.md` § *Student Prompt Cookbook*
+   - Verify the AI's answer, then commit the inserted Q&A block
+3. Repeat for **≥ 3 distinct questions**, then `git push`
+
+<div style="margin-top:0.5em; padding:0.5em 0.7em; background:#fff8e1; border-left:4px solid #f9a825; border-radius:6px; font-size:0.85em;">
+  💡 The Q&A block format and an English example are at the top of <code>2nd-handout.qmd</code>.
+</div>
+
 ## Exercise 2.1 — Absolute / Relative Error Functions {.smaller .exercise-slide}
 
 <div style="padding-left: 2em; margin-top: 1em; margin-bottom: 0.6em;">
@@ -511,11 +537,11 @@ Discuss in your notebook:
   <div class="assign-card">
     <div class="assign-num">1</div>
     <div class="assign-body">
-      <p>Accept the <strong>Ex 2 GitHub Classroom</strong> link <strong>once</strong> — you get one repository containing all three exercises</p>
+      <p>Accept the <strong>Ex 2 GitHub Classroom</strong> link <strong>once</strong> — one repository for all four parts</p>
       <ul>
-        <li>Edit <code>ex2-1.qmd</code>, <code>ex2-2.qmd</code>, <code>ex2-3.qmd</code> (all <code>.qmd</code>, no <code>.ipynb</code>)</li>
+        <li>Edit <code>ex2-1.qmd</code>, <code>ex2-2.qmd</code>, <code>ex2-3.qmd</code> + your copy of <code>2nd-handout.qmd</code> for Ex 2.0 (all <code>.qmd</code>)</li>
         <li><strong>Ex 2.1 &amp; 2.2:</strong> <span class="assign-due">Apr 24 (today), 23:59</span></li>
-        <li><strong>Ex 2.3:</strong> <span class="assign-due">Apr 30 (Wed), 23:59</span></li>
+        <li><strong>Ex 2.0 &amp; 2.3:</strong> <span class="assign-due">Apr 30 (Wed), 23:59</span></li>
         <li>Submit by <code>git push</code> — the last commit before each deadline is graded</li>
       </ul>
     </div>
