@@ -29,33 +29,41 @@ question lives. Over the semester, your copy of this handout becomes
 
 **The 30-second workflow**
 
-1. Open this file in VS Code with GitHub Copilot installed.
-2. Find a line you don't understand.
-3. Open Copilot Chat and paste:
+**Step 0 — Once per chat session.** Open `AI_TUTOR.md` in VS Code, then
+press **`⌘L`** (Mac) / **`Ctrl+L`** (Win/Linux) so the file is attached
+to the chat, and send a short prime message such as:
 
-    ```
-    @workspace Read AI_TUTOR.md and 2nd-handout.qmd.
-    I don't understand this line:
+```
+Read this file. From now on, follow these rules whenever I ask
+about my handout.
+```
 
-    > "<paste the line you're stuck on>"
+This gives the AI the Q&A format **once**, so you don't have to
+re-attach it for every question.
 
-    Please add a Q&A block following AI_TUTOR.md rules.
-    ```
+**Then, for each question:**
 
-4. Re-render: `quarto render 2nd-handout.qmd` — your question and its
-   answer are now part of the handout (collapsed by default; click to expand).
+1. Open this handout (`2nd-handout.qmd`) in the editor.
+2. **Select** the line you don't understand.
+3. Press **`⌘L`** / **`Ctrl+L`** — your selection (and this file) are
+   attached to the same chat as Step 0.
+4. Just ask in plain language, e.g. *"I don't get this line — can you
+   add a Q&A block here?"*
+5. Re-render: `quarto render 2nd-handout.qmd` — your question and its
+   answer are now part of the handout (collapsed by default; click to
+   expand).
 
-See [`AI_TUTOR.md`](../../../AI_TUTOR.md) at the repo root for the full
-rule set the AI follows, and for more prompt templates (follow-ups,
-concept questions, Q&A index).
+> 💡 Why prime once with `AI_TUTOR.md` and then point with `⌘L`?
+> The rules file is long; sending it every time wastes context. Loading
+> it **once** and then pointing at the **exact line** you're stuck on
+> with `⌘L` keeps the AI focused on your question.
 
 **What does an inserted Q&A block look like?** &nbsp;See the sample at
 [Q&A *(Example)* — What does "~1800 BCE" actually refer to?](#qa-example-ybc),
 appended to the end of the *Background* section below.
 
-You can of course also edit this file by hand, run/modify the code cells,
-and add freeform notes anywhere — the AI Q&A workflow is **one option,
-not a requirement**.
+See [`AI_TUTOR.md`](../../AI_TUTOR.md) at the repo root for the full
+rule set the AI follows, and for more prompt templates.
 :::
 
 ::: {.callout-tip collapse="true"}
@@ -74,7 +82,26 @@ pip install -r requirements.txt
 If you'd rather skip the virtual environment for now, just run
 `pip install -r requirements.txt` directly — but a venv is the standard
 Python practice and avoids version conflicts later.
-See [README.md](../../../README.md#setup-one-time) for details.
+See [README.md](../../README.md#setup-one-time) for details.
+:::
+
+::: {.callout-warning}
+## ⚠️ Using a venv? Make sure Quarto runs *inside* it
+
+If you chose the venv route above, Quarto and your code cells must
+actually **run inside that venv** — otherwise Quarto silently falls
+back to your system Python and may miss packages or use a different
+version.
+
+- **Terminal:** `source .venv/bin/activate` *before* `quarto render`
+  (every new shell).
+- **VS Code:** Command Palette → `Python: Select Interpreter` → pick
+  `.venv`. New terminals will then auto-activate, and "Run Cell" will
+  use the venv.
+
+> Not using a venv? That's fine too — just make sure your system Python
+> has every package in `requirements.txt`. Quarto will use it
+> automatically when no venv is active.
 :::
 
 ---

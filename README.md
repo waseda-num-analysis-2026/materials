@@ -37,7 +37,14 @@ Short how-to videos to help you get started:
 
 ## Setup (one-time)
 
-To run the Python code in handouts (e.g. `2nd-handout.qmd`), set up a virtual environment and install the required packages:
+To run the Python code in handouts (e.g. `2nd-handout.qmd`), you need
+the packages listed in [`requirements.txt`](requirements.txt). Pick
+**one** of the two options below.
+
+### Option A — Virtual environment (recommended, safer)
+
+Best if you also use Python for other classes/projects, because it
+keeps each project's packages separate and avoids version conflicts.
 
 ```bash
 cd materials                       # move into the cloned folder
@@ -47,8 +54,31 @@ source .venv/bin/activate          # macOS / Linux
 pip install -r requirements.txt
 ```
 
-> When you open this folder in **VS Code**, the Python extension will usually offer to use `.venv` automatically.
-> If not, run the command palette → `Python: Select Interpreter` → choose `.venv`.
+> ⚠️ **Don't forget to *use* the venv every time.** Creating `.venv`
+> is not enough — Quarto and your code cells must actually run *inside*
+> it, otherwise they silently fall back to your system Python.
+>
+> - **Terminal:** `source .venv/bin/activate` *before* `quarto render`
+>   (every new shell).
+> - **VS Code / Cursor:** Command Palette → `Python: Select Interpreter`
+>   → pick `.venv`. New terminals will then auto-activate, and "Run
+>   Cell" will use the venv.
+
+### Option B — System Python (simpler, if you have no other Python projects)
+
+If this is your only Python project and you don't worry about version
+conflicts with other work, you can install packages directly into the
+Python you already have:
+
+```bash
+cd materials
+pip install -r requirements.txt
+```
+
+> ℹ️ With this option there's nothing to "activate" — Quarto and VS
+> Code use your system Python automatically. The trade-off is that any
+> future project sharing the same Python may clash with these
+> versions.
 
 ## Getting Updates
 
@@ -59,10 +89,12 @@ cd materials   # move into the cloned folder
 git pull
 ```
 
-If `requirements.txt` has been updated, also run:
+If `requirements.txt` has been updated, also re-install:
 
 ```bash
-source .venv/bin/activate          # if not already activated
+# Option A users — activate the venv first if not already:
+source .venv/bin/activate
+# Both options:
 pip install -r requirements.txt
 ```
 
