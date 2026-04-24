@@ -239,7 +239,7 @@ The result is *not* exactly $0.3$ — see the Excel screenshot in the slides.
 
 ```{python}
 # Try it in Python
-print(f"10**40 + 500 - 10**40 = {10**40 + 500 - 10**40}")
+print(f"10.0**40 + 500.0 - 10.0**40 = {10.0**40 + 500 - 10.0**40}")
 print(f"8.3 - 8 = {8.3 - 8}")
 print(f"8.3 - 8 == 0.3? {8.3 - 8 == 0.3}")
 print(f"8.3 - 8 - 0.3   = {8.3 - 8 - 0.3}")
