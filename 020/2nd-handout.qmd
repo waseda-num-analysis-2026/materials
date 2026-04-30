@@ -16,6 +16,7 @@ format:
 execute:
   echo: true
   eval: true
+jupyter: python3
 ---
 
 ::: {.callout-tip collapse="true"}
@@ -244,9 +245,20 @@ def to_binary_scientific(f):
 ```
 
 ```{python}
+#| eval: false
 for v in [1.25, 7.375, 0.2]:
     print(f"  {v:6}  =  {to_binary_scientific(v)}")
 ```
+
+::: {.callout-tip collapse="true"}
+## ▶ Click to reveal the output
+
+```{python}
+#| echo: false
+for v in [1.25, 7.375, 0.2]:
+    print(f"  {v:6}  =  {to_binary_scientific(v)}")
+```
+:::
 
 ---
 
@@ -265,6 +277,7 @@ $$8.3 - 8 = \;?$$
 The result is *not* exactly $0.3$ — see the Excel screenshot in the slides.
 
 ```{python}
+#| eval: false
 # Note: 10  is an integer  → 10**40 is exact (Python int has arbitrary precision)
 #       10.0 is float64   → 10.0**40 is a floating-point number (finite precision)
 # The two behave very differently!
@@ -280,11 +293,25 @@ print(f"8.3 - 8 == 0.3? {8.3 - 8 == 0.3}")
 print(f"8.3 - 8 - 0.3   = {8.3 - 8 - 0.3}")
 ```
 
+::: {.callout-tip collapse="true"}
+## ▶ Click to reveal the output
+
+```{python}
+#| echo: false
+print(f"10  **40 + 500   - 10  **40 = {10**40   + 500   - 10**40}")
+print(f"10.0**40 + 500.0 - 10.0**40 = {10.0**40 + 500.0 - 10.0**40}")
+print(f"8.3 - 8 = {8.3 - 8}")
+print(f"8.3 - 8 == 0.3? {8.3 - 8 == 0.3}")
+print(f"8.3 - 8 - 0.3   = {8.3 - 8 - 0.3}")
+```
+:::
+
 ---
 
 ### Quiz: What is the value of x?
 
 ```{python}
+#| eval: false
 import math
 
 x = 100
@@ -296,6 +323,22 @@ for _ in range(60):
 print(f"Result: x = {x}")
 print(f"Expected: 100")
 ```
+
+::: {.callout-tip collapse="true"}
+## ▶ Click to reveal the output
+
+```{python}
+#| echo: false
+import math
+x = 100
+for _ in range(60):
+    x = math.sqrt(x)
+for _ in range(60):
+    x = x ** 2
+print(f"Result: x = {x}")
+print(f"Expected: 100")
+```
+:::
 
 > **Q:** Why does this happen? What does the result tell us about floating-point arithmetic?
 
@@ -432,6 +475,7 @@ $$\sqrt{1001} - \sqrt{999}
 = \frac{2}{\sqrt{1001} + \sqrt{999}}$$
 
 ```{python}
+#| eval: false
 import numpy as np
 
 # float32 has ~7 significant decimal digits.
@@ -454,6 +498,28 @@ print(f"Error (naive):    {abs(ref64 - float(naive32)):.2e}")
 print(f"Error (improved): {abs(ref64 - float(improved32)):.2e}")
 ```
 
+::: {.callout-tip collapse="true"}
+## ▶ Click to reveal the output
+
+```{python}
+#| echo: false
+import numpy as np
+a32, b32 = np.float32(10**6 + 1), np.float32(10**6 - 1)
+a64, b64 = np.float64(10**6 + 1), np.float64(10**6 - 1)
+naive32    = np.sqrt(a32) - np.sqrt(b32)
+improved32 = (a32 - b32) / (np.sqrt(a32) + np.sqrt(b32))
+ref64      = np.sqrt(a64) - np.sqrt(b64)
+print(f"a = {int(a32)},  b = {int(b32)}")
+print()
+print(f"√a − √b        =  {naive32:.8e}    (naive,    float32)")
+print(f"2 / (√a + √b)  =  {improved32:.8e}    (improved, float32)")
+print(f"√a − √b        =  {ref64:.16e}   (reference, float64)")
+print()
+print(f"Error (naive):    {abs(ref64 - float(naive32)):.2e}")
+print(f"Error (improved): {abs(ref64 - float(improved32)):.2e}")
+```
+:::
+
 ---
 
 ## Appendix: Interval Arithmetic *(for your information)*
@@ -468,6 +534,7 @@ $$\pi \in [3.14,\, 3.15], \quad \sqrt{2} \in [1.41,\, 1.42]
 - **Upper bound**: computed with **round-up**
 
 ```{python}
+#| eval: false
 # Requires:  pip install mpmath
 # mpmath.iv provides rigorous interval arithmetic with directed rounding,
 # so the resulting interval is *guaranteed* to contain the true value.
@@ -483,6 +550,22 @@ print(f"π      ∈ {pi_iv}")
 print(f"√2     ∈ {sq2_iv}")
 print(f"π + √2 ∈ {sum_iv}")
 ```
+
+::: {.callout-tip collapse="true"}
+## ▶ Click to reveal the output
+
+```{python}
+#| echo: false
+from mpmath import iv
+iv.dps = 10
+pi_iv  = iv.pi
+sq2_iv = iv.sqrt(2)
+sum_iv = pi_iv + sq2_iv
+print(f"π      ∈ {pi_iv}")
+print(f"√2     ∈ {sq2_iv}")
+print(f"π + √2 ∈ {sum_iv}")
+```
+:::
 
 ---
 

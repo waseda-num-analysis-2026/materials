@@ -1,0 +1,778 @@
+---
+title: "Lecture 3 — Floating-Point Numbers in Computers"
+subtitle: "Handout: Foundations of and Exercises in Numerical Analysis"
+date: today
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    toc-title: "Contents"
+    number-sections: true
+    html-math-method: mathjax
+    theme: cosmo
+    code-fold: false
+    code-tools: true
+    highlight-style: github
+execute:
+  echo: true
+  eval: true
+jupyter: python3
+---
+
+::: {.callout-tip collapse="true"}
+## How to use this handout — Evolving Study Notes with an AI Tutor
+
+This handout is **the main material for Lecture 3**.
+The companion slides (`3rd.html`) only contain the exercise announcements
+and special class instructions; **all the mathematical content lives here**.
+
+Like the Lecture 2 handout, this file is designed to **grow with you**.
+Whenever a line confuses you, ask the AI tutor (e.g. **GitHub Copilot Chat**
+in VS Code) and it will insert a **Q&A block** directly into this file,
+exactly where the question lives. Over the semester, your copy of this
+handout becomes *your own annotated textbook*.
+
+**The 30-second workflow**
+
+**Step 0 — Once per chat session.** Open `AI_TUTOR.md` in VS Code, then
+press **`⌘L`** (Mac) / **`Ctrl+L`** (Win/Linux) so the file is attached
+to the chat, and send a short prime message such as:
+
+```
+Read this file. From now on, follow these rules whenever I ask
+about my handout.
+```
+
+This gives the AI the Q&A format **once**, so you don't have to
+re-attach it for every question.
+
+**Then, for each question:**
+
+1. Open this handout (`3rd-handout.qmd`) in the editor.
+2. **Select** the line you don't understand.
+3. Press **`⌘L`** / **`Ctrl+L`** — your selection (and this file) are
+   attached to the same chat as Step 0.
+4. Just ask in plain language, e.g. *"I don't get this line — can you
+   add a Q&A block here?"*
+5. Re-render: `quarto render 3rd-handout.qmd` — your question and its
+   answer are now part of the handout (collapsed by default; click to
+   expand).
+
+> 💡 Why prime once with `AI_TUTOR.md` and then point with `⌘L`?
+> The rules file is long; sending it every time wastes context. Loading
+> it **once** and then pointing at the **exact line** you're stuck on
+> with `⌘L` keeps the AI focused on your question.
+
+See [`AI_TUTOR.md`](../../AI_TUTOR.md) at the repo root for the full
+rule set the AI follows, and for more prompt templates.
+:::
+
+---
+
+## Recap from Lecture 2 {#sec-recap}
+
+In the previous lecture we saw that **a real number can be expressed in the form**
+
+$$
+\pm \left(\dfrac{d_0}{\beta^0} + \dfrac{d_1}{\beta^1} + \dfrac{d_2}{\beta^2} + \cdots\right)\cdot \beta^{e}
+$$
+
+where
+
+- $\beta \geq 2$ is the **base** (e.g. 10, 2),
+- each $d_i$ is a **digit** with $0 \leq d_i \leq \beta - 1$,
+- $e$ is an **integer exponent**.
+
+**Examples.**
+
+$$
+7.375 = + \left(\dfrac{7}{10^0} + \dfrac{3}{10^1} + \dfrac{7}{10^2} + \dfrac{5}{10^3}\right)\cdot 10^{0} \quad (\beta = 10)
+$$
+
+$$
+7.375 = + \left(\dfrac{1}{2^0} + \dfrac{1}{2^1} + \dfrac{1}{2^2} + \dfrac{0}{2^3} + \dfrac{1}{2^4} + \dfrac{1}{2^5}\right)\cdot 2^{2} \quad (\beta = 2)
+$$
+
+Some numbers are **finite in one base but infinite in another**:
+
+$$
+0.2 = +\left(\dfrac{2}{10^0}\right)\cdot 10^{-1} \quad (\beta = 10) \quad\text{[finite]}
+$$
+
+$$
+0.2 = +\left(\dfrac{1}{2^0} + \dfrac{1}{2^1} + \dfrac{0}{2^2} + \dfrac{0}{2^3} + \dfrac{1}{2^4} + \dfrac{1}{2^5} + \cdots\right)\cdot 2^{-3} \quad (\beta = 2) \quad\textbf{[infinite!]}
+$$
+
+And $\pi$ is infinite in **both** bases.
+
+> **Today's question.** A computer cannot store infinitely many digits.
+> So *what does a number actually look like inside a computer*?
+
+---
+
+## Floating-Point Numbers in Computers {#sec-fp-in-computers}
+
+Since computers cannot hold infinitely many digits, they **truncate** the
+expansion above to a fixed length $p$ and represent each number in the
+following finite form:
+
+$$
+\pm \left(\dfrac{d_0}{\beta^0} + \dfrac{d_1}{\beta^1} + \dfrac{d_2}{\beta^2} + \cdots + \dfrac{d_{p-1}}{\beta^{p-1}}\right)\cdot \beta^{e}
+$$
+
+The block in parentheses is called the **significand** (sometimes
+*mantissa*). The format is fully described by four parameters:
+
+| Symbol | Name | Meaning |
+|---|---|---|
+| $\beta$ | **base** | Usually 2 (binary) on real computers |
+| $p$ | **precision** | Number of digits stored in the significand |
+| $e$ | **exponent** | Integer in a finite range $E_{\min} \leq e \leq E_{\max}$ |
+| $d_i$ | **digits** | $0 \leq d_i \leq \beta - 1$ |
+
+::: {.callout-note}
+## Your notes
+
+*(Why do you think computers chose $\beta = 2$ instead of $\beta = 10$?)*
+:::
+
+---
+
+## IEEE 754 binary64 (a.k.a. `double`, `float64`) {#sec-ieee754}
+
+Almost every modern CPU uses the **IEEE 754** standard. Its 64-bit
+floating-point format — called **binary64**, **double**, or **float64** —
+is the default for `float` in Python, `double` in C/Java, etc.
+
+::: {.callout-tip icon=false}
+## Definition (binary64)
+
+$$
+\beta = 2,\qquad p = 53,\qquad E_{\min} = -1022,\qquad E_{\max} = 1023.
+$$
+
+A number is stored as
+
+$$
+\pm \left(\dfrac{d_0}{2^0} + \dfrac{d_1}{2^1} + \dfrac{d_2}{2^2} + \cdots + \dfrac{d_{52}}{2^{52}}\right)\cdot 2^{e}
+\qquad (-1022 \leq e \leq 1023)
+$$
+
+with each bit $d_i \in \{0, 1\}$.
+:::
+
+The 64 bits are laid out as:
+
+| Field | Bits | What it stores |
+|---|---|---|
+| Sign | 1 bit | $\pm$ |
+| Exponent | 11 bits | $e$ (with a bias of $1023$) |
+| Significand | 52 bits | $d_1, d_2, \ldots, d_{52}$ (the leading $d_0$ is *implicit*) |
+
+### Why normalize? — to keep the representation **unique**
+
+Looking back at the formula
+
+$$
+\pm \left(\dfrac{d_0}{2^0} + \dfrac{d_1}{2^1} + \cdots + \dfrac{d_{52}}{2^{52}}\right)\cdot 2^{e},
+$$
+
+if we put **no restriction on $d_0$**, the *same* real number ends up
+having **many different representations**. For example, $6 = (110)_2$
+could be written as
+
+$$
+\begin{aligned}
+6 &= (1.10)_2 \cdot 2^{2} \\
+  &= (0.110)_2 \cdot 2^{3} \\
+  &= (0.0110)_2 \cdot 2^{4} \\
+  &= (11.0)_2 \cdot 2^{1} \\
+  &= \cdots
+\end{aligned}
+$$
+
+All of these correspond to the same value, just shifted by adjusting
+the exponent. This redundancy is bad for two reasons:
+
+1. **Wasted precision.** The leading zeros in $(0.0110)_2$ carry no
+   information — they only push the meaningful bits further right and
+   shrink the effective precision.
+2. **Comparison/arithmetic gets hard.** "Are these two bit patterns
+   equal?" should be a simple bit check, not a non-trivial computation.
+
+So the standard pins down a **unique** representation by requiring
+
+$$
+d_0 = 1.
+$$
+
+Numbers that satisfy this are called **normalized** numbers. With this
+rule, $6$ has exactly one representation: $(1.10)_2 \cdot 2^{2}$.
+
+::: {.callout-note}
+## Bonus: the "hidden bit"
+
+Because $d_0$ is *always* $1$ for normalized numbers, **we don't even
+need to store it**. The 52 stored bits give us **53 bits of effective
+precision** for free. This trick is built into IEEE 754 binary64.
+:::
+
+#### The smallest positive normalized number
+
+If we stick *strictly* with normalized numbers (i.e. $d_0 = 1$ always),
+the smallest positive number we can write down keeps only the leading
+$d_0 = 1$ and pushes the exponent to its minimum $E_{\min} = -1022$:
+
+$$
+m_n
+= \left(\dfrac{1}{2^0} + \dfrac{0}{2^1} + \dfrac{0}{2^2} + \cdots + \dfrac{0}{2^{52}}\right)\cdot 2^{-1022}
+= 1 \cdot 2^{-1022}
+\approx 2.225 \times 10^{-308}.
+$$
+
+### Denormalized numbers — fill the gap by trading precision for range
+
+If every number had to be normalized, then everything in the gap
+$(0, m_n)$ would simply have to be **rounded to $0$** — an abrupt
+cliff. That feels wasteful: we still have plenty of bit patterns left
+over (those with $d_0 = 0$ and $e = -1022$) that aren't being used for
+anything.
+
+To use those leftover bit patterns, the standard allows a *second*
+class of numbers, only at the very bottom of the range:
+
+- $d_0 = 0$
+- exponent fixed at $e = -1022$
+
+These are called **denormalized** (or **subnormal**) numbers. The
+trade-off is **precision**: with $d_0 = 0$, the leading $1$ of the
+significand has moved into $d_1$, $d_2$, $\ldots$ — every leading zero
+costs one bit of precision. In return, we can keep representing
+numbers that **get gradually closer and closer to $0$**, instead of
+falling off a cliff at $m_n$.
+
+#### The smallest positive number representable in binary64
+
+By taking $d_0 = 0$, only the very last bit $d_{52} = 1$, and
+$e = -1022$, we squeeze out the **smallest positive number that
+binary64 can represent at all**:
+
+$$
+m_d
+= \left(\dfrac{0}{2^0} + \dfrac{0}{2^1} + \cdots + \dfrac{0}{2^{51}} + \dfrac{1}{2^{52}}\right)\cdot 2^{-1022}
+= 2^{-52} \cdot 2^{-1022}
+= 2^{-1074}
+\approx 4.941 \times 10^{-324}.
+$$
+
+So the smallest positive `float64` value is *not* $m_n$ — it is this
+much tinier denormalized number.
+
+| Class | $d_0$ | $e$ | Precision |
+|---|---|---|---|
+| **Normalized** | $1$ | $-1022 \leq e \leq 1023$ | full 53 bits |
+| **Denormalized** | $0$ | $e = -1022$ (fixed) | gradually less than 53 bits |
+| Special: $\pm 0$, $\pm\infty$, NaN | — | — | — |
+
+Note that uniqueness of representation is still preserved (every
+denormalized number has $d_0 = 0$ and $e = -1022$, so each bit pattern
+still corresponds to exactly one real value). In short, denormalized
+numbers **smoothly fill the gap between $0$ and $m_n$ without
+breaking uniqueness, expanding the expressive power of `float64`**.
+
+::: {.callout-tip icon=false}
+## Floating-point numbers near $0$ — a schematic picture
+
+The schematic below shows how `float64` numbers are scattered on the
+real line near zero. (The figure is generated by the Python code cell
+below — feel free to tweak it and re-render.)
+
+```{python}
+#| label: fig-fp-near-zero
+#| fig-cap: "Float64 numbers near 0 — denormalized vs. normalized."
+#| fig-align: center
+#| echo: false
+
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.patches import FancyArrowPatch
+
+# --- Geometry of the schematic (arbitrary units, only ratios matter) ---
+m_n = 4.0           # x-coordinate that represents m_n
+band_widths = [m_n, 2 * m_n, 4 * m_n]   # widths of e = -1022, -1021, -1020
+ticks_per_band = 8                       # decorative ticks within each band
+n_denorm_ticks = 8                       # decorative ticks in the denormalized region
+m_d = m_n / n_denorm_ticks               # visual spacing in the denormalized region
+
+x_start_normal = m_n
+x_end_normal = x_start_normal + sum(band_widths)
+total_x = x_end_normal + 1.5
+
+# --- Figure ---
+fig, ax = plt.subplots(figsize=(11, 4.6))
+
+# Number line with arrow
+ax.annotate("", xy=(total_x, 0), xytext=(-1.2, 0),
+            arrowprops=dict(arrowstyle="->", color="black", lw=2))
+
+TICK_HALF = 0.18
+LABEL_Y_NEAR = -0.55     # m_n, 2 m_n, ...
+LABEL_Y_FAR = -1.05      # m_d (placed lower so it doesn't clash with "0")
+
+# Origin tick + "0" label (kept compact)
+ax.plot([0, 0], [-TICK_HALF, TICK_HALF], color="black", lw=2)
+ax.text(0, LABEL_Y_NEAR, r"$0$", ha="center", va="top",
+        fontsize=12, color="black")
+
+# --- Denormalized ticks: uniformly spaced between 0 and m_n ---
+denorm_xs = np.linspace(m_d, m_n - m_d, n_denorm_ticks - 1)
+for x in denorm_xs:
+    ax.plot([x, x], [-TICK_HALF * 0.7, TICK_HALF * 0.7],
+            color="#2563eb", lw=1.8)
+
+# Highlight m_d (label placed lower with a leader line to avoid overlapping "0")
+ax.plot([m_d, m_d], [-TICK_HALF, TICK_HALF], color="#2563eb", lw=2.5)
+ax.annotate(r"$m_d = 2^{-1074}$",
+            xy=(m_d, -TICK_HALF),
+            xytext=(m_d, LABEL_Y_FAR),
+            ha="center", va="top", fontsize=11, color="#2563eb",
+            arrowprops=dict(arrowstyle="-", color="#2563eb", lw=0.8))
+
+# --- Normalized ticks: each band is twice as wide as the previous one ---
+band_starts = [x_start_normal]
+for w in band_widths[:-1]:
+    band_starts.append(band_starts[-1] + w)
+
+for start, width in zip(band_starts, band_widths):
+    xs = np.linspace(start, start + width, ticks_per_band + 1)[1:-1]
+    for x in xs:
+        ax.plot([x, x], [-TICK_HALF * 0.7, TICK_HALF * 0.7],
+                color="#dc2626", lw=1.8)
+
+# Highlight m_n, 2 m_n, 4 m_n, 8 m_n
+boundary_xs = [x_start_normal] + [x_start_normal + sum(band_widths[:i + 1])
+                                  for i in range(len(band_widths))]
+boundary_labels = [r"$m_n = 2^{-1022}$", r"$2 m_n$", r"$4 m_n$", r"$8 m_n$"]
+for x, lbl in zip(boundary_xs, boundary_labels):
+    ax.plot([x, x], [-TICK_HALF, TICK_HALF], color="#dc2626", lw=2.5)
+    ax.text(x, LABEL_Y_NEAR, lbl, ha="center", va="top",
+            fontsize=11, color="#dc2626")
+
+# --- Region labels (above the line) ---
+ax.text((m_d + m_n) / 2, 0.95, "denormalized",
+        ha="center", va="center", color="#2563eb",
+        fontsize=13, fontweight="bold")
+ax.annotate("", xy=(m_n - 0.05, 0.6), xytext=(m_d + 0.05, 0.6),
+            arrowprops=dict(arrowstyle="<->", color="#2563eb", lw=1.6))
+
+ax.text((x_start_normal + x_end_normal) / 2, 0.95, "normalized",
+        ha="center", va="center", color="#dc2626",
+        fontsize=13, fontweight="bold")
+ax.annotate("", xy=(x_end_normal - 0.05, 0.6),
+            xytext=(x_start_normal + 0.05, 0.6),
+            arrowprops=dict(arrowstyle="<->", color="#dc2626", lw=1.6))
+
+# Per-band exponent annotations
+for start, width, e in zip(band_starts, band_widths,
+                           [-1022, -1021, -1020]):
+    ax.text(start + width / 2, 0.30, fr"$e = {e}$",
+            ha="center", va="center", color="#dc2626", fontsize=10)
+
+# --- Underflow region indicator (whole interval (0, m_n)) ---
+UNDERFLOW_Y = 1.18
+ax.annotate("", xy=(m_n - 0.05, UNDERFLOW_Y),
+            xytext=(0.05, UNDERFLOW_Y),
+            arrowprops=dict(arrowstyle="<->", color="gray", lw=1.3))
+ax.text(m_n / 2, UNDERFLOW_Y + 0.05, "underflow region",
+        ha="center", va="bottom", color="gray", fontsize=10, style="italic")
+
+# --- "|x| ≤ m_d/2 → 0" indicator (the tie at m_d/2 goes to 0 by ties-to-even) ---
+ax.annotate(r"$|x| \leq m_d / 2$ rounds to $0$",
+            xy=(m_d * 0.3, 0),
+            xytext=(1.5, -1.45),
+            arrowprops=dict(arrowstyle="->", color="gray", lw=1.4),
+            color="gray", fontsize=11, ha="left")
+
+# --- Axes cosmetics ---
+ax.set_xlim(-1.6, total_x + 0.2)
+ax.set_ylim(-1.7, 1.55)
+ax.axis("off")
+plt.tight_layout()
+plt.show()
+```
+
+What to notice:
+
+- **Normalized numbers** (right, red): each band $e = -1022, -1021,
+  -1020, \ldots$ is twice as wide as the previous one, with the same
+  *number* of equally-spaced ticks per band — so the spacing **doubles**
+  with each step away from $0$.
+- **Denormalized numbers** (left, blue): all squeezed into the single
+  band $e = -1022$ with $d_0 = 0$. The ticks are **uniformly spaced**
+  at width $2^{-1074} = m_d$.
+- $m_n = 2^{-1022}$ is the smallest *normalized* number; $m_d = 2^{-1074}$
+  is the smallest positive `float64` of any kind.
+- **Underflow** is the situation where the result of a computation has
+  magnitude less than $m_n$. It does **not** automatically mean the
+  value becomes $0$: in IEEE 754's *gradual underflow* the value is
+  represented as a denormalized number (with reduced precision). Under
+  round-to-nearest, only values with $|x| \leq m_d / 2$ are rounded to
+  $0$ — the equality case ($|x| = m_d/2$) is a tie that goes to $0$ by
+  *ties-to-even* (because the last bit of $0$ is even, while the last
+  bit of $m_d$ is odd). Values in $(m_d/2,\ m_d)$ instead round *up*
+  to $m_d$, not down to $0$.
+:::
+
+---
+
+## Largest Representable Number {#sec-max}
+
+We already derived the two *smallest* positive numbers — $m_n$
+([Section @sec-ieee754]) and $m_d$ — while introducing normalized and
+denormalized numbers. The remaining piece is the *largest* one.
+
+### Largest positive normalized number
+
+Take every digit to its maximum and the exponent to its maximum:
+
+$$
+M
+= \left(\dfrac{1}{2^0} + \dfrac{1}{2^1} + \cdots + \dfrac{1}{2^{52}}\right)\cdot 2^{1023}
+= (2 - 2^{-52})\cdot 2^{1023}
+\approx 1.798\times 10^{308}.
+$$
+
+### Summary — the three landmark values
+
+Together, $m_d$, $m_n$, and $M$ bracket the positive `float64` range:
+
+| Symbol | Value | Meaning |
+|---|---|---|
+| $m_d$ | $2^{-1074} \approx 4.941 \times 10^{-324}$ | smallest positive `float64` (denormalized) |
+| $m_n$ | $2^{-1022} \approx 2.225 \times 10^{-308}$ | smallest positive *normalized* `float64` |
+| $M$   | $(2 - 2^{-52})\cdot 2^{1023} \approx 1.798 \times 10^{308}$ | largest positive `float64` |
+
+Real numbers *far* below $m_d$ in magnitude round to $0$ (underflow)
+and *far* above $M$ become $\pm\infty$ (overflow). But values *just*
+outside the range — slightly smaller than $m_d$, or slightly larger
+than $M$ — instead round *inward* to $m_d$ or $M$ respectively, since
+under round-to-nearest the closest representable `float64` is the
+boundary itself.
+
+::: {.callout-note}
+## Verify in Python — what would this print?
+
+```{python}
+#| eval: false
+import sys
+fi = sys.float_info
+
+# m_d = 2**-1074           (smallest positive float64, denormalized)
+print(f"m_d  formula = 2**-1074                = {2.0**-1074:.6e}")
+print()
+
+# m_n = 2**-1022           (smallest positive normalized float64)
+print(f"m_n  formula = 2**-1022                = {2.0**-1022:.6e}")
+print(f"     Python  = sys.float_info.min      = {fi.min:.6e}")
+print()
+
+# M = (2 - 2**-52) * 2**1023  (largest positive float64)
+print(f"M    formula = (2 - 2**-52) * 2**1023  = {(2 - 2**-52) * 2.0**1023:.6e}")
+print(f"     Python  = sys.float_info.max      = {fi.max:.6e}")
+```
+
+::: {.callout-tip collapse="true"}
+## ▶ Click to reveal the output
+
+```{python}
+#| echo: false
+import sys
+fi = sys.float_info
+print(f"m_d  formula = 2**-1074                = {2.0**-1074:.6e}")
+print()
+print(f"m_n  formula = 2**-1022                = {2.0**-1022:.6e}")
+print(f"     Python  = sys.float_info.min      = {fi.min:.6e}")
+print()
+print(f"M    formula = (2 - 2**-52) * 2**1023  = {(2 - 2**-52) * 2.0**1023:.6e}")
+print(f"     Python  = sys.float_info.max      = {fi.max:.6e}")
+```
+:::
+:::
+
+---
+
+## Rounding "Nearest" {#sec-rounding}
+
+Most real numbers $x \in \mathbb{R}$ are **not** exactly representable in
+binary64. So when a computer is asked to store $x$, it has to **round** it
+to a representable number.
+
+Let $\mathbb{F}$ denote the set of all binary64 numbers, and pick a
+normalized $x$ satisfying $m_n \leq x \leq M$.
+
+::: {.callout-tip icon=false}
+## Definition (round-to-nearest, RN)
+
+When $x \notin \mathbb{F}$, the computer rounds $x$ to the **nearest
+representable** number $\mathrm{RN}(x) \in \mathbb{F}$, i.e.
+
+$$
+|x - \mathrm{RN}(x)| \;=\; \min_{y \in \mathbb{F}}\; |x - y|.
+$$
+:::
+
+```{python}
+#| label: fig-rn
+#| fig-cap: "Round-to-nearest: $\\mathrm{RN}(x)$ picks whichever neighbor in $\\mathbb{F}$ is closer to $x$."
+#| fig-align: center
+#| echo: false
+
+import matplotlib.pyplot as plt
+
+fig, ax = plt.subplots(figsize=(11, 3.6))
+
+# Number line with arrow
+ax.annotate("", xy=(11.5, 0), xytext=(-0.5, 0),
+            arrowprops=dict(arrowstyle="->", color="black", lw=2))
+
+# Representable points in F (filled blue circles)
+F_points = [1.0, 3.0, 5.0, 7.0, 9.0, 11.0]
+for p in F_points:
+    ax.plot(p, 0, marker="o", markersize=10,
+            markerfacecolor="#2563eb", markeredgecolor="#2563eb",
+            zorder=3)
+
+# Two neighbors that bracket x, plus the non-representable real x
+x1, x2 = 5.0, 7.0
+x_real = 5.7   # closer to x1
+
+# Non-representable x: open red marker
+ax.plot(x_real, 0, marker="o", markersize=11,
+        markerfacecolor="white", markeredgecolor="#dc2626",
+        markeredgewidth=2.2, zorder=4)
+
+# Labels under the line
+ax.text(x1, -0.55, r"$x_1$", ha="center", va="top",
+        fontsize=14, color="#2563eb", fontweight="bold")
+ax.text(x2, -0.55, r"$x_2$", ha="center", va="top",
+        fontsize=14, color="#2563eb", fontweight="bold")
+ax.text(x_real, -0.55, r"$x \notin \mathbb{F}$",
+        ha="center", va="top", fontsize=13, color="#dc2626")
+
+# Bracket: distance to x1 (closer, highlighted)
+BR_Y = 0.65
+ax.annotate("", xy=(x_real, BR_Y), xytext=(x1, BR_Y),
+            arrowprops=dict(arrowstyle="<->", color="#16a34a", lw=2))
+ax.text((x1 + x_real) / 2, BR_Y + 0.12, r"$|x - x_1|$",
+        ha="center", va="bottom", fontsize=12,
+        color="#16a34a", fontweight="bold")
+
+# Bracket: distance to x2 (farther, faded)
+ax.annotate("", xy=(x_real, BR_Y), xytext=(x2, BR_Y),
+            arrowprops=dict(arrowstyle="<->", color="gray", lw=1.5))
+ax.text((x2 + x_real) / 2, BR_Y + 0.12, r"$|x - x_2|$",
+        ha="center", va="bottom", fontsize=12, color="gray")
+
+# Winner annotation
+ax.annotate(r"$\mathrm{RN}(x) = x_1$",
+            xy=(x1, 0.05), xytext=(x1 - 1.6, -1.15),
+            arrowprops=dict(arrowstyle="->", color="#16a34a", lw=1.6),
+            color="#16a34a", fontsize=13, fontweight="bold",
+            ha="center")
+
+# "the set F" label
+ax.text(11.0, 0.45, r"the set $\mathbb{F}$",
+        ha="right", va="bottom", color="#2563eb", fontsize=12,
+        style="italic")
+
+# Axes cosmetics
+ax.set_xlim(-0.7, 11.7)
+ax.set_ylim(-1.4, 1.2)
+ax.axis("off")
+plt.tight_layout()
+plt.show()
+```
+
+### Other rounding modes
+
+IEEE 754 actually defines **four** rounding modes. Round-to-nearest is
+the default and the one we use throughout the course.
+
+| Mode | Symbol | Picks |
+|---|---|---|
+| Round to nearest (even) | $\mathrm{RN}$ | closest in $\mathbb{F}$; tie → even significand |
+| Round toward $+\infty$ | $\mathrm{RU}$ | upward / ceiling in $\mathbb{F}$ |
+| Round toward $-\infty$ | $\mathrm{RD}$ | downward / floor in $\mathbb{F}$ |
+| Round toward zero | $\mathrm{RZ}$ | truncation in $\mathbb{F}$ |
+
+We will revisit $\mathrm{RU}$ and $\mathrm{RD}$ in a later lecture on
+**interval arithmetic**.
+
+### Observation: rounding around $1$
+
+Look at the gap between $1$ and the **next** representable number larger
+than $1$. Call this gap $\varepsilon$.
+
+By definition both $1$ and $1 + \varepsilon$ live in $\mathbb{F}$, but
+their **last stored bits** are different:
+
+$$
+1 \;=\; \Bigl(\tfrac{1}{2^0} + \tfrac{0}{2^1} + \tfrac{0}{2^2} + \cdots + \tfrac{\boldsymbol{0}}{2^{52}}\Bigr)\cdot 2^{0}
+\qquad (d_{52} = 0)
+$$
+
+$$
+1 + \varepsilon \;=\; \Bigl(\tfrac{1}{2^0} + \tfrac{0}{2^1} + \cdots + \tfrac{0}{2^{51}} + \tfrac{\boldsymbol{1}}{2^{52}}\Bigr)\cdot 2^{0}
+\qquad (d_{52} = 1)
+$$
+
+Now ask the computer to round three reals between them:
+$1 + \tfrac{\varepsilon}{4}$, $1 + \tfrac{\varepsilon}{2}$, and
+$1 + \tfrac{3\varepsilon}{4}$. Where do they go?
+
+::: {.callout-note}
+## Notes
+
+<div style="height: 18em;"></div>
+:::
+
+#### Machine epsilon {#sec-machine-epsilon}
+
+The gap we just used near $1$ deserves a formal name. The
+**machine epsilon** of binary64 is
+
+$$
+\varepsilon \;:=\; 2^{-52} \;\approx\; 2.22\times 10^{-16},
+$$
+
+namely the distance from $1$ to the next representable number in
+$\mathbb{F}$. In Python it is also exposed as `sys.float_info.epsilon`.
+
+### Special case: tie-breaking by "round to even"
+
+When $x$ falls *exactly* halfway between two representable numbers $x_1$
+and $x_2$, round-to-nearest picks the one whose **last stored digit is
+even** (i.e. $d_{52} = 0$).
+
+This rule keeps long sums of rounded values **statistically unbiased** —
+naive "always round up on ties" would consistently over-estimate.
+
+```{python}
+#| label: fig-tie-even
+#| fig-cap: "Tie-breaking by ties-to-even: when $x$ is exactly halfway between $x_1$ and $x_2$, $\\mathrm{RN}(x)$ picks the side whose last bit $d_{52}$ is even."
+#| fig-align: center
+#| echo: false
+
+import matplotlib.pyplot as plt
+from matplotlib.patches import FancyArrowPatch
+
+fig, ax = plt.subplots(figsize=(11, 4.4))
+
+x1, x2 = 2.0, 8.0
+x_real = (x1 + x2) / 2          # exactly halfway
+
+# Number line
+ax.annotate("", xy=(x2 + 1.8, 0), xytext=(x1 - 1.8, 0),
+            arrowprops=dict(arrowstyle="->", color="black", lw=2))
+
+# Representable endpoints (filled blue)
+for x in (x1, x2):
+    ax.plot(x, 0, marker="o", markersize=12,
+            markerfacecolor="#2563eb", markeredgecolor="#2563eb", zorder=3)
+
+# Non-representable midpoint (open red)
+ax.plot(x_real, 0, marker="o", markersize=11,
+        markerfacecolor="white", markeredgecolor="#dc2626",
+        markeredgewidth=2.2, zorder=4)
+
+# Labels above the dots
+ax.text(x1, 0.45, r"$x_1$", ha="center", va="bottom",
+        fontsize=15, color="#2563eb", fontweight="bold")
+ax.text(x2, 0.45, r"$x_2$", ha="center", va="bottom",
+        fontsize=15, color="#2563eb", fontweight="bold")
+ax.text(x_real, 0.45, r"$x$", ha="center", va="bottom",
+        fontsize=15, color="#dc2626", fontweight="bold")
+
+# Equal-distance brackets above (visual confirmation of "tie")
+BR_Y = 1.10
+ax.annotate("", xy=(x_real - 0.05, BR_Y), xytext=(x1 + 0.18, BR_Y),
+            arrowprops=dict(arrowstyle="<->", color="gray", lw=1.4))
+ax.annotate("", xy=(x2 - 0.18, BR_Y), xytext=(x_real + 0.05, BR_Y),
+            arrowprops=dict(arrowstyle="<->", color="gray", lw=1.4))
+ax.text(x_real, BR_Y + 0.20, "exactly halfway",
+        ha="center", va="bottom", fontsize=11, color="gray", style="italic")
+
+# Parity labels below the line
+ax.text(x1, -0.50, r"$d_{52} = 0$  (even)", ha="center", va="top",
+        fontsize=12, color="#16a34a", fontweight="bold")
+ax.text(x2, -0.50, r"$d_{52} = 1$  (odd)",  ha="center", va="top",
+        fontsize=12, color="#9ca3af")
+
+# Chosen / rejected
+ax.text(x1, -1.05, "✓ chosen", ha="center", va="top",
+        fontsize=13, color="#16a34a", fontweight="bold")
+ax.text(x2, -1.05, "✗ rejected", ha="center", va="top",
+        fontsize=13, color="#9ca3af")
+
+# Curved arrows below the line
+# Solid green: x → x1 (chosen because d_52 = 0 is even)
+ax.add_patch(FancyArrowPatch(
+    (x_real, -0.18), (x1 + 0.22, -0.18),
+    connectionstyle="arc3,rad=0.45",
+    arrowstyle="->", color="#16a34a", lw=2.2, mutation_scale=22))
+# Dashed gray: x → x2 (rejected)
+ax.add_patch(FancyArrowPatch(
+    (x_real, -0.18), (x2 - 0.22, -0.18),
+    connectionstyle="arc3,rad=-0.45",
+    arrowstyle="->", color="#d1d5db", lw=1.6, mutation_scale=18,
+    linestyle="dashed"))
+
+# Axes cosmetics
+ax.set_xlim(x1 - 2.3, x2 + 2.3)
+ax.set_ylim(-1.85, 1.85)
+ax.axis("off")
+plt.tight_layout()
+plt.show()
+```
+
+::: {.callout-note}
+## Verify in Python — the three values from above
+
+```{python}
+#| eval: false
+eps = 2**-52   # = the gap between 1 and the next float64
+
+print(f"(1 + ε/4)  - 1 = {(1 + eps/4)     - 1!r}")
+print(f"(1 + ε/2)  - 1 = {(1 + eps/2)     - 1!r}")
+print(f"(1 + 3ε/4) - 1 = {(1 + 3*eps/4)   - 1!r}")
+```
+
+::: {.callout-tip collapse="true"}
+## ▶ Click to reveal the output
+
+```{python}
+#| echo: false
+eps = 2**-52
+print(f"(1 + ε/4)  - 1 = {(1 + eps/4)     - 1!r}")
+print(f"(1 + ε/2)  - 1 = {(1 + eps/2)     - 1!r}")
+print(f"(1 + 3ε/4) - 1 = {(1 + 3*eps/4)   - 1!r}")
+```
+:::
+:::
+
+---
+
+## Summary {#sec-summary}
+
+| Concept | Key fact |
+|---|---|
+| Floating-point format | $\pm$ significand $\cdot \beta^{e}$, with $p$ digits in the significand |
+| binary64 (IEEE 754) | $\beta = 2$, $p = 53$ effective bits (52 stored + 1 hidden), $E_{\min} = -1022$, $E_{\max} = 1023$ |
+| Normalization | $d_0 = 1$ ⇒ representation is **unique** and gains the *hidden bit* for free |
+| Denormalized numbers | $d_0 = 0$ at the smallest exponent — fill the gap near $0$ by trading precision for range |
+| Smallest positive denormalized | $m_d = 2^{-1074} \approx 4.941 \times 10^{-324}$ |
+| Smallest positive normalized | $m_n = 2^{-1022} \approx 2.225 \times 10^{-308}$ |
+| Largest positive | $M = (2 - 2^{-52}) \cdot 2^{1023} \approx 1.798 \times 10^{308}$ |
+| Machine epsilon | $\varepsilon = 2^{-52} \approx 2.22 \times 10^{-16}$ — distance from $1$ to the next float64 |
+| Default rounding | Round to nearest (RN); on a tie, the side with **even $d_{52}$** wins |
+

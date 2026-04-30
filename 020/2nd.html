@@ -102,6 +102,8 @@
   <link href="2nd_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="2nd_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="2nd_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="2nd_files/libs/revealjs/plugin/reveal-chalkboard/font-awesome/css/all.css" rel="stylesheet">
+  <link href="2nd_files/libs/revealjs/plugin/reveal-chalkboard/style.css" rel="stylesheet">
   <link href="2nd_files/libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
   <style type="text/css">
     .reveal div.sourceCode {
@@ -749,6 +751,7 @@ a = 1,\ b = -10^{15},\ c = 10^{14}
   <script src="2nd_files/libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
   <script src="2nd_files/libs/revealjs/plugin/reveal-menu/menu.js"></script>
   <script src="2nd_files/libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="2nd_files/libs/revealjs/plugin/reveal-chalkboard/plugin.js"></script>
   <script src="2nd_files/libs/revealjs/plugin/quarto-support/support.js"></script>
   
 
@@ -770,7 +773,8 @@ a = 1,\ b = -10^{15},\ c = 10^{14}
 'autoAnimateDuration': 1,
 'autoAnimateUnmatched': true,
 'jumpToSlide': true,
-'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleChalkboard(event)\"><kbd>b</kbd> Toggle Chalkboard</a></li>\n<li class=\"slide-tool-item\" data-item=\"6\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleNotesCanvas(event)\"><kbd>c</kbd> Toggle Notes Canvas</a></li>\n<li class=\"slide-tool-item\" data-item=\"7\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.downloadDrawings(event)\"><kbd>d</kbd> Download Drawings</a></li>\n<li class=\"slide-tool-item\" data-item=\"8\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'chalkboard': {"buttons":true,"storage":"chalkboardData_2nd"},
 'smaller': false,
  
         // Display controls in the bottom right corner
@@ -941,7 +945,7 @@ a = 1,\ b = -10^{15},\ c = 10^{14}
         },
 
         // reveal.js plugins
-        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, QuartoSupport,
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, RevealChalkboard, QuartoSupport,
 
           RevealMath,
           RevealNotes,
@@ -949,6 +953,235 @@ a = 1,\ b = -10^{15},\ c = 10^{14}
           RevealZoom
         ]
       });
+    </script>
+    <!--
+      chalkboard-toolbar.html — Reveal.js chalkboard helper toolbar
+      -------------------------------------------------------------
+      Injected via _quarto.yml `format.revealjs.include-after-body`.
+      Adds three small buttons at the top-right of the slide deck so the
+      lecturer doesn't need to memorise keyboard shortcuts during a live
+      class.
+
+          💾 Save board   → RevealChalkboard.download()        (key: D)
+          📂 Load board   → file-picker, writes JSON to sessionStorage,
+                            then reloads. The chalkboard plugin will pick
+                            the data up via its `storage` config option.
+          🗑 Clear board  → wipes the sessionStorage entry and reloads
+                            (a fresh deck without persisted strokes).
+
+      How loading works
+      -----------------
+      Quarto's chalkboard plugin loads previous strokes from
+      `sessionStorage[ chalkboard.storage ]` if that YAML option is set.
+      We exploit this: the Load button writes the user-picked JSON into
+      the same key, then `location.reload()` lets the plugin's normal
+      init path restore the strokes. No internal API hacking required.
+
+      Per-slide YAML must therefore include:
+
+          chalkboard:
+            storage: <unique-key-per-deck>
+            # src: my-board.json   # optional, baseline shipped with repo
+                                   # used when sessionStorage is empty
+                                   # (great for GitHub Pages publishing)
+    -->
+    <script>
+    (function () {
+      "use strict";
+
+      function getStorageKey() {
+        if (window.Reveal && Reveal.getConfig) {
+          const cfg = Reveal.getConfig().chalkboard || {};
+          if (cfg.storage) return cfg.storage;
+        }
+        return null;
+      }
+
+      const BTN_STYLE = {
+        padding: "6px 12px",
+        background: "rgba(255,255,255,0.92)",
+        border: "1px solid #d1d5db",
+        borderRadius: "6px",
+        font: "13px/1.2 system-ui, -apple-system, sans-serif",
+        color: "#111827",
+        cursor: "pointer",
+        boxShadow: "0 2px 6px rgba(0,0,0,0.10)",
+        userSelect: "none",
+      };
+
+      function makeBtn(label, title, onClick, extraStyle) {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.title = title;
+        btn.textContent = label;
+        Object.assign(btn.style, BTN_STYLE, extraStyle || {});
+        btn.addEventListener("click", onClick);
+        return btn;
+      }
+
+      function makeToolbar() {
+        if (document.getElementById("chalkboard-toolbar")) return;
+
+        const bar = document.createElement("div");
+        bar.id = "chalkboard-toolbar";
+        Object.assign(bar.style, {
+          position: "fixed",
+          top: "10px",
+          right: "10px",
+          zIndex: "100",
+          display: "flex",
+          gap: "6px",
+          alignItems: "center",
+        });
+
+        // ─── Save ────────────────────────────────────────────────────────
+        const saveBtn = makeBtn(
+          "💾 Save board",
+          "Save chalkboard / notes annotations as JSON  (shortcut: D)",
+          function () {
+            if (window.RevealChalkboard && typeof RevealChalkboard.download === "function") {
+              RevealChalkboard.download();
+            } else {
+              alert("Chalkboard plugin not loaded yet — try again in a moment.");
+            }
+          }
+        );
+
+        // ─── Load (file picker → sessionStorage → reload) ───────────────
+        //
+        // Browsers don't allow arbitrary directories as the initial folder
+        // (security: a page mustn't peek into your filesystem). What we can
+        // do is:
+        //   * Use the File System Access API with an `id` derived from the
+        //     deck's path so the browser remembers "where you picked from
+        //     last time on THIS deck" — after the first pick, it always
+        //     reopens in that directory.
+        //   * Fall back to <input type=file>, which most browsers also
+        //     remember the last directory of.
+        // First-time default is `downloads/`, since 💾 Save board writes
+        // there.
+
+        function applyJsonText(jsonText) {
+          const key = getStorageKey();
+          if (!key) {
+            alert(
+              "This slide deck doesn't have `chalkboard.storage` configured " +
+              "in its YAML, so dynamic load is not available.\n\n" +
+              "Add `chalkboard: { storage: <unique-key> }` to the .qmd " +
+              "front-matter, then re-render."
+            );
+            return;
+          }
+          try {
+            JSON.parse(jsonText); // sanity-check
+            sessionStorage.setItem(key, jsonText);
+            location.reload();
+          } catch (err) {
+            alert("Failed to parse JSON: " + err.message);
+          }
+        }
+
+        // Hidden legacy <input type="file"> as fallback for browsers that
+        // don't expose `showOpenFilePicker` (Safari, Firefox, file:// URLs).
+        const fileInput = document.createElement("input");
+        fileInput.type = "file";
+        fileInput.accept = "application/json,.json";
+        fileInput.style.display = "none";
+        fileInput.addEventListener("change", function (e) {
+          const f = e.target.files && e.target.files[0];
+          if (!f) return;
+          const reader = new FileReader();
+          reader.onload = function (ev) { applyJsonText(ev.target.result); };
+          reader.readAsText(f);
+          e.target.value = "";
+        });
+
+        async function pickAndLoad() {
+          // Modern path: showOpenFilePicker — supports `id` to remember the
+          // last-used directory per slide deck.
+          if (typeof window.showOpenFilePicker === "function") {
+            try {
+              const [handle] = await window.showOpenFilePicker({
+                id: "chalkboard-load-" + location.pathname.replace(/[^a-zA-Z0-9]+/g, "-").slice(0, 32),
+                startIn: "downloads",
+                multiple: false,
+                types: [{
+                  description: "Chalkboard JSON",
+                  accept: { "application/json": [".json"] },
+                }],
+              });
+              const file = await handle.getFile();
+              const text = await file.text();
+              applyJsonText(text);
+              return;
+            } catch (err) {
+              if (err && err.name === "AbortError") return; // user cancelled
+              console.warn("showOpenFilePicker failed, falling back to <input type=file>", err);
+            }
+          }
+          // Fallback path
+          fileInput.click();
+        }
+
+        const loadBtn = makeBtn(
+          "📂 Load board",
+          "Load a chalkboard JSON file. The browser will remember which folder " +
+          "you picked from last time on this deck.",
+          function () { pickAndLoad(); }
+        );
+
+        // ─── Clear (wipe sessionStorage + reload) ───────────────────────
+        const clearBtn = makeBtn(
+          "🗑 Clear board",
+          "Discard persisted strokes for this deck and reload a fresh deck",
+          function () {
+            const key = getStorageKey();
+            if (!key) {
+              alert("No `chalkboard.storage` key configured for this deck.");
+              return;
+            }
+            if (!confirm("Discard all persisted strokes for this slide deck and reload?")) return;
+            sessionStorage.removeItem(key);
+            location.reload();
+          }
+        );
+
+        // ─── "loaded" badge if sessionStorage already has data ──────────
+        const key = getStorageKey();
+        if (key) {
+          const stored = sessionStorage.getItem(key);
+          if (stored && stored !== "null" && stored !== "[]") {
+            const badge = document.createElement("span");
+            badge.textContent = "📂 loaded";
+            badge.title = "Strokes restored from sessionStorage  (key: " + key + ")";
+            Object.assign(badge.style, {
+              font: "12px/1.2 system-ui, -apple-system, sans-serif",
+              color: "#065f46",
+              padding: "3px 8px",
+              background: "rgba(220,252,231,0.95)",
+              border: "1px solid #a7f3d0",
+              borderRadius: "999px",
+              marginRight: "4px",
+              userSelect: "none",
+            });
+            bar.appendChild(badge);
+          }
+        }
+
+        bar.appendChild(saveBtn);
+        bar.appendChild(loadBtn);
+        bar.appendChild(clearBtn);
+        bar.appendChild(fileInput);
+
+        document.body.appendChild(bar);
+      }
+
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", makeToolbar);
+      } else {
+        makeToolbar();
+      }
+    })();
     </script>
     <script id="quarto-html-after-body" type="application/javascript">
       window.document.addEventListener("DOMContentLoaded", function (event) {

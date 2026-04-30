@@ -10,6 +10,8 @@ format:
   revealjs:
     theme: [default, custom.scss]
     slide-number: true
+    chalkboard:
+      storage: chalkboardData_1st
     title-slide-attributes:
       data-background-image: "images/image1.png"
       data-background-size: "contain"

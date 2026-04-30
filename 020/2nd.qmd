@@ -11,6 +11,8 @@ format:
     theme: [default, custom.scss]
     slide-number: true
     html-math-method: mathjax
+    chalkboard:
+      storage: chalkboardData_2nd
     title-slide-attributes:
       data-background-image: "images/image1.png"
       data-background-size: "contain"

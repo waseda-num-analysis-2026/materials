@@ -1,0 +1,236 @@
+---
+title: "Numerical Analysis"
+subtitle: "Foundations and Exercises"
+author: 
+  - name: "TANAKA, Kazuaki (田中 一成)"
+    email: "k.tanaka@aoni.waseda.jp"
+    affiliations:
+      - name: "Institute for Mathematical Science, Waseda University"
+format: 
+  revealjs:
+    theme: [default, custom.scss]
+    slide-number: true
+    html-math-method: mathjax
+    chalkboard:
+      storage: chalkboardData_3rd
+    title-slide-attributes:
+      data-background-image: "images/image1.png"
+      data-background-size: "contain"
+      data-background-opacity: "0.15"
+---
+
+## Before We Start {.smaller}
+
+```{=html}
+<div class="mission-tip" style="margin-top:0.6em; margin-bottom:0.8em;">
+  <div class="mission-tip-icon">📥</div>
+  <div class="mission-tip-content">
+    <strong>Please clone (or pull) the course materials repository right now.</strong>
+  </div>
+</div>
+
+<div style="display:flex; flex-direction:column; gap:0.5em; margin-bottom:0.8em;">
+  <div>
+    <div style="font-size:0.78em; color:#888; margin-bottom:0.2em;">First time</div>
+    <pre style="margin:0; background:#1e1e2e; color:#cdd6f4; border-radius:8px; padding:0.5em 1em; font-size:0.78em; line-height:1.5;"><code>git clone https://github.com/waseda-num-analysis-2026/materials</code></pre>
+  </div>
+  <div>
+    <div style="font-size:0.78em; color:#888; margin-bottom:0.2em;">Already cloned</div>
+    <pre style="margin:0; background:#1e1e2e; color:#cdd6f4; border-radius:8px; padding:0.5em 1em; font-size:0.78em; line-height:1.5;"><code>cd materials
+git pull</code></pre>
+  </div>
+</div>
+<p style="font-size:0.78em; color:#666; margin:0.3em 0 0.6em 0.2em;">💡 Not sure how? Just ask your AI — it can run these commands for you.</p>
+
+<div style="background:#f0f4ff; border-left:3px solid #4472C4; border-radius:6px; padding:0.6em 1em; font-size:0.82em;">
+  <strong>Today's materials</strong> are inside <code>030/</code>:
+  <table style="margin-top:0.4em; border-collapse:collapse; width:100%;">
+    <tr><td style="padding:0.15em 0.6em 0.15em 0;"><code>3rd-handout.qmd</code></td><td style="color:#555;">📘 <strong>main material</strong> — full content of this lecture</td></tr>
+    <tr><td style="padding:0.15em 0.6em 0.15em 0;"><code>3rd-handout.html</code></td><td style="color:#555;">rendered handout — viewable in browser</td></tr>
+    <tr><td style="padding:0.15em 0.6em 0.15em 0;"><code>3rd.qmd</code></td><td style="color:#555;">slides (this file) — exercises &amp; instructions only</td></tr>
+    <tr><td style="padding:0.15em 0.6em 0.15em 0;"><code>3rd.html</code></td><td style="color:#555;">rendered slides</td></tr>
+  </table>
+</div>
+```
+
+## Pair Work — Ex 2.3 {.smaller}
+
+```{=html}
+<div style="background:#f3e5f5; border-left:4px solid #7b1fa2; border-radius:8px; padding:0.7em 1em; margin-bottom:0.6em;">
+  <div style="font-size:0.85em; color:#4a148c; font-weight:700; letter-spacing:0.04em;">TODAY'S CLASS ACTIVITY (~90 min)</div>
+  <div style="font-size:0.92em; margin-top:0.2em;">Watch your partner's <strong>Ex 2.3 video</strong>, exchange feedback, and submit a sheet.</div>
+</div>
+
+<ol style="margin:0; padding-left:1.4em; font-size:0.85em; line-height:1.65;">
+  <li><strong>Form pairs</strong> — pairing method announced in class &nbsp;<span style="color:#888;">(10 min)</span></li>
+  <li><strong>Exchange video URLs</strong> with each other &nbsp;<span style="color:#888;">(5 min)</span><br>
+      <span style="font-size:0.92em; color:#555;">Just share the URL you submitted to Ex 2.3.</span></li>
+  <li><strong>Watch your partner's video</strong> &nbsp;<span style="color:#888;">(10 min)</span></li>
+  <li><strong>Submit feedback</strong> — the <em>Before Discussion</em> section &nbsp;<span style="color:#888;">(15 min)</span></li>
+  <li><strong>Discuss</strong> based on the feedback sheet &nbsp;<span style="color:#888;">(30 min)</span><br>
+      <span style="font-size:0.92em; color:#555;">Share three positive points first. Then "what would make it even more perfect".</span></li>
+  <li><strong>Submit your self-evaluation</strong> — the <em>After Discussion</em> section &nbsp;<span style="color:#888;">(15 min)</span></li>
+</ol>
+
+<div style="margin-top:0.6em; background:#fff8e1; border-left:4px solid #f9a825; border-radius:6px; padding:0.5em 0.9em; font-size:0.83em;">
+  📻 <strong>Please bring your earphones.</strong> Feedback sheet template: <em>Will Be Announced</em>.
+</div>
+```
+
+## Exercise 3.0 — Evolve the Handout with AI {.smaller .exercise-slide}
+
+<div style="padding-left: 2em; margin-top: 0.5em; margin-bottom: 0.4em;">
+  <strong>Repository:</strong> same as Ex 3.1
+  &nbsp;&nbsp;|&nbsp;&nbsp; <strong>Submit:</strong> <code>3rd-handout.qmd</code> (your edited copy)
+  &nbsp;&nbsp;|&nbsp;&nbsp; <strong style="color: #d84315;">Deadline: May 7 (Thu), 23:59</strong>
+</div>
+
+While studying `3rd-handout.qmd`, **insert at least 3 Q&A blocks** of your
+own — questions you actually had while reading, answered with the help of
+GitHub Copilot (or another AI) following the protocol in
+[`AI_TUTOR.md`](https://github.com/waseda-num-analysis-2026/materials/blob/main/AI_TUTOR.md).
+
+**How to submit**
+
+1. Copy `materials/030/3rd-handout.qmd` into the root of your **Ex 3** repository
+2. Open it in VS Code, then for each question:
+   - Highlight the line you don't understand
+   - Ask Copilot using the prompt in `AI_TUTOR.md` § *Student Prompt Cookbook*
+   - Verify the AI's answer, then commit the inserted Q&A block
+3. Repeat for **≥ 3 distinct questions**, then `git push`
+
+<div style="margin-top:0.5em; padding:0.5em 0.7em; background:#fff8e1; border-left:4px solid #f9a825; border-radius:6px; font-size:0.85em;">
+  💡 The Q&A block format and an English example are at the top of <code>3rd-handout.qmd</code>.
+</div>
+
+## Exercise 3.1 — Normalized Floating-Point Numbers {.smaller .exercise-slide}
+
+<div style="padding-left: 2em; margin-top: 0.5em; margin-bottom: 0.4em;">
+  <strong>Repository:</strong> Ex 3 — <a href="https://classroom.github.com/a/PLACEHOLDER_EX3">GitHub Classroom link</a>
+  &nbsp;&nbsp;|&nbsp;&nbsp; <strong>Edit:</strong> <code>ex3-1.qmd</code>
+  &nbsp;&nbsp;|&nbsp;&nbsp; <strong style="color: #d84315;">Deadline: May 7 (Thu), 23:59</strong>
+</div>
+
+For two toy floating-point systems, find normalizations and the
+smallest / largest positive normalized numbers.
+
+1. With $\beta = 10,\ p = 4,\ -2 \leq e \leq 3$:
+   - Normalize $-0.123$.
+   - Find the minimum and maximum positive normalized numbers.
+2. With $\beta = 2,\ p = 5,\ -6 \leq e \leq 7$:
+   - Normalize $0.25$ and $0.1$ (use round-to-nearest if not exact).
+   - Find the minimum and maximum positive normalized numbers.
+
+::: {.mission-box}
+**Reminder.** *Normalization* means writing a number with the leading
+digit $d_0 \neq 0$ (in binary, that means $d_0 = 1$). See the handout
+§ *Floating-Point Numbers in Computers*.
+:::
+
+## Exercise 3.2 — $1 + \eta - 1$ in `float64` {.smaller .exercise-slide}
+
+<div style="padding-left: 2em; margin-top: 0.5em; margin-bottom: 0.4em;">
+  <strong>Repository:</strong> same as Ex 3.1
+  &nbsp;&nbsp;|&nbsp;&nbsp; <strong>Edit:</strong> <code>ex3-2.qmd</code>
+  &nbsp;&nbsp;|&nbsp;&nbsp; <strong style="color: #d84315;">Deadline: May 7 (Thu), 23:59</strong>
+</div>
+
+<div style="margin: 0.4em 0 0.6em 0; padding: 0.5em 0.9em; background:#f3e5f5; border-left:4px solid #7b1fa2; border-radius:6px; font-size:0.85em;">
+  🎥 <strong>Pair-work target for next class.</strong> Record a 5-minute video explaining your answer — see the last slide for details.
+</div>
+
+For IEEE 754 binary64 (`float64`), compute and **explain**
+
+$$
+1 + \eta - 1 \quad\text{for}\quad \eta = 2^{-52},\ 2^{-53},\ 2^{-54}.
+$$
+
+You should explain *why* the answer is what it is in each case — not
+just print the number.
+
+::: {.mission-box}
+**Hint.** Recall the handout § *Machine Epsilon*. What is the gap
+between $1$ and the next representable number? What does
+round-to-nearest do when $1 + \eta$ is closer to $1$ than to
+$1 + \varepsilon$?
+:::
+
+## Exercise 3.3 — Where the Integer Grid Breaks {.smaller .exercise-slide}
+
+<div style="padding-left: 2em; margin-top: 0.5em; margin-bottom: 0.4em;">
+  <strong>Repository:</strong> same as Ex 3.1
+  &nbsp;&nbsp;|&nbsp;&nbsp; <strong>Edit:</strong> <code>ex3-3.qmd</code>
+  &nbsp;&nbsp;|&nbsp;&nbsp; <strong style="color: #d84315;">Deadline: May 7 (Thu), 23:59</strong>
+</div>
+
+Among the positive integers representable in `float64`, find the
+**smallest pair of consecutive integers** whose `float64` representations
+differ by **2** instead of **1**.
+
+<div style="margin-top:0.5em; padding:0.55em 0.85em; background:#ffebee; border-left:4px solid #c62828; border-radius:6px; font-size:0.85em;">
+  ⚠️ The answer must be derived <strong>theoretically</strong> from the
+  definition of `float64`. Code may be used as a verification tool only.
+</div>
+
+::: {.mission-box}
+**Hint.** When does the spacing between consecutive `float64` values
+exceed $1$? Express the gap in terms of $p$ and $e$.
+:::
+
+## Assignments and Preparation for Next Lecture {.smaller}
+
+```{=html}
+<div class="assign-list">
+  <div class="assign-card">
+    <div class="assign-num">1</div>
+    <div class="assign-body">
+      <p>Accept the <strong>Ex 3 GitHub Classroom</strong> link <strong>once</strong> — one repository for all four parts</p>
+      <ul>
+        <li>Edit <code>ex3-1.qmd</code>, <code>ex3-2.qmd</code>, <code>ex3-3.qmd</code> + your copy of <code>3rd-handout.qmd</code> for Ex 3.0 (all <code>.qmd</code>)</li>
+        <li><strong>All four parts:</strong> <span class="assign-due">May 7 (Thu), 23:59</span></li>
+        <li>Submit by <code>git push</code> — the last commit before the deadline is graded</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="assign-card">
+    <div class="assign-num">2</div>
+    <div class="assign-body">
+      <p>Record a <strong>5-minute explanatory video</strong> for <strong>Ex 3.2</strong> and paste its URL into <code>ex3-2.qmd</code></p>
+      <ul>
+        <li><strong>YouTube unlisted (限定公開)</strong> recommended; otherwise any link-shareable service (Google Drive, Dropbox, OneDrive, …)</li>
+        <li>Use Zoom, QuickTime, or OBS to record</li>
+        <li>Do <strong>not</strong> commit the MP4 file directly to the repository — paste a URL instead</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="assign-card">
+    <div class="assign-num">3</div>
+    <div class="assign-body">
+      <div style="display:grid; grid-template-columns:1.6fr 1fr; gap:1em;">
+        <div>
+          <p>Next class: <strong>"pair work"</strong> for Ex 3.2</p>
+          <ul>
+            <li>You will be assigned to pairs (announced later)</li>
+            <li>Each person will watch the partner's video</li>
+            <li>Discuss strengths and areas for improvement together</li>
+            <li>Both members submit separate feedback sheets</li>
+            <li>📻 <strong>Please bring your earphones</strong></li>
+          </ul>
+        </div>
+        <div style="background:#f3e5f5; border-radius:8px; padding:0.6em 0.8em;">
+          <div style="font-size:0.8em; color:#4a148c; font-weight:700; letter-spacing:0.04em; margin-bottom:0.35em;">Evaluated on 5 axes</div>
+          <ol style="margin:0; padding-left:1.2em; font-size:0.85em; line-height:1.55;">
+            <li>Accuracy &amp; Depth of Content</li>
+            <li>Clarity of Explanation</li>
+            <li>Structure &amp; Time Management</li>
+            <li>Audience Engagement</li>
+            <li>Effective Use of Visual Aids</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+```
