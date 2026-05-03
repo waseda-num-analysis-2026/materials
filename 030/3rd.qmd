@@ -79,10 +79,21 @@ git pull</code></pre>
 
 ## Exercise 3.0 — Evolve the Handout with AI {.smaller .exercise-slide}
 
+::: {.callout-important}
+## Schedule update (May 3)
+
+All Session 3 assignment deadlines have been **extended by one week**:
+**May 14 (Thu), 23:59 JST**.
+
+This was originally May 7. Also, the pair work for **Exercise 3.2**
+will be held in **Session 5 or later**, not in the next class.
+:::
+
 <div style="padding-left: 2em; margin-top: 0.5em; margin-bottom: 0.4em;">
   <strong>Repository:</strong> same as Ex 3.1
   &nbsp;&nbsp;|&nbsp;&nbsp; <strong>Submit:</strong> <code>3rd-handout.qmd</code> (your edited copy)
-  &nbsp;&nbsp;|&nbsp;&nbsp; <strong style="color: #d84315;">Deadline: May 7 (Thu), 23:59</strong>
+  &nbsp;&nbsp;|&nbsp;&nbsp; <strong style="color: #d84315;">Deadline: May 14 (Thu), 23:59</strong>
+  <span style="color:#6d4c41; font-size:0.82em;">(extended from May 7)</span>
 </div>
 
 While studying `3rd-handout.qmd`, **insert at least 3 Q&A blocks** of your
@@ -108,7 +119,8 @@ GitHub Copilot (or another AI) following the protocol in
 <div style="padding-left: 2em; margin-top: 0.5em; margin-bottom: 0.4em;">
   <strong>Repository:</strong> Ex 3 — <a href="https://classroom.github.com/a/tIfL0rKn">GitHub Classroom link</a>
   &nbsp;&nbsp;|&nbsp;&nbsp; <strong>Edit:</strong> <code>ex3-1.qmd</code>
-  &nbsp;&nbsp;|&nbsp;&nbsp; <strong style="color: #d84315;">Deadline: May 7 (Thu), 23:59</strong>
+  &nbsp;&nbsp;|&nbsp;&nbsp; <strong style="color: #d84315;">Deadline: May 14 (Thu), 23:59</strong>
+  <span style="color:#6d4c41; font-size:0.82em;">(extended from May 7)</span>
 </div>
 
 For two toy floating-point systems, find normalizations and the
@@ -132,11 +144,12 @@ digit $d_0 \neq 0$ (in binary, that means $d_0 = 1$). See the handout
 <div style="padding-left: 2em; margin-top: 0.5em; margin-bottom: 0.4em;">
   <strong>Repository:</strong> same as Ex 3.1
   &nbsp;&nbsp;|&nbsp;&nbsp; <strong>Edit:</strong> <code>ex3-2.qmd</code>
-  &nbsp;&nbsp;|&nbsp;&nbsp; <strong style="color: #d84315;">Deadline: May 7 (Thu), 23:59</strong>
+  &nbsp;&nbsp;|&nbsp;&nbsp; <strong style="color: #d84315;">Deadline: May 14 (Thu), 23:59</strong>
+  <span style="color:#6d4c41; font-size:0.82em;">(extended from May 7)</span>
 </div>
 
 <div style="margin: 0.4em 0 0.6em 0; padding: 0.5em 0.9em; background:#f3e5f5; border-left:4px solid #7b1fa2; border-radius:6px; font-size:0.85em;">
-  🎥 <strong>Pair-work target for next class.</strong> Record a 5-minute video explaining your answer — see the last slide for details.
+  🎥 <strong>Video still required.</strong> Record a 5-minute video explaining your answer. The pair work using this video is rescheduled to <strong>Session 5 or later</strong>.
 </div>
 
 For IEEE 754 binary64 (`float64`), compute and **explain**
@@ -160,7 +173,8 @@ $1 + \varepsilon$?
 <div style="padding-left: 2em; margin-top: 0.5em; margin-bottom: 0.4em;">
   <strong>Repository:</strong> same as Ex 3.1
   &nbsp;&nbsp;|&nbsp;&nbsp; <strong>Edit:</strong> <code>ex3-3.qmd</code>
-  &nbsp;&nbsp;|&nbsp;&nbsp; <strong style="color: #d84315;">Deadline: May 7 (Thu), 23:59</strong>
+  &nbsp;&nbsp;|&nbsp;&nbsp; <strong style="color: #d84315;">Deadline: May 14 (Thu), 23:59</strong>
+  <span style="color:#6d4c41; font-size:0.82em;">(extended from May 7)</span>
 </div>
 
 Among the positive integers representable in `float64`, find the
@@ -187,7 +201,7 @@ exceed $1$? Express the gap in terms of $p$ and $e$.
       <p>Accept the <strong>Ex 3 GitHub Classroom</strong> link <strong>once</strong> — one repository for all four parts</p>
       <ul>
         <li>Edit <code>ex3-1.qmd</code>, <code>ex3-2.qmd</code>, <code>ex3-3.qmd</code> + your copy of <code>3rd-handout.qmd</code> for Ex 3.0 (all <code>.qmd</code>)</li>
-        <li><strong>All four parts:</strong> <span class="assign-due">May 7 (Thu), 23:59</span></li>
+        <li><strong>All four parts:</strong> <span class="assign-due">May 14 (Thu), 23:59</span> <span style="color:#6d4c41;">(extended from May 7)</span></li>
         <li>Submit by <code>git push</code> — the last commit before the deadline is graded</li>
       </ul>
     </div>
@@ -210,13 +224,13 @@ exceed $1$? Express the gap in terms of $p$ and $e$.
     <div class="assign-body">
       <div style="display:grid; grid-template-columns:1.6fr 1fr; gap:1em;">
         <div>
-          <p>Next class: <strong>"pair work"</strong> for Ex 3.2</p>
+          <p><strong>Session 5 or later:</strong> pair work for Ex 3.2</p>
           <ul>
             <li>You will be assigned to pairs (announced later)</li>
             <li>Each person will watch the partner's video</li>
             <li>Discuss strengths and areas for improvement together</li>
             <li>Both members submit separate feedback sheets</li>
-            <li>📻 <strong>Please bring your earphones</strong></li>
+            <li>📻 <strong>Please bring your earphones when the pair work is announced</strong></li>
           </ul>
         </div>
         <div style="background:#f3e5f5; border-radius:8px; padding:0.6em 0.8em;">

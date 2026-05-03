@@ -28,6 +28,10 @@ Short how-to videos to help you get started:
 
 ## Exercises
 
+> **Schedule update (May 3):** Session 3 deadlines were extended by one
+> week. Ex 3.0–3.3 are now due **May 14, 23:59 JST** (originally May 7).
+> The pair work for Ex 3.2 will be held in **Session 5 or later**.
+
 | # | Exercise | Link | Deadline |
 |---|----------|------|----------|
 | 1.1 | Hello GitHub | [Access](https://classroom.github.com/a/oobb4OWM) | Apr 17, 23:59 |
@@ -35,10 +39,10 @@ Short how-to videos to help you get started:
 | 2.0 | Evolve the Handout with AI (≥ 3 Q&A in `2nd-handout.qmd`, see [`AI_TUTOR.md`](AI_TUTOR.md)) | same repo as 2.1 | Apr 30, 23:59 |
 | 2.1, 2.2 | Errors (one repo) | [Access](https://classroom.github.com/a/Xj_QQlK9) | Apr 24, 23:59 |
 | 2.3 | Cancellation in Quadratic Equation | same repo as 2.1 | Apr 30, 23:59 |
-| 3.0 | Evolve the Handout with AI (≥ 3 Q&A in `3rd-handout.qmd`, see [`AI_TUTOR.md`](AI_TUTOR.md)) | same repo as 3.1 | May 7, 23:59 |
-| 3.1 | Normalized Floating-Point Numbers | [Access](https://classroom.github.com/a/tIfL0rKn) | May 7, 23:59 |
-| 3.2 | $1+\eta-1$ in `float64` (+ video) | same repo as 3.1 | May 7, 23:59 |
-| 3.3 | Where the Integer Grid Breaks | same repo as 3.1 | May 7, 23:59 |
+| 3.0 | Evolve the Handout with AI (≥ 3 Q&A in `3rd-handout.qmd`, see [`AI_TUTOR.md`](AI_TUTOR.md)) | same repo as 3.1 | **May 14, 23:59** (extended from May 7) |
+| 3.1 | Normalized Floating-Point Numbers | [Access](https://classroom.github.com/a/tIfL0rKn) | **May 14, 23:59** (extended from May 7) |
+| 3.2 | $1+\eta-1$ in `float64` (+ video; pair work in Session 5 or later) | same repo as 3.1 | **May 14, 23:59** (extended from May 7) |
+| 3.3 | Where the Integer Grid Breaks | same repo as 3.1 | **May 14, 23:59** (extended from May 7) |
 
 ## Setup (one-time)
 
