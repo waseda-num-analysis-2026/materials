@@ -6,7 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2026-05-01">
+<meta name="dcterms.date" content="2026-05-03">
 
 <title>Lecture 3 — Floating-Point Numbers in Computers</title>
 <style>
@@ -152,7 +152,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">May 1, 2026</p>
+      <p class="date">May 3, 2026</p>
     </div>
   </div>
   
@@ -549,7 +549,7 @@ M
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<div id="9889d6d9" class="cell" data-execution_count="2">
+<div id="eb042b0f" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sys</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>fi <span class="op">=</span> sys.float_info</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -578,7 +578,7 @@ M
 </div>
 <div id="callout-6" class="callout-6-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<div id="6f217ffc" class="cell" data-execution_count="3">
+<div id="c0280fec" class="cell" data-execution_count="3">
 <div class="cell-output cell-output-stdout">
 <pre><code>m_d  formula = 2**-1074                = 4.940656e-324
 
@@ -685,18 +685,17 @@ Figure&nbsp;2: Round-to-nearest: <span class="math inline">\(\mathrm{RN}(x)\)</s
 \qquad (d_{52} = 1)
 \]</span></p>
 <p>Now ask the computer to round three reals between them: <span class="math inline">\(1 + \tfrac{\varepsilon}{4}\)</span>, <span class="math inline">\(1 + \tfrac{\varepsilon}{2}\)</span>, and <span class="math inline">\(1 + \tfrac{3\varepsilon}{4}\)</span>. Where do they go?</p>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
+<div id="cell-fig-rounding-near-one" class="cell" data-execution_count="5">
+<div class="cell-output cell-output-display">
+<div id="fig-rounding-near-one" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-rounding-near-one-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="3rd-handout_files/figure-html/fig-rounding-near-one-output-1.png" class="quarto-figure quarto-figure-center figure-img" width="1046" height="336">
 </div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>Notes
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<div style="height: 18em;">
-
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-rounding-near-one-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3: Rounding behavior between <span class="math inline">\(1\)</span> and <span class="math inline">\(1+\varepsilon\)</span>.
+</figcaption>
+</figure>
 </div>
 </div>
 </div>
@@ -713,7 +712,7 @@ Figure&nbsp;2: Round-to-nearest: <span class="math inline">\(\mathrm{RN}(x)\)</s
 <h3 data-number="5.3" class="anchored" data-anchor-id="special-case-tie-breaking-by-round-to-even"><span class="header-section-number">5.3</span> Special case: tie-breaking by “round to even”</h3>
 <p>When <span class="math inline">\(x\)</span> falls <em>exactly</em> halfway between two representable numbers <span class="math inline">\(x_1\)</span> and <span class="math inline">\(x_2\)</span>, round-to-nearest picks the one whose <strong>last stored digit is even</strong> (i.e.&nbsp;<span class="math inline">\(d_{52} = 0\)</span>).</p>
 <p>This rule keeps long sums of rounded values <strong>statistically unbiased</strong> — naive “always round up on ties” would consistently over-estimate.</p>
-<div id="cell-fig-tie-even" class="cell" data-execution_count="5">
+<div id="cell-fig-tie-even" class="cell" data-execution_count="6">
 <div class="cell-output cell-output-display">
 <div id="fig-tie-even" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
@@ -721,7 +720,7 @@ Figure&nbsp;2: Round-to-nearest: <span class="math inline">\(\mathrm{RN}(x)\)</s
 <img src="3rd-handout_files/figure-html/fig-tie-even-output-1.png" class="quarto-figure quarto-figure-center figure-img" width="1046" height="413">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-tie-even-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;3: Tie-breaking by ties-to-even: when <span class="math inline">\(x\)</span> is exactly halfway between <span class="math inline">\(x_1\)</span> and <span class="math inline">\(x_2\)</span>, <span class="math inline">\(\mathrm{RN}(x)\)</span> picks the side whose last bit <span class="math inline">\(d_{52}\)</span> is even.
+Figure&nbsp;4: Tie-breaking by ties-to-even: when <span class="math inline">\(x\)</span> is exactly halfway between <span class="math inline">\(x_1\)</span> and <span class="math inline">\(x_2\)</span>, <span class="math inline">\(\mathrm{RN}(x)\)</span> picks the side whose last bit <span class="math inline">\(d_{52}\)</span> is even.
 </figcaption>
 </figure>
 </div>
@@ -737,7 +736,7 @@ Figure&nbsp;3: Tie-breaking by ties-to-even: when <span class="math inline">\(x\
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<div id="ed0994b2" class="cell" data-execution_count="6">
+<div id="f95859dc" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>eps <span class="op">=</span> <span class="dv">2</span><span class="op">**-</span><span class="dv">52</span>   <span class="co"># = the gap between 1 and the next float64</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"(1 + ε/4)  - 1 = </span><span class="sc">{</span>(<span class="dv">1</span> <span class="op">+</span> eps<span class="op">/</span><span class="dv">4</span>)     <span class="op">-</span> <span class="dv">1</span><span class="sc">!r}</span><span class="ss">"</span>)</span>
@@ -745,7 +744,7 @@ Figure&nbsp;3: Tie-breaking by ties-to-even: when <span class="math inline">\(x\
 <span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"(1 + 3ε/4) - 1 = </span><span class="sc">{</span>(<span class="dv">1</span> <span class="op">+</span> <span class="dv">3</span><span class="op">*</span>eps<span class="op">/</span><span class="dv">4</span>)   <span class="op">-</span> <span class="dv">1</span><span class="sc">!r}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-10-contents" aria-controls="callout-10" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -754,9 +753,9 @@ Figure&nbsp;3: Tie-breaking by ties-to-even: when <span class="math inline">\(x\
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-10" class="callout-10-contents callout-collapse collapse">
+<div id="callout-9" class="callout-9-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<div id="10f60802" class="cell" data-execution_count="7">
+<div id="e3e3522d" class="cell" data-execution_count="8">
 <div class="cell-output cell-output-stdout">
 <pre><code>(1 + ε/4)  - 1 = 0.0
 (1 + ε/2)  - 1 = 0.0
@@ -839,9 +838,13 @@ Figure&nbsp;3: Tie-breaking by ties-to-even: when <span class="math inline">\(x\
     save / load
   • Toggle ON/OFF: when OFF, scrolling and clicks pass through normally
   • Save/Load annotations as JSON
+  • Toolbar is draggable via the ⋮⋮ grip; can be hidden via the ✕
+    button (a small ✏ launcher appears at top-right while hidden).
+    Position and visibility persist across reloads via localStorage.
   • Tested on Chrome / Edge (Mac & Windows)
   Keyboard shortcuts (when ON unless noted):
       Alt+A         toggle annotation mode (works also when OFF)
+      Alt+T         toggle TOOLBAR visibility (works also when OFF)
       P / H / E     select pen / highlighter / eraser
       Cmd/Ctrl+Z    undo
       Esc           turn annotation OFF
@@ -876,6 +879,10 @@ Figure&nbsp;3: Tie-breaking by ties-to-even: when <span class="math inline">\(x\
   // Highlighter: how transparent strokes should look.
   const HIGHLIGHTER_ALPHA = 0.35;
 
+  // localStorage keys (versioned in case the format changes later).
+  const STORAGE_POS_KEY = "annotation-toolbar-pos-v1";
+  const STORAGE_VIS_KEY = "annotation-toolbar-visible-v1";
+
   let enabled = false;
   let tool = "pen";
   let color = COLORS[0].value;
@@ -884,6 +891,14 @@ Figure&nbsp;3: Tie-breaking by ties-to-even: when <span class="math inline">\(x\
   let strokes = [];
   let currentStroke = null;
   let canvas, ctx, toolbar;
+  // The small "✏" launcher that re-opens the toolbar after it has been
+  // hidden via the ✕ button or Alt+T.
+  let showBtn = null;
+  // Drag state for moving the toolbar around the viewport.
+  let toolbarDragging = false;
+  let toolbarDragStartClient = null;
+  let toolbarDragStartLeft = 0;
+  let toolbarDragStartTop = 0;
   // Per-tool color memory: switching tools restores the last color used
   // with that tool. Pen defaults to black, highlighter to yellow.
   const TOOL_COLOR = {
@@ -1100,6 +1115,60 @@ Figure&nbsp;3: Tie-breaking by ties-to-even: when <span class="math inline">\(x\
       },
     });
 
+    // ── Drag handle ────────────────────────────────────────────
+    // A small "⋮⋮" grip the user can grab to move the whole toolbar
+    // anywhere on the viewport. We use Pointer Events so mouse, pen and
+    // touch all work; the resulting position is persisted to
+    // localStorage so it survives page reloads.
+    const dragHandle = el("div", {
+      id: "annotation-drag-handle",
+      title: "Drag to move toolbar",
+      style: {
+        cursor: "grab",
+        padding: "2px 6px",
+        color: "#6b7280",
+        font: "16px/1 system-ui, -apple-system, sans-serif",
+        userSelect: "none",
+        touchAction: "none",
+      },
+    }, "⋮⋮");
+
+    dragHandle.addEventListener("pointerdown", (e) => {
+      if (e.button !== undefined && e.button !== 0) return;
+      const rect = bar.getBoundingClientRect();
+      // Convert any right/bottom-anchored placement to absolute
+      // top/left so we can move it freely from here on.
+      bar.style.right = "auto";
+      bar.style.bottom = "auto";
+      bar.style.left = rect.left + "px";
+      bar.style.top = rect.top + "px";
+      toolbarDragging = true;
+      toolbarDragStartClient = { x: e.clientX, y: e.clientY };
+      toolbarDragStartLeft = rect.left;
+      toolbarDragStartTop = rect.top;
+      dragHandle.style.cursor = "grabbing";
+      try { dragHandle.setPointerCapture(e.pointerId); } catch (_) {}
+      e.preventDefault();
+    });
+    dragHandle.addEventListener("pointermove", (e) => {
+      if (!toolbarDragging) return;
+      const dx = e.clientX - toolbarDragStartClient.x;
+      const dy = e.clientY - toolbarDragStartClient.y;
+      bar.style.left = (toolbarDragStartLeft + dx) + "px";
+      bar.style.top  = (toolbarDragStartTop  + dy) + "px";
+      clampToolbarPosition();
+      e.preventDefault();
+    });
+    const endToolbarDrag = (e) => {
+      if (!toolbarDragging) return;
+      toolbarDragging = false;
+      dragHandle.style.cursor = "grab";
+      saveToolbarPosition();
+      try { dragHandle.releasePointerCapture(e.pointerId); } catch (_) {}
+    };
+    dragHandle.addEventListener("pointerup", endToolbarDrag);
+    dragHandle.addEventListener("pointercancel", endToolbarDrag);
+
     const onOff = makeBtn("✏ Annotate: OFF", () => setEnabled(!enabled), {
       style: { background: "#f3f4f6", fontWeight: "600" },
     });
@@ -1175,6 +1244,17 @@ Figure&nbsp;3: Tie-breaking by ties-to-even: when <span class="math inline">\(x\
       },
     });
 
+    // ── Hide button ────────────────────────────────────────────
+    // Collapses the toolbar entirely; a small "✏" launcher (built in
+    // makeShowButton) appears at top-right so the user can bring it
+    // back. Visibility state is persisted to localStorage.
+    const hideBtn = makeBtn("✕", () => setToolbarVisible(false), {
+      title: "Hide toolbar (Alt+T)",
+      style: { padding: "4px 8px", fontWeight: "600", color: "#6b7280" },
+    });
+    hideBtn.id = "annotation-hide";
+
+    bar.appendChild(dragHandle);
     bar.appendChild(onOff);
     bar.appendChild(sep());
     bar.appendChild(penBtn);
@@ -1190,9 +1270,105 @@ Figure&nbsp;3: Tie-breaking by ties-to-even: when <span class="math inline">\(x\
     bar.appendChild(saveBtn);
     bar.appendChild(loadBtn);
     bar.appendChild(fileInput);
+    bar.appendChild(sep());
+    bar.appendChild(hideBtn);
 
     document.body.appendChild(bar);
     return bar;
+  }
+
+  // ── Toolbar position / visibility helpers ──────────────────────
+  function clampToolbarPosition() {
+    if (!toolbar) return;
+    // Only clamp when the user has actually positioned the toolbar
+    // via left/top (i.e. dragged or restored). The default
+    // top/right anchor handles itself.
+    if (!toolbar.style.left || !toolbar.style.top) return;
+    const margin = 4;
+    const w = toolbar.offsetWidth;
+    const h = toolbar.offsetHeight;
+    let left = parseFloat(toolbar.style.left);
+    let top = parseFloat(toolbar.style.top);
+    if (isNaN(left) || isNaN(top)) return;
+    left = Math.max(margin, Math.min(window.innerWidth  - w - margin, left));
+    top  = Math.max(margin, Math.min(window.innerHeight - h - margin, top));
+    toolbar.style.right = "auto";
+    toolbar.style.bottom = "auto";
+    toolbar.style.left = left + "px";
+    toolbar.style.top = top + "px";
+  }
+
+  function saveToolbarPosition() {
+    if (!toolbar) return;
+    try {
+      const left = parseFloat(toolbar.style.left);
+      const top = parseFloat(toolbar.style.top);
+      if (!isNaN(left) && !isNaN(top)) {
+        localStorage.setItem(STORAGE_POS_KEY, JSON.stringify({ left, top }));
+      }
+    } catch (_) {}
+  }
+
+  function restoreToolbarPosition() {
+    if (!toolbar) return;
+    try {
+      const raw = localStorage.getItem(STORAGE_POS_KEY);
+      if (!raw) return;
+      const pos = JSON.parse(raw);
+      if (pos && typeof pos.left === "number" && typeof pos.top === "number") {
+        toolbar.style.right = "auto";
+        toolbar.style.bottom = "auto";
+        toolbar.style.left = pos.left + "px";
+        toolbar.style.top = pos.top + "px";
+        clampToolbarPosition();
+      }
+    } catch (_) {}
+  }
+
+  function setToolbarVisible(on) {
+    if (!toolbar) return;
+    toolbar.style.display = on ? "flex" : "none";
+    if (showBtn) showBtn.style.display = on ? "none" : "flex";
+    try { localStorage.setItem(STORAGE_VIS_KEY, on ? "1" : "0"); } catch (_) {}
+  }
+
+  function restoreToolbarVisibility() {
+    let visible = true;
+    try {
+      const raw = localStorage.getItem(STORAGE_VIS_KEY);
+      if (raw === "0") visible = false;
+    } catch (_) {}
+    setToolbarVisible(visible);
+  }
+
+  // Tiny round "✏" button visible only while the toolbar is hidden,
+  // so the user can always bring the toolbar back without remembering
+  // the keyboard shortcut.
+  function makeShowButton() {
+    return el("button", {
+      type: "button",
+      title: "Show annotation toolbar (Alt+T)",
+      style: {
+        position: "fixed",
+        top: "12px",
+        right: "12px",
+        zIndex: "2147483647",
+        width: "36px",
+        height: "36px",
+        borderRadius: "50%",
+        border: "1px solid #d1d5db",
+        background: "rgba(255,255,255,0.96)",
+        color: "#111827",
+        boxShadow: "0 4px 14px rgba(0,0,0,0.10)",
+        cursor: "pointer",
+        font: "16px/1 system-ui, -apple-system, sans-serif",
+        display: "none",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "0",
+      },
+      onclick: () => setToolbarVisible(true),
+    }, "✏");
   }
 
   function setEnabled(on) {
@@ -1397,6 +1573,12 @@ Figure&nbsp;3: Tie-breaking by ties-to-even: when <span class="math inline">\(x\
       setEnabled(!enabled);
       return;
     }
+    if (e.altKey && (e.key === "t" || e.key === "T")) {
+      e.preventDefault();
+      const visible = toolbar && toolbar.style.display !== "none";
+      setToolbarVisible(!visible);
+      return;
+    }
     if (!enabled) return;
     if ((e.metaKey || e.ctrlKey) && e.key === "z") {
       e.preventDefault(); undo();
@@ -1416,13 +1598,21 @@ Figure&nbsp;3: Tie-breaking by ties-to-even: when <span class="math inline">\(x\
     canvas = makeCanvas();
     resizeCanvas();
     toolbar = makeToolbar();
+    showBtn = makeShowButton();
+    document.body.appendChild(showBtn);
+    // Restore previous position + visibility (if any).
+    restoreToolbarPosition();
+    restoreToolbarVisibility();
     setTool("pen");
 
     canvas.addEventListener("pointerdown", onPointerDown);
     canvas.addEventListener("pointermove", onPointerMove);
     canvas.addEventListener("pointerup", onPointerUp);
     canvas.addEventListener("pointercancel", onPointerUp);
-    window.addEventListener("resize", resizeCanvas);
+    window.addEventListener("resize", () => {
+      resizeCanvas();
+      clampToolbarPosition();
+    });
     window.addEventListener("keydown", onKeyDown);
     // Re-render whenever the user scrolls so strokes appear locked to
     // the underlying page content.
@@ -2526,151 +2716,248 @@ Figure&nbsp;3: Tie-breaking by ties-to-even: when <span class="math inline">\(x\
 <span id="cb6-638"><a href="#cb6-638" aria-hidden="true" tabindex="-1"></a>$1 + \tfrac{\varepsilon}{4}$, $1 + \tfrac{\varepsilon}{2}$, and</span>
 <span id="cb6-639"><a href="#cb6-639" aria-hidden="true" tabindex="-1"></a>$1 + \tfrac{3\varepsilon}{4}$. Where do they go?</span>
 <span id="cb6-640"><a href="#cb6-640" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-641"><a href="#cb6-641" aria-hidden="true" tabindex="-1"></a>::: {.callout-note}</span>
-<span id="cb6-642"><a href="#cb6-642" aria-hidden="true" tabindex="-1"></a><span class="fu">## Notes</span></span>
-<span id="cb6-643"><a href="#cb6-643" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-644"><a href="#cb6-644" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">div</span><span class="ot"> style</span><span class="op">=</span><span class="st">"height: 18em;"</span><span class="dt">&gt;&lt;/</span><span class="kw">div</span><span class="dt">&gt;</span></span>
-<span id="cb6-645"><a href="#cb6-645" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb6-646"><a href="#cb6-646" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-647"><a href="#cb6-647" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Machine epsilon {#sec-machine-epsilon}</span></span>
+<span id="cb6-643"><a href="#cb6-643" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb6-644"><a href="#cb6-644" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-rounding-near-one</span></span>
+<span id="cb6-645"><a href="#cb6-645" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Rounding behavior between $1$ and $1+\\varepsilon$."</span></span>
+<span id="cb6-646"><a href="#cb6-646" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-align: center</span></span>
+<span id="cb6-647"><a href="#cb6-647" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
 <span id="cb6-648"><a href="#cb6-648" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-649"><a href="#cb6-649" aria-hidden="true" tabindex="-1"></a>The gap we just used near $1$ deserves a formal name. The</span>
-<span id="cb6-650"><a href="#cb6-650" aria-hidden="true" tabindex="-1"></a>**machine epsilon** of binary64 is</span>
+<span id="cb6-649"><a href="#cb6-649" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb6-650"><a href="#cb6-650" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> matplotlib.patches <span class="im">import</span> FancyArrowPatch</span>
 <span id="cb6-651"><a href="#cb6-651" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-652"><a href="#cb6-652" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb6-653"><a href="#cb6-653" aria-hidden="true" tabindex="-1"></a>\varepsilon \;:=\; 2^{-52} \;\approx\; 2.22\times 10^{-16},</span>
-<span id="cb6-654"><a href="#cb6-654" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb6-655"><a href="#cb6-655" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-656"><a href="#cb6-656" aria-hidden="true" tabindex="-1"></a>namely the distance from $1$ to the next representable number in</span>
-<span id="cb6-657"><a href="#cb6-657" aria-hidden="true" tabindex="-1"></a>$\mathbb{F}$. In Python it is also exposed as <span class="in">`sys.float_info.epsilon`</span>.</span>
-<span id="cb6-658"><a href="#cb6-658" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-659"><a href="#cb6-659" aria-hidden="true" tabindex="-1"></a><span class="fu">### Special case: tie-breaking by "round to even"</span></span>
+<span id="cb6-652"><a href="#cb6-652" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">11</span>, <span class="fl">3.6</span>))</span>
+<span id="cb6-653"><a href="#cb6-653" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-654"><a href="#cb6-654" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Geometry ---</span></span>
+<span id="cb6-655"><a href="#cb6-655" aria-hidden="true" tabindex="-1"></a>x_1 <span class="op">=</span> <span class="fl">0.0</span></span>
+<span id="cb6-656"><a href="#cb6-656" aria-hidden="true" tabindex="-1"></a>x_eps <span class="op">=</span> <span class="fl">4.0</span></span>
+<span id="cb6-657"><a href="#cb6-657" aria-hidden="true" tabindex="-1"></a>x_14 <span class="op">=</span> x_1 <span class="op">+</span> (x_eps <span class="op">-</span> x_1) <span class="op">*</span> <span class="fl">0.25</span></span>
+<span id="cb6-658"><a href="#cb6-658" aria-hidden="true" tabindex="-1"></a>x_12 <span class="op">=</span> x_1 <span class="op">+</span> (x_eps <span class="op">-</span> x_1) <span class="op">*</span> <span class="fl">0.5</span></span>
+<span id="cb6-659"><a href="#cb6-659" aria-hidden="true" tabindex="-1"></a>x_34 <span class="op">=</span> x_1 <span class="op">+</span> (x_eps <span class="op">-</span> x_1) <span class="op">*</span> <span class="fl">0.75</span></span>
 <span id="cb6-660"><a href="#cb6-660" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-661"><a href="#cb6-661" aria-hidden="true" tabindex="-1"></a>When $x$ falls *exactly* halfway between two representable numbers $x_1$</span>
-<span id="cb6-662"><a href="#cb6-662" aria-hidden="true" tabindex="-1"></a>and $x_2$, round-to-nearest picks the one whose **last stored digit is</span>
-<span id="cb6-663"><a href="#cb6-663" aria-hidden="true" tabindex="-1"></a>even** (i.e. $d_{52} = 0$).</span>
-<span id="cb6-664"><a href="#cb6-664" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-665"><a href="#cb6-665" aria-hidden="true" tabindex="-1"></a>This rule keeps long sums of rounded values **statistically unbiased** —</span>
-<span id="cb6-666"><a href="#cb6-666" aria-hidden="true" tabindex="-1"></a>naive "always round up on ties" would consistently over-estimate.</span>
-<span id="cb6-667"><a href="#cb6-667" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-670"><a href="#cb6-670" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb6-671"><a href="#cb6-671" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-tie-even</span></span>
-<span id="cb6-672"><a href="#cb6-672" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Tie-breaking by ties-to-even: when $x$ is exactly halfway between $x_1$ and $x_2$, $\\mathrm{RN}(x)$ picks the side whose last bit $d_{52}$ is even."</span></span>
-<span id="cb6-673"><a href="#cb6-673" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-align: center</span></span>
-<span id="cb6-674"><a href="#cb6-674" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
-<span id="cb6-675"><a href="#cb6-675" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-676"><a href="#cb6-676" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb6-677"><a href="#cb6-677" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> matplotlib.patches <span class="im">import</span> FancyArrowPatch</span>
-<span id="cb6-678"><a href="#cb6-678" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-679"><a href="#cb6-679" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">11</span>, <span class="fl">4.4</span>))</span>
+<span id="cb6-661"><a href="#cb6-661" aria-hidden="true" tabindex="-1"></a>TICK_HALF <span class="op">=</span> <span class="fl">0.10</span></span>
+<span id="cb6-662"><a href="#cb6-662" aria-hidden="true" tabindex="-1"></a>DOT_SIZE <span class="op">=</span> <span class="dv">9</span></span>
+<span id="cb6-663"><a href="#cb6-663" aria-hidden="true" tabindex="-1"></a>GREEN <span class="op">=</span> <span class="st">"#16a34a"</span></span>
+<span id="cb6-664"><a href="#cb6-664" aria-hidden="true" tabindex="-1"></a>BLUE <span class="op">=</span> <span class="st">"#2563eb"</span></span>
+<span id="cb6-665"><a href="#cb6-665" aria-hidden="true" tabindex="-1"></a>RED <span class="op">=</span> <span class="st">"#dc2626"</span></span>
+<span id="cb6-666"><a href="#cb6-666" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-667"><a href="#cb6-667" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Number line ---</span></span>
+<span id="cb6-668"><a href="#cb6-668" aria-hidden="true" tabindex="-1"></a>ax.annotate(<span class="st">""</span>, xy<span class="op">=</span>(x_eps <span class="op">+</span> <span class="fl">2.5</span>, <span class="dv">0</span>), xytext<span class="op">=</span>(x_1 <span class="op">-</span> <span class="fl">1.2</span>, <span class="dv">0</span>),</span>
+<span id="cb6-669"><a href="#cb6-669" aria-hidden="true" tabindex="-1"></a>            arrowprops<span class="op">=</span><span class="bu">dict</span>(arrowstyle<span class="op">=</span><span class="st">"-&gt;"</span>, color<span class="op">=</span><span class="st">"black"</span>, lw<span class="op">=</span><span class="fl">1.2</span>))</span>
+<span id="cb6-670"><a href="#cb6-670" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-671"><a href="#cb6-671" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Endpoint dots ---</span></span>
+<span id="cb6-672"><a href="#cb6-672" aria-hidden="true" tabindex="-1"></a>ax.plot([x_1, x_eps], [<span class="dv">0</span>, <span class="dv">0</span>], marker<span class="op">=</span><span class="st">"o"</span>, markersize<span class="op">=</span>DOT_SIZE,</span>
+<span id="cb6-673"><a href="#cb6-673" aria-hidden="true" tabindex="-1"></a>        color<span class="op">=</span>BLUE, ls<span class="op">=</span><span class="st">""</span>, zorder<span class="op">=</span><span class="dv">3</span>)</span>
+<span id="cb6-674"><a href="#cb6-674" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-675"><a href="#cb6-675" aria-hidden="true" tabindex="-1"></a><span class="co"># Endpoint labels (a little above and to the side of each dot)</span></span>
+<span id="cb6-676"><a href="#cb6-676" aria-hidden="true" tabindex="-1"></a>ax.text(x_1 <span class="op">-</span> <span class="fl">0.30</span>, <span class="fl">0.10</span>, <span class="st">"1"</span>,</span>
+<span id="cb6-677"><a href="#cb6-677" aria-hidden="true" tabindex="-1"></a>        ha<span class="op">=</span><span class="st">"right"</span>, va<span class="op">=</span><span class="st">"bottom"</span>, fontsize<span class="op">=</span><span class="dv">19</span>, fontweight<span class="op">=</span><span class="st">"bold"</span>)</span>
+<span id="cb6-678"><a href="#cb6-678" aria-hidden="true" tabindex="-1"></a>ax.text(x_eps <span class="op">+</span> <span class="fl">0.10</span>, <span class="fl">0.10</span>, <span class="vs">r"</span><span class="dv">$</span><span class="vs">1 </span><span class="op">+</span><span class="vs"> </span><span class="ch">\v</span><span class="vs">arepsilon</span><span class="dv">$</span><span class="vs">"</span>,</span>
+<span id="cb6-679"><a href="#cb6-679" aria-hidden="true" tabindex="-1"></a>        ha<span class="op">=</span><span class="st">"left"</span>, va<span class="op">=</span><span class="st">"bottom"</span>, fontsize<span class="op">=</span><span class="dv">19</span>, fontweight<span class="op">=</span><span class="st">"bold"</span>)</span>
 <span id="cb6-680"><a href="#cb6-680" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-681"><a href="#cb6-681" aria-hidden="true" tabindex="-1"></a>x1, x2 <span class="op">=</span> <span class="fl">2.0</span>, <span class="fl">8.0</span></span>
-<span id="cb6-682"><a href="#cb6-682" aria-hidden="true" tabindex="-1"></a>x_real <span class="op">=</span> (x1 <span class="op">+</span> x2) <span class="op">/</span> <span class="dv">2</span>          <span class="co"># exactly halfway</span></span>
-<span id="cb6-683"><a href="#cb6-683" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-684"><a href="#cb6-684" aria-hidden="true" tabindex="-1"></a><span class="co"># Number line</span></span>
-<span id="cb6-685"><a href="#cb6-685" aria-hidden="true" tabindex="-1"></a>ax.annotate(<span class="st">""</span>, xy<span class="op">=</span>(x2 <span class="op">+</span> <span class="fl">1.8</span>, <span class="dv">0</span>), xytext<span class="op">=</span>(x1 <span class="op">-</span> <span class="fl">1.8</span>, <span class="dv">0</span>),</span>
-<span id="cb6-686"><a href="#cb6-686" aria-hidden="true" tabindex="-1"></a>            arrowprops<span class="op">=</span><span class="bu">dict</span>(arrowstyle<span class="op">=</span><span class="st">"-&gt;"</span>, color<span class="op">=</span><span class="st">"black"</span>, lw<span class="op">=</span><span class="dv">2</span>))</span>
-<span id="cb6-687"><a href="#cb6-687" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-688"><a href="#cb6-688" aria-hidden="true" tabindex="-1"></a><span class="co"># Representable endpoints (filled blue)</span></span>
-<span id="cb6-689"><a href="#cb6-689" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> x <span class="kw">in</span> (x1, x2):</span>
-<span id="cb6-690"><a href="#cb6-690" aria-hidden="true" tabindex="-1"></a>    ax.plot(x, <span class="dv">0</span>, marker<span class="op">=</span><span class="st">"o"</span>, markersize<span class="op">=</span><span class="dv">12</span>,</span>
-<span id="cb6-691"><a href="#cb6-691" aria-hidden="true" tabindex="-1"></a>            markerfacecolor<span class="op">=</span><span class="st">"#2563eb"</span>, markeredgecolor<span class="op">=</span><span class="st">"#2563eb"</span>, zorder<span class="op">=</span><span class="dv">3</span>)</span>
-<span id="cb6-692"><a href="#cb6-692" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-693"><a href="#cb6-693" aria-hidden="true" tabindex="-1"></a><span class="co"># Non-representable midpoint (open red)</span></span>
-<span id="cb6-694"><a href="#cb6-694" aria-hidden="true" tabindex="-1"></a>ax.plot(x_real, <span class="dv">0</span>, marker<span class="op">=</span><span class="st">"o"</span>, markersize<span class="op">=</span><span class="dv">11</span>,</span>
-<span id="cb6-695"><a href="#cb6-695" aria-hidden="true" tabindex="-1"></a>        markerfacecolor<span class="op">=</span><span class="st">"white"</span>, markeredgecolor<span class="op">=</span><span class="st">"#dc2626"</span>,</span>
-<span id="cb6-696"><a href="#cb6-696" aria-hidden="true" tabindex="-1"></a>        markeredgewidth<span class="op">=</span><span class="fl">2.2</span>, zorder<span class="op">=</span><span class="dv">4</span>)</span>
-<span id="cb6-697"><a href="#cb6-697" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-698"><a href="#cb6-698" aria-hidden="true" tabindex="-1"></a><span class="co"># Labels above the dots</span></span>
-<span id="cb6-699"><a href="#cb6-699" aria-hidden="true" tabindex="-1"></a>ax.text(x1, <span class="fl">0.45</span>, <span class="vs">r"</span><span class="dv">$</span><span class="vs">x_1</span><span class="dv">$</span><span class="vs">"</span>, ha<span class="op">=</span><span class="st">"center"</span>, va<span class="op">=</span><span class="st">"bottom"</span>,</span>
-<span id="cb6-700"><a href="#cb6-700" aria-hidden="true" tabindex="-1"></a>        fontsize<span class="op">=</span><span class="dv">15</span>, color<span class="op">=</span><span class="st">"#2563eb"</span>, fontweight<span class="op">=</span><span class="st">"bold"</span>)</span>
-<span id="cb6-701"><a href="#cb6-701" aria-hidden="true" tabindex="-1"></a>ax.text(x2, <span class="fl">0.45</span>, <span class="vs">r"</span><span class="dv">$</span><span class="vs">x_2</span><span class="dv">$</span><span class="vs">"</span>, ha<span class="op">=</span><span class="st">"center"</span>, va<span class="op">=</span><span class="st">"bottom"</span>,</span>
-<span id="cb6-702"><a href="#cb6-702" aria-hidden="true" tabindex="-1"></a>        fontsize<span class="op">=</span><span class="dv">15</span>, color<span class="op">=</span><span class="st">"#2563eb"</span>, fontweight<span class="op">=</span><span class="st">"bold"</span>)</span>
-<span id="cb6-703"><a href="#cb6-703" aria-hidden="true" tabindex="-1"></a>ax.text(x_real, <span class="fl">0.45</span>, <span class="vs">r"</span><span class="dv">$</span><span class="vs">x</span><span class="dv">$</span><span class="vs">"</span>, ha<span class="op">=</span><span class="st">"center"</span>, va<span class="op">=</span><span class="st">"bottom"</span>,</span>
-<span id="cb6-704"><a href="#cb6-704" aria-hidden="true" tabindex="-1"></a>        fontsize<span class="op">=</span><span class="dv">15</span>, color<span class="op">=</span><span class="st">"#dc2626"</span>, fontweight<span class="op">=</span><span class="st">"bold"</span>)</span>
-<span id="cb6-705"><a href="#cb6-705" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-706"><a href="#cb6-706" aria-hidden="true" tabindex="-1"></a><span class="co"># Equal-distance brackets above (visual confirmation of "tie")</span></span>
-<span id="cb6-707"><a href="#cb6-707" aria-hidden="true" tabindex="-1"></a>BR_Y <span class="op">=</span> <span class="fl">1.10</span></span>
-<span id="cb6-708"><a href="#cb6-708" aria-hidden="true" tabindex="-1"></a>ax.annotate(<span class="st">""</span>, xy<span class="op">=</span>(x_real <span class="op">-</span> <span class="fl">0.05</span>, BR_Y), xytext<span class="op">=</span>(x1 <span class="op">+</span> <span class="fl">0.18</span>, BR_Y),</span>
-<span id="cb6-709"><a href="#cb6-709" aria-hidden="true" tabindex="-1"></a>            arrowprops<span class="op">=</span><span class="bu">dict</span>(arrowstyle<span class="op">=</span><span class="st">"&lt;-&gt;"</span>, color<span class="op">=</span><span class="st">"gray"</span>, lw<span class="op">=</span><span class="fl">1.4</span>))</span>
-<span id="cb6-710"><a href="#cb6-710" aria-hidden="true" tabindex="-1"></a>ax.annotate(<span class="st">""</span>, xy<span class="op">=</span>(x2 <span class="op">-</span> <span class="fl">0.18</span>, BR_Y), xytext<span class="op">=</span>(x_real <span class="op">+</span> <span class="fl">0.05</span>, BR_Y),</span>
-<span id="cb6-711"><a href="#cb6-711" aria-hidden="true" tabindex="-1"></a>            arrowprops<span class="op">=</span><span class="bu">dict</span>(arrowstyle<span class="op">=</span><span class="st">"&lt;-&gt;"</span>, color<span class="op">=</span><span class="st">"gray"</span>, lw<span class="op">=</span><span class="fl">1.4</span>))</span>
-<span id="cb6-712"><a href="#cb6-712" aria-hidden="true" tabindex="-1"></a>ax.text(x_real, BR_Y <span class="op">+</span> <span class="fl">0.20</span>, <span class="st">"exactly halfway"</span>,</span>
-<span id="cb6-713"><a href="#cb6-713" aria-hidden="true" tabindex="-1"></a>        ha<span class="op">=</span><span class="st">"center"</span>, va<span class="op">=</span><span class="st">"bottom"</span>, fontsize<span class="op">=</span><span class="dv">11</span>, color<span class="op">=</span><span class="st">"gray"</span>, style<span class="op">=</span><span class="st">"italic"</span>)</span>
-<span id="cb6-714"><a href="#cb6-714" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-715"><a href="#cb6-715" aria-hidden="true" tabindex="-1"></a><span class="co"># Parity labels below the line</span></span>
-<span id="cb6-716"><a href="#cb6-716" aria-hidden="true" tabindex="-1"></a>ax.text(x1, <span class="op">-</span><span class="fl">0.50</span>, <span class="vs">r"</span><span class="dv">$</span><span class="vs">d_</span><span class="op">{52}</span><span class="vs"> = 0</span><span class="dv">$</span><span class="vs">  </span><span class="kw">(</span><span class="vs">even</span><span class="kw">)</span><span class="vs">"</span>, ha<span class="op">=</span><span class="st">"center"</span>, va<span class="op">=</span><span class="st">"top"</span>,</span>
-<span id="cb6-717"><a href="#cb6-717" aria-hidden="true" tabindex="-1"></a>        fontsize<span class="op">=</span><span class="dv">12</span>, color<span class="op">=</span><span class="st">"#16a34a"</span>, fontweight<span class="op">=</span><span class="st">"bold"</span>)</span>
-<span id="cb6-718"><a href="#cb6-718" aria-hidden="true" tabindex="-1"></a>ax.text(x2, <span class="op">-</span><span class="fl">0.50</span>, <span class="vs">r"</span><span class="dv">$</span><span class="vs">d_</span><span class="op">{52}</span><span class="vs"> = 1</span><span class="dv">$</span><span class="vs">  </span><span class="kw">(</span><span class="vs">odd</span><span class="kw">)</span><span class="vs">"</span>,  ha<span class="op">=</span><span class="st">"center"</span>, va<span class="op">=</span><span class="st">"top"</span>,</span>
-<span id="cb6-719"><a href="#cb6-719" aria-hidden="true" tabindex="-1"></a>        fontsize<span class="op">=</span><span class="dv">12</span>, color<span class="op">=</span><span class="st">"#9ca3af"</span>)</span>
-<span id="cb6-720"><a href="#cb6-720" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-721"><a href="#cb6-721" aria-hidden="true" tabindex="-1"></a><span class="co"># Chosen / rejected</span></span>
-<span id="cb6-722"><a href="#cb6-722" aria-hidden="true" tabindex="-1"></a>ax.text(x1, <span class="op">-</span><span class="fl">1.05</span>, <span class="st">"✓ chosen"</span>, ha<span class="op">=</span><span class="st">"center"</span>, va<span class="op">=</span><span class="st">"top"</span>,</span>
-<span id="cb6-723"><a href="#cb6-723" aria-hidden="true" tabindex="-1"></a>        fontsize<span class="op">=</span><span class="dv">13</span>, color<span class="op">=</span><span class="st">"#16a34a"</span>, fontweight<span class="op">=</span><span class="st">"bold"</span>)</span>
-<span id="cb6-724"><a href="#cb6-724" aria-hidden="true" tabindex="-1"></a>ax.text(x2, <span class="op">-</span><span class="fl">1.05</span>, <span class="st">"✗ rejected"</span>, ha<span class="op">=</span><span class="st">"center"</span>, va<span class="op">=</span><span class="st">"top"</span>,</span>
-<span id="cb6-725"><a href="#cb6-725" aria-hidden="true" tabindex="-1"></a>        fontsize<span class="op">=</span><span class="dv">13</span>, color<span class="op">=</span><span class="st">"#9ca3af"</span>)</span>
-<span id="cb6-726"><a href="#cb6-726" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-727"><a href="#cb6-727" aria-hidden="true" tabindex="-1"></a><span class="co"># Curved arrows below the line</span></span>
-<span id="cb6-728"><a href="#cb6-728" aria-hidden="true" tabindex="-1"></a><span class="co"># Solid green: x → x1 (chosen because d_52 = 0 is even)</span></span>
-<span id="cb6-729"><a href="#cb6-729" aria-hidden="true" tabindex="-1"></a>ax.add_patch(FancyArrowPatch(</span>
-<span id="cb6-730"><a href="#cb6-730" aria-hidden="true" tabindex="-1"></a>    (x_real, <span class="op">-</span><span class="fl">0.18</span>), (x1 <span class="op">+</span> <span class="fl">0.22</span>, <span class="op">-</span><span class="fl">0.18</span>),</span>
-<span id="cb6-731"><a href="#cb6-731" aria-hidden="true" tabindex="-1"></a>    connectionstyle<span class="op">=</span><span class="st">"arc3,rad=0.45"</span>,</span>
-<span id="cb6-732"><a href="#cb6-732" aria-hidden="true" tabindex="-1"></a>    arrowstyle<span class="op">=</span><span class="st">"-&gt;"</span>, color<span class="op">=</span><span class="st">"#16a34a"</span>, lw<span class="op">=</span><span class="fl">2.2</span>, mutation_scale<span class="op">=</span><span class="dv">22</span>))</span>
-<span id="cb6-733"><a href="#cb6-733" aria-hidden="true" tabindex="-1"></a><span class="co"># Dashed gray: x → x2 (rejected)</span></span>
-<span id="cb6-734"><a href="#cb6-734" aria-hidden="true" tabindex="-1"></a>ax.add_patch(FancyArrowPatch(</span>
-<span id="cb6-735"><a href="#cb6-735" aria-hidden="true" tabindex="-1"></a>    (x_real, <span class="op">-</span><span class="fl">0.18</span>), (x2 <span class="op">-</span> <span class="fl">0.22</span>, <span class="op">-</span><span class="fl">0.18</span>),</span>
-<span id="cb6-736"><a href="#cb6-736" aria-hidden="true" tabindex="-1"></a>    connectionstyle<span class="op">=</span><span class="st">"arc3,rad=-0.45"</span>,</span>
-<span id="cb6-737"><a href="#cb6-737" aria-hidden="true" tabindex="-1"></a>    arrowstyle<span class="op">=</span><span class="st">"-&gt;"</span>, color<span class="op">=</span><span class="st">"#d1d5db"</span>, lw<span class="op">=</span><span class="fl">1.6</span>, mutation_scale<span class="op">=</span><span class="dv">18</span>,</span>
-<span id="cb6-738"><a href="#cb6-738" aria-hidden="true" tabindex="-1"></a>    linestyle<span class="op">=</span><span class="st">"dashed"</span>))</span>
-<span id="cb6-739"><a href="#cb6-739" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-740"><a href="#cb6-740" aria-hidden="true" tabindex="-1"></a><span class="co"># Axes cosmetics</span></span>
-<span id="cb6-741"><a href="#cb6-741" aria-hidden="true" tabindex="-1"></a>ax.set_xlim(x1 <span class="op">-</span> <span class="fl">2.3</span>, x2 <span class="op">+</span> <span class="fl">2.3</span>)</span>
-<span id="cb6-742"><a href="#cb6-742" aria-hidden="true" tabindex="-1"></a>ax.set_ylim(<span class="op">-</span><span class="fl">1.85</span>, <span class="fl">1.85</span>)</span>
-<span id="cb6-743"><a href="#cb6-743" aria-hidden="true" tabindex="-1"></a>ax.axis(<span class="st">"off"</span>)</span>
-<span id="cb6-744"><a href="#cb6-744" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
-<span id="cb6-745"><a href="#cb6-745" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
-<span id="cb6-746"><a href="#cb6-746" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb6-747"><a href="#cb6-747" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-748"><a href="#cb6-748" aria-hidden="true" tabindex="-1"></a>::: {.callout-note}</span>
-<span id="cb6-749"><a href="#cb6-749" aria-hidden="true" tabindex="-1"></a><span class="fu">## Verify in Python — the three values from above</span></span>
-<span id="cb6-750"><a href="#cb6-750" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-753"><a href="#cb6-753" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb6-754"><a href="#cb6-754" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
-<span id="cb6-755"><a href="#cb6-755" aria-hidden="true" tabindex="-1"></a>eps <span class="op">=</span> <span class="dv">2</span><span class="op">**-</span><span class="dv">52</span>   <span class="co"># = the gap between 1 and the next float64</span></span>
-<span id="cb6-756"><a href="#cb6-756" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-757"><a href="#cb6-757" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"(1 + ε/4)  - 1 = </span><span class="sc">{</span>(<span class="dv">1</span> <span class="op">+</span> eps<span class="op">/</span><span class="dv">4</span>)     <span class="op">-</span> <span class="dv">1</span><span class="sc">!r}</span><span class="ss">"</span>)</span>
-<span id="cb6-758"><a href="#cb6-758" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"(1 + ε/2)  - 1 = </span><span class="sc">{</span>(<span class="dv">1</span> <span class="op">+</span> eps<span class="op">/</span><span class="dv">2</span>)     <span class="op">-</span> <span class="dv">1</span><span class="sc">!r}</span><span class="ss">"</span>)</span>
-<span id="cb6-759"><a href="#cb6-759" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"(1 + 3ε/4) - 1 = </span><span class="sc">{</span>(<span class="dv">1</span> <span class="op">+</span> <span class="dv">3</span><span class="op">*</span>eps<span class="op">/</span><span class="dv">4</span>)   <span class="op">-</span> <span class="dv">1</span><span class="sc">!r}</span><span class="ss">"</span>)</span>
-<span id="cb6-760"><a href="#cb6-760" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb6-681"><a href="#cb6-681" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Three intermediate ticks ---</span></span>
+<span id="cb6-682"><a href="#cb6-682" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> x <span class="kw">in</span> [x_14, x_12, x_34]:</span>
+<span id="cb6-683"><a href="#cb6-683" aria-hidden="true" tabindex="-1"></a>    ax.plot([x, x], [<span class="op">-</span>TICK_HALF, TICK_HALF],</span>
+<span id="cb6-684"><a href="#cb6-684" aria-hidden="true" tabindex="-1"></a>            color<span class="op">=</span>GREEN, lw<span class="op">=</span><span class="fl">2.2</span>, zorder<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb6-685"><a href="#cb6-685" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-686"><a href="#cb6-686" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Rounding arrows: start at the MIDDLE of each tick (on the line, y=0),</span></span>
+<span id="cb6-687"><a href="#cb6-687" aria-hidden="true" tabindex="-1"></a><span class="co">#     arc UPWARD (above the line), land at the destination dot ---</span></span>
+<span id="cb6-688"><a href="#cb6-688" aria-hidden="true" tabindex="-1"></a><span class="co"># Going LEFT  → positive rad = arc bulges UP</span></span>
+<span id="cb6-689"><a href="#cb6-689" aria-hidden="true" tabindex="-1"></a><span class="co"># Going RIGHT → negative rad = arc bulges UP</span></span>
+<span id="cb6-690"><a href="#cb6-690" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-691"><a href="#cb6-691" aria-hidden="true" tabindex="-1"></a><span class="co"># 1 + ε/4 → 1</span></span>
+<span id="cb6-692"><a href="#cb6-692" aria-hidden="true" tabindex="-1"></a>ax.add_patch(FancyArrowPatch(</span>
+<span id="cb6-693"><a href="#cb6-693" aria-hidden="true" tabindex="-1"></a>    (x_14, <span class="dv">0</span>), (x_1 <span class="op">+</span> <span class="fl">0.12</span>, <span class="dv">0</span>),</span>
+<span id="cb6-694"><a href="#cb6-694" aria-hidden="true" tabindex="-1"></a>    connectionstyle<span class="op">=</span><span class="st">"arc3,rad=0.55"</span>,</span>
+<span id="cb6-695"><a href="#cb6-695" aria-hidden="true" tabindex="-1"></a>    arrowstyle<span class="op">=</span><span class="st">"-&gt;"</span>, color<span class="op">=</span>GREEN, lw<span class="op">=</span><span class="fl">2.0</span>, mutation_scale<span class="op">=</span><span class="dv">18</span>))</span>
+<span id="cb6-696"><a href="#cb6-696" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-697"><a href="#cb6-697" aria-hidden="true" tabindex="-1"></a><span class="co"># 1 + ε/2 → 1</span></span>
+<span id="cb6-698"><a href="#cb6-698" aria-hidden="true" tabindex="-1"></a>ax.add_patch(FancyArrowPatch(</span>
+<span id="cb6-699"><a href="#cb6-699" aria-hidden="true" tabindex="-1"></a>    (x_12, <span class="dv">0</span>), (x_1 <span class="op">+</span> <span class="fl">0.12</span>, <span class="dv">0</span>),</span>
+<span id="cb6-700"><a href="#cb6-700" aria-hidden="true" tabindex="-1"></a>    connectionstyle<span class="op">=</span><span class="st">"arc3,rad=0.40"</span>,</span>
+<span id="cb6-701"><a href="#cb6-701" aria-hidden="true" tabindex="-1"></a>    arrowstyle<span class="op">=</span><span class="st">"-&gt;"</span>, color<span class="op">=</span>GREEN, lw<span class="op">=</span><span class="fl">2.0</span>, mutation_scale<span class="op">=</span><span class="dv">18</span>))</span>
+<span id="cb6-702"><a href="#cb6-702" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-703"><a href="#cb6-703" aria-hidden="true" tabindex="-1"></a><span class="co"># 1 + 3ε/4 → 1 + ε</span></span>
+<span id="cb6-704"><a href="#cb6-704" aria-hidden="true" tabindex="-1"></a>ax.add_patch(FancyArrowPatch(</span>
+<span id="cb6-705"><a href="#cb6-705" aria-hidden="true" tabindex="-1"></a>    (x_34, <span class="dv">0</span>), (x_eps <span class="op">-</span> <span class="fl">0.12</span>, <span class="dv">0</span>),</span>
+<span id="cb6-706"><a href="#cb6-706" aria-hidden="true" tabindex="-1"></a>    connectionstyle<span class="op">=</span><span class="st">"arc3,rad=-0.55"</span>,</span>
+<span id="cb6-707"><a href="#cb6-707" aria-hidden="true" tabindex="-1"></a>    arrowstyle<span class="op">=</span><span class="st">"-&gt;"</span>, color<span class="op">=</span>GREEN, lw<span class="op">=</span><span class="fl">2.0</span>, mutation_scale<span class="op">=</span><span class="dv">18</span>))</span>
+<span id="cb6-708"><a href="#cb6-708" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-709"><a href="#cb6-709" aria-hidden="true" tabindex="-1"></a><span class="co"># Labels for the three intermediate values</span></span>
+<span id="cb6-710"><a href="#cb6-710" aria-hidden="true" tabindex="-1"></a><span class="co"># (placed at the x of each tick, ABOVE the arc peaks)</span></span>
+<span id="cb6-711"><a href="#cb6-711" aria-hidden="true" tabindex="-1"></a>ax.text(x_14, <span class="fl">0.55</span>, <span class="vs">r"</span><span class="dv">$</span><span class="vs">1 </span><span class="op">+</span><span class="vs"> </span><span class="ch">\f</span><span class="vs">rac{</span><span class="ch">\v</span><span class="vs">arepsilon}</span><span class="op">{4}</span><span class="dv">$</span><span class="vs">"</span>,</span>
+<span id="cb6-712"><a href="#cb6-712" aria-hidden="true" tabindex="-1"></a>        ha<span class="op">=</span><span class="st">"center"</span>, va<span class="op">=</span><span class="st">"bottom"</span>, fontsize<span class="op">=</span><span class="dv">15</span>, color<span class="op">=</span>GREEN)</span>
+<span id="cb6-713"><a href="#cb6-713" aria-hidden="true" tabindex="-1"></a>ax.text(x_12, <span class="fl">1.45</span>, <span class="vs">r"</span><span class="dv">$</span><span class="vs">1 </span><span class="op">+</span><span class="vs"> </span><span class="ch">\f</span><span class="vs">rac{</span><span class="ch">\v</span><span class="vs">arepsilon}</span><span class="op">{2}</span><span class="dv">$</span><span class="vs">"</span>,</span>
+<span id="cb6-714"><a href="#cb6-714" aria-hidden="true" tabindex="-1"></a>        ha<span class="op">=</span><span class="st">"center"</span>, va<span class="op">=</span><span class="st">"bottom"</span>, fontsize<span class="op">=</span><span class="dv">15</span>, color<span class="op">=</span>GREEN)</span>
+<span id="cb6-715"><a href="#cb6-715" aria-hidden="true" tabindex="-1"></a>ax.text(x_34, <span class="fl">0.55</span>, <span class="vs">r"</span><span class="dv">$</span><span class="vs">1 </span><span class="op">+</span><span class="vs"> </span><span class="ch">\f</span><span class="vs">rac</span><span class="op">{3}{4}</span><span class="ch">\v</span><span class="vs">arepsilon</span><span class="dv">$</span><span class="vs">"</span>,</span>
+<span id="cb6-716"><a href="#cb6-716" aria-hidden="true" tabindex="-1"></a>        ha<span class="op">=</span><span class="st">"center"</span>, va<span class="op">=</span><span class="st">"bottom"</span>, fontsize<span class="op">=</span><span class="dv">15</span>, color<span class="op">=</span>GREEN)</span>
+<span id="cb6-717"><a href="#cb6-717" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-718"><a href="#cb6-718" aria-hidden="true" tabindex="-1"></a><span class="co"># Down arrow from "1+ε/2" label onto the tick top</span></span>
+<span id="cb6-719"><a href="#cb6-719" aria-hidden="true" tabindex="-1"></a>ax.annotate(<span class="st">""</span>, xy<span class="op">=</span>(x_12, TICK_HALF <span class="op">+</span> <span class="fl">0.02</span>),</span>
+<span id="cb6-720"><a href="#cb6-720" aria-hidden="true" tabindex="-1"></a>            xytext<span class="op">=</span>(x_12, <span class="fl">1.40</span>),</span>
+<span id="cb6-721"><a href="#cb6-721" aria-hidden="true" tabindex="-1"></a>            arrowprops<span class="op">=</span><span class="bu">dict</span>(arrowstyle<span class="op">=</span><span class="st">"-&gt;"</span>, color<span class="op">=</span>GREEN, lw<span class="op">=</span><span class="fl">1.6</span>))</span>
+<span id="cb6-722"><a href="#cb6-722" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-723"><a href="#cb6-723" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Machine epsilon annotation (close to 1+ε) ---</span></span>
+<span id="cb6-724"><a href="#cb6-724" aria-hidden="true" tabindex="-1"></a>ax.text(x_eps <span class="op">+</span> <span class="fl">0.85</span>, <span class="fl">0.55</span>,</span>
+<span id="cb6-725"><a href="#cb6-725" aria-hidden="true" tabindex="-1"></a>        <span class="vs">r"</span><span class="dv">$</span><span class="vs">2</span><span class="dv">^</span><span class="vs">{-52}</span><span class="ch">\ </span><span class="er">\</span><span class="vs">leftarrow</span><span class="dv">$</span><span class="vs"> Machine epsilon of Float 64"</span>,</span>
+<span id="cb6-726"><a href="#cb6-726" aria-hidden="true" tabindex="-1"></a>        ha<span class="op">=</span><span class="st">"left"</span>, va<span class="op">=</span><span class="st">"center"</span>, fontsize<span class="op">=</span><span class="fl">12.5</span>, color<span class="op">=</span>BLUE, fontweight<span class="op">=</span><span class="st">"bold"</span>)</span>
+<span id="cb6-727"><a href="#cb6-727" aria-hidden="true" tabindex="-1"></a>ax.annotate(<span class="st">""</span>, xy<span class="op">=</span>(x_eps <span class="op">+</span> <span class="fl">0.45</span>, <span class="fl">0.20</span>),</span>
+<span id="cb6-728"><a href="#cb6-728" aria-hidden="true" tabindex="-1"></a>            xytext<span class="op">=</span>(x_eps <span class="op">+</span> <span class="fl">0.95</span>, <span class="fl">0.45</span>),</span>
+<span id="cb6-729"><a href="#cb6-729" aria-hidden="true" tabindex="-1"></a>            arrowprops<span class="op">=</span><span class="bu">dict</span>(arrowstyle<span class="op">=</span><span class="st">"-&gt;"</span>, color<span class="op">=</span>RED, lw<span class="op">=</span><span class="fl">1.4</span>))</span>
+<span id="cb6-730"><a href="#cb6-730" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-731"><a href="#cb6-731" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Last-bit labels (just under the line) ---</span></span>
+<span id="cb6-732"><a href="#cb6-732" aria-hidden="true" tabindex="-1"></a>ax.text(x_1, <span class="op">-</span><span class="fl">0.25</span>, <span class="vs">r"</span><span class="kw">(</span><span class="vs">last bit </span><span class="dv">$</span><span class="vs">0</span><span class="dv">$</span><span class="kw">)</span><span class="vs">"</span>,</span>
+<span id="cb6-733"><a href="#cb6-733" aria-hidden="true" tabindex="-1"></a>        ha<span class="op">=</span><span class="st">"center"</span>, va<span class="op">=</span><span class="st">"top"</span>, fontsize<span class="op">=</span><span class="dv">12</span>)</span>
+<span id="cb6-734"><a href="#cb6-734" aria-hidden="true" tabindex="-1"></a>ax.text(x_eps, <span class="op">-</span><span class="fl">0.25</span>, <span class="vs">r"</span><span class="kw">(</span><span class="vs">last bit </span><span class="dv">$</span><span class="vs">1</span><span class="dv">$</span><span class="kw">)</span><span class="vs">"</span>,</span>
+<span id="cb6-735"><a href="#cb6-735" aria-hidden="true" tabindex="-1"></a>        ha<span class="op">=</span><span class="st">"center"</span>, va<span class="op">=</span><span class="st">"top"</span>, fontsize<span class="op">=</span><span class="dv">12</span>)</span>
+<span id="cb6-736"><a href="#cb6-736" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-737"><a href="#cb6-737" aria-hidden="true" tabindex="-1"></a>ax.set_xlim(x_1 <span class="op">-</span> <span class="fl">1.5</span>, x_eps <span class="op">+</span> <span class="fl">5.4</span>)</span>
+<span id="cb6-738"><a href="#cb6-738" aria-hidden="true" tabindex="-1"></a>ax.set_ylim(<span class="op">-</span><span class="fl">0.45</span>, <span class="fl">1.75</span>)</span>
+<span id="cb6-739"><a href="#cb6-739" aria-hidden="true" tabindex="-1"></a>ax.axis(<span class="st">"off"</span>)</span>
+<span id="cb6-740"><a href="#cb6-740" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb6-741"><a href="#cb6-741" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb6-742"><a href="#cb6-742" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb6-743"><a href="#cb6-743" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-744"><a href="#cb6-744" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Machine epsilon {#sec-machine-epsilon}</span></span>
+<span id="cb6-745"><a href="#cb6-745" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-746"><a href="#cb6-746" aria-hidden="true" tabindex="-1"></a>The gap we just used near $1$ deserves a formal name. The</span>
+<span id="cb6-747"><a href="#cb6-747" aria-hidden="true" tabindex="-1"></a>**machine epsilon** of binary64 is</span>
+<span id="cb6-748"><a href="#cb6-748" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-749"><a href="#cb6-749" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb6-750"><a href="#cb6-750" aria-hidden="true" tabindex="-1"></a>\varepsilon \;:=\; 2^{-52} \;\approx\; 2.22\times 10^{-16},</span>
+<span id="cb6-751"><a href="#cb6-751" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb6-752"><a href="#cb6-752" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-753"><a href="#cb6-753" aria-hidden="true" tabindex="-1"></a>namely the distance from $1$ to the next representable number in</span>
+<span id="cb6-754"><a href="#cb6-754" aria-hidden="true" tabindex="-1"></a>$\mathbb{F}$. In Python it is also exposed as <span class="in">`sys.float_info.epsilon`</span>.</span>
+<span id="cb6-755"><a href="#cb6-755" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-756"><a href="#cb6-756" aria-hidden="true" tabindex="-1"></a><span class="fu">### Special case: tie-breaking by "round to even"</span></span>
+<span id="cb6-757"><a href="#cb6-757" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-758"><a href="#cb6-758" aria-hidden="true" tabindex="-1"></a>When $x$ falls *exactly* halfway between two representable numbers $x_1$</span>
+<span id="cb6-759"><a href="#cb6-759" aria-hidden="true" tabindex="-1"></a>and $x_2$, round-to-nearest picks the one whose **last stored digit is</span>
+<span id="cb6-760"><a href="#cb6-760" aria-hidden="true" tabindex="-1"></a>even** (i.e. $d_{52} = 0$).</span>
 <span id="cb6-761"><a href="#cb6-761" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-762"><a href="#cb6-762" aria-hidden="true" tabindex="-1"></a>::: {.callout-tip collapse="true"}</span>
-<span id="cb6-763"><a href="#cb6-763" aria-hidden="true" tabindex="-1"></a><span class="fu">## ▶ Click to reveal the output</span></span>
+<span id="cb6-762"><a href="#cb6-762" aria-hidden="true" tabindex="-1"></a>This rule keeps long sums of rounded values **statistically unbiased** —</span>
+<span id="cb6-763"><a href="#cb6-763" aria-hidden="true" tabindex="-1"></a>naive "always round up on ties" would consistently over-estimate.</span>
 <span id="cb6-764"><a href="#cb6-764" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-767"><a href="#cb6-767" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb6-768"><a href="#cb6-768" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
-<span id="cb6-769"><a href="#cb6-769" aria-hidden="true" tabindex="-1"></a>eps <span class="op">=</span> <span class="dv">2</span><span class="op">**-</span><span class="dv">52</span></span>
-<span id="cb6-770"><a href="#cb6-770" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"(1 + ε/4)  - 1 = </span><span class="sc">{</span>(<span class="dv">1</span> <span class="op">+</span> eps<span class="op">/</span><span class="dv">4</span>)     <span class="op">-</span> <span class="dv">1</span><span class="sc">!r}</span><span class="ss">"</span>)</span>
-<span id="cb6-771"><a href="#cb6-771" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"(1 + ε/2)  - 1 = </span><span class="sc">{</span>(<span class="dv">1</span> <span class="op">+</span> eps<span class="op">/</span><span class="dv">2</span>)     <span class="op">-</span> <span class="dv">1</span><span class="sc">!r}</span><span class="ss">"</span>)</span>
-<span id="cb6-772"><a href="#cb6-772" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"(1 + 3ε/4) - 1 = </span><span class="sc">{</span>(<span class="dv">1</span> <span class="op">+</span> <span class="dv">3</span><span class="op">*</span>eps<span class="op">/</span><span class="dv">4</span>)   <span class="op">-</span> <span class="dv">1</span><span class="sc">!r}</span><span class="ss">"</span>)</span>
-<span id="cb6-773"><a href="#cb6-773" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb6-774"><a href="#cb6-774" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb6-775"><a href="#cb6-775" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb6-776"><a href="#cb6-776" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-777"><a href="#cb6-777" aria-hidden="true" tabindex="-1"></a>---</span>
-<span id="cb6-778"><a href="#cb6-778" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-779"><a href="#cb6-779" aria-hidden="true" tabindex="-1"></a><span class="fu">## Summary {#sec-summary}</span></span>
+<span id="cb6-768"><a href="#cb6-768" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-tie-even</span></span>
+<span id="cb6-769"><a href="#cb6-769" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Tie-breaking by ties-to-even: when $x$ is exactly halfway between $x_1$ and $x_2$, $\\mathrm{RN}(x)$ picks the side whose last bit $d_{52}$ is even."</span></span>
+<span id="cb6-770"><a href="#cb6-770" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-align: center</span></span>
+<span id="cb6-771"><a href="#cb6-771" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
+<span id="cb6-772"><a href="#cb6-772" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-773"><a href="#cb6-773" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb6-774"><a href="#cb6-774" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> matplotlib.patches <span class="im">import</span> FancyArrowPatch</span>
+<span id="cb6-775"><a href="#cb6-775" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-776"><a href="#cb6-776" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">11</span>, <span class="fl">4.4</span>))</span>
+<span id="cb6-777"><a href="#cb6-777" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-778"><a href="#cb6-778" aria-hidden="true" tabindex="-1"></a>x1, x2 <span class="op">=</span> <span class="fl">2.0</span>, <span class="fl">8.0</span></span>
+<span id="cb6-779"><a href="#cb6-779" aria-hidden="true" tabindex="-1"></a>x_real <span class="op">=</span> (x1 <span class="op">+</span> x2) <span class="op">/</span> <span class="dv">2</span>          <span class="co"># exactly halfway</span></span>
 <span id="cb6-780"><a href="#cb6-780" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-781"><a href="#cb6-781" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Concept <span class="pp">|</span> Key fact <span class="pp">|</span></span>
-<span id="cb6-782"><a href="#cb6-782" aria-hidden="true" tabindex="-1"></a><span class="pp">|---|---|</span></span>
-<span id="cb6-783"><a href="#cb6-783" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Floating-point format <span class="pp">|</span> $\pm$ significand $\cdot \beta^{e}$, with $p$ digits in the significand <span class="pp">|</span></span>
-<span id="cb6-784"><a href="#cb6-784" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> binary64 (IEEE 754) <span class="pp">|</span> $\beta = 2$, $p = 53$ effective bits (52 stored + 1 hidden), $E_{\min} = -1022$, $E_{\max} = 1023$ <span class="pp">|</span></span>
-<span id="cb6-785"><a href="#cb6-785" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Normalization <span class="pp">|</span> $d_0 = 1$ ⇒ representation is **unique** and gains the *hidden bit* for free <span class="pp">|</span></span>
-<span id="cb6-786"><a href="#cb6-786" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Denormalized numbers <span class="pp">|</span> $d_0 = 0$ at the smallest exponent — fill the gap near $0$ by trading precision for range <span class="pp">|</span></span>
-<span id="cb6-787"><a href="#cb6-787" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Smallest positive denormalized <span class="pp">|</span> $m_d = 2^{-1074} \approx 4.941 \times 10^{-324}$ <span class="pp">|</span></span>
-<span id="cb6-788"><a href="#cb6-788" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Smallest positive normalized <span class="pp">|</span> $m_n = 2^{-1022} \approx 2.225 \times 10^{-308}$ <span class="pp">|</span></span>
-<span id="cb6-789"><a href="#cb6-789" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Largest positive <span class="pp">|</span> $M = (2 - 2^{-52}) \cdot 2^{1023} \approx 1.798 \times 10^{308}$ <span class="pp">|</span></span>
-<span id="cb6-790"><a href="#cb6-790" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Machine epsilon <span class="pp">|</span> $\varepsilon = 2^{-52} \approx 2.22 \times 10^{-16}$ — distance from $1$ to the next float64 <span class="pp">|</span></span>
-<span id="cb6-791"><a href="#cb6-791" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Default rounding <span class="pp">|</span> Round to nearest (RN); on a tie, the side with **even $d_{52}$** wins <span class="pp">|</span></span>
+<span id="cb6-781"><a href="#cb6-781" aria-hidden="true" tabindex="-1"></a><span class="co"># Number line</span></span>
+<span id="cb6-782"><a href="#cb6-782" aria-hidden="true" tabindex="-1"></a>ax.annotate(<span class="st">""</span>, xy<span class="op">=</span>(x2 <span class="op">+</span> <span class="fl">1.8</span>, <span class="dv">0</span>), xytext<span class="op">=</span>(x1 <span class="op">-</span> <span class="fl">1.8</span>, <span class="dv">0</span>),</span>
+<span id="cb6-783"><a href="#cb6-783" aria-hidden="true" tabindex="-1"></a>            arrowprops<span class="op">=</span><span class="bu">dict</span>(arrowstyle<span class="op">=</span><span class="st">"-&gt;"</span>, color<span class="op">=</span><span class="st">"black"</span>, lw<span class="op">=</span><span class="dv">2</span>))</span>
+<span id="cb6-784"><a href="#cb6-784" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-785"><a href="#cb6-785" aria-hidden="true" tabindex="-1"></a><span class="co"># Representable endpoints (filled blue)</span></span>
+<span id="cb6-786"><a href="#cb6-786" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> x <span class="kw">in</span> (x1, x2):</span>
+<span id="cb6-787"><a href="#cb6-787" aria-hidden="true" tabindex="-1"></a>    ax.plot(x, <span class="dv">0</span>, marker<span class="op">=</span><span class="st">"o"</span>, markersize<span class="op">=</span><span class="dv">12</span>,</span>
+<span id="cb6-788"><a href="#cb6-788" aria-hidden="true" tabindex="-1"></a>            markerfacecolor<span class="op">=</span><span class="st">"#2563eb"</span>, markeredgecolor<span class="op">=</span><span class="st">"#2563eb"</span>, zorder<span class="op">=</span><span class="dv">3</span>)</span>
+<span id="cb6-789"><a href="#cb6-789" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-790"><a href="#cb6-790" aria-hidden="true" tabindex="-1"></a><span class="co"># Non-representable midpoint (open red)</span></span>
+<span id="cb6-791"><a href="#cb6-791" aria-hidden="true" tabindex="-1"></a>ax.plot(x_real, <span class="dv">0</span>, marker<span class="op">=</span><span class="st">"o"</span>, markersize<span class="op">=</span><span class="dv">11</span>,</span>
+<span id="cb6-792"><a href="#cb6-792" aria-hidden="true" tabindex="-1"></a>        markerfacecolor<span class="op">=</span><span class="st">"white"</span>, markeredgecolor<span class="op">=</span><span class="st">"#dc2626"</span>,</span>
+<span id="cb6-793"><a href="#cb6-793" aria-hidden="true" tabindex="-1"></a>        markeredgewidth<span class="op">=</span><span class="fl">2.2</span>, zorder<span class="op">=</span><span class="dv">4</span>)</span>
+<span id="cb6-794"><a href="#cb6-794" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-795"><a href="#cb6-795" aria-hidden="true" tabindex="-1"></a><span class="co"># Labels above the dots</span></span>
+<span id="cb6-796"><a href="#cb6-796" aria-hidden="true" tabindex="-1"></a>ax.text(x1, <span class="fl">0.45</span>, <span class="vs">r"</span><span class="dv">$</span><span class="vs">x_1</span><span class="dv">$</span><span class="vs">"</span>, ha<span class="op">=</span><span class="st">"center"</span>, va<span class="op">=</span><span class="st">"bottom"</span>,</span>
+<span id="cb6-797"><a href="#cb6-797" aria-hidden="true" tabindex="-1"></a>        fontsize<span class="op">=</span><span class="dv">15</span>, color<span class="op">=</span><span class="st">"#2563eb"</span>, fontweight<span class="op">=</span><span class="st">"bold"</span>)</span>
+<span id="cb6-798"><a href="#cb6-798" aria-hidden="true" tabindex="-1"></a>ax.text(x2, <span class="fl">0.45</span>, <span class="vs">r"</span><span class="dv">$</span><span class="vs">x_2</span><span class="dv">$</span><span class="vs">"</span>, ha<span class="op">=</span><span class="st">"center"</span>, va<span class="op">=</span><span class="st">"bottom"</span>,</span>
+<span id="cb6-799"><a href="#cb6-799" aria-hidden="true" tabindex="-1"></a>        fontsize<span class="op">=</span><span class="dv">15</span>, color<span class="op">=</span><span class="st">"#2563eb"</span>, fontweight<span class="op">=</span><span class="st">"bold"</span>)</span>
+<span id="cb6-800"><a href="#cb6-800" aria-hidden="true" tabindex="-1"></a>ax.text(x_real, <span class="fl">0.45</span>, <span class="vs">r"</span><span class="dv">$</span><span class="vs">x</span><span class="dv">$</span><span class="vs">"</span>, ha<span class="op">=</span><span class="st">"center"</span>, va<span class="op">=</span><span class="st">"bottom"</span>,</span>
+<span id="cb6-801"><a href="#cb6-801" aria-hidden="true" tabindex="-1"></a>        fontsize<span class="op">=</span><span class="dv">15</span>, color<span class="op">=</span><span class="st">"#dc2626"</span>, fontweight<span class="op">=</span><span class="st">"bold"</span>)</span>
+<span id="cb6-802"><a href="#cb6-802" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-803"><a href="#cb6-803" aria-hidden="true" tabindex="-1"></a><span class="co"># Equal-distance brackets above (visual confirmation of "tie")</span></span>
+<span id="cb6-804"><a href="#cb6-804" aria-hidden="true" tabindex="-1"></a>BR_Y <span class="op">=</span> <span class="fl">1.10</span></span>
+<span id="cb6-805"><a href="#cb6-805" aria-hidden="true" tabindex="-1"></a>ax.annotate(<span class="st">""</span>, xy<span class="op">=</span>(x_real <span class="op">-</span> <span class="fl">0.05</span>, BR_Y), xytext<span class="op">=</span>(x1 <span class="op">+</span> <span class="fl">0.18</span>, BR_Y),</span>
+<span id="cb6-806"><a href="#cb6-806" aria-hidden="true" tabindex="-1"></a>            arrowprops<span class="op">=</span><span class="bu">dict</span>(arrowstyle<span class="op">=</span><span class="st">"&lt;-&gt;"</span>, color<span class="op">=</span><span class="st">"gray"</span>, lw<span class="op">=</span><span class="fl">1.4</span>))</span>
+<span id="cb6-807"><a href="#cb6-807" aria-hidden="true" tabindex="-1"></a>ax.annotate(<span class="st">""</span>, xy<span class="op">=</span>(x2 <span class="op">-</span> <span class="fl">0.18</span>, BR_Y), xytext<span class="op">=</span>(x_real <span class="op">+</span> <span class="fl">0.05</span>, BR_Y),</span>
+<span id="cb6-808"><a href="#cb6-808" aria-hidden="true" tabindex="-1"></a>            arrowprops<span class="op">=</span><span class="bu">dict</span>(arrowstyle<span class="op">=</span><span class="st">"&lt;-&gt;"</span>, color<span class="op">=</span><span class="st">"gray"</span>, lw<span class="op">=</span><span class="fl">1.4</span>))</span>
+<span id="cb6-809"><a href="#cb6-809" aria-hidden="true" tabindex="-1"></a>ax.text(x_real, BR_Y <span class="op">+</span> <span class="fl">0.20</span>, <span class="st">"exactly halfway"</span>,</span>
+<span id="cb6-810"><a href="#cb6-810" aria-hidden="true" tabindex="-1"></a>        ha<span class="op">=</span><span class="st">"center"</span>, va<span class="op">=</span><span class="st">"bottom"</span>, fontsize<span class="op">=</span><span class="dv">11</span>, color<span class="op">=</span><span class="st">"gray"</span>, style<span class="op">=</span><span class="st">"italic"</span>)</span>
+<span id="cb6-811"><a href="#cb6-811" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-812"><a href="#cb6-812" aria-hidden="true" tabindex="-1"></a><span class="co"># Parity labels below the line</span></span>
+<span id="cb6-813"><a href="#cb6-813" aria-hidden="true" tabindex="-1"></a>ax.text(x1, <span class="op">-</span><span class="fl">0.50</span>, <span class="vs">r"</span><span class="dv">$</span><span class="vs">d_</span><span class="op">{52}</span><span class="vs"> = 0</span><span class="dv">$</span><span class="vs">  </span><span class="kw">(</span><span class="vs">even</span><span class="kw">)</span><span class="vs">"</span>, ha<span class="op">=</span><span class="st">"center"</span>, va<span class="op">=</span><span class="st">"top"</span>,</span>
+<span id="cb6-814"><a href="#cb6-814" aria-hidden="true" tabindex="-1"></a>        fontsize<span class="op">=</span><span class="dv">12</span>, color<span class="op">=</span><span class="st">"#16a34a"</span>, fontweight<span class="op">=</span><span class="st">"bold"</span>)</span>
+<span id="cb6-815"><a href="#cb6-815" aria-hidden="true" tabindex="-1"></a>ax.text(x2, <span class="op">-</span><span class="fl">0.50</span>, <span class="vs">r"</span><span class="dv">$</span><span class="vs">d_</span><span class="op">{52}</span><span class="vs"> = 1</span><span class="dv">$</span><span class="vs">  </span><span class="kw">(</span><span class="vs">odd</span><span class="kw">)</span><span class="vs">"</span>,  ha<span class="op">=</span><span class="st">"center"</span>, va<span class="op">=</span><span class="st">"top"</span>,</span>
+<span id="cb6-816"><a href="#cb6-816" aria-hidden="true" tabindex="-1"></a>        fontsize<span class="op">=</span><span class="dv">12</span>, color<span class="op">=</span><span class="st">"#9ca3af"</span>)</span>
+<span id="cb6-817"><a href="#cb6-817" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-818"><a href="#cb6-818" aria-hidden="true" tabindex="-1"></a><span class="co"># Chosen / rejected</span></span>
+<span id="cb6-819"><a href="#cb6-819" aria-hidden="true" tabindex="-1"></a>ax.text(x1, <span class="op">-</span><span class="fl">1.05</span>, <span class="st">"✓ chosen"</span>, ha<span class="op">=</span><span class="st">"center"</span>, va<span class="op">=</span><span class="st">"top"</span>,</span>
+<span id="cb6-820"><a href="#cb6-820" aria-hidden="true" tabindex="-1"></a>        fontsize<span class="op">=</span><span class="dv">13</span>, color<span class="op">=</span><span class="st">"#16a34a"</span>, fontweight<span class="op">=</span><span class="st">"bold"</span>)</span>
+<span id="cb6-821"><a href="#cb6-821" aria-hidden="true" tabindex="-1"></a>ax.text(x2, <span class="op">-</span><span class="fl">1.05</span>, <span class="st">"✗ rejected"</span>, ha<span class="op">=</span><span class="st">"center"</span>, va<span class="op">=</span><span class="st">"top"</span>,</span>
+<span id="cb6-822"><a href="#cb6-822" aria-hidden="true" tabindex="-1"></a>        fontsize<span class="op">=</span><span class="dv">13</span>, color<span class="op">=</span><span class="st">"#9ca3af"</span>)</span>
+<span id="cb6-823"><a href="#cb6-823" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-824"><a href="#cb6-824" aria-hidden="true" tabindex="-1"></a><span class="co"># Curved arrows: start at the middle of the red dot (y=0) and arc DOWN</span></span>
+<span id="cb6-825"><a href="#cb6-825" aria-hidden="true" tabindex="-1"></a><span class="co"># Going LEFT  → negative rad = arc bulges DOWN</span></span>
+<span id="cb6-826"><a href="#cb6-826" aria-hidden="true" tabindex="-1"></a><span class="co"># Going RIGHT → positive rad = arc bulges DOWN</span></span>
+<span id="cb6-827"><a href="#cb6-827" aria-hidden="true" tabindex="-1"></a><span class="co"># Solid green: x → x1 (chosen because d_52 = 0 is even)</span></span>
+<span id="cb6-828"><a href="#cb6-828" aria-hidden="true" tabindex="-1"></a>ax.add_patch(FancyArrowPatch(</span>
+<span id="cb6-829"><a href="#cb6-829" aria-hidden="true" tabindex="-1"></a>    (x_real, <span class="dv">0</span>), (x1 <span class="op">+</span> <span class="fl">0.22</span>, <span class="dv">0</span>),</span>
+<span id="cb6-830"><a href="#cb6-830" aria-hidden="true" tabindex="-1"></a>    connectionstyle<span class="op">=</span><span class="st">"arc3,rad=-0.45"</span>,</span>
+<span id="cb6-831"><a href="#cb6-831" aria-hidden="true" tabindex="-1"></a>    arrowstyle<span class="op">=</span><span class="st">"-&gt;"</span>, color<span class="op">=</span><span class="st">"#16a34a"</span>, lw<span class="op">=</span><span class="fl">2.2</span>, mutation_scale<span class="op">=</span><span class="dv">22</span>))</span>
+<span id="cb6-832"><a href="#cb6-832" aria-hidden="true" tabindex="-1"></a><span class="co"># Dashed gray: x → x2 (rejected)</span></span>
+<span id="cb6-833"><a href="#cb6-833" aria-hidden="true" tabindex="-1"></a>ax.add_patch(FancyArrowPatch(</span>
+<span id="cb6-834"><a href="#cb6-834" aria-hidden="true" tabindex="-1"></a>    (x_real, <span class="dv">0</span>), (x2 <span class="op">-</span> <span class="fl">0.22</span>, <span class="dv">0</span>),</span>
+<span id="cb6-835"><a href="#cb6-835" aria-hidden="true" tabindex="-1"></a>    connectionstyle<span class="op">=</span><span class="st">"arc3,rad=0.45"</span>,</span>
+<span id="cb6-836"><a href="#cb6-836" aria-hidden="true" tabindex="-1"></a>    arrowstyle<span class="op">=</span><span class="st">"-&gt;"</span>, color<span class="op">=</span><span class="st">"#d1d5db"</span>, lw<span class="op">=</span><span class="fl">1.6</span>, mutation_scale<span class="op">=</span><span class="dv">18</span>,</span>
+<span id="cb6-837"><a href="#cb6-837" aria-hidden="true" tabindex="-1"></a>    linestyle<span class="op">=</span><span class="st">"dashed"</span>))</span>
+<span id="cb6-838"><a href="#cb6-838" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-839"><a href="#cb6-839" aria-hidden="true" tabindex="-1"></a><span class="co"># Axes cosmetics</span></span>
+<span id="cb6-840"><a href="#cb6-840" aria-hidden="true" tabindex="-1"></a>ax.set_xlim(x1 <span class="op">-</span> <span class="fl">2.3</span>, x2 <span class="op">+</span> <span class="fl">2.3</span>)</span>
+<span id="cb6-841"><a href="#cb6-841" aria-hidden="true" tabindex="-1"></a>ax.set_ylim(<span class="op">-</span><span class="fl">1.85</span>, <span class="fl">1.85</span>)</span>
+<span id="cb6-842"><a href="#cb6-842" aria-hidden="true" tabindex="-1"></a>ax.axis(<span class="st">"off"</span>)</span>
+<span id="cb6-843"><a href="#cb6-843" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb6-844"><a href="#cb6-844" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb6-845"><a href="#cb6-845" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb6-846"><a href="#cb6-846" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-847"><a href="#cb6-847" aria-hidden="true" tabindex="-1"></a>::: {.callout-note}</span>
+<span id="cb6-848"><a href="#cb6-848" aria-hidden="true" tabindex="-1"></a><span class="fu">## Verify in Python — the three values from above</span></span>
+<span id="cb6-849"><a href="#cb6-849" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-852"><a href="#cb6-852" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb6-853"><a href="#cb6-853" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
+<span id="cb6-854"><a href="#cb6-854" aria-hidden="true" tabindex="-1"></a>eps <span class="op">=</span> <span class="dv">2</span><span class="op">**-</span><span class="dv">52</span>   <span class="co"># = the gap between 1 and the next float64</span></span>
+<span id="cb6-855"><a href="#cb6-855" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-856"><a href="#cb6-856" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"(1 + ε/4)  - 1 = </span><span class="sc">{</span>(<span class="dv">1</span> <span class="op">+</span> eps<span class="op">/</span><span class="dv">4</span>)     <span class="op">-</span> <span class="dv">1</span><span class="sc">!r}</span><span class="ss">"</span>)</span>
+<span id="cb6-857"><a href="#cb6-857" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"(1 + ε/2)  - 1 = </span><span class="sc">{</span>(<span class="dv">1</span> <span class="op">+</span> eps<span class="op">/</span><span class="dv">2</span>)     <span class="op">-</span> <span class="dv">1</span><span class="sc">!r}</span><span class="ss">"</span>)</span>
+<span id="cb6-858"><a href="#cb6-858" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"(1 + 3ε/4) - 1 = </span><span class="sc">{</span>(<span class="dv">1</span> <span class="op">+</span> <span class="dv">3</span><span class="op">*</span>eps<span class="op">/</span><span class="dv">4</span>)   <span class="op">-</span> <span class="dv">1</span><span class="sc">!r}</span><span class="ss">"</span>)</span>
+<span id="cb6-859"><a href="#cb6-859" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb6-860"><a href="#cb6-860" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-861"><a href="#cb6-861" aria-hidden="true" tabindex="-1"></a>::: {.callout-tip collapse="true"}</span>
+<span id="cb6-862"><a href="#cb6-862" aria-hidden="true" tabindex="-1"></a><span class="fu">## ▶ Click to reveal the output</span></span>
+<span id="cb6-863"><a href="#cb6-863" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-866"><a href="#cb6-866" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb6-867"><a href="#cb6-867" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
+<span id="cb6-868"><a href="#cb6-868" aria-hidden="true" tabindex="-1"></a>eps <span class="op">=</span> <span class="dv">2</span><span class="op">**-</span><span class="dv">52</span></span>
+<span id="cb6-869"><a href="#cb6-869" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"(1 + ε/4)  - 1 = </span><span class="sc">{</span>(<span class="dv">1</span> <span class="op">+</span> eps<span class="op">/</span><span class="dv">4</span>)     <span class="op">-</span> <span class="dv">1</span><span class="sc">!r}</span><span class="ss">"</span>)</span>
+<span id="cb6-870"><a href="#cb6-870" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"(1 + ε/2)  - 1 = </span><span class="sc">{</span>(<span class="dv">1</span> <span class="op">+</span> eps<span class="op">/</span><span class="dv">2</span>)     <span class="op">-</span> <span class="dv">1</span><span class="sc">!r}</span><span class="ss">"</span>)</span>
+<span id="cb6-871"><a href="#cb6-871" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"(1 + 3ε/4) - 1 = </span><span class="sc">{</span>(<span class="dv">1</span> <span class="op">+</span> <span class="dv">3</span><span class="op">*</span>eps<span class="op">/</span><span class="dv">4</span>)   <span class="op">-</span> <span class="dv">1</span><span class="sc">!r}</span><span class="ss">"</span>)</span>
+<span id="cb6-872"><a href="#cb6-872" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb6-873"><a href="#cb6-873" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb6-874"><a href="#cb6-874" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb6-875"><a href="#cb6-875" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-876"><a href="#cb6-876" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb6-877"><a href="#cb6-877" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-878"><a href="#cb6-878" aria-hidden="true" tabindex="-1"></a><span class="fu">## Summary {#sec-summary}</span></span>
+<span id="cb6-879"><a href="#cb6-879" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-880"><a href="#cb6-880" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Concept <span class="pp">|</span> Key fact <span class="pp">|</span></span>
+<span id="cb6-881"><a href="#cb6-881" aria-hidden="true" tabindex="-1"></a><span class="pp">|---|---|</span></span>
+<span id="cb6-882"><a href="#cb6-882" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Floating-point format <span class="pp">|</span> $\pm$ significand $\cdot \beta^{e}$, with $p$ digits in the significand <span class="pp">|</span></span>
+<span id="cb6-883"><a href="#cb6-883" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> binary64 (IEEE 754) <span class="pp">|</span> $\beta = 2$, $p = 53$ effective bits (52 stored + 1 hidden), $E_{\min} = -1022$, $E_{\max} = 1023$ <span class="pp">|</span></span>
+<span id="cb6-884"><a href="#cb6-884" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Normalization <span class="pp">|</span> $d_0 = 1$ ⇒ representation is **unique** and gains the *hidden bit* for free <span class="pp">|</span></span>
+<span id="cb6-885"><a href="#cb6-885" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Denormalized numbers <span class="pp">|</span> $d_0 = 0$ at the smallest exponent — fill the gap near $0$ by trading precision for range <span class="pp">|</span></span>
+<span id="cb6-886"><a href="#cb6-886" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Smallest positive denormalized <span class="pp">|</span> $m_d = 2^{-1074} \approx 4.941 \times 10^{-324}$ <span class="pp">|</span></span>
+<span id="cb6-887"><a href="#cb6-887" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Smallest positive normalized <span class="pp">|</span> $m_n = 2^{-1022} \approx 2.225 \times 10^{-308}$ <span class="pp">|</span></span>
+<span id="cb6-888"><a href="#cb6-888" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Largest positive <span class="pp">|</span> $M = (2 - 2^{-52}) \cdot 2^{1023} \approx 1.798 \times 10^{308}$ <span class="pp">|</span></span>
+<span id="cb6-889"><a href="#cb6-889" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Machine epsilon <span class="pp">|</span> $\varepsilon = 2^{-52} \approx 2.22 \times 10^{-16}$ — distance from $1$ to the next float64 <span class="pp">|</span></span>
+<span id="cb6-890"><a href="#cb6-890" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Default rounding <span class="pp">|</span> Round to nearest (RN); on a tie, the side with **even $d_{52}$** wins <span class="pp">|</span></span>
 </code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->

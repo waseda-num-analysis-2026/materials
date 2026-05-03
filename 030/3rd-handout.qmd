@@ -630,11 +630,106 @@ Now ask the computer to round three reals between them:
 $1 + \tfrac{\varepsilon}{4}$, $1 + \tfrac{\varepsilon}{2}$, and
 $1 + \tfrac{3\varepsilon}{4}$. Where do they go?
 
-::: {.callout-note}
-## Notes
+```{python}
+#| label: fig-rounding-near-one
+#| fig-cap: "Rounding behavior between $1$ and $1+\\varepsilon$."
+#| fig-align: center
+#| echo: false
 
-<div style="height: 18em;"></div>
-:::
+import matplotlib.pyplot as plt
+from matplotlib.patches import FancyArrowPatch
+
+fig, ax = plt.subplots(figsize=(11, 3.6))
+
+# --- Geometry ---
+x_1 = 0.0
+x_eps = 4.0
+x_14 = x_1 + (x_eps - x_1) * 0.25
+x_12 = x_1 + (x_eps - x_1) * 0.5
+x_34 = x_1 + (x_eps - x_1) * 0.75
+
+TICK_HALF = 0.10
+DOT_SIZE = 9
+GREEN = "#16a34a"
+BLUE = "#2563eb"
+RED = "#dc2626"
+
+# --- Number line ---
+ax.annotate("", xy=(x_eps + 2.5, 0), xytext=(x_1 - 1.2, 0),
+            arrowprops=dict(arrowstyle="->", color="black", lw=1.2))
+
+# --- Endpoint dots ---
+ax.plot([x_1, x_eps], [0, 0], marker="o", markersize=DOT_SIZE,
+        color=BLUE, ls="", zorder=3)
+
+# Endpoint labels (a little above and to the side of each dot)
+ax.text(x_1 - 0.30, 0.10, "1",
+        ha="right", va="bottom", fontsize=19, fontweight="bold")
+ax.text(x_eps + 0.10, 0.10, r"$1 + \varepsilon$",
+        ha="left", va="bottom", fontsize=19, fontweight="bold")
+
+# --- Three intermediate ticks ---
+for x in [x_14, x_12, x_34]:
+    ax.plot([x, x], [-TICK_HALF, TICK_HALF],
+            color=GREEN, lw=2.2, zorder=2)
+
+# --- Rounding arrows: start at the MIDDLE of each tick (on the line, y=0),
+#     arc UPWARD (above the line), land at the destination dot ---
+# Going LEFT  → positive rad = arc bulges UP
+# Going RIGHT → negative rad = arc bulges UP
+
+# 1 + ε/4 → 1
+ax.add_patch(FancyArrowPatch(
+    (x_14, 0), (x_1 + 0.12, 0),
+    connectionstyle="arc3,rad=0.55",
+    arrowstyle="->", color=GREEN, lw=2.0, mutation_scale=18))
+
+# 1 + ε/2 → 1
+ax.add_patch(FancyArrowPatch(
+    (x_12, 0), (x_1 + 0.12, 0),
+    connectionstyle="arc3,rad=0.40",
+    arrowstyle="->", color=GREEN, lw=2.0, mutation_scale=18))
+
+# 1 + 3ε/4 → 1 + ε
+ax.add_patch(FancyArrowPatch(
+    (x_34, 0), (x_eps - 0.12, 0),
+    connectionstyle="arc3,rad=-0.55",
+    arrowstyle="->", color=GREEN, lw=2.0, mutation_scale=18))
+
+# Labels for the three intermediate values
+# (placed at the x of each tick, ABOVE the arc peaks)
+ax.text(x_14, 0.55, r"$1 + \frac{\varepsilon}{4}$",
+        ha="center", va="bottom", fontsize=15, color=GREEN)
+ax.text(x_12, 1.45, r"$1 + \frac{\varepsilon}{2}$",
+        ha="center", va="bottom", fontsize=15, color=GREEN)
+ax.text(x_34, 0.55, r"$1 + \frac{3}{4}\varepsilon$",
+        ha="center", va="bottom", fontsize=15, color=GREEN)
+
+# Down arrow from "1+ε/2" label onto the tick top
+ax.annotate("", xy=(x_12, TICK_HALF + 0.02),
+            xytext=(x_12, 1.40),
+            arrowprops=dict(arrowstyle="->", color=GREEN, lw=1.6))
+
+# --- Machine epsilon annotation (close to 1+ε) ---
+ax.text(x_eps + 0.85, 0.55,
+        r"$2^{-52}\ \leftarrow$ Machine epsilon of Float 64",
+        ha="left", va="center", fontsize=12.5, color=BLUE, fontweight="bold")
+ax.annotate("", xy=(x_eps + 0.45, 0.20),
+            xytext=(x_eps + 0.95, 0.45),
+            arrowprops=dict(arrowstyle="->", color=RED, lw=1.4))
+
+# --- Last-bit labels (just under the line) ---
+ax.text(x_1, -0.25, r"(last bit $0$)",
+        ha="center", va="top", fontsize=12)
+ax.text(x_eps, -0.25, r"(last bit $1$)",
+        ha="center", va="top", fontsize=12)
+
+ax.set_xlim(x_1 - 1.5, x_eps + 5.4)
+ax.set_ylim(-0.45, 1.75)
+ax.axis("off")
+plt.tight_layout()
+plt.show()
+```
 
 #### Machine epsilon {#sec-machine-epsilon}
 
@@ -714,16 +809,18 @@ ax.text(x1, -1.05, "✓ chosen", ha="center", va="top",
 ax.text(x2, -1.05, "✗ rejected", ha="center", va="top",
         fontsize=13, color="#9ca3af")
 
-# Curved arrows below the line
+# Curved arrows: start at the middle of the red dot (y=0) and arc DOWN
+# Going LEFT  → negative rad = arc bulges DOWN
+# Going RIGHT → positive rad = arc bulges DOWN
 # Solid green: x → x1 (chosen because d_52 = 0 is even)
 ax.add_patch(FancyArrowPatch(
-    (x_real, -0.18), (x1 + 0.22, -0.18),
-    connectionstyle="arc3,rad=0.45",
+    (x_real, 0), (x1 + 0.22, 0),
+    connectionstyle="arc3,rad=-0.45",
     arrowstyle="->", color="#16a34a", lw=2.2, mutation_scale=22))
 # Dashed gray: x → x2 (rejected)
 ax.add_patch(FancyArrowPatch(
-    (x_real, -0.18), (x2 - 0.22, -0.18),
-    connectionstyle="arc3,rad=-0.45",
+    (x_real, 0), (x2 - 0.22, 0),
+    connectionstyle="arc3,rad=0.45",
     arrowstyle="->", color="#d1d5db", lw=1.6, mutation_scale=18,
     linestyle="dashed"))
 
