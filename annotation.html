@@ -157,22 +157,32 @@
   // Stroke points are stored in DOCUMENT coordinates (pageX/pageY)
   // as captured at draw time. When drawing on the fixed-position
   // canvas we subtract the current scroll offset (so strokes scroll
-  // with the page) AND add the stroke's anchor delta — the
-  // difference between the anchor's current position and the
-  // anchor's position when the stroke was saved. This single
-  // mechanism keeps strokes glued to the underlying content across
-  //   • scrolling (anchor's document-coord top is invariant under
-  //     scroll, so delta stays zero — fast path)
-  //   • zoom / window resize (anchor reflows with content, delta
-  //     compensates so strokes follow)
-  //   • cross-machine font drift (saved anchor was at the original
+  // with the page) AND apply an anchor-relative transform that
+  // keeps strokes glued to the underlying content across
+  //   • scrolling (anchor's document-coord position is invariant
+  //     under scroll, so the transform is the identity — fast path)
+  //   • browser zoom (Chrome's page-zoom scales CSS pixel values,
+  //     so zoom_ratio = current_anchor.width / saved_anchor.width.
+  //     We scale the stroke's offset from its anchor by this ratio.)
+  //   • window resize / responsive reflow (anchor reflows with
+  //     content; the transform compensates)
+  //   • cross-machine font drift (saved anchor was at the origin
   //     machine's CSS px, current anchor is at this machine's CSS
-  //     px — delta absorbs the difference)
+  //     px — the transform absorbs the difference)
+  //
+  // Transform per point:
+  //   new = anchor_now + (saved - anchor_saved) * scale
+  // Falls back to identity when no anchor is available, and to a
+  // pure translation when the anchor predates width/height capture.
   function drawStroke(s, anchorCache) {
     if (!s.points || s.points.length === 0) return;
     const sx = window.scrollX, sy = window.scrollY;
 
-    let adx = 0, ady = 0;
+    let useAnchor = false;
+    let aSavedLeft = 0, aSavedTop = 0;
+    let aNowLeft = 0, aNowTop = 0;
+    let scale = 1.0;
+
     if (s.anchor && s.anchor.id) {
       let pos;
       if (anchorCache && anchorCache.has(s.anchor.id)) {
@@ -181,15 +191,33 @@
         const el = document.getElementById(s.anchor.id);
         if (el) {
           const r = el.getBoundingClientRect();
-          pos = { left: r.left + window.scrollX, top: r.top + window.scrollY };
+          pos = {
+            left: r.left + window.scrollX,
+            top: r.top + window.scrollY,
+            width: r.width,
+            height: r.height,
+          };
         } else {
           pos = null;
         }
         if (anchorCache) anchorCache.set(s.anchor.id, pos);
       }
       if (pos) {
-        adx = pos.left - s.anchor.left;
-        ady = pos.top  - s.anchor.top;
+        useAnchor = true;
+        aSavedLeft = s.anchor.left;
+        aSavedTop = s.anchor.top;
+        aNowLeft = pos.left;
+        aNowTop = pos.top;
+        // Use the anchor's width as the zoom-ratio signal (height
+        // is noisier — small text elements have integer-rounded
+        // heights). Width tracks zoom faithfully because anchor
+        // text reflows in proportion to the zoom factor.
+        if (s.anchor.width > 0 && pos.width > 0) {
+          scale = pos.width / s.anchor.width;
+          // Clamp tiny noise (< 0.5%) to identity to avoid
+          // accumulating sub-pixel drift on every redraw.
+          if (Math.abs(scale - 1) < 0.005) scale = 1;
+        }
       }
     }
 
@@ -216,8 +244,21 @@
     ctx.lineWidth = s.width;
     ctx.beginPath();
     const [p0, ...rest] = s.points;
-    ctx.moveTo(p0.x + adx - sx, p0.y + ady - sy);
-    for (const p of rest) ctx.lineTo(p.x + adx - sx, p.y + ady - sy);
+    if (useAnchor) {
+      ctx.moveTo(
+        aNowLeft + (p0.x - aSavedLeft) * scale - sx,
+        aNowTop  + (p0.y - aSavedTop)  * scale - sy
+      );
+      for (const p of rest) {
+        ctx.lineTo(
+          aNowLeft + (p.x - aSavedLeft) * scale - sx,
+          aNowTop  + (p.y - aSavedTop)  * scale - sy
+        );
+      }
+    } else {
+      ctx.moveTo(p0.x - sx, p0.y - sy);
+      for (const p of rest) ctx.lineTo(p.x - sx, p.y - sy);
+    }
     ctx.stroke();
     ctx.restore();
   }
@@ -803,34 +844,62 @@
       id: best.id,
       top: r.top + window.scrollY,
       left: r.left + window.scrollX,
+      // width / height are also captured so drawStroke can detect
+      // browser-zoom changes: in Chrome's page-zoom, getBoundingClientRect
+      // returns CSS pixel values that scale with the zoom factor, so
+      //   scale = current_anchor.width / saved_anchor.width
+      // gives the zoom-ratio between save and load (= 1.0 if zoom
+      // unchanged) and lets us scale the stroke's offset from the
+      // anchor accordingly.
+      width: r.width,
+      height: r.height,
     };
   }
 
   function saveJson() {
-    // Auto-attach an anchor to any in-memory stroke that doesn't
-    // already have one (e.g. strokes loaded from a v2 file). The
-    // anchor is computed from the stroke's first point against the
-    // CURRENT document, on the assumption that whatever the user
-    // sees on screen right now is what they want to capture. They
-    // can verify alignment visually before clicking Save .json.
-    let upgraded = 0;
+    // Two on-save upgrades:
+    //   • Any stroke without an anchor at all gets one attached
+    //     (covers v2 files loaded into the page).
+    //   • Any anchor lacking width/height gets those backfilled
+    //     from the current anchor element (so older v3 files
+    //     drawn before width/height capture become zoom-robust).
+    // Both upgrades trust the user's "save" click as confirmation
+    // that the strokes currently look aligned with the live page.
+    let attached = 0;
+    let backfilled = 0;
     const strokesOut = strokes.map((s) => {
-      if (s.anchor && s.anchor.id) return s;
+      if (s.anchor && s.anchor.id) {
+        if (s.anchor.width === undefined || s.anchor.height === undefined) {
+          const el = document.getElementById(s.anchor.id);
+          if (el) {
+            const r = el.getBoundingClientRect();
+            backfilled++;
+            return {
+              ...s,
+              anchor: { ...s.anchor, width: r.width, height: r.height },
+            };
+          }
+        }
+        return s;
+      }
       if (!s.points || s.points.length === 0) return s;
       const p0 = s.points[0];
       const anchor = findNearestAnchorAbove(p0.x, p0.y);
       if (!anchor) return s;
-      upgraded++;
+      attached++;
       return { ...s, anchor };
     });
-    if (upgraded > 0) {
+    if (attached > 0 || backfilled > 0) {
       // Persist the upgrade so a subsequent save / undo sees the
       // anchored strokes too.
       strokes = strokesOut;
       if (window.console) {
+        const parts = [];
+        if (attached > 0)   parts.push("anchored=" + attached);
+        if (backfilled > 0) parts.push("backfilled-dimensions=" + backfilled);
         console.info(
-          "[annotation] Auto-anchored " + upgraded + " stroke(s) " +
-          "while saving — file is now fully v3-compatible."
+          "[annotation] On-save upgrade: " + parts.join(", ") +
+          " — file is now zoom-robust."
         );
       }
     }
