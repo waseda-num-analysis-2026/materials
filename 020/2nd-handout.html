@@ -342,7 +342,7 @@ The handout says <em>“Deep historical roots — dating back to ~1800 BCE.”</
 </section>
 <section id="verifying-in-python" class="level3" data-number="2.2">
 <h3 data-number="2.2" class="anchored" data-anchor-id="verifying-in-python"><span class="header-section-number">2.2</span> Verifying in Python</h3>
-<div id="f1db4a21" class="cell" data-execution_count="1">
+<div id="6adc396f" class="cell" data-execution_count="1">
 <details class="code-fold">
 <summary>Helper: to_binary_scientific(f)</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> struct</span>
@@ -368,7 +368,7 @@ The handout says <em>“Deep historical roots — dating back to ~1800 BCE.”</
 <span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="ss">f"</span><span class="sc">{</span>mantissa_str<span class="sc">}</span><span class="ss">₂ × 2^</span><span class="sc">{</span>e<span class="sc">}</span><span class="ss">"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
-<div id="bf2f22ae" class="cell" data-execution_count="2">
+<div id="55d71cb9" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> v <span class="kw">in</span> [<span class="fl">1.25</span>, <span class="fl">7.375</span>, <span class="fl">0.2</span>]:</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"  </span><span class="sc">{</span>v<span class="sc">:6}</span><span class="ss">  =  </span><span class="sc">{</span>to_binary_scientific(v)<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
@@ -384,7 +384,7 @@ The handout says <em>“Deep historical roots — dating back to ~1800 BCE.”</
 </div>
 <div id="callout-6" class="callout-6-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<div id="dd6b5714" class="cell" data-execution_count="3">
+<div id="10ce4fb4" class="cell" data-execution_count="3">
 <div class="cell-output cell-output-stdout">
 <pre><code>    1.25  =  1.01₂ × 2^0
    7.375  =  1.11011₂ × 2^2
@@ -404,7 +404,7 @@ The handout says <em>“Deep historical roots — dating back to ~1800 BCE.”</
 <p><strong>Example 2: Rounding error</strong></p>
 <p><span class="math display">\[8.3 - 8 = \;?\]</span></p>
 <p>The result is <em>not</em> exactly <span class="math inline">\(0.3\)</span> — see the Excel screenshot in the slides.</p>
-<div id="3c796872" class="cell" data-execution_count="4">
+<div id="88a9d243" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Note: 10  is an integer  → 10**40 is exact (Python int has arbitrary precision)</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co">#       10.0 is float64   → 10.0**40 is a floating-point number (finite precision)</span></span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co"># The two behave very differently!</span></span>
@@ -431,7 +431,7 @@ The handout says <em>“Deep historical roots — dating back to ~1800 BCE.”</
 </div>
 <div id="callout-7" class="callout-7-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<div id="e44f0d64" class="cell" data-execution_count="5">
+<div id="db57bed0" class="cell" data-execution_count="5">
 <div class="cell-output cell-output-stdout">
 <pre><code>10  **40 + 500   - 10  **40 = 500
 10.0**40 + 500.0 - 10.0**40 = 0.0
@@ -447,7 +447,7 @@ The handout says <em>“Deep historical roots — dating back to ~1800 BCE.”</
 </section>
 <section id="quiz-what-is-the-value-of-x" class="level3" data-number="2.4">
 <h3 data-number="2.4" class="anchored" data-anchor-id="quiz-what-is-the-value-of-x"><span class="header-section-number">2.4</span> Quiz: What is the value of x?</h3>
-<div id="1470566d" class="cell" data-execution_count="6">
+<div id="eb0ad979" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> math</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> <span class="dv">100</span></span>
@@ -471,7 +471,7 @@ The handout says <em>“Deep historical roots — dating back to ~1800 BCE.”</
 </div>
 <div id="callout-8" class="callout-8-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<div id="5001431d" class="cell" data-execution_count="7">
+<div id="8422bfff" class="cell" data-execution_count="7">
 <div class="cell-output cell-output-stdout">
 <pre><code>Result: x = 1.0
 Expected: 100</code></pre>
@@ -635,7 +635,7 @@ E := \left|\frac{(x - y) - (\hat{x} - \hat{y})}{x - y}\right|
 <p><span class="math display">\[\sqrt{1001} - \sqrt{999}
 = \frac{(\sqrt{1001} - \sqrt{999})(\sqrt{1001} + \sqrt{999})}{\sqrt{1001} + \sqrt{999}}
 = \frac{2}{\sqrt{1001} + \sqrt{999}}\]</span></p>
-<div id="9f5973c5" class="cell" data-execution_count="8">
+<div id="15d2719b" class="cell" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co"># float32 has ~7 significant decimal digits.</span></span>
@@ -669,7 +669,7 @@ E := \left|\frac{(x - y) - (\hat{x} - \hat{y})}{x - y}\right|
 </div>
 <div id="callout-12" class="callout-12-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<div id="29adf395" class="cell" data-execution_count="9">
+<div id="80320399" class="cell" data-execution_count="9">
 <div class="cell-output cell-output-stdout">
 <pre><code>a = 1000001,  b = 999999
 
@@ -697,7 +697,7 @@ Error (improved): 4.74e-11</code></pre>
 <li><strong>Lower bound</strong>: computed with <strong>round-down</strong></li>
 <li><strong>Upper bound</strong>: computed with <strong>round-up</strong></li>
 </ul>
-<div id="7bda4fef" class="cell" data-execution_count="10">
+<div id="cc31987c" class="cell" data-execution_count="10">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Requires:  pip install mpmath</span></span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="co"># mpmath.iv provides rigorous interval arithmetic with directed rounding,</span></span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="co"># so the resulting interval is *guaranteed* to contain the true value.</span></span>
@@ -725,7 +725,7 @@ Error (improved): 4.74e-11</code></pre>
 </div>
 <div id="callout-13" class="callout-13-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<div id="2000da1d" class="cell" data-execution_count="11">
+<div id="443984f0" class="cell" data-execution_count="11">
 <div class="cell-output cell-output-stdout">
 <pre><code>π      ∈ [3.14159265358467, 3.14159265361377]
 √2     ∈ [1.4142135623697, 1.41421356238425]
@@ -1596,90 +1596,69 @@ Error (improved): 4.74e-11</code></pre>
     reader.readAsText(file);
   }
 
-  // Cross-platform alignment: strokes are saved in document
-  // (pageX/pageY) coordinates which depend on the rendered layout —
-  // and Windows ↔ macOS renders the same handout with slightly
-  // different font metrics, so the document reflows by a few
-  // percent in non-uniform ways.
+  // Strokes are saved in document (pageX/pageY) coordinates.
   //
   // v3 (preferred): each stroke carries an anchor = nearest
   //   [id]-bearing element with its absolute position at save time.
   //   We re-find that element by id, compute (curTop-savedTop,
   //   curLeft-savedLeft), and translate the whole stroke by that
   //   delta. Because the anchor moves with the content, strokes
-  //   stay glued to whatever they were drawn over.
+  //   stay glued to whatever they were drawn over even across
+  //   Windows ↔ macOS font-rendering differences.
   //
-  // v2 (legacy fallback): rescale proportionally using
-  //   document.scrollHeight, recentre by scrollWidth difference. A
-  //   linear approximation that only works when reflow is uniform.
+  // v2 (legacy): no anchors. We place strokes at their saved
+  //   coordinates verbatim. We deliberately do NOT auto-rescale
+  //   here — proportional scrollHeight rescaling is unreliable
+  //   under non-uniform reflow and was making same-machine reloads
+  //   drift. To get cross-machine alignment for a v2 file, re-save
+  //   it on the machine where it was drawn (which upgrades it to
+  //   v3).
   function realignStrokesToCurrentDocument(data) {
     const strokesIn = Array.isArray(data.strokes) ? data.strokes : [];
     if (strokesIn.length === 0) return [];
 
-    const anchored = strokesIn.filter(s => s.anchor && s.anchor.id);
-    if (anchored.length > 0) {
-      let resolved = 0, missing = 0, identical = 0;
-      const out = strokesIn.map((s) => {
-        if (!s.anchor || !s.anchor.id) return s;
-        const el = document.getElementById(s.anchor.id);
-        if (!el) { missing++; return s; }
-        const r = el.getBoundingClientRect();
-        const dx = (r.left + window.scrollX) - s.anchor.left;
-        const dy = (r.top  + window.scrollY) - s.anchor.top;
-        if (Math.abs(dx) < 0.5 && Math.abs(dy) < 0.5) {
-          identical++;
-          return s;
-        }
-        resolved++;
-        return {
-          ...s,
-          points: s.points.map(p => ({ ...p, x: p.x + dx, y: p.y + dy })),
-        };
-      });
+    const hasAnchors = strokesIn.some(s => s.anchor && s.anchor.id);
+    if (!hasAnchors) {
       if (window.console) {
         console.info(
-          "[annotation] Anchor realign (v" + (data.version || "?") + "):",
-          "shifted=" + resolved,
-          "no-shift=" + identical,
-          "missing-anchor=" + missing,
-          "of " + strokesIn.length + " strokes"
+          "[annotation] Loaded " + strokesIn.length + " strokes from " +
+          "v" + (data.version || "?") + " (no anchors). " +
+          "Strokes placed at their saved coordinates verbatim. " +
+          "If alignment looks off across machines, re-save on the " +
+          "machine where the file was drawn to upgrade to v3."
         );
       }
-      return out;
+      return strokesIn;
     }
 
-    // No anchors → fall back to proportional rescale (v2).
-    const saved = data.document;
-    if (!saved || !saved.scrollWidth || !saved.scrollHeight) return strokesIn;
-    const curW = document.documentElement.scrollWidth;
-    const curH = document.documentElement.scrollHeight;
-    const dx = (curW - saved.scrollWidth) / 2;
-    const sy = curH / saved.scrollHeight;
-    const sx = curW / saved.scrollWidth;
-    if (Math.abs(dx) < 0.5 && Math.abs(sy - 1) < 0.001) return strokesIn;
-    const widthScale = Math.sqrt(Math.max(0.1, sx * sy));
+    let resolved = 0, missing = 0, identical = 0;
+    const out = strokesIn.map((s) => {
+      if (!s.anchor || !s.anchor.id) return s;
+      const el = document.getElementById(s.anchor.id);
+      if (!el) { missing++; return s; }
+      const r = el.getBoundingClientRect();
+      const dx = (r.left + window.scrollX) - s.anchor.left;
+      const dy = (r.top  + window.scrollY) - s.anchor.top;
+      if (Math.abs(dx) < 0.5 && Math.abs(dy) < 0.5) {
+        identical++;
+        return s;
+      }
+      resolved++;
+      return {
+        ...s,
+        points: s.points.map(p => ({ ...p, x: p.x + dx, y: p.y + dy })),
+      };
+    });
     if (window.console) {
-      console.warn(
-        "[annotation] Legacy v2 file — using proportional rescale " +
-        "(strokes may drift on non-uniform reflow). Re-saving on the " +
-        "machine where it was drawn upgrades it to v3 (anchor-based)."
-      );
       console.info(
-        "[annotation] Proportional realign:",
-        "saved", saved.scrollWidth + "×" + saved.scrollHeight,
-        "→ current", curW + "×" + curH,
-        "(dx=" + dx.toFixed(1) + "px, sy=" + sy.toFixed(4) + ")"
+        "[annotation] Anchor realign (v" + (data.version || "?") + "):",
+        "shifted=" + resolved,
+        "no-shift=" + identical,
+        "missing-anchor=" + missing,
+        "of " + strokesIn.length + " strokes"
       );
     }
-    return strokesIn.map((s) => ({
-      ...s,
-      width: s.width * widthScale,
-      points: s.points.map((p) => ({
-        ...p,
-        x: p.x + dx,
-        y: p.y * sy,
-      })),
-    }));
+    return out;
   }
 
   // Browsers do not allow JS to point a file picker at an arbitrary
