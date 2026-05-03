@@ -4,20 +4,23 @@
   Injected via _quarto.yml `format.html.include-after-body`.
   • Vanilla JS only (no external dependencies)
   • Pointer Events API (mouse / pen / touch all unified)
-  • Toolbar: pen / highlighter / eraser / color / width / undo / clear /
-    save / load
+  • Toolbar: cursor / pen / highlighter / eraser / color / width /
+    undo / clear / save / load
   • Toggle ON/OFF: when OFF, scrolling and clicks pass through normally
+  • Cursor tool: keeps annotation mode ON (existing strokes stay
+    visible) but lets the page handle pointer events again so the
+    user can scroll, click links, use the TOC, etc.
   • Save/Load annotations as JSON
   • Toolbar is draggable via the ⋮⋮ grip; can be hidden via the ✕
     button (a small ✏ launcher appears at top-right while hidden).
     Position and visibility persist across reloads via localStorage.
   • Tested on Chrome / Edge (Mac & Windows)
   Keyboard shortcuts (when ON unless noted):
-      Alt+A         toggle annotation mode (works also when OFF)
-      Alt+T         toggle TOOLBAR visibility (works also when OFF)
-      P / H / E     select pen / highlighter / eraser
-      Cmd/Ctrl+Z    undo
-      Esc           turn annotation OFF
+      Alt+A             toggle annotation mode (works also when OFF)
+      Alt+T             toggle TOOLBAR visibility (works also when OFF)
+      C / P / H / E     select cursor / pen / highlighter / eraser
+      Cmd/Ctrl+Z        undo
+      Esc               turn annotation OFF
 -->
 <script>
 (function () {
@@ -38,9 +41,15 @@
     { name: "huge",     value: 32 },
     { name: "giant",    value: 56 },
   ];
-  const TOOLS = ["pen", "highlighter", "eraser"];
+  // "cursor" is a non-drawing tool: it keeps annotation mode ON
+  // (existing strokes stay visible) but lets the page receive pointer
+  // events again, so the user can scroll, click links, use the TOC,
+  // etc. without first turning annotation OFF.
+  const TOOLS = ["cursor", "pen", "highlighter", "eraser"];
 
   // Default stroke width for each tool (must be a value present in WIDTHS).
+  // "cursor" intentionally has no entry — switching to cursor leaves
+  // the previously selected width unchanged.
   const DEFAULT_WIDTH = {
     pen: 4,
     highlighter: 16,
@@ -71,7 +80,9 @@
   let toolbarDragStartTop = 0;
   // Per-tool color memory: switching tools restores the last color used
   // with that tool. Pen defaults to black, highlighter to yellow.
+  // Cursor is non-drawing → ignores color.
   const TOOL_COLOR = {
+    cursor: null,                 // cursor ignores color
     pen: COLORS[0].value,         // black
     highlighter: COLORS[4].value, // yellow
     eraser: null,                 // eraser ignores color
@@ -344,9 +355,14 @@
     });
     onOff.id = "annotation-toggle";
 
+    const cursorBtn = makeBtn("↖ Cursor", () => setTool("cursor"), {
+      title: "Cursor — interact with the page (scroll, click, TOC). " +
+             "Drawings remain visible. (C)",
+    });
     const penBtn = makeBtn("Pen", () => setTool("pen"));
     const hlBtn = makeBtn("Highlighter", () => setTool("highlighter"));
     const eraserBtn = makeBtn("Eraser", () => setTool("eraser"));
+    cursorBtn.id = "annotation-cursor";
     penBtn.id = "annotation-pen";
     hlBtn.id = "annotation-highlighter";
     eraserBtn.id = "annotation-eraser";
@@ -427,6 +443,7 @@
     bar.appendChild(dragHandle);
     bar.appendChild(onOff);
     bar.appendChild(sep());
+    bar.appendChild(cursorBtn);
     bar.appendChild(penBtn);
     bar.appendChild(hlBtn);
     bar.appendChild(eraserBtn);
@@ -541,10 +558,26 @@
     }, "✏");
   }
 
+  // Sync the canvas's pointer-events / display with the current
+  // (enabled, tool) pair:
+  //   • annotation OFF             → canvas hidden, no events
+  //   • annotation ON  + cursor    → canvas visible, events pass
+  //                                   through to the page
+  //   • annotation ON  + drawing   → canvas visible, events captured
+  function updateCanvasInteractivity() {
+    if (!canvas) return;
+    if (!enabled) {
+      canvas.style.pointerEvents = "none";
+      canvas.style.display = "none";
+      return;
+    }
+    canvas.style.display = "block";
+    canvas.style.pointerEvents = (tool === "cursor") ? "none" : "auto";
+  }
+
   function setEnabled(on) {
     enabled = on;
-    canvas.style.pointerEvents = on ? "auto" : "none";
-    canvas.style.display = on ? "block" : "none";
+    updateCanvasInteractivity();
     const btn = document.getElementById("annotation-toggle");
     if (btn) {
       btn.textContent = on ? "✏ Annotate: ON" : "✏ Annotate: OFF";
@@ -557,26 +590,36 @@
   }
   function setTool(t) {
     if (!TOOLS.includes(t)) return;
+    // Cancel any in-progress stroke when switching to the
+    // non-drawing cursor tool.
+    if (t === "cursor" && drawing) {
+      drawing = false;
+      currentStroke = null;
+    }
     tool = t;
 
-    // Restore the per-tool color (eraser keeps the previous pen color
-    // internally; it's just unused while erasing).
+    // Restore the per-tool color (eraser/cursor keep the previous
+    // pen color internally; they just don't use it).
     if (TOOL_COLOR[tool]) color = TOOL_COLOR[tool];
 
     // Restore the tool's preferred default stroke width and sync the
-    // dropdown so the user can see it.
-    width = DEFAULT_WIDTH[tool] || width;
+    // dropdown so the user can see it. Cursor has no preferred width
+    // → leave the previous value untouched.
+    if (DEFAULT_WIDTH[tool]) width = DEFAULT_WIDTH[tool];
     const sel = document.getElementById("annotation-width");
     if (sel) sel.value = String(width);
 
+    const c   = document.getElementById("annotation-cursor");
     const p   = document.getElementById("annotation-pen");
     const h   = document.getElementById("annotation-highlighter");
     const e2  = document.getElementById("annotation-eraser");
+    if (c)  c.style.outline  = tool === "cursor"      ? "2px solid #2563eb" : "none";
     if (p)  p.style.outline  = tool === "pen"         ? "2px solid #2563eb" : "none";
     if (h)  h.style.outline  = tool === "highlighter" ? "2px solid #2563eb" : "none";
     if (e2) e2.style.outline = tool === "eraser"      ? "2px solid #2563eb" : "none";
 
     updateCursor();
+    updateCanvasInteractivity();
   }
   function setColor(c) {
     color = c;
@@ -599,6 +642,12 @@
   // it stays visible on both light and dark backgrounds.
   function updateCursor() {
     if (!canvas) return;
+    // Cursor tool: the canvas does not capture pointer events, so its
+    // own cursor is moot. Reset to default for tidiness.
+    if (tool === "cursor") {
+      canvas.style.cursor = "default";
+      return;
+    }
     const MIN_VIS = 10;
     const MAX_VIS = 96;            // browser cursor size sanity cap
     const visW = Math.min(MAX_VIS, Math.max(MIN_VIS, width));
@@ -752,6 +801,8 @@
     if (!enabled) return;
     if ((e.metaKey || e.ctrlKey) && e.key === "z") {
       e.preventDefault(); undo();
+    } else if (e.key === "c" || e.key === "C") {
+      setTool("cursor");
     } else if (e.key === "p" || e.key === "P") {
       setTool("pen");
     } else if (e.key === "h" || e.key === "H") {

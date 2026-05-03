@@ -342,7 +342,7 @@ The handout says <em>“Deep historical roots — dating back to ~1800 BCE.”</
 </section>
 <section id="verifying-in-python" class="level3" data-number="2.2">
 <h3 data-number="2.2" class="anchored" data-anchor-id="verifying-in-python"><span class="header-section-number">2.2</span> Verifying in Python</h3>
-<div id="8d0987c9" class="cell" data-execution_count="1">
+<div id="4ffa34bd" class="cell" data-execution_count="1">
 <details class="code-fold">
 <summary>Helper: to_binary_scientific(f)</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> struct</span>
@@ -368,7 +368,7 @@ The handout says <em>“Deep historical roots — dating back to ~1800 BCE.”</
 <span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="ss">f"</span><span class="sc">{</span>mantissa_str<span class="sc">}</span><span class="ss">₂ × 2^</span><span class="sc">{</span>e<span class="sc">}</span><span class="ss">"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
-<div id="5a3a58af" class="cell" data-execution_count="2">
+<div id="474f86be" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> v <span class="kw">in</span> [<span class="fl">1.25</span>, <span class="fl">7.375</span>, <span class="fl">0.2</span>]:</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"  </span><span class="sc">{</span>v<span class="sc">:6}</span><span class="ss">  =  </span><span class="sc">{</span>to_binary_scientific(v)<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
@@ -384,7 +384,7 @@ The handout says <em>“Deep historical roots — dating back to ~1800 BCE.”</
 </div>
 <div id="callout-6" class="callout-6-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<div id="78f90934" class="cell" data-execution_count="3">
+<div id="965fadeb" class="cell" data-execution_count="3">
 <div class="cell-output cell-output-stdout">
 <pre><code>    1.25  =  1.01₂ × 2^0
    7.375  =  1.11011₂ × 2^2
@@ -404,7 +404,7 @@ The handout says <em>“Deep historical roots — dating back to ~1800 BCE.”</
 <p><strong>Example 2: Rounding error</strong></p>
 <p><span class="math display">\[8.3 - 8 = \;?\]</span></p>
 <p>The result is <em>not</em> exactly <span class="math inline">\(0.3\)</span> — see the Excel screenshot in the slides.</p>
-<div id="34abc0d5" class="cell" data-execution_count="4">
+<div id="fb4be655" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Note: 10  is an integer  → 10**40 is exact (Python int has arbitrary precision)</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co">#       10.0 is float64   → 10.0**40 is a floating-point number (finite precision)</span></span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co"># The two behave very differently!</span></span>
@@ -431,7 +431,7 @@ The handout says <em>“Deep historical roots — dating back to ~1800 BCE.”</
 </div>
 <div id="callout-7" class="callout-7-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<div id="6d8f31f7" class="cell" data-execution_count="5">
+<div id="1913c134" class="cell" data-execution_count="5">
 <div class="cell-output cell-output-stdout">
 <pre><code>10  **40 + 500   - 10  **40 = 500
 10.0**40 + 500.0 - 10.0**40 = 0.0
@@ -447,7 +447,7 @@ The handout says <em>“Deep historical roots — dating back to ~1800 BCE.”</
 </section>
 <section id="quiz-what-is-the-value-of-x" class="level3" data-number="2.4">
 <h3 data-number="2.4" class="anchored" data-anchor-id="quiz-what-is-the-value-of-x"><span class="header-section-number">2.4</span> Quiz: What is the value of x?</h3>
-<div id="12bcc939" class="cell" data-execution_count="6">
+<div id="d560f3a4" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> math</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> <span class="dv">100</span></span>
@@ -471,7 +471,7 @@ The handout says <em>“Deep historical roots — dating back to ~1800 BCE.”</
 </div>
 <div id="callout-8" class="callout-8-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<div id="b09ab5e0" class="cell" data-execution_count="7">
+<div id="8ed0d527" class="cell" data-execution_count="7">
 <div class="cell-output cell-output-stdout">
 <pre><code>Result: x = 1.0
 Expected: 100</code></pre>
@@ -635,7 +635,7 @@ E := \left|\frac{(x - y) - (\hat{x} - \hat{y})}{x - y}\right|
 <p><span class="math display">\[\sqrt{1001} - \sqrt{999}
 = \frac{(\sqrt{1001} - \sqrt{999})(\sqrt{1001} + \sqrt{999})}{\sqrt{1001} + \sqrt{999}}
 = \frac{2}{\sqrt{1001} + \sqrt{999}}\]</span></p>
-<div id="553d2381" class="cell" data-execution_count="8">
+<div id="e98edf57" class="cell" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co"># float32 has ~7 significant decimal digits.</span></span>
@@ -669,7 +669,7 @@ E := \left|\frac{(x - y) - (\hat{x} - \hat{y})}{x - y}\right|
 </div>
 <div id="callout-12" class="callout-12-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<div id="a2280175" class="cell" data-execution_count="9">
+<div id="8ebb09ce" class="cell" data-execution_count="9">
 <div class="cell-output cell-output-stdout">
 <pre><code>a = 1000001,  b = 999999
 
@@ -697,7 +697,7 @@ Error (improved): 4.74e-11</code></pre>
 <li><strong>Lower bound</strong>: computed with <strong>round-down</strong></li>
 <li><strong>Upper bound</strong>: computed with <strong>round-up</strong></li>
 </ul>
-<div id="c23ea279" class="cell" data-execution_count="10">
+<div id="9abd6989" class="cell" data-execution_count="10">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Requires:  pip install mpmath</span></span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="co"># mpmath.iv provides rigorous interval arithmetic with directed rounding,</span></span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="co"># so the resulting interval is *guaranteed* to contain the true value.</span></span>
@@ -725,7 +725,7 @@ Error (improved): 4.74e-11</code></pre>
 </div>
 <div id="callout-13" class="callout-13-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<div id="c046a538" class="cell" data-execution_count="11">
+<div id="6e0f8ace" class="cell" data-execution_count="11">
 <div class="cell-output cell-output-stdout">
 <pre><code>π      ∈ [3.14159265358467, 3.14159265361377]
 √2     ∈ [1.4142135623697, 1.41421356238425]
@@ -785,20 +785,23 @@ Error (improved): 4.74e-11</code></pre>
   Injected via _quarto.yml `format.html.include-after-body`.
   • Vanilla JS only (no external dependencies)
   • Pointer Events API (mouse / pen / touch all unified)
-  • Toolbar: pen / highlighter / eraser / color / width / undo / clear /
-    save / load
+  • Toolbar: cursor / pen / highlighter / eraser / color / width /
+    undo / clear / save / load
   • Toggle ON/OFF: when OFF, scrolling and clicks pass through normally
+  • Cursor tool: keeps annotation mode ON (existing strokes stay
+    visible) but lets the page handle pointer events again so the
+    user can scroll, click links, use the TOC, etc.
   • Save/Load annotations as JSON
   • Toolbar is draggable via the ⋮⋮ grip; can be hidden via the ✕
     button (a small ✏ launcher appears at top-right while hidden).
     Position and visibility persist across reloads via localStorage.
   • Tested on Chrome / Edge (Mac & Windows)
   Keyboard shortcuts (when ON unless noted):
-      Alt+A         toggle annotation mode (works also when OFF)
-      Alt+T         toggle TOOLBAR visibility (works also when OFF)
-      P / H / E     select pen / highlighter / eraser
-      Cmd/Ctrl+Z    undo
-      Esc           turn annotation OFF
+      Alt+A             toggle annotation mode (works also when OFF)
+      Alt+T             toggle TOOLBAR visibility (works also when OFF)
+      C / P / H / E     select cursor / pen / highlighter / eraser
+      Cmd/Ctrl+Z        undo
+      Esc               turn annotation OFF
 -->
 <script>
 (function () {
@@ -819,9 +822,15 @@ Error (improved): 4.74e-11</code></pre>
     { name: "huge",     value: 32 },
     { name: "giant",    value: 56 },
   ];
-  const TOOLS = ["pen", "highlighter", "eraser"];
+  // "cursor" is a non-drawing tool: it keeps annotation mode ON
+  // (existing strokes stay visible) but lets the page receive pointer
+  // events again, so the user can scroll, click links, use the TOC,
+  // etc. without first turning annotation OFF.
+  const TOOLS = ["cursor", "pen", "highlighter", "eraser"];
 
   // Default stroke width for each tool (must be a value present in WIDTHS).
+  // "cursor" intentionally has no entry — switching to cursor leaves
+  // the previously selected width unchanged.
   const DEFAULT_WIDTH = {
     pen: 4,
     highlighter: 16,
@@ -852,7 +861,9 @@ Error (improved): 4.74e-11</code></pre>
   let toolbarDragStartTop = 0;
   // Per-tool color memory: switching tools restores the last color used
   // with that tool. Pen defaults to black, highlighter to yellow.
+  // Cursor is non-drawing → ignores color.
   const TOOL_COLOR = {
+    cursor: null,                 // cursor ignores color
     pen: COLORS[0].value,         // black
     highlighter: COLORS[4].value, // yellow
     eraser: null,                 // eraser ignores color
@@ -1125,9 +1136,14 @@ Error (improved): 4.74e-11</code></pre>
     });
     onOff.id = "annotation-toggle";
 
+    const cursorBtn = makeBtn("↖ Cursor", () => setTool("cursor"), {
+      title: "Cursor — interact with the page (scroll, click, TOC). " +
+             "Drawings remain visible. (C)",
+    });
     const penBtn = makeBtn("Pen", () => setTool("pen"));
     const hlBtn = makeBtn("Highlighter", () => setTool("highlighter"));
     const eraserBtn = makeBtn("Eraser", () => setTool("eraser"));
+    cursorBtn.id = "annotation-cursor";
     penBtn.id = "annotation-pen";
     hlBtn.id = "annotation-highlighter";
     eraserBtn.id = "annotation-eraser";
@@ -1208,6 +1224,7 @@ Error (improved): 4.74e-11</code></pre>
     bar.appendChild(dragHandle);
     bar.appendChild(onOff);
     bar.appendChild(sep());
+    bar.appendChild(cursorBtn);
     bar.appendChild(penBtn);
     bar.appendChild(hlBtn);
     bar.appendChild(eraserBtn);
@@ -1322,10 +1339,26 @@ Error (improved): 4.74e-11</code></pre>
     }, "✏");
   }
 
+  // Sync the canvas's pointer-events / display with the current
+  // (enabled, tool) pair:
+  //   • annotation OFF             → canvas hidden, no events
+  //   • annotation ON  + cursor    → canvas visible, events pass
+  //                                   through to the page
+  //   • annotation ON  + drawing   → canvas visible, events captured
+  function updateCanvasInteractivity() {
+    if (!canvas) return;
+    if (!enabled) {
+      canvas.style.pointerEvents = "none";
+      canvas.style.display = "none";
+      return;
+    }
+    canvas.style.display = "block";
+    canvas.style.pointerEvents = (tool === "cursor") ? "none" : "auto";
+  }
+
   function setEnabled(on) {
     enabled = on;
-    canvas.style.pointerEvents = on ? "auto" : "none";
-    canvas.style.display = on ? "block" : "none";
+    updateCanvasInteractivity();
     const btn = document.getElementById("annotation-toggle");
     if (btn) {
       btn.textContent = on ? "✏ Annotate: ON" : "✏ Annotate: OFF";
@@ -1338,26 +1371,36 @@ Error (improved): 4.74e-11</code></pre>
   }
   function setTool(t) {
     if (!TOOLS.includes(t)) return;
+    // Cancel any in-progress stroke when switching to the
+    // non-drawing cursor tool.
+    if (t === "cursor" && drawing) {
+      drawing = false;
+      currentStroke = null;
+    }
     tool = t;
 
-    // Restore the per-tool color (eraser keeps the previous pen color
-    // internally; it's just unused while erasing).
+    // Restore the per-tool color (eraser/cursor keep the previous
+    // pen color internally; they just don't use it).
     if (TOOL_COLOR[tool]) color = TOOL_COLOR[tool];
 
     // Restore the tool's preferred default stroke width and sync the
-    // dropdown so the user can see it.
-    width = DEFAULT_WIDTH[tool] || width;
+    // dropdown so the user can see it. Cursor has no preferred width
+    // → leave the previous value untouched.
+    if (DEFAULT_WIDTH[tool]) width = DEFAULT_WIDTH[tool];
     const sel = document.getElementById("annotation-width");
     if (sel) sel.value = String(width);
 
+    const c   = document.getElementById("annotation-cursor");
     const p   = document.getElementById("annotation-pen");
     const h   = document.getElementById("annotation-highlighter");
     const e2  = document.getElementById("annotation-eraser");
+    if (c)  c.style.outline  = tool === "cursor"      ? "2px solid #2563eb" : "none";
     if (p)  p.style.outline  = tool === "pen"         ? "2px solid #2563eb" : "none";
     if (h)  h.style.outline  = tool === "highlighter" ? "2px solid #2563eb" : "none";
     if (e2) e2.style.outline = tool === "eraser"      ? "2px solid #2563eb" : "none";
 
     updateCursor();
+    updateCanvasInteractivity();
   }
   function setColor(c) {
     color = c;
@@ -1380,6 +1423,12 @@ Error (improved): 4.74e-11</code></pre>
   // it stays visible on both light and dark backgrounds.
   function updateCursor() {
     if (!canvas) return;
+    // Cursor tool: the canvas does not capture pointer events, so its
+    // own cursor is moot. Reset to default for tidiness.
+    if (tool === "cursor") {
+      canvas.style.cursor = "default";
+      return;
+    }
     const MIN_VIS = 10;
     const MAX_VIS = 96;            // browser cursor size sanity cap
     const visW = Math.min(MAX_VIS, Math.max(MIN_VIS, width));
@@ -1533,6 +1582,8 @@ Error (improved): 4.74e-11</code></pre>
     if (!enabled) return;
     if ((e.metaKey || e.ctrlKey) && e.key === "z") {
       e.preventDefault(); undo();
+    } else if (e.key === "c" || e.key === "C") {
+      setTool("cursor");
     } else if (e.key === "p" || e.key === "P") {
       setTool("pen");
     } else if (e.key === "h" || e.key === "H") {
