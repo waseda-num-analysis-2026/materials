@@ -10,7 +10,9 @@
   • Cursor tool: keeps annotation mode ON (existing strokes stay
     visible) but lets the page handle pointer events again so the
     user can scroll, click links, use the TOC, etc.
-  • Save/Load annotations as JSON
+  • Save/Load annotations as JSON (v3 format anchors each stroke to
+    the nearest [id] element so cross-machine loads — e.g. saved on
+    Windows, loaded on macOS — line up despite font drift)
   • Toolbar is draggable via the ⋮⋮ grip; can be hidden via the ✕
     button (a small ✏ launcher appears at top-right while hidden).
     Position and visibility persist across reloads via localStorage.
@@ -194,13 +196,18 @@
     const w = (e.pointerType === "pen" && e.pressure > 0)
       ? Math.max(1, width * (e.pressure * 1.5 + 0.4))
       : width;
-    // Store in DOCUMENT coordinates so the stroke "sticks" to the page
-    // when the user scrolls.
+    const startX = e.clientX + window.scrollX;
+    const startY = e.clientY + window.scrollY;
+    // Store in DOCUMENT coordinates so the stroke "sticks" to the
+    // page when the user scrolls. Also pin the stroke to the nearest
+    // [id]-bearing content element so cross-machine loads can
+    // reapply the offset against that element's current position.
     currentStroke = {
       tool, color, width: w,
+      anchor: findNearestAnchorAbove(startX, startY),
       points: [{
-        x: e.clientX + window.scrollX,
-        y: e.clientY + window.scrollY,
+        x: startX,
+        y: startY,
         p: e.pressure || 0.5,
       }],
     };
@@ -697,10 +704,69 @@
     redraw();
   }
 
+  // ── Content anchors ────────────────────────────────────────────
+  // Each stroke is pinned to the nearest [id]-bearing content
+  // element above its starting point. On load we re-find that
+  // element by id and translate the whole stroke by the difference
+  // between the saved anchor position and the anchor's current
+  // position — which absorbs cross-machine font drift far more
+  // accurately than a linear document-height rescale.
+  const ANCHOR_IGNORE_PREFIXES = ["annotation-"];
+  const ANCHOR_IGNORE_IDS = new Set([
+    "TOC",
+    "title-block-header",
+    "quarto-document-content",
+  ]);
+  let anchorListCache = null;
+
+  function isContentAnchor(el) {
+    if (!el || !el.id) return false;
+    if (ANCHOR_IGNORE_IDS.has(el.id)) return false;
+    for (const pre of ANCHOR_IGNORE_PREFIXES) {
+      if (el.id.startsWith(pre)) return false;
+    }
+    if (el.closest && el.closest("#TOC")) return false;
+    return true;
+  }
+
+  function getAnchorList() {
+    if (anchorListCache) return anchorListCache;
+    const out = [];
+    for (const el of document.querySelectorAll("[id]")) {
+      if (isContentAnchor(el)) out.push(el);
+    }
+    anchorListCache = out;
+    return out;
+  }
+
+  function findNearestAnchorAbove(absX, absY) {
+    const list = getAnchorList();
+    let best = null;
+    let bestTop = -Infinity;
+    for (const el of list) {
+      const r = el.getBoundingClientRect();
+      if (r.width === 0 && r.height === 0) continue;
+      const top = r.top + window.scrollY;
+      // Allow tiny slop so a point landing exactly on the anchor's
+      // top still picks it.
+      if (top <= absY + 4 && top > bestTop) {
+        best = el;
+        bestTop = top;
+      }
+    }
+    if (!best) return null;
+    const r = best.getBoundingClientRect();
+    return {
+      id: best.id,
+      top: r.top + window.scrollY,
+      left: r.left + window.scrollX,
+    };
+  }
+
   function saveJson() {
     const data = {
-      version: 2,                       // v2 = document-coordinate strokes
-      coordinates: "document",          // strokes use pageX/pageY
+      version: 3,                       // v3 = anchored strokes
+      coordinates: "document+anchor",   // pageX/pageY plus per-stroke anchor
       url: location.href,
       title: document.title,
       savedAt: new Date().toISOString(),
@@ -752,24 +818,56 @@
   // Cross-platform alignment: strokes are saved in document
   // (pageX/pageY) coordinates which depend on the rendered layout —
   // and Windows ↔ macOS renders the same handout with slightly
-  // different font metrics, so the document height differs by a few
-  // percent and the centred body is offset horizontally if the
-  // window width is different.
+  // different font metrics, so the document reflows by a few
+  // percent in non-uniform ways.
   //
-  // We rescale loaded strokes by the ratio of the saved vs current
-  // document dimensions so the strokes follow the content:
+  // v3 (preferred): each stroke carries an anchor = nearest
+  //   [id]-bearing element with its absolute position at save time.
+  //   We re-find that element by id, compute (curTop-savedTop,
+  //   curLeft-savedLeft), and translate the whole stroke by that
+  //   delta. Because the anchor moves with the content, strokes
+  //   stay glued to whatever they were drawn over.
   //
-  //   x  →  x + (curScrollWidth  - savedScrollWidth) / 2     // recentre
-  //   y  →  y *  curScrollHeight / savedScrollHeight         // restretch
-  //   width → width * sqrt(sx * sy)                          // rough size
-  //
-  // This assumes the content area is horizontally centred (true for
-  // Quarto's default theme) and that the layout reflows
-  // approximately uniformly along Y. Imperfect on huge zoom / window
-  // size differences but gets within a couple of pixels for the
-  // typical "saved at home, opened at the lectern" workflow.
+  // v2 (legacy fallback): rescale proportionally using
+  //   document.scrollHeight, recentre by scrollWidth difference. A
+  //   linear approximation that only works when reflow is uniform.
   function realignStrokesToCurrentDocument(data) {
-    const strokesIn = data.strokes;
+    const strokesIn = Array.isArray(data.strokes) ? data.strokes : [];
+    if (strokesIn.length === 0) return [];
+
+    const anchored = strokesIn.filter(s => s.anchor && s.anchor.id);
+    if (anchored.length > 0) {
+      let resolved = 0, missing = 0, identical = 0;
+      const out = strokesIn.map((s) => {
+        if (!s.anchor || !s.anchor.id) return s;
+        const el = document.getElementById(s.anchor.id);
+        if (!el) { missing++; return s; }
+        const r = el.getBoundingClientRect();
+        const dx = (r.left + window.scrollX) - s.anchor.left;
+        const dy = (r.top  + window.scrollY) - s.anchor.top;
+        if (Math.abs(dx) < 0.5 && Math.abs(dy) < 0.5) {
+          identical++;
+          return s;
+        }
+        resolved++;
+        return {
+          ...s,
+          points: s.points.map(p => ({ ...p, x: p.x + dx, y: p.y + dy })),
+        };
+      });
+      if (window.console) {
+        console.info(
+          "[annotation] Anchor realign (v" + (data.version || "?") + "):",
+          "shifted=" + resolved,
+          "no-shift=" + identical,
+          "missing-anchor=" + missing,
+          "of " + strokesIn.length + " strokes"
+        );
+      }
+      return out;
+    }
+
+    // No anchors → fall back to proportional rescale (v2).
     const saved = data.document;
     if (!saved || !saved.scrollWidth || !saved.scrollHeight) return strokesIn;
     const curW = document.documentElement.scrollWidth;
@@ -777,12 +875,16 @@
     const dx = (curW - saved.scrollWidth) / 2;
     const sy = curH / saved.scrollHeight;
     const sx = curW / saved.scrollWidth;
-    // No-op if the layouts are essentially identical.
     if (Math.abs(dx) < 0.5 && Math.abs(sy - 1) < 0.001) return strokesIn;
     const widthScale = Math.sqrt(Math.max(0.1, sx * sy));
     if (window.console) {
+      console.warn(
+        "[annotation] Legacy v2 file — using proportional rescale " +
+        "(strokes may drift on non-uniform reflow). Re-saving on the " +
+        "machine where it was drawn upgrades it to v3 (anchor-based)."
+      );
       console.info(
-        "[annotation] Realigning strokes:",
+        "[annotation] Proportional realign:",
         "saved", saved.scrollWidth + "×" + saved.scrollHeight,
         "→ current", curW + "×" + curH,
         "(dx=" + dx.toFixed(1) + "px, sy=" + sy.toFixed(4) + ")"
