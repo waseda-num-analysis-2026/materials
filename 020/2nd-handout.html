@@ -6,7 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2026-05-01">
+<meta name="dcterms.date" content="2026-05-03">
 
 <title>Lecture 2 — Errors in Numerical Computation</title>
 <style>
@@ -152,7 +152,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">May 1, 2026</p>
+      <p class="date">May 3, 2026</p>
     </div>
   </div>
   
@@ -342,7 +342,7 @@ The handout says <em>“Deep historical roots — dating back to ~1800 BCE.”</
 </section>
 <section id="verifying-in-python" class="level3" data-number="2.2">
 <h3 data-number="2.2" class="anchored" data-anchor-id="verifying-in-python"><span class="header-section-number">2.2</span> Verifying in Python</h3>
-<div id="98c8527a" class="cell" data-execution_count="1">
+<div id="8d0987c9" class="cell" data-execution_count="1">
 <details class="code-fold">
 <summary>Helper: to_binary_scientific(f)</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> struct</span>
@@ -368,7 +368,7 @@ The handout says <em>“Deep historical roots — dating back to ~1800 BCE.”</
 <span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="ss">f"</span><span class="sc">{</span>mantissa_str<span class="sc">}</span><span class="ss">₂ × 2^</span><span class="sc">{</span>e<span class="sc">}</span><span class="ss">"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
-<div id="211f7f52" class="cell" data-execution_count="2">
+<div id="5a3a58af" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> v <span class="kw">in</span> [<span class="fl">1.25</span>, <span class="fl">7.375</span>, <span class="fl">0.2</span>]:</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"  </span><span class="sc">{</span>v<span class="sc">:6}</span><span class="ss">  =  </span><span class="sc">{</span>to_binary_scientific(v)<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
@@ -384,7 +384,7 @@ The handout says <em>“Deep historical roots — dating back to ~1800 BCE.”</
 </div>
 <div id="callout-6" class="callout-6-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<div id="11d5240b" class="cell" data-execution_count="3">
+<div id="78f90934" class="cell" data-execution_count="3">
 <div class="cell-output cell-output-stdout">
 <pre><code>    1.25  =  1.01₂ × 2^0
    7.375  =  1.11011₂ × 2^2
@@ -404,7 +404,7 @@ The handout says <em>“Deep historical roots — dating back to ~1800 BCE.”</
 <p><strong>Example 2: Rounding error</strong></p>
 <p><span class="math display">\[8.3 - 8 = \;?\]</span></p>
 <p>The result is <em>not</em> exactly <span class="math inline">\(0.3\)</span> — see the Excel screenshot in the slides.</p>
-<div id="00eee96b" class="cell" data-execution_count="4">
+<div id="34abc0d5" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Note: 10  is an integer  → 10**40 is exact (Python int has arbitrary precision)</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co">#       10.0 is float64   → 10.0**40 is a floating-point number (finite precision)</span></span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co"># The two behave very differently!</span></span>
@@ -431,7 +431,7 @@ The handout says <em>“Deep historical roots — dating back to ~1800 BCE.”</
 </div>
 <div id="callout-7" class="callout-7-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<div id="2bc2cbbf" class="cell" data-execution_count="5">
+<div id="6d8f31f7" class="cell" data-execution_count="5">
 <div class="cell-output cell-output-stdout">
 <pre><code>10  **40 + 500   - 10  **40 = 500
 10.0**40 + 500.0 - 10.0**40 = 0.0
@@ -447,7 +447,7 @@ The handout says <em>“Deep historical roots — dating back to ~1800 BCE.”</
 </section>
 <section id="quiz-what-is-the-value-of-x" class="level3" data-number="2.4">
 <h3 data-number="2.4" class="anchored" data-anchor-id="quiz-what-is-the-value-of-x"><span class="header-section-number">2.4</span> Quiz: What is the value of x?</h3>
-<div id="cee40691" class="cell" data-execution_count="6">
+<div id="12bcc939" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> math</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> <span class="dv">100</span></span>
@@ -471,7 +471,7 @@ The handout says <em>“Deep historical roots — dating back to ~1800 BCE.”</
 </div>
 <div id="callout-8" class="callout-8-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<div id="0e217328" class="cell" data-execution_count="7">
+<div id="b09ab5e0" class="cell" data-execution_count="7">
 <div class="cell-output cell-output-stdout">
 <pre><code>Result: x = 1.0
 Expected: 100</code></pre>
@@ -635,7 +635,7 @@ E := \left|\frac{(x - y) - (\hat{x} - \hat{y})}{x - y}\right|
 <p><span class="math display">\[\sqrt{1001} - \sqrt{999}
 = \frac{(\sqrt{1001} - \sqrt{999})(\sqrt{1001} + \sqrt{999})}{\sqrt{1001} + \sqrt{999}}
 = \frac{2}{\sqrt{1001} + \sqrt{999}}\]</span></p>
-<div id="811c9ce4" class="cell" data-execution_count="8">
+<div id="553d2381" class="cell" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co"># float32 has ~7 significant decimal digits.</span></span>
@@ -669,7 +669,7 @@ E := \left|\frac{(x - y) - (\hat{x} - \hat{y})}{x - y}\right|
 </div>
 <div id="callout-12" class="callout-12-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<div id="997d5885" class="cell" data-execution_count="9">
+<div id="a2280175" class="cell" data-execution_count="9">
 <div class="cell-output cell-output-stdout">
 <pre><code>a = 1000001,  b = 999999
 
@@ -697,7 +697,7 @@ Error (improved): 4.74e-11</code></pre>
 <li><strong>Lower bound</strong>: computed with <strong>round-down</strong></li>
 <li><strong>Upper bound</strong>: computed with <strong>round-up</strong></li>
 </ul>
-<div id="79d55924" class="cell" data-execution_count="10">
+<div id="c23ea279" class="cell" data-execution_count="10">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Requires:  pip install mpmath</span></span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="co"># mpmath.iv provides rigorous interval arithmetic with directed rounding,</span></span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="co"># so the resulting interval is *guaranteed* to contain the true value.</span></span>
@@ -725,7 +725,7 @@ Error (improved): 4.74e-11</code></pre>
 </div>
 <div id="callout-13" class="callout-13-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<div id="381e4ed8" class="cell" data-execution_count="11">
+<div id="c046a538" class="cell" data-execution_count="11">
 <div class="cell-output cell-output-stdout">
 <pre><code>π      ∈ [3.14159265358467, 3.14159265361377]
 √2     ∈ [1.4142135623697, 1.41421356238425]
@@ -789,9 +789,13 @@ Error (improved): 4.74e-11</code></pre>
     save / load
   • Toggle ON/OFF: when OFF, scrolling and clicks pass through normally
   • Save/Load annotations as JSON
+  • Toolbar is draggable via the ⋮⋮ grip; can be hidden via the ✕
+    button (a small ✏ launcher appears at top-right while hidden).
+    Position and visibility persist across reloads via localStorage.
   • Tested on Chrome / Edge (Mac & Windows)
   Keyboard shortcuts (when ON unless noted):
       Alt+A         toggle annotation mode (works also when OFF)
+      Alt+T         toggle TOOLBAR visibility (works also when OFF)
       P / H / E     select pen / highlighter / eraser
       Cmd/Ctrl+Z    undo
       Esc           turn annotation OFF
@@ -826,6 +830,10 @@ Error (improved): 4.74e-11</code></pre>
   // Highlighter: how transparent strokes should look.
   const HIGHLIGHTER_ALPHA = 0.35;
 
+  // localStorage keys (versioned in case the format changes later).
+  const STORAGE_POS_KEY = "annotation-toolbar-pos-v1";
+  const STORAGE_VIS_KEY = "annotation-toolbar-visible-v1";
+
   let enabled = false;
   let tool = "pen";
   let color = COLORS[0].value;
@@ -834,6 +842,14 @@ Error (improved): 4.74e-11</code></pre>
   let strokes = [];
   let currentStroke = null;
   let canvas, ctx, toolbar;
+  // The small "✏" launcher that re-opens the toolbar after it has been
+  // hidden via the ✕ button or Alt+T.
+  let showBtn = null;
+  // Drag state for moving the toolbar around the viewport.
+  let toolbarDragging = false;
+  let toolbarDragStartClient = null;
+  let toolbarDragStartLeft = 0;
+  let toolbarDragStartTop = 0;
   // Per-tool color memory: switching tools restores the last color used
   // with that tool. Pen defaults to black, highlighter to yellow.
   const TOOL_COLOR = {
@@ -1050,6 +1066,60 @@ Error (improved): 4.74e-11</code></pre>
       },
     });
 
+    // ── Drag handle ────────────────────────────────────────────
+    // A small "⋮⋮" grip the user can grab to move the whole toolbar
+    // anywhere on the viewport. We use Pointer Events so mouse, pen and
+    // touch all work; the resulting position is persisted to
+    // localStorage so it survives page reloads.
+    const dragHandle = el("div", {
+      id: "annotation-drag-handle",
+      title: "Drag to move toolbar",
+      style: {
+        cursor: "grab",
+        padding: "2px 6px",
+        color: "#6b7280",
+        font: "16px/1 system-ui, -apple-system, sans-serif",
+        userSelect: "none",
+        touchAction: "none",
+      },
+    }, "⋮⋮");
+
+    dragHandle.addEventListener("pointerdown", (e) => {
+      if (e.button !== undefined && e.button !== 0) return;
+      const rect = bar.getBoundingClientRect();
+      // Convert any right/bottom-anchored placement to absolute
+      // top/left so we can move it freely from here on.
+      bar.style.right = "auto";
+      bar.style.bottom = "auto";
+      bar.style.left = rect.left + "px";
+      bar.style.top = rect.top + "px";
+      toolbarDragging = true;
+      toolbarDragStartClient = { x: e.clientX, y: e.clientY };
+      toolbarDragStartLeft = rect.left;
+      toolbarDragStartTop = rect.top;
+      dragHandle.style.cursor = "grabbing";
+      try { dragHandle.setPointerCapture(e.pointerId); } catch (_) {}
+      e.preventDefault();
+    });
+    dragHandle.addEventListener("pointermove", (e) => {
+      if (!toolbarDragging) return;
+      const dx = e.clientX - toolbarDragStartClient.x;
+      const dy = e.clientY - toolbarDragStartClient.y;
+      bar.style.left = (toolbarDragStartLeft + dx) + "px";
+      bar.style.top  = (toolbarDragStartTop  + dy) + "px";
+      clampToolbarPosition();
+      e.preventDefault();
+    });
+    const endToolbarDrag = (e) => {
+      if (!toolbarDragging) return;
+      toolbarDragging = false;
+      dragHandle.style.cursor = "grab";
+      saveToolbarPosition();
+      try { dragHandle.releasePointerCapture(e.pointerId); } catch (_) {}
+    };
+    dragHandle.addEventListener("pointerup", endToolbarDrag);
+    dragHandle.addEventListener("pointercancel", endToolbarDrag);
+
     const onOff = makeBtn("✏ Annotate: OFF", () => setEnabled(!enabled), {
       style: { background: "#f3f4f6", fontWeight: "600" },
     });
@@ -1125,6 +1195,17 @@ Error (improved): 4.74e-11</code></pre>
       },
     });
 
+    // ── Hide button ────────────────────────────────────────────
+    // Collapses the toolbar entirely; a small "✏" launcher (built in
+    // makeShowButton) appears at top-right so the user can bring it
+    // back. Visibility state is persisted to localStorage.
+    const hideBtn = makeBtn("✕", () => setToolbarVisible(false), {
+      title: "Hide toolbar (Alt+T)",
+      style: { padding: "4px 8px", fontWeight: "600", color: "#6b7280" },
+    });
+    hideBtn.id = "annotation-hide";
+
+    bar.appendChild(dragHandle);
     bar.appendChild(onOff);
     bar.appendChild(sep());
     bar.appendChild(penBtn);
@@ -1140,9 +1221,105 @@ Error (improved): 4.74e-11</code></pre>
     bar.appendChild(saveBtn);
     bar.appendChild(loadBtn);
     bar.appendChild(fileInput);
+    bar.appendChild(sep());
+    bar.appendChild(hideBtn);
 
     document.body.appendChild(bar);
     return bar;
+  }
+
+  // ── Toolbar position / visibility helpers ──────────────────────
+  function clampToolbarPosition() {
+    if (!toolbar) return;
+    // Only clamp when the user has actually positioned the toolbar
+    // via left/top (i.e. dragged or restored). The default
+    // top/right anchor handles itself.
+    if (!toolbar.style.left || !toolbar.style.top) return;
+    const margin = 4;
+    const w = toolbar.offsetWidth;
+    const h = toolbar.offsetHeight;
+    let left = parseFloat(toolbar.style.left);
+    let top = parseFloat(toolbar.style.top);
+    if (isNaN(left) || isNaN(top)) return;
+    left = Math.max(margin, Math.min(window.innerWidth  - w - margin, left));
+    top  = Math.max(margin, Math.min(window.innerHeight - h - margin, top));
+    toolbar.style.right = "auto";
+    toolbar.style.bottom = "auto";
+    toolbar.style.left = left + "px";
+    toolbar.style.top = top + "px";
+  }
+
+  function saveToolbarPosition() {
+    if (!toolbar) return;
+    try {
+      const left = parseFloat(toolbar.style.left);
+      const top = parseFloat(toolbar.style.top);
+      if (!isNaN(left) && !isNaN(top)) {
+        localStorage.setItem(STORAGE_POS_KEY, JSON.stringify({ left, top }));
+      }
+    } catch (_) {}
+  }
+
+  function restoreToolbarPosition() {
+    if (!toolbar) return;
+    try {
+      const raw = localStorage.getItem(STORAGE_POS_KEY);
+      if (!raw) return;
+      const pos = JSON.parse(raw);
+      if (pos && typeof pos.left === "number" && typeof pos.top === "number") {
+        toolbar.style.right = "auto";
+        toolbar.style.bottom = "auto";
+        toolbar.style.left = pos.left + "px";
+        toolbar.style.top = pos.top + "px";
+        clampToolbarPosition();
+      }
+    } catch (_) {}
+  }
+
+  function setToolbarVisible(on) {
+    if (!toolbar) return;
+    toolbar.style.display = on ? "flex" : "none";
+    if (showBtn) showBtn.style.display = on ? "none" : "flex";
+    try { localStorage.setItem(STORAGE_VIS_KEY, on ? "1" : "0"); } catch (_) {}
+  }
+
+  function restoreToolbarVisibility() {
+    let visible = true;
+    try {
+      const raw = localStorage.getItem(STORAGE_VIS_KEY);
+      if (raw === "0") visible = false;
+    } catch (_) {}
+    setToolbarVisible(visible);
+  }
+
+  // Tiny round "✏" button visible only while the toolbar is hidden,
+  // so the user can always bring the toolbar back without remembering
+  // the keyboard shortcut.
+  function makeShowButton() {
+    return el("button", {
+      type: "button",
+      title: "Show annotation toolbar (Alt+T)",
+      style: {
+        position: "fixed",
+        top: "12px",
+        right: "12px",
+        zIndex: "2147483647",
+        width: "36px",
+        height: "36px",
+        borderRadius: "50%",
+        border: "1px solid #d1d5db",
+        background: "rgba(255,255,255,0.96)",
+        color: "#111827",
+        boxShadow: "0 4px 14px rgba(0,0,0,0.10)",
+        cursor: "pointer",
+        font: "16px/1 system-ui, -apple-system, sans-serif",
+        display: "none",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "0",
+      },
+      onclick: () => setToolbarVisible(true),
+    }, "✏");
   }
 
   function setEnabled(on) {
@@ -1347,6 +1524,12 @@ Error (improved): 4.74e-11</code></pre>
       setEnabled(!enabled);
       return;
     }
+    if (e.altKey && (e.key === "t" || e.key === "T")) {
+      e.preventDefault();
+      const visible = toolbar && toolbar.style.display !== "none";
+      setToolbarVisible(!visible);
+      return;
+    }
     if (!enabled) return;
     if ((e.metaKey || e.ctrlKey) && e.key === "z") {
       e.preventDefault(); undo();
@@ -1366,13 +1549,21 @@ Error (improved): 4.74e-11</code></pre>
     canvas = makeCanvas();
     resizeCanvas();
     toolbar = makeToolbar();
+    showBtn = makeShowButton();
+    document.body.appendChild(showBtn);
+    // Restore previous position + visibility (if any).
+    restoreToolbarPosition();
+    restoreToolbarVisibility();
     setTool("pen");
 
     canvas.addEventListener("pointerdown", onPointerDown);
     canvas.addEventListener("pointermove", onPointerMove);
     canvas.addEventListener("pointerup", onPointerUp);
     canvas.addEventListener("pointercancel", onPointerUp);
-    window.addEventListener("resize", resizeCanvas);
+    window.addEventListener("resize", () => {
+      resizeCanvas();
+      clampToolbarPosition();
+    });
     window.addEventListener("keydown", onKeyDown);
     // Re-render whenever the user scrolls so strokes appear locked to
     // the underlying page content.

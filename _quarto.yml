@@ -1,0 +1,15 @@
+project:
+  title: "Numerical Analysis 2026 — materials"
+
+# Plain-HTML outputs (handouts, python_guidelines) → custom pen-tablet
+#   overlay defined in annotation.html (pen / highlighter / eraser).
+# Reveal.js slides → use Quarto's built-in chalkboard plugin
+#   (enabled per-slide with `chalkboard: true`) and add a small
+#   "💾 Save board" button via chalkboard-toolbar.html.
+format:
+  html:
+    include-after-body:
+      - annotation.html
+  revealjs:
+    include-after-body:
+      - chalkboard-toolbar.html
