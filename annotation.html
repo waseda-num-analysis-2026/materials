@@ -807,6 +807,34 @@
   }
 
   function saveJson() {
+    // Auto-attach an anchor to any in-memory stroke that doesn't
+    // already have one (e.g. strokes loaded from a v2 file). The
+    // anchor is computed from the stroke's first point against the
+    // CURRENT document, on the assumption that whatever the user
+    // sees on screen right now is what they want to capture. They
+    // can verify alignment visually before clicking Save .json.
+    let upgraded = 0;
+    const strokesOut = strokes.map((s) => {
+      if (s.anchor && s.anchor.id) return s;
+      if (!s.points || s.points.length === 0) return s;
+      const p0 = s.points[0];
+      const anchor = findNearestAnchorAbove(p0.x, p0.y);
+      if (!anchor) return s;
+      upgraded++;
+      return { ...s, anchor };
+    });
+    if (upgraded > 0) {
+      // Persist the upgrade so a subsequent save / undo sees the
+      // anchored strokes too.
+      strokes = strokesOut;
+      if (window.console) {
+        console.info(
+          "[annotation] Auto-anchored " + upgraded + " stroke(s) " +
+          "while saving — file is now fully v3-compatible."
+        );
+      }
+    }
+
     const data = {
       version: 3,                       // v3 = anchored strokes
       coordinates: "document+anchor",   // pageX/pageY plus per-stroke anchor
@@ -822,7 +850,7 @@
         scrollWidth: document.documentElement.scrollWidth,
         scrollHeight: document.documentElement.scrollHeight,
       },
-      strokes,
+      strokes: strokesOut,
     };
     const blob = new Blob([JSON.stringify(data, null, 2)], {
       type: "application/json",
@@ -858,65 +886,45 @@
     reader.readAsText(file);
   }
 
-  // Stroke alignment is now handled at draw time (drawStroke
-  // applies the anchor delta on every render), which means once a
-  // stroke has an anchor it automatically follows zoom changes,
-  // window resizes and cross-machine font drift.
-  //
-  // The job of this function is therefore just to load strokes as
-  // they were saved AND to opportunistically auto-upgrade legacy
-  // v2 strokes (no anchor) to v3. We can only do the upgrade
-  // safely when the current document layout matches the layout
-  // the file was saved against — i.e. a same-machine reload.
-  // Otherwise the freshly-attached anchor would point to the
-  // current machine's content while the stroke coordinates still
-  // refer to the original machine's layout.
+  // Strokes are placed at their saved coordinates as-is. Anchored
+  // strokes get a per-frame translation in drawStroke (so zoom /
+  // resize / scroll all "just work"); unanchored ones simply sit
+  // at their saved coordinates. The decision of when to attach an
+  // anchor to an unanchored stroke is deferred to save time
+  // (saveJson) — by then the user has had a chance to verify
+  // visually that the strokes are aligned with the current page.
+  // Doing it at load time would be brittle because the heuristic
+  // for "same machine?" (comparing document.scrollWidth/Height)
+  // is not stable enough in practice.
   function realignStrokesToCurrentDocument(data) {
     const strokesIn = Array.isArray(data.strokes) ? data.strokes : [];
     if (strokesIn.length === 0) return [];
 
-    const sd = data.document;
-    const matchesSavedDoc = !!(
-      sd && sd.scrollWidth && sd.scrollHeight &&
-      Math.abs(document.documentElement.scrollWidth  - sd.scrollWidth)  < 5 &&
-      Math.abs(document.documentElement.scrollHeight - sd.scrollHeight) < 50
-    );
-
-    let alreadyAnchored = 0;
-    let upgraded = 0;
-    let leftAsIs = 0;
-    const out = strokesIn.map((s) => {
-      if (s.anchor && s.anchor.id) { alreadyAnchored++; return s; }
-      if (!matchesSavedDoc) { leftAsIs++; return s; }
-      if (!s.points || s.points.length === 0) { leftAsIs++; return s; }
-      const p0 = s.points[0];
-      const anchor = findNearestAnchorAbove(p0.x, p0.y);
-      if (!anchor) { leftAsIs++; return s; }
-      upgraded++;
-      return { ...s, anchor };
-    });
-
     if (window.console) {
+      const anchored = strokesIn.filter(s => s.anchor && s.anchor.id).length;
+      const unanchored = strokesIn.length - anchored;
       console.info(
-        "[annotation] Loaded v" + (data.version || "?") + ":",
-        "anchored=" + alreadyAnchored,
-        "auto-upgraded=" + upgraded,
-        "unanchored=" + leftAsIs,
-        "(" + strokesIn.length + " total).",
-        matchesSavedDoc
-          ? "Saved-doc layout matches → upgrade applied."
-          : "Saved-doc layout differs → upgrade skipped (re-save on " +
-            "the original machine to attach anchors)."
+        "[annotation] Loaded v" + (data.version || "?") + ": " +
+        "anchored=" + anchored + " unanchored=" + unanchored +
+        " (" + strokesIn.length + " total)."
       );
-      if (alreadyAnchored + upgraded > 0) {
+      if (anchored > 0) {
         console.info(
-          "[annotation] Anchored strokes will follow zoom / window " +
-          "resize / reflow automatically (delta is applied per draw)."
+          "[annotation] Anchored strokes follow zoom / resize / " +
+          "reflow automatically (delta is applied per draw)."
+        );
+      }
+      if (unanchored > 0) {
+        console.info(
+          "[annotation] Unanchored strokes will be auto-anchored " +
+          "the next time you click Save .json — provided the strokes " +
+          "look aligned with the current page (i.e. you're on the " +
+          "machine where they were drawn)."
         );
       }
     }
 
-    return out;
+    return strokesIn;
   }
 
   // Browsers do not allow JS to point a file picker at an arbitrary
@@ -934,8 +942,14 @@
     const fileInput = document.querySelector("#annotation-toolbar input[type=file]");
     if (typeof window.showOpenFilePicker === "function") {
       try {
-        const id = "annotation-load-"
-          + location.pathname.replace(/[^a-zA-Z0-9]+/g, "-").slice(0, 32);
+        // showOpenFilePicker's `id` field is capped at 32 characters
+        // by the spec. Combine the prefix and path-derived suffix,
+        // then truncate the WHOLE string — this still yields a
+        // reasonably unique id per page while staying within the
+        // limit.
+        const id = ("annot-load-" +
+                    location.pathname.replace(/[^a-zA-Z0-9]+/g, "-")
+                  ).slice(0, 32);
         const [handle] = await window.showOpenFilePicker({
           id,
           startIn: "downloads",
