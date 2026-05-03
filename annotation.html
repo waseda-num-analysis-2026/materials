@@ -12,7 +12,13 @@
     user can scroll, click links, use the TOC, etc.
   • Save/Load annotations as JSON (v3 format anchors each stroke to
     the nearest [id] element so cross-machine loads — e.g. saved on
-    Windows, loaded on macOS — line up despite font drift)
+    Windows, loaded on macOS — line up despite font drift). Anchored
+    strokes also automatically follow browser-zoom changes and
+    window resizes (delta applied per draw, no reload needed).
+  • Loading a legacy v2 file on the same machine where it was saved
+    auto-upgrades each stroke to v3 by attaching an anchor based on
+    the current layout — re-saving then produces a fully portable
+    v3 file.
   • Toolbar is draggable via the ⋮⋮ grip; can be hidden via the ✕
     button (a small ✏ launcher appears at top-right while hidden).
     Position and visibility persist across reloads via localStorage.
@@ -140,16 +146,53 @@
   function redraw() {
     if (!ctx) return;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    for (const s of strokes) drawStroke(s);
+    // Per-redraw cache of anchor positions: at most one
+    // getBoundingClientRect per unique anchor id. Browser zoom or
+    // window resize will fire a fresh redraw, so the cache always
+    // reflects the current layout.
+    const anchorCache = new Map();
+    for (const s of strokes) drawStroke(s, anchorCache);
   }
 
-  // Stroke points are stored in DOCUMENT coordinates (pageX/pageY).
-  // When drawing on the fixed-position canvas we subtract the current
-  // scroll offset, so the strokes appear to stay anchored to the page
-  // content as the user scrolls (PDF-like behaviour).
-  function drawStroke(s) {
+  // Stroke points are stored in DOCUMENT coordinates (pageX/pageY)
+  // as captured at draw time. When drawing on the fixed-position
+  // canvas we subtract the current scroll offset (so strokes scroll
+  // with the page) AND add the stroke's anchor delta — the
+  // difference between the anchor's current position and the
+  // anchor's position when the stroke was saved. This single
+  // mechanism keeps strokes glued to the underlying content across
+  //   • scrolling (anchor's document-coord top is invariant under
+  //     scroll, so delta stays zero — fast path)
+  //   • zoom / window resize (anchor reflows with content, delta
+  //     compensates so strokes follow)
+  //   • cross-machine font drift (saved anchor was at the original
+  //     machine's CSS px, current anchor is at this machine's CSS
+  //     px — delta absorbs the difference)
+  function drawStroke(s, anchorCache) {
     if (!s.points || s.points.length === 0) return;
     const sx = window.scrollX, sy = window.scrollY;
+
+    let adx = 0, ady = 0;
+    if (s.anchor && s.anchor.id) {
+      let pos;
+      if (anchorCache && anchorCache.has(s.anchor.id)) {
+        pos = anchorCache.get(s.anchor.id);
+      } else {
+        const el = document.getElementById(s.anchor.id);
+        if (el) {
+          const r = el.getBoundingClientRect();
+          pos = { left: r.left + window.scrollX, top: r.top + window.scrollY };
+        } else {
+          pos = null;
+        }
+        if (anchorCache) anchorCache.set(s.anchor.id, pos);
+      }
+      if (pos) {
+        adx = pos.left - s.anchor.left;
+        ady = pos.top  - s.anchor.top;
+      }
+    }
+
     ctx.save();
     if (s.tool === "eraser") {
       ctx.globalCompositeOperation = "destination-out";
@@ -173,8 +216,8 @@
     ctx.lineWidth = s.width;
     ctx.beginPath();
     const [p0, ...rest] = s.points;
-    ctx.moveTo(p0.x - sx, p0.y - sy);
-    for (const p of rest) ctx.lineTo(p.x - sx, p.y - sy);
+    ctx.moveTo(p0.x + adx - sx, p0.y + ady - sy);
+    for (const p of rest) ctx.lineTo(p.x + adx - sx, p.y + ady - sy);
     ctx.stroke();
     ctx.restore();
   }
@@ -815,68 +858,64 @@
     reader.readAsText(file);
   }
 
-  // Strokes are saved in document (pageX/pageY) coordinates.
+  // Stroke alignment is now handled at draw time (drawStroke
+  // applies the anchor delta on every render), which means once a
+  // stroke has an anchor it automatically follows zoom changes,
+  // window resizes and cross-machine font drift.
   //
-  // v3 (preferred): each stroke carries an anchor = nearest
-  //   [id]-bearing element with its absolute position at save time.
-  //   We re-find that element by id, compute (curTop-savedTop,
-  //   curLeft-savedLeft), and translate the whole stroke by that
-  //   delta. Because the anchor moves with the content, strokes
-  //   stay glued to whatever they were drawn over even across
-  //   Windows ↔ macOS font-rendering differences.
-  //
-  // v2 (legacy): no anchors. We place strokes at their saved
-  //   coordinates verbatim. We deliberately do NOT auto-rescale
-  //   here — proportional scrollHeight rescaling is unreliable
-  //   under non-uniform reflow and was making same-machine reloads
-  //   drift. To get cross-machine alignment for a v2 file, re-save
-  //   it on the machine where it was drawn (which upgrades it to
-  //   v3).
+  // The job of this function is therefore just to load strokes as
+  // they were saved AND to opportunistically auto-upgrade legacy
+  // v2 strokes (no anchor) to v3. We can only do the upgrade
+  // safely when the current document layout matches the layout
+  // the file was saved against — i.e. a same-machine reload.
+  // Otherwise the freshly-attached anchor would point to the
+  // current machine's content while the stroke coordinates still
+  // refer to the original machine's layout.
   function realignStrokesToCurrentDocument(data) {
     const strokesIn = Array.isArray(data.strokes) ? data.strokes : [];
     if (strokesIn.length === 0) return [];
 
-    const hasAnchors = strokesIn.some(s => s.anchor && s.anchor.id);
-    if (!hasAnchors) {
-      if (window.console) {
-        console.info(
-          "[annotation] Loaded " + strokesIn.length + " strokes from " +
-          "v" + (data.version || "?") + " (no anchors). " +
-          "Strokes placed at their saved coordinates verbatim. " +
-          "If alignment looks off across machines, re-save on the " +
-          "machine where the file was drawn to upgrade to v3."
-        );
-      }
-      return strokesIn;
-    }
+    const sd = data.document;
+    const matchesSavedDoc = !!(
+      sd && sd.scrollWidth && sd.scrollHeight &&
+      Math.abs(document.documentElement.scrollWidth  - sd.scrollWidth)  < 5 &&
+      Math.abs(document.documentElement.scrollHeight - sd.scrollHeight) < 50
+    );
 
-    let resolved = 0, missing = 0, identical = 0;
+    let alreadyAnchored = 0;
+    let upgraded = 0;
+    let leftAsIs = 0;
     const out = strokesIn.map((s) => {
-      if (!s.anchor || !s.anchor.id) return s;
-      const el = document.getElementById(s.anchor.id);
-      if (!el) { missing++; return s; }
-      const r = el.getBoundingClientRect();
-      const dx = (r.left + window.scrollX) - s.anchor.left;
-      const dy = (r.top  + window.scrollY) - s.anchor.top;
-      if (Math.abs(dx) < 0.5 && Math.abs(dy) < 0.5) {
-        identical++;
-        return s;
-      }
-      resolved++;
-      return {
-        ...s,
-        points: s.points.map(p => ({ ...p, x: p.x + dx, y: p.y + dy })),
-      };
+      if (s.anchor && s.anchor.id) { alreadyAnchored++; return s; }
+      if (!matchesSavedDoc) { leftAsIs++; return s; }
+      if (!s.points || s.points.length === 0) { leftAsIs++; return s; }
+      const p0 = s.points[0];
+      const anchor = findNearestAnchorAbove(p0.x, p0.y);
+      if (!anchor) { leftAsIs++; return s; }
+      upgraded++;
+      return { ...s, anchor };
     });
+
     if (window.console) {
       console.info(
-        "[annotation] Anchor realign (v" + (data.version || "?") + "):",
-        "shifted=" + resolved,
-        "no-shift=" + identical,
-        "missing-anchor=" + missing,
-        "of " + strokesIn.length + " strokes"
+        "[annotation] Loaded v" + (data.version || "?") + ":",
+        "anchored=" + alreadyAnchored,
+        "auto-upgraded=" + upgraded,
+        "unanchored=" + leftAsIs,
+        "(" + strokesIn.length + " total).",
+        matchesSavedDoc
+          ? "Saved-doc layout matches → upgrade applied."
+          : "Saved-doc layout differs → upgrade skipped (re-save on " +
+            "the original machine to attach anchors)."
       );
+      if (alreadyAnchored + upgraded > 0) {
+        console.info(
+          "[annotation] Anchored strokes will follow zoom / window " +
+          "resize / reflow automatically (delta is applied per draw)."
+        );
+      }
     }
+
     return out;
   }
 
