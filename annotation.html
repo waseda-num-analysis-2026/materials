@@ -740,13 +740,63 @@
           alert("Not a valid annotation file.");
           return;
         }
-        strokes = data.strokes;
+        strokes = realignStrokesToCurrentDocument(data);
         redraw();
       } catch (err) {
         alert("Failed to parse JSON: " + err.message);
       }
     };
     reader.readAsText(file);
+  }
+
+  // Cross-platform alignment: strokes are saved in document
+  // (pageX/pageY) coordinates which depend on the rendered layout —
+  // and Windows ↔ macOS renders the same handout with slightly
+  // different font metrics, so the document height differs by a few
+  // percent and the centred body is offset horizontally if the
+  // window width is different.
+  //
+  // We rescale loaded strokes by the ratio of the saved vs current
+  // document dimensions so the strokes follow the content:
+  //
+  //   x  →  x + (curScrollWidth  - savedScrollWidth) / 2     // recentre
+  //   y  →  y *  curScrollHeight / savedScrollHeight         // restretch
+  //   width → width * sqrt(sx * sy)                          // rough size
+  //
+  // This assumes the content area is horizontally centred (true for
+  // Quarto's default theme) and that the layout reflows
+  // approximately uniformly along Y. Imperfect on huge zoom / window
+  // size differences but gets within a couple of pixels for the
+  // typical "saved at home, opened at the lectern" workflow.
+  function realignStrokesToCurrentDocument(data) {
+    const strokesIn = data.strokes;
+    const saved = data.document;
+    if (!saved || !saved.scrollWidth || !saved.scrollHeight) return strokesIn;
+    const curW = document.documentElement.scrollWidth;
+    const curH = document.documentElement.scrollHeight;
+    const dx = (curW - saved.scrollWidth) / 2;
+    const sy = curH / saved.scrollHeight;
+    const sx = curW / saved.scrollWidth;
+    // No-op if the layouts are essentially identical.
+    if (Math.abs(dx) < 0.5 && Math.abs(sy - 1) < 0.001) return strokesIn;
+    const widthScale = Math.sqrt(Math.max(0.1, sx * sy));
+    if (window.console) {
+      console.info(
+        "[annotation] Realigning strokes:",
+        "saved", saved.scrollWidth + "×" + saved.scrollHeight,
+        "→ current", curW + "×" + curH,
+        "(dx=" + dx.toFixed(1) + "px, sy=" + sy.toFixed(4) + ")"
+      );
+    }
+    return strokesIn.map((s) => ({
+      ...s,
+      width: s.width * widthScale,
+      points: s.points.map((p) => ({
+        ...p,
+        x: p.x + dx,
+        y: p.y * sy,
+      })),
+    }));
   }
 
   // Browsers do not allow JS to point a file picker at an arbitrary
