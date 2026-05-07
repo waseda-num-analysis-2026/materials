@@ -6,7 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2026-05-07">
+<meta name="dcterms.date" content="2026-05-08">
 
 <title>Lecture 4 — Vector Norms and Matrix Norms</title>
 <style>
@@ -144,7 +144,7 @@ window.Quarto = {
   <li><a href="#exercise-4.0-evolve-this-handout-with-ai" id="toc-exercise-4.0-evolve-this-handout-with-ai" class="nav-link" data-scroll-target="#exercise-4.0-evolve-this-handout-with-ai"><span class="header-section-number">6.1</span> Exercise 4.0 — Evolve This Handout with AI</a></li>
   <li><a href="#exercise-4.1-prove-the-standard-vector-norms-are-norms" id="toc-exercise-4.1-prove-the-standard-vector-norms-are-norms" class="nav-link" data-scroll-target="#exercise-4.1-prove-the-standard-vector-norms-are-norms"><span class="header-section-number">6.2</span> Exercise 4.1 — Prove the Standard Vector Norms Are Norms</a></li>
   <li><a href="#exercise-4.2-verify-norm-inequalities-numerically" id="toc-exercise-4.2-verify-norm-inequalities-numerically" class="nav-link" data-scroll-target="#exercise-4.2-verify-norm-inequalities-numerically"><span class="header-section-number">6.3</span> Exercise 4.2 — Verify Norm Inequalities Numerically</a></li>
-  <li><a href="#exercise-4.3-implement-matrix-norms" id="toc-exercise-4.3-implement-matrix-norms" class="nav-link" data-scroll-target="#exercise-4.3-implement-matrix-norms"><span class="header-section-number">6.4</span> Exercise 4.3 — Implement Matrix Norms</a></li>
+  <li><a href="#exercise-4.3-random-search-for-matrix-norms" id="toc-exercise-4.3-random-search-for-matrix-norms" class="nav-link" data-scroll-target="#exercise-4.3-random-search-for-matrix-norms"><span class="header-section-number">6.4</span> Exercise 4.3 — Random Search for Matrix Norms</a></li>
   </ul></li>
   <li><a href="#sec-summary" id="toc-sec-summary" class="nav-link" data-scroll-target="#sec-summary"><span class="header-section-number">7</span> Summary</a></li>
   </ul>
@@ -166,7 +166,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">May 7, 2026</p>
+      <p class="date">May 8, 2026</p>
     </div>
   </div>
   
@@ -327,7 +327,7 @@ x =
 <p><span class="math display">\[
 \|x\|_\infty = \max\{|-1|, |2|, |-3|\} = 3.
 \]</span></p>
-<div id="bf3af570" class="cell" data-execution_count="1">
+<div id="53a39ebd" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> numpy <span class="im">import</span> linalg <span class="im">as</span> LA</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -349,7 +349,7 @@ x =
 </div>
 <div id="callout-3" class="callout-3-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<div id="9272edd9" class="cell" data-execution_count="2">
+<div id="aa5b61cc" class="cell" data-execution_count="2">
 <div class="cell-output cell-output-stdout">
 <pre><code>||x||_1     = 6.0
 ||x||_2     = 3.7416573867739413
@@ -426,7 +426,7 @@ M'\|x\|_A \leq \|x\|_B \leq M\|x\|_A
 \tag{7}
 \]</span></p>
 <p>These are the inequalities you will check numerically in <strong>Exercise 4.2</strong>.</p>
-<div id="6def6329" class="cell" data-execution_count="4">
+<div id="3471cc6d" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> numpy <span class="im">import</span> linalg <span class="im">as</span> LA</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -460,7 +460,7 @@ M'\|x\|_A \leq \|x\|_B \leq M\|x\|_A
 </div>
 <div id="callout-4" class="callout-4-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<div id="9b7a346a" class="cell" data-execution_count="5">
+<div id="5d30bc3b" class="cell" data-execution_count="5">
 <div class="cell-output cell-output-stdout">
 <pre><code>x = [-0.79312248  0.24057128 -1.89632635  1.39577171  0.63829474]
 ||x||_2 &lt;= ||x||_1 &lt;= sqrt(n)||x||_2
@@ -559,7 +559,7 @@ A =
 \end{pmatrix}.
 \]</span></p>
 <p>The <span class="math inline">\(\ell^1\)</span> matrix norm is the maximum absolute column sum, and the <span class="math inline">\(\ell^\infty\)</span> matrix norm is the maximum absolute row sum.</p>
-<div id="1b8822d9" class="cell" data-execution_count="6">
+<div id="199c8a85" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> numpy <span class="im">import</span> linalg <span class="im">as</span> LA</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -594,7 +594,7 @@ A =
 </div>
 <div id="callout-5" class="callout-5-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<div id="41ccdfc9" class="cell" data-execution_count="7">
+<div id="ae42f8d8" class="cell" data-execution_count="7">
 <div class="cell-output cell-output-stdout">
 <pre><code>A =
 [[ 1. -2.  0.]
@@ -668,7 +668,7 @@ row sums    = [3. 8. 7.]
 </tbody>
 </table>
 <p>The exact runtime depends on the implementation and the matrix, but the important lesson is simple: the norm that is easiest to reason about is not always the cheapest one to compute.</p>
-<div id="653b6a17" class="cell" data-execution_count="8">
+<div id="6cc268ef" class="cell" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> time</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> numpy <span class="im">import</span> linalg <span class="im">as</span> LA</span>
@@ -700,12 +700,12 @@ row sums    = [3. 8. 7.]
 </div>
 <div id="callout-6" class="callout-6-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<div id="906a814e" class="cell" data-execution_count="9">
+<div id="3335f22b" class="cell" data-execution_count="9">
 <div class="cell-output cell-output-stdout">
-<pre><code>1-norm         : value=  138.7704, time=0.00009 sec
-infinity-norm  : value=  144.5164, time=0.00009 sec
+<pre><code>1-norm         : value=  138.7704, time=0.00016 sec
+infinity-norm  : value=  144.5164, time=0.00010 sec
 Frobenius norm : value=  150.2648, time=0.00001 sec
-2-norm         : value=   24.2951, time=0.00100 sec</code></pre>
+2-norm         : value=   24.2951, time=0.00093 sec</code></pre>
 </div>
 </div>
 </div>
@@ -716,7 +716,8 @@ Frobenius norm : value=  150.2648, time=0.00001 sec
 </section>
 <section id="sec-exercises" class="level2" data-number="6">
 <h2 data-number="6" class="anchored" data-anchor-id="sec-exercises"><span class="header-section-number">6</span> Exercises for This Lecture</h2>
-<p>The exercises are submitted in the <strong>Ex 4 repository</strong>. See the slides for the exact GitHub Classroom link and deadline.</p>
+<p>The exercises are submitted in the <strong>Ex 4 repository</strong>: <a href="https://classroom.github.com/a/IIB7mFi7" class="uri">https://classroom.github.com/a/IIB7mFi7</a>.</p>
+<p>Deadline (JST): <strong>May 14 (Thu), 23:59</strong>.</p>
 <section id="exercise-4.0-evolve-this-handout-with-ai" class="level3" data-number="6.1">
 <h3 data-number="6.1" class="anchored" data-anchor-id="exercise-4.0-evolve-this-handout-with-ai"><span class="header-section-number">6.1</span> Exercise 4.0 — Evolve This Handout with AI</h3>
 <p>While studying <code>4th-handout.qmd</code>, insert at least <strong>three Q&amp;A blocks</strong> of your own. Use the workflow described at the top of this handout:</p>
@@ -751,7 +752,7 @@ Frobenius norm : value=  150.2648, time=0.00001 sec
 \|x\|_\infty \leq \|x\|_2 \leq \sqrt{n}\,\|x\|_\infty.
 \]</span></p>
 <p>Test multiple dimensions and multiple random vectors. A useful function signature is:</p>
-<div id="cc0f202a" class="cell" data-execution_count="10">
+<div id="3c980c38" class="cell" data-execution_count="10">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> verify_norm_inequalities(n_dims, n_tests<span class="op">=</span><span class="dv">100</span>):</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co">    Return True if all three inequalities pass for all tests.</span></span>
@@ -760,26 +761,26 @@ Frobenius norm : value=  150.2648, time=0.00001 sec
 <span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">pass</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="exercise-4.3-implement-matrix-norms" class="level3" data-number="6.4">
-<h3 data-number="6.4" class="anchored" data-anchor-id="exercise-4.3-implement-matrix-norms"><span class="header-section-number">6.4</span> Exercise 4.3 — Implement Matrix Norms</h3>
-<p>Make a Python function for calculating the matrix norm for <span class="math inline">\(p = 1\)</span> and <span class="math inline">\(p = \infty\)</span>.</p>
-<p><strong>Inputs:</strong> <code>p</code> and a matrix <code>A</code><br>
-<strong>Output:</strong> the matrix norm</p>
-<p>Rules:</p>
-<ul>
-<li>Do <strong>not</strong> use <code>numpy.linalg.norm</code> inside your implementation.</li>
-<li>Compare your result with <code>numpy.linalg.norm</code> for several random matrices.</li>
-<li>Extra points may be given if your code can be applied to other useful matrix norms, but correctness for <span class="math inline">\(p = 1\)</span> and <span class="math inline">\(p = \infty\)</span> comes first.</li>
-</ul>
+<section id="exercise-4.3-random-search-for-matrix-norms" class="level3" data-number="6.4">
+<h3 data-number="6.4" class="anchored" data-anchor-id="exercise-4.3-random-search-for-matrix-norms"><span class="header-section-number">6.4</span> Exercise 4.3 — Random Search for Matrix Norms</h3>
+<p>Estimate the induced matrix norm <span class="math inline">\(\|A\|_p\)</span> from below by sampling random vectors. AI use is allowed, but you must verify and explain the results yourself.</p>
+<p>You should:</p>
+<ol type="1">
+<li>Choose at least <strong>two</strong> matrices <span class="math inline">\(A\)</span>. Include one <span class="math inline">\(2 \times 2\)</span> example for geometric discussion.</li>
+<li>For <span class="math inline">\(p = 1, 2, \infty\)</span>, sample many nonzero vectors and compute <span class="math inline">\(r_p(x)=\|Ax\|_p/\|x\|_p\)</span>.</li>
+<li>For one <span class="math inline">\(2 \times 2\)</span> matrix, try several sample sizes, e.g. <code>N = 10, 100, 1000, 10000</code>; report the sampled maximum, true value, and relative gap.</li>
+<li>Compare the sampled maximum with the true value: is it above, below, or equal? Explain your answer. Then discuss why one case is close and another case is not.</li>
+</ol>
 <p>A useful function signature is:</p>
-<div id="3f53bc7e" class="cell" data-execution_count="11">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> matrix_norm(A, p):</span>
+<div id="5bed955c" class="cell" data-execution_count="11">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> estimate_induced_norm(A, p, n_samples<span class="op">=</span><span class="dv">1000</span>):</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co">    Compute the matrix norm for p = 1 or p = np.inf.</span></span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="co">    Do not call numpy.linalg.norm inside this function.</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co">    Return the largest sampled value of ||Ax||_p / ||x||_p</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="co">    and the vector that gave it.</span></span>
 <span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
 <span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">pass</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
+<p><strong>Optional Challenge.</strong> For <span class="math inline">\(p=2\)</span>, compute <span class="math inline">\(\lambda_{\max}(A^T A)\)</span>, compare <span class="math inline">\(\sqrt{\lambda_{\max}(A^T A)}\)</span> with <code>numpy.linalg.norm(A, ord=2)</code>, and compare the corresponding eigenvector direction with your best random direction.</p>
 <hr>
 </section>
 </section>
@@ -3019,105 +3020,116 @@ Frobenius norm : value=  150.2648, time=0.00001 sec
 <span id="cb12-630"><a href="#cb12-630" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-631"><a href="#cb12-631" aria-hidden="true" tabindex="-1"></a><span class="fu">## Exercises for This Lecture {#sec-exercises}</span></span>
 <span id="cb12-632"><a href="#cb12-632" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-633"><a href="#cb12-633" aria-hidden="true" tabindex="-1"></a>The exercises are submitted in the **Ex 4 repository**. See the slides</span>
-<span id="cb12-634"><a href="#cb12-634" aria-hidden="true" tabindex="-1"></a>for the exact GitHub Classroom link and deadline.</span>
+<span id="cb12-633"><a href="#cb12-633" aria-hidden="true" tabindex="-1"></a>The exercises are submitted in the **Ex 4 repository**:</span>
+<span id="cb12-634"><a href="#cb12-634" aria-hidden="true" tabindex="-1"></a><span class="ot">&lt;https://classroom.github.com/a/IIB7mFi7&gt;</span>.</span>
 <span id="cb12-635"><a href="#cb12-635" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-636"><a href="#cb12-636" aria-hidden="true" tabindex="-1"></a><span class="fu">### Exercise 4.0 — Evolve This Handout with AI</span></span>
+<span id="cb12-636"><a href="#cb12-636" aria-hidden="true" tabindex="-1"></a>Deadline (JST): **May 14 (Thu), 23:59**.</span>
 <span id="cb12-637"><a href="#cb12-637" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-638"><a href="#cb12-638" aria-hidden="true" tabindex="-1"></a>While studying <span class="in">`4th-handout.qmd`</span>, insert at least **three Q&amp;A blocks** of</span>
-<span id="cb12-639"><a href="#cb12-639" aria-hidden="true" tabindex="-1"></a>your own. Use the workflow described at the top of this handout:</span>
-<span id="cb12-640"><a href="#cb12-640" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-641"><a href="#cb12-641" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>Prime the chat once with <span class="in">`AI_TUTOR.md`</span>.</span>
-<span id="cb12-642"><a href="#cb12-642" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>Select the confusing line in <span class="in">`4th-handout.qmd`</span>.</span>
-<span id="cb12-643"><a href="#cb12-643" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>Press <span class="in">`⌘L`</span> / <span class="in">`Ctrl+L`</span>.</span>
-<span id="cb12-644"><a href="#cb12-644" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span>Ask the AI to insert a Q&amp;A block.</span>
-<span id="cb12-645"><a href="#cb12-645" aria-hidden="true" tabindex="-1"></a><span class="ss">5. </span>Verify the answer and commit the edited handout.</span>
-<span id="cb12-646"><a href="#cb12-646" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-647"><a href="#cb12-647" aria-hidden="true" tabindex="-1"></a><span class="fu">### Exercise 4.1 — Prove the Standard Vector Norms Are Norms</span></span>
+<span id="cb12-638"><a href="#cb12-638" aria-hidden="true" tabindex="-1"></a><span class="fu">### Exercise 4.0 — Evolve This Handout with AI</span></span>
+<span id="cb12-639"><a href="#cb12-639" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-640"><a href="#cb12-640" aria-hidden="true" tabindex="-1"></a>While studying <span class="in">`4th-handout.qmd`</span>, insert at least **three Q&amp;A blocks** of</span>
+<span id="cb12-641"><a href="#cb12-641" aria-hidden="true" tabindex="-1"></a>your own. Use the workflow described at the top of this handout:</span>
+<span id="cb12-642"><a href="#cb12-642" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-643"><a href="#cb12-643" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>Prime the chat once with <span class="in">`AI_TUTOR.md`</span>.</span>
+<span id="cb12-644"><a href="#cb12-644" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>Select the confusing line in <span class="in">`4th-handout.qmd`</span>.</span>
+<span id="cb12-645"><a href="#cb12-645" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>Press <span class="in">`⌘L`</span> / <span class="in">`Ctrl+L`</span>.</span>
+<span id="cb12-646"><a href="#cb12-646" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span>Ask the AI to insert a Q&amp;A block.</span>
+<span id="cb12-647"><a href="#cb12-647" aria-hidden="true" tabindex="-1"></a><span class="ss">5. </span>Verify the answer and commit the edited handout.</span>
 <span id="cb12-648"><a href="#cb12-648" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-649"><a href="#cb12-649" aria-hidden="true" tabindex="-1"></a>Prove that $\ell^1$, $\ell^2$, and $\ell^\infty$ satisfy the three norm</span>
-<span id="cb12-650"><a href="#cb12-650" aria-hidden="true" tabindex="-1"></a>properties:</span>
-<span id="cb12-651"><a href="#cb12-651" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-652"><a href="#cb12-652" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>Positivity.</span>
-<span id="cb12-653"><a href="#cb12-653" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>Homogeneity.</span>
-<span id="cb12-654"><a href="#cb12-654" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>Triangle inequality.</span>
-<span id="cb12-655"><a href="#cb12-655" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-656"><a href="#cb12-656" aria-hidden="true" tabindex="-1"></a>For $\ell^2$, use the Cauchy-Schwarz inequality to prove the triangle</span>
-<span id="cb12-657"><a href="#cb12-657" aria-hidden="true" tabindex="-1"></a>inequality.</span>
-<span id="cb12-658"><a href="#cb12-658" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-659"><a href="#cb12-659" aria-hidden="true" tabindex="-1"></a><span class="fu">### Exercise 4.2 — Verify Norm Inequalities Numerically</span></span>
+<span id="cb12-649"><a href="#cb12-649" aria-hidden="true" tabindex="-1"></a><span class="fu">### Exercise 4.1 — Prove the Standard Vector Norms Are Norms</span></span>
+<span id="cb12-650"><a href="#cb12-650" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-651"><a href="#cb12-651" aria-hidden="true" tabindex="-1"></a>Prove that $\ell^1$, $\ell^2$, and $\ell^\infty$ satisfy the three norm</span>
+<span id="cb12-652"><a href="#cb12-652" aria-hidden="true" tabindex="-1"></a>properties:</span>
+<span id="cb12-653"><a href="#cb12-653" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-654"><a href="#cb12-654" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>Positivity.</span>
+<span id="cb12-655"><a href="#cb12-655" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>Homogeneity.</span>
+<span id="cb12-656"><a href="#cb12-656" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>Triangle inequality.</span>
+<span id="cb12-657"><a href="#cb12-657" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-658"><a href="#cb12-658" aria-hidden="true" tabindex="-1"></a>For $\ell^2$, use the Cauchy-Schwarz inequality to prove the triangle</span>
+<span id="cb12-659"><a href="#cb12-659" aria-hidden="true" tabindex="-1"></a>inequality.</span>
 <span id="cb12-660"><a href="#cb12-660" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-661"><a href="#cb12-661" aria-hidden="true" tabindex="-1"></a>Confirm inequalities (5), (6), and (7) numerically using random vectors:</span>
+<span id="cb12-661"><a href="#cb12-661" aria-hidden="true" tabindex="-1"></a><span class="fu">### Exercise 4.2 — Verify Norm Inequalities Numerically</span></span>
 <span id="cb12-662"><a href="#cb12-662" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-663"><a href="#cb12-663" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb12-664"><a href="#cb12-664" aria-hidden="true" tabindex="-1"></a><span class="sc">\|</span>x<span class="sc">\|</span>_2 \leq <span class="sc">\|</span>x<span class="sc">\|</span>_1 \leq \sqrt{n}\,<span class="sc">\|</span>x<span class="sc">\|</span>_2,</span>
+<span id="cb12-663"><a href="#cb12-663" aria-hidden="true" tabindex="-1"></a>Confirm inequalities (5), (6), and (7) numerically using random vectors:</span>
+<span id="cb12-664"><a href="#cb12-664" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-665"><a href="#cb12-665" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb12-666"><a href="#cb12-666" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-666"><a href="#cb12-666" aria-hidden="true" tabindex="-1"></a><span class="sc">\|</span>x<span class="sc">\|</span>_2 \leq <span class="sc">\|</span>x<span class="sc">\|</span>_1 \leq \sqrt{n}\,<span class="sc">\|</span>x<span class="sc">\|</span>_2,</span>
 <span id="cb12-667"><a href="#cb12-667" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb12-668"><a href="#cb12-668" aria-hidden="true" tabindex="-1"></a><span class="sc">\|</span>x<span class="sc">\|</span>_\infty \leq \|x\|_1 \leq n\,\|x\|_\infty,</span>
+<span id="cb12-668"><a href="#cb12-668" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-669"><a href="#cb12-669" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb12-670"><a href="#cb12-670" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-670"><a href="#cb12-670" aria-hidden="true" tabindex="-1"></a><span class="sc">\|</span>x<span class="sc">\|</span>_\infty \leq \|x\|_1 \leq n\,\|x\|_\infty,</span>
 <span id="cb12-671"><a href="#cb12-671" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb12-672"><a href="#cb12-672" aria-hidden="true" tabindex="-1"></a><span class="sc">\|</span>x<span class="sc">\|</span>_\infty \leq \|x\|_2 \leq \sqrt{n}\,\|x\|_\infty.</span>
+<span id="cb12-672"><a href="#cb12-672" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-673"><a href="#cb12-673" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb12-674"><a href="#cb12-674" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-675"><a href="#cb12-675" aria-hidden="true" tabindex="-1"></a>Test multiple dimensions and multiple random vectors. A useful function</span>
-<span id="cb12-676"><a href="#cb12-676" aria-hidden="true" tabindex="-1"></a>signature is:</span>
-<span id="cb12-677"><a href="#cb12-677" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-680"><a href="#cb12-680" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb12-681"><a href="#cb12-681" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
-<span id="cb12-682"><a href="#cb12-682" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> verify_norm_inequalities(n_dims, n_tests<span class="op">=</span><span class="dv">100</span>):</span>
-<span id="cb12-683"><a href="#cb12-683" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
-<span id="cb12-684"><a href="#cb12-684" aria-hidden="true" tabindex="-1"></a><span class="co">    Return True if all three inequalities pass for all tests.</span></span>
-<span id="cb12-685"><a href="#cb12-685" aria-hidden="true" tabindex="-1"></a><span class="co">    Print useful diagnostic information if something fails.</span></span>
-<span id="cb12-686"><a href="#cb12-686" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
-<span id="cb12-687"><a href="#cb12-687" aria-hidden="true" tabindex="-1"></a>    <span class="cf">pass</span></span>
-<span id="cb12-688"><a href="#cb12-688" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb12-689"><a href="#cb12-689" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-690"><a href="#cb12-690" aria-hidden="true" tabindex="-1"></a><span class="fu">### Exercise 4.3 — Implement Matrix Norms</span></span>
+<span id="cb12-674"><a href="#cb12-674" aria-hidden="true" tabindex="-1"></a><span class="sc">\|</span>x<span class="sc">\|</span>_\infty \leq \|x\|_2 \leq \sqrt{n}\,\|x\|_\infty.</span>
+<span id="cb12-675"><a href="#cb12-675" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb12-676"><a href="#cb12-676" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-677"><a href="#cb12-677" aria-hidden="true" tabindex="-1"></a>Test multiple dimensions and multiple random vectors. A useful function</span>
+<span id="cb12-678"><a href="#cb12-678" aria-hidden="true" tabindex="-1"></a>signature is:</span>
+<span id="cb12-679"><a href="#cb12-679" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-682"><a href="#cb12-682" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb12-683"><a href="#cb12-683" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
+<span id="cb12-684"><a href="#cb12-684" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> verify_norm_inequalities(n_dims, n_tests<span class="op">=</span><span class="dv">100</span>):</span>
+<span id="cb12-685"><a href="#cb12-685" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb12-686"><a href="#cb12-686" aria-hidden="true" tabindex="-1"></a><span class="co">    Return True if all three inequalities pass for all tests.</span></span>
+<span id="cb12-687"><a href="#cb12-687" aria-hidden="true" tabindex="-1"></a><span class="co">    Print useful diagnostic information if something fails.</span></span>
+<span id="cb12-688"><a href="#cb12-688" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb12-689"><a href="#cb12-689" aria-hidden="true" tabindex="-1"></a>    <span class="cf">pass</span></span>
+<span id="cb12-690"><a href="#cb12-690" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb12-691"><a href="#cb12-691" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-692"><a href="#cb12-692" aria-hidden="true" tabindex="-1"></a>Make a Python function for calculating the matrix norm for $p = 1$ and</span>
-<span id="cb12-693"><a href="#cb12-693" aria-hidden="true" tabindex="-1"></a>$p = \infty$.</span>
-<span id="cb12-694"><a href="#cb12-694" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-695"><a href="#cb12-695" aria-hidden="true" tabindex="-1"></a>**Inputs:** <span class="in">`p`</span> and a matrix <span class="in">`A`</span>  </span>
-<span id="cb12-696"><a href="#cb12-696" aria-hidden="true" tabindex="-1"></a>**Output:** the matrix norm</span>
+<span id="cb12-692"><a href="#cb12-692" aria-hidden="true" tabindex="-1"></a><span class="fu">### Exercise 4.3 — Random Search for Matrix Norms</span></span>
+<span id="cb12-693"><a href="#cb12-693" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-694"><a href="#cb12-694" aria-hidden="true" tabindex="-1"></a>Estimate the induced matrix norm $<span class="sc">\|</span>A<span class="sc">\|</span>_p$ from below by sampling random</span>
+<span id="cb12-695"><a href="#cb12-695" aria-hidden="true" tabindex="-1"></a>vectors. AI use is allowed, but you must verify and explain the results</span>
+<span id="cb12-696"><a href="#cb12-696" aria-hidden="true" tabindex="-1"></a>yourself.</span>
 <span id="cb12-697"><a href="#cb12-697" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-698"><a href="#cb12-698" aria-hidden="true" tabindex="-1"></a>Rules:</span>
+<span id="cb12-698"><a href="#cb12-698" aria-hidden="true" tabindex="-1"></a>You should:</span>
 <span id="cb12-699"><a href="#cb12-699" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-700"><a href="#cb12-700" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Do **not** use <span class="in">`numpy.linalg.norm`</span> inside your implementation.</span>
-<span id="cb12-701"><a href="#cb12-701" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Compare your result with <span class="in">`numpy.linalg.norm`</span> for several random matrices.</span>
-<span id="cb12-702"><a href="#cb12-702" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Extra points may be given if your code can be applied to other useful</span>
-<span id="cb12-703"><a href="#cb12-703" aria-hidden="true" tabindex="-1"></a>  matrix norms, but correctness for $p = 1$ and $p = \infty$ comes first.</span>
-<span id="cb12-704"><a href="#cb12-704" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-705"><a href="#cb12-705" aria-hidden="true" tabindex="-1"></a>A useful function signature is:</span>
-<span id="cb12-706"><a href="#cb12-706" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-709"><a href="#cb12-709" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb12-710"><a href="#cb12-710" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
-<span id="cb12-711"><a href="#cb12-711" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> matrix_norm(A, p):</span>
-<span id="cb12-712"><a href="#cb12-712" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
-<span id="cb12-713"><a href="#cb12-713" aria-hidden="true" tabindex="-1"></a><span class="co">    Compute the matrix norm for p = 1 or p = np.inf.</span></span>
-<span id="cb12-714"><a href="#cb12-714" aria-hidden="true" tabindex="-1"></a><span class="co">    Do not call numpy.linalg.norm inside this function.</span></span>
-<span id="cb12-715"><a href="#cb12-715" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
-<span id="cb12-716"><a href="#cb12-716" aria-hidden="true" tabindex="-1"></a>    <span class="cf">pass</span></span>
-<span id="cb12-717"><a href="#cb12-717" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb12-718"><a href="#cb12-718" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-719"><a href="#cb12-719" aria-hidden="true" tabindex="-1"></a>---</span>
-<span id="cb12-720"><a href="#cb12-720" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-721"><a href="#cb12-721" aria-hidden="true" tabindex="-1"></a><span class="fu">## Summary {#sec-summary}</span></span>
-<span id="cb12-722"><a href="#cb12-722" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-723"><a href="#cb12-723" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Object <span class="pp">|</span> Main idea <span class="pp">|</span> Common formulas <span class="pp">|</span></span>
-<span id="cb12-724"><a href="#cb12-724" aria-hidden="true" tabindex="-1"></a><span class="pp">|---|---|---|</span></span>
-<span id="cb12-725"><a href="#cb12-725" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Vector norm <span class="pp">|</span> measures the size of a vector <span class="pp">|</span> $<span class="sc">\|</span>x<span class="sc">\|</span>_1$, $\|x\|_2$, $\|x\|_\infty$ <span class="pp">|</span></span>
-<span id="cb12-726"><a href="#cb12-726" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Equivalent norms <span class="pp">|</span> different norms are comparable in finite dimensions <span class="pp">|</span> inequalities (5)--(7) <span class="pp">|</span></span>
-<span id="cb12-727"><a href="#cb12-727" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Induced matrix norm <span class="pp">|</span> largest stretching factor of a matrix <span class="pp">|</span> $<span class="sc">\|</span>A<span class="sc">\|</span> = \max_{x \neq 0} <span class="sc">\|</span>Ax<span class="sc">\|</span>/<span class="sc">\|</span>x<span class="sc">\|</span>$ <span class="pp">|</span></span>
-<span id="cb12-728"><a href="#cb12-728" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Matrix $1$-norm <span class="pp">|</span> maximum absolute column sum <span class="pp">|</span> $<span class="sc">\|</span>A<span class="sc">\|</span>_1 = \max_j \sum_i |a_{ij}<span class="pp">|</span>$ <span class="pp">|</span></span>
-<span id="cb12-729"><a href="#cb12-729" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Matrix $\infty$-norm <span class="pp">|</span> maximum absolute row sum <span class="pp">|</span> $<span class="sc">\|</span>A<span class="sc">\|</span>_\infty = \max_i \sum_j |a_{ij}<span class="pp">|</span>$ <span class="pp">|</span></span>
-<span id="cb12-730"><a href="#cb12-730" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Matrix $2$-norm <span class="pp">|</span> spectral norm <span class="pp">|</span> $<span class="sc">\|</span>A<span class="sc">\|</span>_2 = \sqrt{\lambda_{\max}(A^T A)}$ <span class="pp">|</span></span>
-<span id="cb12-731"><a href="#cb12-731" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Frobenius norm <span class="pp">|</span> easy-to-compute size of all entries <span class="pp">|</span> $<span class="sc">\|</span>A<span class="sc">\|</span>_F = \sqrt{\sum_{i,j}|a_{ij}<span class="pp">|</span>^2}$ <span class="pp">|</span></span>
-<span id="cb12-732"><a href="#cb12-732" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-733"><a href="#cb12-733" aria-hidden="true" tabindex="-1"></a>Norms are the language that lets us turn vague statements like "the</span>
-<span id="cb12-734"><a href="#cb12-734" aria-hidden="true" tabindex="-1"></a>error is small" or "the matrix is large" into precise mathematical</span>
-<span id="cb12-735"><a href="#cb12-735" aria-hidden="true" tabindex="-1"></a>statements that can be analyzed and computed.</span>
+<span id="cb12-700"><a href="#cb12-700" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>Choose at least **two** matrices $A$. Include one $2 \times 2$ example</span>
+<span id="cb12-701"><a href="#cb12-701" aria-hidden="true" tabindex="-1"></a>   for geometric discussion.</span>
+<span id="cb12-702"><a href="#cb12-702" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>For $p = 1, 2, \infty$, sample many nonzero vectors and compute</span>
+<span id="cb12-703"><a href="#cb12-703" aria-hidden="true" tabindex="-1"></a>   $r_p(x)=<span class="sc">\|</span>Ax<span class="sc">\|</span>_p/<span class="sc">\|</span>x<span class="sc">\|</span>_p$.</span>
+<span id="cb12-704"><a href="#cb12-704" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>For one $2 \times 2$ matrix, try several sample sizes, e.g.</span>
+<span id="cb12-705"><a href="#cb12-705" aria-hidden="true" tabindex="-1"></a>   <span class="in">`N = 10, 100, 1000, 10000`</span>; report the sampled maximum, true value,</span>
+<span id="cb12-706"><a href="#cb12-706" aria-hidden="true" tabindex="-1"></a>   and relative gap.</span>
+<span id="cb12-707"><a href="#cb12-707" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span>Compare the sampled maximum with the true value: is it above, below,</span>
+<span id="cb12-708"><a href="#cb12-708" aria-hidden="true" tabindex="-1"></a>   or equal? Explain your answer. Then discuss why one case is close and</span>
+<span id="cb12-709"><a href="#cb12-709" aria-hidden="true" tabindex="-1"></a>   another case is not.</span>
+<span id="cb12-710"><a href="#cb12-710" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-711"><a href="#cb12-711" aria-hidden="true" tabindex="-1"></a>A useful function signature is:</span>
+<span id="cb12-712"><a href="#cb12-712" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-715"><a href="#cb12-715" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb12-716"><a href="#cb12-716" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
+<span id="cb12-717"><a href="#cb12-717" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> estimate_induced_norm(A, p, n_samples<span class="op">=</span><span class="dv">1000</span>):</span>
+<span id="cb12-718"><a href="#cb12-718" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb12-719"><a href="#cb12-719" aria-hidden="true" tabindex="-1"></a><span class="co">    Return the largest sampled value of ||Ax||_p / ||x||_p</span></span>
+<span id="cb12-720"><a href="#cb12-720" aria-hidden="true" tabindex="-1"></a><span class="co">    and the vector that gave it.</span></span>
+<span id="cb12-721"><a href="#cb12-721" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb12-722"><a href="#cb12-722" aria-hidden="true" tabindex="-1"></a>    <span class="cf">pass</span></span>
+<span id="cb12-723"><a href="#cb12-723" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb12-724"><a href="#cb12-724" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-725"><a href="#cb12-725" aria-hidden="true" tabindex="-1"></a>**Optional Challenge.** For $p=2$, compute $\lambda_{\max}(A^T A)$,</span>
+<span id="cb12-726"><a href="#cb12-726" aria-hidden="true" tabindex="-1"></a>compare $\sqrt{\lambda_{\max}(A^T A)}$ with <span class="in">`numpy.linalg.norm(A, ord=2)`</span>,</span>
+<span id="cb12-727"><a href="#cb12-727" aria-hidden="true" tabindex="-1"></a>and compare the corresponding eigenvector direction with your best random</span>
+<span id="cb12-728"><a href="#cb12-728" aria-hidden="true" tabindex="-1"></a>direction.</span>
+<span id="cb12-729"><a href="#cb12-729" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-730"><a href="#cb12-730" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb12-731"><a href="#cb12-731" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-732"><a href="#cb12-732" aria-hidden="true" tabindex="-1"></a><span class="fu">## Summary {#sec-summary}</span></span>
+<span id="cb12-733"><a href="#cb12-733" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-734"><a href="#cb12-734" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Object <span class="pp">|</span> Main idea <span class="pp">|</span> Common formulas <span class="pp">|</span></span>
+<span id="cb12-735"><a href="#cb12-735" aria-hidden="true" tabindex="-1"></a><span class="pp">|---|---|---|</span></span>
+<span id="cb12-736"><a href="#cb12-736" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Vector norm <span class="pp">|</span> measures the size of a vector <span class="pp">|</span> $<span class="sc">\|</span>x<span class="sc">\|</span>_1$, $\|x\|_2$, $\|x\|_\infty$ <span class="pp">|</span></span>
+<span id="cb12-737"><a href="#cb12-737" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Equivalent norms <span class="pp">|</span> different norms are comparable in finite dimensions <span class="pp">|</span> inequalities (5)--(7) <span class="pp">|</span></span>
+<span id="cb12-738"><a href="#cb12-738" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Induced matrix norm <span class="pp">|</span> largest stretching factor of a matrix <span class="pp">|</span> $<span class="sc">\|</span>A<span class="sc">\|</span> = \max_{x \neq 0} <span class="sc">\|</span>Ax<span class="sc">\|</span>/<span class="sc">\|</span>x<span class="sc">\|</span>$ <span class="pp">|</span></span>
+<span id="cb12-739"><a href="#cb12-739" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Matrix $1$-norm <span class="pp">|</span> maximum absolute column sum <span class="pp">|</span> $<span class="sc">\|</span>A<span class="sc">\|</span>_1 = \max_j \sum_i |a_{ij}<span class="pp">|</span>$ <span class="pp">|</span></span>
+<span id="cb12-740"><a href="#cb12-740" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Matrix $\infty$-norm <span class="pp">|</span> maximum absolute row sum <span class="pp">|</span> $<span class="sc">\|</span>A<span class="sc">\|</span>_\infty = \max_i \sum_j |a_{ij}<span class="pp">|</span>$ <span class="pp">|</span></span>
+<span id="cb12-741"><a href="#cb12-741" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Matrix $2$-norm <span class="pp">|</span> spectral norm <span class="pp">|</span> $<span class="sc">\|</span>A<span class="sc">\|</span>_2 = \sqrt{\lambda_{\max}(A^T A)}$ <span class="pp">|</span></span>
+<span id="cb12-742"><a href="#cb12-742" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Frobenius norm <span class="pp">|</span> easy-to-compute size of all entries <span class="pp">|</span> $<span class="sc">\|</span>A<span class="sc">\|</span>_F = \sqrt{\sum_{i,j}|a_{ij}<span class="pp">|</span>^2}$ <span class="pp">|</span></span>
+<span id="cb12-743"><a href="#cb12-743" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-744"><a href="#cb12-744" aria-hidden="true" tabindex="-1"></a>Norms are the language that lets us turn vague statements like "the</span>
+<span id="cb12-745"><a href="#cb12-745" aria-hidden="true" tabindex="-1"></a>error is small" or "the matrix is large" into precise mathematical</span>
+<span id="cb12-746"><a href="#cb12-746" aria-hidden="true" tabindex="-1"></a>statements that can be analyzed and computed.</span>
 </code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
