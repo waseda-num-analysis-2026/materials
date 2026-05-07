@@ -5,7 +5,7 @@ author:
   - name: "TANAKA, Kazuaki (田中 一成)"
     email: "k.tanaka@aoni.waseda.jp"
     affiliations:
-      - name: "Institute for Mathematical Science, Waseda University"
+      - name: "Global Center for Science and Engineering, Waseda University"
 format: 
   revealjs:
     theme: [default, custom.scss]

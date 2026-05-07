@@ -5,7 +5,7 @@ author:
   - name: "TANAKA, Kazuaki (田中 一成)"
     email: "k.tanaka@aoni.waseda.jp"
     affiliations:
-      - name: "Institute for Mathematical Science, Waseda University"
+      - name: "Global Center for Science and Engineering, Waseda University"
 format: 
   revealjs:
     theme: [default, ../030/custom.scss]
@@ -64,24 +64,14 @@ git pull</code></pre>
   </div>
 </div>
 
-<div style="display:grid; grid-template-columns:1fr 1fr; gap:0.8em;">
-  <div style="background:#ffffff; border:1px solid #d6e4f0; border-radius:10px; padding:0.75em 0.9em;">
-    <div style="font-size:0.8em; color:#0070C0; font-weight:700;">Read in the handout</div>
-    <ul style="font-size:0.83em; line-height:1.55; margin:0.4em 0 0 1.2em;">
-      <li>Vector norm axioms</li>
-      <li><code>l1</code>, <code>l2</code>, and <code>linf</code> norms</li>
-      <li>Norm equivalence inequalities</li>
-      <li>Induced matrix norms</li>
-      <li>Frobenius norm and computational cost</li>
-    </ul>
-  </div>
+<div style="display:grid; grid-template-columns:1fr; gap:0.8em;">
   <div style="background:#fff8e1; border:1px solid #ffe082; border-radius:10px; padding:0.75em 0.9em;">
     <div style="font-size:0.8em; color:#e65100; font-weight:700;">Today you will submit</div>
     <ul style="font-size:0.83em; line-height:1.55; margin:0.4em 0 0 1.2em;">
       <li>Ex 4.0: AI Q&amp;A blocks in the handout</li>
       <li>Ex 4.1: proof of norm properties</li>
       <li>Ex 4.2: numerical verification</li>
-      <li>Ex 4.3: matrix norm implementation</li>
+      <li>Ex 4.3: random-search estimate of matrix norms</li>
     </ul>
   </div>
 </div>
@@ -112,7 +102,7 @@ git pull</code></pre>
 <div style="padding-left: 2em; margin-top: 0.5em; margin-bottom: 0.4em;">
   <strong>Repository:</strong> same as Ex 4.1
   &nbsp;&nbsp;|&nbsp;&nbsp; <strong>Submit:</strong> <code>4th-handout.qmd</code> (your edited copy)
-  &nbsp;&nbsp;|&nbsp;&nbsp; <strong style="color: #d84315;">Deadline: TBA</strong>
+  &nbsp;&nbsp;|&nbsp;&nbsp; <strong style="color: #d84315;">Deadline: May 14 (Thu), 23:59</strong>
 </div>
 
 While studying `4th-handout.qmd`, **insert at least 3 Q&A blocks** of your
@@ -139,7 +129,7 @@ GitHub Copilot (or another AI) following the protocol in
 <div style="padding-left: 2em; margin-top: 0.5em; margin-bottom: 0.4em;">
   <strong>Repository:</strong> Ex 4 — GitHub Classroom link TBA
   &nbsp;&nbsp;|&nbsp;&nbsp; <strong>Edit:</strong> <code>ex4-1.qmd</code>
-  &nbsp;&nbsp;|&nbsp;&nbsp; <strong style="color: #d84315;">Deadline: TBA</strong>
+  &nbsp;&nbsp;|&nbsp;&nbsp; <strong style="color: #d84315;">Deadline: May 14 (Thu), 23:59</strong>
 </div>
 
 Prove that $\ell^1$, $\ell^2$, and $\ell^\infty$ are vector norms on
@@ -161,7 +151,7 @@ For each norm, verify:
 <div style="padding-left: 2em; margin-top: 0.5em; margin-bottom: 0.4em;">
   <strong>Repository:</strong> same as Ex 4.1
   &nbsp;&nbsp;|&nbsp;&nbsp; <strong>Edit:</strong> <code>ex4-2.qmd</code>
-  &nbsp;&nbsp;|&nbsp;&nbsp; <strong style="color: #d84315;">Deadline: TBA</strong>
+  &nbsp;&nbsp;|&nbsp;&nbsp; <strong style="color: #d84315;">Deadline: May 14 (Thu), 23:59</strong>
 </div>
 
 Confirm the following inequalities numerically using random vectors:
@@ -182,29 +172,49 @@ $$
 - Use many random vectors for each dimension
 - Report clearly whether all tests passed
 
-## Exercise 4.3 — Implement Matrix Norms {.smaller .exercise-slide}
+## Exercise 4.3 — Random Search for Matrix Norms {.smaller .exercise-slide}
 
 <div style="padding-left: 2em; margin-top: 0.5em; margin-bottom: 0.4em;">
   <strong>Repository:</strong> same as Ex 4.1
   &nbsp;&nbsp;|&nbsp;&nbsp; <strong>Edit:</strong> <code>ex4-3.qmd</code>
-  &nbsp;&nbsp;|&nbsp;&nbsp; <strong style="color: #d84315;">Deadline: TBA</strong>
+  &nbsp;&nbsp;|&nbsp;&nbsp; <strong style="color: #d84315;">Deadline: May 14 (Thu), 23:59</strong>
 </div>
 
-Make a Python function for calculating the matrix norm for $p = 1$ and
-$p = \infty$.
+Estimate the induced matrix norm $\|A\|_p$ from below by sampling random vectors.
 
-**Inputs:** `p` and a matrix `A`  
-**Output:** the matrix norm
+<div style="font-size:0.78em; color:#666; margin:0.15em 0 0.45em 0;">
+  AI use is allowed, but you must verify and explain the results yourself.
+</div>
 
-Rules:
+- Choose at least **two** matrices $A$; include one $2 \times 2$ example for
+  geometric discussion.
+- For $p = 1, 2, \infty$, sample many nonzero vectors and compute
+  $r_p(x)=\|Ax\|_p/\|x\|_p$.
+- For one $2 \times 2$ matrix, try several sample sizes, e.g.
+  `N = 10, 100, 1000, 10000`; report the sampled maximum, true value, and
+  relative gap.
+- Compare the sampled maximum with the true value: is it above, below, or
+  equal? Explain your answer. Then discuss why one case is close and another
+  case is not.
 
-- Do **not** use `numpy.linalg.norm` inside your implementation.
-- Compare your result with `numpy.linalg.norm` for several random matrices.
-- Extra points may be given if your code can be applied to other useful matrix norms.
+## Exercise 4.3 — Optional Challenge {.smaller .exercise-slide}
+
+For $p = 2$, do the following extra analysis for one $2 \times 2$ matrix:
+
+$$
+\|A\|_2 = \sqrt{\lambda_{\max}(A^T A)}.
+$$
+
+- Compute $\lambda_{\max}(A^T A)$ and confirm that it gives the same value
+  as `numpy.linalg.norm(A, ord=2)`.
+- Compute an eigenvector $v_{\max}$ of $A^T A$ for $\lambda_{\max}$, and
+  check the stretch ratio $\|Av_{\max}\|_2 / \|v_{\max}\|_2$.
+- Compare $v_{\max}$ with the best direction found by your random search.
+- Briefly explain why this direction is called a maximum-stretching direction.
 
 ::: {.mission-box}
-**Hint.** For $p = 1$, use the maximum absolute **column** sum.  
-For $p = \infty$, use the maximum absolute **row** sum.
+This bonus is beyond today's main lecture. It is for students who want to
+connect matrix norms with eigenvalues and maximum stretching directions.
 :::
 
 ## Assignments and Preparation for Next Lecture {.smaller}
@@ -218,7 +228,7 @@ For $p = \infty$, use the maximum absolute **row** sum.
       <ul>
         <li>One repository will contain Ex 4.0, 4.1, 4.2, and 4.3</li>
         <li>Edit <code>ex4-1.qmd</code>, <code>ex4-2.qmd</code>, <code>ex4-3.qmd</code> + your copy of <code>4th-handout.qmd</code> for Ex 4.0</li>
-        <li><strong>Deadline:</strong> <span class="assign-due">TBA</span></li>
+        <li><strong>Deadline:</strong> <span class="assign-due">May 14 (Thu), 23:59</span></li>
         <li>Submit by <code>git push</code> — the last commit before the deadline is graded</li>
       </ul>
     </div>
@@ -231,17 +241,6 @@ For $p = \infty$, use the maximum absolute **row** sum.
       <ul>
         <li>Extended deadline: <strong>May 14 (Thu), 23:59 JST</strong></li>
         <li>Ex 3.2 video pair work will be announced later</li>
-      </ul>
-    </div>
-  </div>
-
-  <div class="assign-card">
-    <div class="assign-num">3</div>
-    <div class="assign-body">
-      <p>Before the next lecture, read the beginning of the next handout once it is published</p>
-      <ul>
-        <li>Focus on definitions first; proofs can come later</li>
-        <li>Use the AI Tutor workflow when a line is unclear</li>
       </ul>
     </div>
   </div>

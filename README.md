@@ -1,7 +1,7 @@
 # Numerical Analysis 2026 — Course Materials
 
 **Instructor:** TANAKA, Kazuaki (田中 一成)  
-**Institute for Mathematical Science, Waseda University**
+**Global Center for Science and Engineering, Waseda University**
 
 ## About
 
