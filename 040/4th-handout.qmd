@@ -71,15 +71,16 @@ rule set and the Q&A block format.
 
 ## Why Norms Matter {#sec-why-norms}
 
-Numerical analysis is full of statements like:
+Numerical analysis is full of statements such as "the computed answer is
+close to the true answer." To make this precise, we need a way to measure
+how large the error is.
 
-$$
-\text{computed answer} \approx \text{true answer}.
-$$
-
-To make this precise, we need a way to measure the **size** of a vector,
-the **size** of an error vector, and the **size** of a matrix acting on
+For this purpose, we need a way to measure the **size** of a vector, the
+**size** of an error vector, and the **size** of a matrix acting on
 vectors. This is the role of **norms**.
+
+Norms are also indispensable for **convergence analysis**, which is one of
+the central themes of numerical analysis.
 
 In this lecture we work mainly in $\mathbb{R}^n$. The same ideas extend
 almost immediately to $\mathbb{C}^n$.
@@ -250,10 +251,6 @@ plt.tight_layout()
 plt.show()
 ```
 
-The picture shows a key idea: norms are different ways of measuring
-size. They disagree numerically, but in finite-dimensional spaces they
-are not completely unrelated.
-
 ---
 
 ## Properties of Standard Vector Norms {#sec-vector-properties}
@@ -384,7 +381,7 @@ $$
 \frac{\|Ax\|}{\|x\|}.
 $$
 
-This is the largest possible **stretching factor** of the matrix $A$.
+This is the maximum stretching factor of the matrix $A$.
 
 Equivalently,
 
@@ -569,7 +566,7 @@ import numpy as np
 from numpy import linalg as LA
 
 rng = np.random.default_rng(2026)
-n = 150
+n = 1000
 A = rng.normal(size=(n, n))
 
 for label, ord_value in [
@@ -592,7 +589,7 @@ for label, ord_value in [
 import time
 
 rng = np.random.default_rng(2026)
-n = 150
+n = 1000
 A = rng.normal(size=(n, n))
 
 for label, ord_value in [
@@ -610,110 +607,13 @@ for label, ord_value in [
 
 ---
 
-## Exercises for This Lecture {#sec-exercises}
-
-The exercises are submitted in the **Ex 4 repository**:
-<https://classroom.github.com/a/IIB7mFi7>.
-
-Deadline (JST): **May 14 (Thu), 23:59**.
-
-### Exercise 4.0 — Evolve This Handout with AI
-
-While studying `4th-handout.qmd`, insert at least **three Q&A blocks** of
-your own. Use the workflow described at the top of this handout:
-
-1. Prime the chat once with `AI_TUTOR.md`.
-2. Select the confusing line in `4th-handout.qmd`.
-3. Press `⌘L` / `Ctrl+L`.
-4. Ask the AI to insert a Q&A block.
-5. Verify the answer and commit the edited handout.
-
-### Exercise 4.1 — Prove the Standard Vector Norms Are Norms
-
-Prove that $\ell^1$, $\ell^2$, and $\ell^\infty$ satisfy the three norm
-properties:
-
-1. Positivity.
-2. Homogeneity.
-3. Triangle inequality.
-
-For $\ell^2$, use the Cauchy-Schwarz inequality to prove the triangle
-inequality.
-
-### Exercise 4.2 — Verify Norm Inequalities Numerically
-
-Confirm inequalities (5), (6), and (7) numerically using random vectors:
-
-$$
-\|x\|_2 \leq \|x\|_1 \leq \sqrt{n}\,\|x\|_2,
-$$
-
-$$
-\|x\|_\infty \leq \|x\|_1 \leq n\,\|x\|_\infty,
-$$
-
-$$
-\|x\|_\infty \leq \|x\|_2 \leq \sqrt{n}\,\|x\|_\infty.
-$$
-
-Test multiple dimensions and multiple random vectors. A useful function
-signature is:
-
-```{python}
-#| eval: false
-def verify_norm_inequalities(n_dims, n_tests=100):
-    """
-    Return True if all three inequalities pass for all tests.
-    Print useful diagnostic information if something fails.
-    """
-    pass
-```
-
-### Exercise 4.3 — Random Search for Matrix Norms
-
-Estimate the induced matrix norm $\|A\|_p$ from below by sampling random
-vectors. AI use is allowed, but you must verify and explain the results
-yourself.
-
-You should:
-
-1. Choose at least **two** matrices $A$. Include one $2 \times 2$ example
-   for geometric discussion.
-2. For $p = 1, 2, \infty$, sample many nonzero vectors and compute
-   $r_p(x)=\|Ax\|_p/\|x\|_p$.
-3. For one $2 \times 2$ matrix, try several sample sizes, e.g.
-   `N = 10, 100, 1000, 10000`; report the sampled maximum, true value,
-   and relative gap.
-4. Compare the sampled maximum with the true value: is it above, below,
-   or equal? Explain your answer. Then discuss why one case is close and
-   another case is not.
-
-A useful function signature is:
-
-```{python}
-#| eval: false
-def estimate_induced_norm(A, p, n_samples=1000):
-    """
-    Return the largest sampled value of ||Ax||_p / ||x||_p
-    and the vector that gave it.
-    """
-    pass
-```
-
-**Optional Challenge.** For $p=2$, compute $\lambda_{\max}(A^T A)$,
-compare $\sqrt{\lambda_{\max}(A^T A)}$ with `numpy.linalg.norm(A, ord=2)`,
-and compare the corresponding eigenvector direction with your best random
-direction.
-
----
-
 ## Summary {#sec-summary}
 
 | Object | Main idea | Common formulas |
 |---|---|---|
 | Vector norm | measures the size of a vector | $\|x\|_1$, $\|x\|_2$, $\|x\|_\infty$ |
 | Equivalent norms | different norms are comparable in finite dimensions | inequalities (5)--(7) |
-| Induced matrix norm | largest stretching factor of a matrix | $\|A\| = \max_{x \neq 0} \|Ax\|/\|x\|$ |
+| Induced matrix norm | maximum stretching factor of a matrix | $\|A\| = \max_{x \neq 0} \|Ax\|/\|x\|$ |
 | Matrix $1$-norm | maximum absolute column sum | $\|A\|_1 = \max_j \sum_i |a_{ij}|$ |
 | Matrix $\infty$-norm | maximum absolute row sum | $\|A\|_\infty = \max_i \sum_j |a_{ij}|$ |
 | Matrix $2$-norm | spectral norm | $\|A\|_2 = \sqrt{\lambda_{\max}(A^T A)}$ |

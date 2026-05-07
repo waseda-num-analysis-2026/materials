@@ -210,7 +210,7 @@ $$
 - Compute an eigenvector $v_{\max}$ of $A^T A$ for $\lambda_{\max}$, and
   check the stretch ratio $\|Av_{\max}\|_2 / \|v_{\max}\|_2$.
 - Compare $v_{\max}$ with the best direction found by your random search.
-- Briefly explain why this direction is called a maximum-stretching direction.
+- Briefly explain why this direction gives the maximum stretching factor.
 
 ::: {.mission-box}
 This bonus is beyond today's main lecture. It is for students who want to
