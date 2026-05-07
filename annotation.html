@@ -1011,14 +1011,16 @@
     const fileInput = document.querySelector("#annotation-toolbar input[type=file]");
     if (typeof window.showOpenFilePicker === "function") {
       try {
-        // showOpenFilePicker's `id` field is capped at 32 characters
-        // by the spec. Combine the prefix and path-derived suffix,
-        // then truncate the WHOLE string — this still yields a
-        // reasonably unique id per page while staying within the
-        // limit.
-        const id = ("annot-load-" +
-                    location.pathname.replace(/[^a-zA-Z0-9]+/g, "-")
-                  ).slice(0, 32);
+        // NOTE: this id is intentionally allowed to exceed the
+        // browser's 32-char cap on long paths so that the call
+        // throws and we fall through to the <input type=file>
+        // path below — that fallback inherits Chrome's per-origin
+        // "last folder used" memory, which is the UX the user
+        // depends on day-to-day. (A short stable id would make
+        // showOpenFilePicker succeed but each first-open would
+        // start in Downloads instead of the most recent folder.)
+        const id = "annotation-load-"
+          + location.pathname.replace(/[^a-zA-Z0-9]+/g, "-").slice(0, 32);
         const [handle] = await window.showOpenFilePicker({
           id,
           startIn: "downloads",

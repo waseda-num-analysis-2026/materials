@@ -16,6 +16,7 @@ Materials are organized by lecture number:
 | `010/` | Orientation and Guidance | [Slides](https://waseda-num-analysis-2026.github.io/materials/010/1st.html) | [Watch](https://youtu.be/AS3yAQUdcLc) |
 | `020/` | Errors and Cancellation | [Slides](https://waseda-num-analysis-2026.github.io/materials/020/2nd.html) · [Handout](https://waseda-num-analysis-2026.github.io/materials/020/2nd-handout.html) · [Python Guidelines](https://waseda-num-analysis-2026.github.io/materials/020/python_guidelines/python_guidelines.html) | [Watch](https://youtu.be/SKz0dKh1vtI) |
 | `030/` | Floating-Point Numbers | [Slides](https://waseda-num-analysis-2026.github.io/materials/030/3rd.html) · [Handout](https://waseda-num-analysis-2026.github.io/materials/030/3rd-handout.html) | [Watch](https://youtu.be/9_d11bJozUY) |
+| `040/` | Vector Norms and Matrix Norms | [Slides](https://waseda-num-analysis-2026.github.io/materials/040/4th.html) · [Handout](https://waseda-num-analysis-2026.github.io/materials/040/4th-handout.html) | TBA |
 | ...    | ... | ... | ... |
 
 ## Tutorial Videos
@@ -43,6 +44,10 @@ Short how-to videos to help you get started:
 | 3.1 | Normalized Floating-Point Numbers | [Access](https://classroom.github.com/a/tIfL0rKn) | **May 14, 23:59** (extended from May 7) |
 | 3.2 | $1+\eta-1$ in `float64` (+ video; pair work in Session 5 or later) | same repo as 3.1 | **May 14, 23:59** (extended from May 7) |
 | 3.3 | Where the Integer Grid Breaks | same repo as 3.1 | **May 14, 23:59** (extended from May 7) |
+| 4.0 | Evolve the Handout with AI (≥ 3 Q&A in `4th-handout.qmd`, see [`AI_TUTOR.md`](AI_TUTOR.md)) | same repo as 4.1 | TBA |
+| 4.1 | Prove the Standard Vector Norms Are Norms | TBA | TBA |
+| 4.2 | Verify Norm Inequalities Numerically | same repo as 4.1 | TBA |
+| 4.3 | Implement Matrix Norms for $p=1,\infty$ | same repo as 4.1 | TBA |
 
 ## Setup (one-time)
 

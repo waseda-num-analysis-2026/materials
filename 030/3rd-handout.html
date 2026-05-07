@@ -6,7 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2026-05-03">
+<meta name="dcterms.date" content="2026-05-07">
 
 <title>Lecture 3 — Floating-Point Numbers in Computers</title>
 <style>
@@ -152,7 +152,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">May 3, 2026</p>
+      <p class="date">May 7, 2026</p>
     </div>
   </div>
   
@@ -194,7 +194,7 @@ about my handout.</code></pre>
 <blockquote class="blockquote">
 <p>💡 Why prime once with <code>AI_TUTOR.md</code> and then point with <code>⌘L</code>? The rules file is long; sending it every time wastes context. Loading it <strong>once</strong> and then pointing at the <strong>exact line</strong> you’re stuck on with <code>⌘L</code> keeps the AI focused on your question.</p>
 </blockquote>
-<p>See <a href="../../AI_TUTOR.md"><code>AI_TUTOR.md</code></a> at the repo root for the full rule set the AI follows, and for more prompt templates.</p>
+<p>See <a href="../../AI_TUTOR.md"><code>AI_TUTOR.md</code></a> at the repo root for the full rule set and the Q&amp;A block format.</p>
 </div>
 </div>
 </div>
@@ -549,7 +549,7 @@ M
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<div id="ef5330be" class="cell" data-execution_count="2">
+<div id="2ff1d6ec" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sys</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>fi <span class="op">=</span> sys.float_info</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -578,7 +578,7 @@ M
 </div>
 <div id="callout-6" class="callout-6-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<div id="0db53ab2" class="cell" data-execution_count="3">
+<div id="d57a3b15" class="cell" data-execution_count="3">
 <div class="cell-output cell-output-stdout">
 <pre><code>m_d  formula = 2**-1074                = 4.940656e-324
 
@@ -736,7 +736,7 @@ Figure&nbsp;4: Tie-breaking by ties-to-even: when <span class="math inline">\(x\
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<div id="34222871" class="cell" data-execution_count="7">
+<div id="3892e855" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>eps <span class="op">=</span> <span class="dv">2</span><span class="op">**-</span><span class="dv">52</span>   <span class="co"># = the gap between 1 and the next float64</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"(1 + ε/4)  - 1 = </span><span class="sc">{</span>(<span class="dv">1</span> <span class="op">+</span> eps<span class="op">/</span><span class="dv">4</span>)     <span class="op">-</span> <span class="dv">1</span><span class="sc">!r}</span><span class="ss">"</span>)</span>
@@ -755,7 +755,7 @@ Figure&nbsp;4: Tie-breaking by ties-to-even: when <span class="math inline">\(x\
 </div>
 <div id="callout-9" class="callout-9-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<div id="3cda077c" class="cell" data-execution_count="8">
+<div id="9d4d2102" class="cell" data-execution_count="8">
 <div class="cell-output cell-output-stdout">
 <pre><code>(1 + ε/4)  - 1 = 0.0
 (1 + ε/2)  - 1 = 0.0
@@ -1841,14 +1841,16 @@ Figure&nbsp;4: Tie-breaking by ties-to-even: when <span class="math inline">\(x\
     const fileInput = document.querySelector("#annotation-toolbar input[type=file]");
     if (typeof window.showOpenFilePicker === "function") {
       try {
-        // showOpenFilePicker's `id` field is capped at 32 characters
-        // by the spec. Combine the prefix and path-derived suffix,
-        // then truncate the WHOLE string — this still yields a
-        // reasonably unique id per page while staying within the
-        // limit.
-        const id = ("annot-load-" +
-                    location.pathname.replace(/[^a-zA-Z0-9]+/g, "-")
-                  ).slice(0, 32);
+        // NOTE: this id is intentionally allowed to exceed the
+        // browser's 32-char cap on long paths so that the call
+        // throws and we fall through to the <input type=file>
+        // path below — that fallback inherits Chrome's per-origin
+        // "last folder used" memory, which is the UX the user
+        // depends on day-to-day. (A short stable id would make
+        // showOpenFilePicker succeed but each first-open would
+        // start in Downloads instead of the most recent folder.)
+        const id = "annotation-load-"
+          + location.pathname.replace(/[^a-zA-Z0-9]+/g, "-").slice(0, 32);
         const [handle] = await window.showOpenFilePicker({
           id,
           startIn: "downloads",
@@ -2454,7 +2456,7 @@ Figure&nbsp;4: Tie-breaking by ties-to-even: when <span class="math inline">\(x\
 <span id="cb6-64"><a href="#cb6-64" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; with </span><span class="in">`⌘L`</span><span class="at"> keeps the AI focused on your question.</span></span>
 <span id="cb6-65"><a href="#cb6-65" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-66"><a href="#cb6-66" aria-hidden="true" tabindex="-1"></a>See <span class="co">[</span><span class="ot">`AI_TUTOR.md`</span><span class="co">](../../AI_TUTOR.md)</span> at the repo root for the full</span>
-<span id="cb6-67"><a href="#cb6-67" aria-hidden="true" tabindex="-1"></a>rule set the AI follows, and for more prompt templates.</span>
+<span id="cb6-67"><a href="#cb6-67" aria-hidden="true" tabindex="-1"></a>rule set and the Q&amp;A block format.</span>
 <span id="cb6-68"><a href="#cb6-68" aria-hidden="true" tabindex="-1"></a>:::</span>
 <span id="cb6-69"><a href="#cb6-69" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-70"><a href="#cb6-70" aria-hidden="true" tabindex="-1"></a>---</span>

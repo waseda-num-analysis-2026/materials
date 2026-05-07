@@ -460,8 +460,9 @@ GitHub Copilot (or another AI) following the protocol in
 
 1. Copy `materials/020/2nd-handout.qmd` into the root of your **Ex 2** repository
 2. Open it in VS Code, then for each question:
+   - First prime the chat once with `AI_TUTOR.md`
    - Highlight the line you don't understand
-   - Ask Copilot using the prompt in `AI_TUTOR.md` § *Student Prompt Cookbook*
+   - Press `⌘L` / `Ctrl+L`, then ask the AI to add a Q&A block
    - Verify the AI's answer, then commit the inserted Q&A block
 3. Repeat for **≥ 3 distinct questions**, then `git push`
 

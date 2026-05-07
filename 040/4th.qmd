@@ -1,0 +1,249 @@
+---
+title: "Numerical Analysis"
+subtitle: "Foundations and Exercises"
+author: 
+  - name: "TANAKA, Kazuaki (田中 一成)"
+    email: "k.tanaka@aoni.waseda.jp"
+    affiliations:
+      - name: "Institute for Mathematical Science, Waseda University"
+format: 
+  revealjs:
+    theme: [default, ../030/custom.scss]
+    slide-number: true
+    html-math-method: mathjax
+    chalkboard:
+      storage: chalkboardData_4th
+    title-slide-attributes:
+      data-background-image: "../030/images/image1.png"
+      data-background-size: "contain"
+      data-background-opacity: "0.15"
+---
+
+## Before We Start {.smaller}
+
+```{=html}
+<div class="mission-tip" style="margin-top:0.6em; margin-bottom:0.8em;">
+  <div class="mission-tip-icon">📥</div>
+  <div class="mission-tip-content">
+    <strong>Please clone (or pull) the course materials repository right now.</strong>
+  </div>
+</div>
+
+<div style="display:flex; flex-direction:column; gap:0.5em; margin-bottom:0.8em;">
+  <div>
+    <div style="font-size:0.78em; color:#888; margin-bottom:0.2em;">First time</div>
+    <pre style="margin:0; background:#1e1e2e; color:#cdd6f4; border-radius:8px; padding:0.5em 1em; font-size:0.78em; line-height:1.5;"><code>git clone https://github.com/waseda-num-analysis-2026/materials</code></pre>
+  </div>
+  <div>
+    <div style="font-size:0.78em; color:#888; margin-bottom:0.2em;">Already cloned</div>
+    <pre style="margin:0; background:#1e1e2e; color:#cdd6f4; border-radius:8px; padding:0.5em 1em; font-size:0.78em; line-height:1.5;"><code>cd materials
+git pull</code></pre>
+  </div>
+</div>
+<p style="font-size:0.78em; color:#666; margin:0.3em 0 0.6em 0.2em;">💡 Not sure how? Just ask your AI — it can run these commands for you.</p>
+
+<div style="background:#f0f4ff; border-left:3px solid #4472C4; border-radius:6px; padding:0.6em 1em; font-size:0.82em;">
+  <strong>Today's materials</strong> are inside <code>040/</code>:
+  <table style="margin-top:0.4em; border-collapse:collapse; width:100%;">
+    <tr><td style="padding:0.15em 0.6em 0.15em 0;"><code>4th-handout.qmd</code></td><td style="color:#555;">📘 <strong>main material</strong> — full content of this lecture</td></tr>
+    <tr><td style="padding:0.15em 0.6em 0.15em 0;"><code>4th-handout.html</code></td><td style="color:#555;">rendered handout — viewable in browser</td></tr>
+    <tr><td style="padding:0.15em 0.6em 0.15em 0;"><code>4th.qmd</code></td><td style="color:#555;">slides (this file) — exercises &amp; instructions only</td></tr>
+    <tr><td style="padding:0.15em 0.6em 0.15em 0;"><code>4th.html</code></td><td style="color:#555;">rendered slides</td></tr>
+  </table>
+</div>
+```
+
+## Today's Main Material {.smaller}
+
+```{=html}
+<div style="background:#e8f5e9; border-left:4px solid #2e7d32; border-radius:8px; padding:0.8em 1em; margin-bottom:0.7em;">
+  <div style="font-size:0.82em; color:#1b5e20; font-weight:700; letter-spacing:0.04em;">LECTURE 4</div>
+  <div style="font-size:1.05em; margin-top:0.2em;"><strong>Vector Norms and Matrix Norms</strong></div>
+  <div style="font-size:0.84em; color:#455a64; margin-top:0.25em;">
+    The handout is the textbook. These slides are only for class logistics and assignments.
+  </div>
+</div>
+
+<div style="display:grid; grid-template-columns:1fr 1fr; gap:0.8em;">
+  <div style="background:#ffffff; border:1px solid #d6e4f0; border-radius:10px; padding:0.75em 0.9em;">
+    <div style="font-size:0.8em; color:#0070C0; font-weight:700;">Read in the handout</div>
+    <ul style="font-size:0.83em; line-height:1.55; margin:0.4em 0 0 1.2em;">
+      <li>Vector norm axioms</li>
+      <li><code>l1</code>, <code>l2</code>, and <code>linf</code> norms</li>
+      <li>Norm equivalence inequalities</li>
+      <li>Induced matrix norms</li>
+      <li>Frobenius norm and computational cost</li>
+    </ul>
+  </div>
+  <div style="background:#fff8e1; border:1px solid #ffe082; border-radius:10px; padding:0.75em 0.9em;">
+    <div style="font-size:0.8em; color:#e65100; font-weight:700;">Today you will submit</div>
+    <ul style="font-size:0.83em; line-height:1.55; margin:0.4em 0 0 1.2em;">
+      <li>Ex 4.0: AI Q&amp;A blocks in the handout</li>
+      <li>Ex 4.1: proof of norm properties</li>
+      <li>Ex 4.2: numerical verification</li>
+      <li>Ex 4.3: matrix norm implementation</li>
+    </ul>
+  </div>
+</div>
+```
+
+## Reminder — Session 3 Assignments {.smaller}
+
+```{=html}
+<div style="background:#fff3e0; border-left:4px solid #ef6c00; border-radius:8px; padding:0.75em 1em; margin-bottom:0.7em;">
+  <div style="font-size:0.84em; color:#bf360c; font-weight:700; letter-spacing:0.04em;">REMINDER</div>
+  <div style="font-size:0.95em; margin-top:0.2em;">
+    Ex 3.0–3.3 deadlines were extended to <strong>May 14 (Thu), 23:59 JST</strong>.
+  </div>
+</div>
+
+<div style="display:flex; flex-direction:column; gap:0.55em; font-size:0.86em;">
+  <div style="background:#f3e5f5; border-left:4px solid #7b1fa2; border-radius:6px; padding:0.55em 0.85em;">
+    🎥 Ex 3.2 video is still required. Pair work using the video will be held in <strong>Session 5 or later</strong>.
+  </div>
+  <div style="background:#e3f2fd; border-left:4px solid #1976d2; border-radius:6px; padding:0.55em 0.85em;">
+    If you have grading or assignment questions, reply in the relevant GitHub Issue or ask in Mattermost <code>#question</code>.
+  </div>
+</div>
+```
+
+## Exercise 4.0 — Evolve the Handout with AI {.smaller .exercise-slide}
+
+<div style="padding-left: 2em; margin-top: 0.5em; margin-bottom: 0.4em;">
+  <strong>Repository:</strong> same as Ex 4.1
+  &nbsp;&nbsp;|&nbsp;&nbsp; <strong>Submit:</strong> <code>4th-handout.qmd</code> (your edited copy)
+  &nbsp;&nbsp;|&nbsp;&nbsp; <strong style="color: #d84315;">Deadline: TBA</strong>
+</div>
+
+While studying `4th-handout.qmd`, **insert at least 3 Q&A blocks** of your
+own — questions you actually had while reading, answered with the help of
+GitHub Copilot (or another AI) following the protocol in
+[`AI_TUTOR.md`](https://github.com/waseda-num-analysis-2026/materials/blob/main/AI_TUTOR.md).
+
+**How to submit**
+
+1. Copy `materials/040/4th-handout.qmd` into the root of your **Ex 4** repository
+2. Open it in VS Code, then for each question:
+   - First prime the chat once with `AI_TUTOR.md`
+   - Highlight the line you don't understand
+   - Press `⌘L` / `Ctrl+L`, then ask the AI to add a Q&A block
+   - Verify the AI's answer, then commit the inserted Q&A block
+3. Repeat for **≥ 3 distinct questions**, then `git push`
+
+<div style="margin-top:0.5em; padding:0.5em 0.7em; background:#fff8e1; border-left:4px solid #f9a825; border-radius:6px; font-size:0.85em;">
+  💡 The Q&A block format is explained at the top of <code>4th-handout.qmd</code>.
+</div>
+
+## Exercise 4.1 — Prove the Standard Norms Are Norms {.smaller .exercise-slide}
+
+<div style="padding-left: 2em; margin-top: 0.5em; margin-bottom: 0.4em;">
+  <strong>Repository:</strong> Ex 4 — GitHub Classroom link TBA
+  &nbsp;&nbsp;|&nbsp;&nbsp; <strong>Edit:</strong> <code>ex4-1.qmd</code>
+  &nbsp;&nbsp;|&nbsp;&nbsp; <strong style="color: #d84315;">Deadline: TBA</strong>
+</div>
+
+Prove that $\ell^1$, $\ell^2$, and $\ell^\infty$ are vector norms on
+$\mathbb{R}^n$.
+
+For each norm, verify:
+
+1. Positivity
+2. Homogeneity
+3. Triangle inequality
+
+<div style="margin-top:0.5em; padding:0.55em 0.85em; background:#ffebee; border-left:4px solid #c62828; border-radius:6px; font-size:0.85em;">
+  ⚠️ <strong>AI is not recommended for the proof itself.</strong>
+  You may use AI to convert handwritten equations to LaTeX, but the mathematical reasoning should be yours.
+</div>
+
+## Exercise 4.2 — Verify Norm Inequalities Numerically {.smaller .exercise-slide}
+
+<div style="padding-left: 2em; margin-top: 0.5em; margin-bottom: 0.4em;">
+  <strong>Repository:</strong> same as Ex 4.1
+  &nbsp;&nbsp;|&nbsp;&nbsp; <strong>Edit:</strong> <code>ex4-2.qmd</code>
+  &nbsp;&nbsp;|&nbsp;&nbsp; <strong style="color: #d84315;">Deadline: TBA</strong>
+</div>
+
+Confirm the following inequalities numerically using random vectors:
+
+$$
+\|x\|_2 \leq \|x\|_1 \leq \sqrt{n}\,\|x\|_2,
+\qquad
+\|x\|_\infty \leq \|x\|_1 \leq n\,\|x\|_\infty,
+$$
+
+$$
+\|x\|_\infty \leq \|x\|_2 \leq \sqrt{n}\,\|x\|_\infty.
+$$
+
+**Minimum requirement**
+
+- Test several dimensions, e.g. `n = 2, 5, 10, 50`
+- Use many random vectors for each dimension
+- Report clearly whether all tests passed
+
+## Exercise 4.3 — Implement Matrix Norms {.smaller .exercise-slide}
+
+<div style="padding-left: 2em; margin-top: 0.5em; margin-bottom: 0.4em;">
+  <strong>Repository:</strong> same as Ex 4.1
+  &nbsp;&nbsp;|&nbsp;&nbsp; <strong>Edit:</strong> <code>ex4-3.qmd</code>
+  &nbsp;&nbsp;|&nbsp;&nbsp; <strong style="color: #d84315;">Deadline: TBA</strong>
+</div>
+
+Make a Python function for calculating the matrix norm for $p = 1$ and
+$p = \infty$.
+
+**Inputs:** `p` and a matrix `A`  
+**Output:** the matrix norm
+
+Rules:
+
+- Do **not** use `numpy.linalg.norm` inside your implementation.
+- Compare your result with `numpy.linalg.norm` for several random matrices.
+- Extra points may be given if your code can be applied to other useful matrix norms.
+
+::: {.mission-box}
+**Hint.** For $p = 1$, use the maximum absolute **column** sum.  
+For $p = \infty$, use the maximum absolute **row** sum.
+:::
+
+## Assignments and Preparation for Next Lecture {.smaller}
+
+```{=html}
+<div class="assign-list">
+  <div class="assign-card">
+    <div class="assign-num">1</div>
+    <div class="assign-body">
+      <p>Accept the <strong>Ex 4 GitHub Classroom</strong> link once it is announced</p>
+      <ul>
+        <li>One repository will contain Ex 4.0, 4.1, 4.2, and 4.3</li>
+        <li>Edit <code>ex4-1.qmd</code>, <code>ex4-2.qmd</code>, <code>ex4-3.qmd</code> + your copy of <code>4th-handout.qmd</code> for Ex 4.0</li>
+        <li><strong>Deadline:</strong> <span class="assign-due">TBA</span></li>
+        <li>Submit by <code>git push</code> — the last commit before the deadline is graded</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="assign-card">
+    <div class="assign-num">2</div>
+    <div class="assign-body">
+      <p>Keep working on <strong>Ex 3.0–3.3</strong> if not finished yet</p>
+      <ul>
+        <li>Extended deadline: <strong>May 14 (Thu), 23:59 JST</strong></li>
+        <li>Ex 3.2 video pair work will be announced later</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="assign-card">
+    <div class="assign-num">3</div>
+    <div class="assign-body">
+      <p>Before the next lecture, read the beginning of the next handout once it is published</p>
+      <ul>
+        <li>Focus on definitions first; proofs can come later</li>
+        <li>Use the AI Tutor workflow when a line is unclear</li>
+      </ul>
+    </div>
+  </div>
+</div>
+```

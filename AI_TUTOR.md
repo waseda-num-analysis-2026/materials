@@ -180,43 +180,58 @@ Recurring concepts to reference (link to them when relevant):
 
 ## §7. Student Prompt Cookbook (how students should ask)
 
-Students can copy these into Copilot Chat (`@workspace` makes Copilot read
-the workspace files).
+The recommended workflow is to attach files by selection, not by typing
+workspace-wide prompts.
+
+**Step 0 — Prime the AI once per chat session**
+
+Open `AI_TUTOR.md`, press **`⌘L`** (Mac) / **`Ctrl+L`** (Win/Linux), and send:
+
+```
+Read this file. From now on, follow these rules whenever I ask
+about my handout.
+```
+
+After that, keep using the same chat for questions about the handout.
 
 **A. Standard "I don't get this line" question**
 
-```
-@workspace Read AI_TUTOR.md and 2nd-handout.qmd.
-I don't understand this line:
+In the handout, select the confusing line, press **`⌘L`** / **`Ctrl+L`**, and ask:
 
-> "<paste the line you're stuck on>"
+```
+I don't understand this line.
+Please add a Q&A block here following AI_TUTOR.md rules.
+```
+
+**B. Concept question about a subsection**
+
+Select the relevant subsection heading or paragraph, press **`⌘L`** / **`Ctrl+L`**, and ask:
+
+```
+Concept question about this subsection:
+"<your question>"
 
 Please add a Q&A block following AI_TUTOR.md rules.
 ```
 
-**B. Concept question (no specific line)**
-
-```
-@workspace Read AI_TUTOR.md and 2nd-handout.qmd.
-Concept question on §"<subsection title>":
-"<your question>"
-Add a Q&A block per AI_TUTOR.md.
-```
-
 **C. Follow-up to a previous Q&A**
 
+Select the existing Q&A block, press **`⌘L`** / **`Ctrl+L`**, and ask:
+
 ```
-@workspace Read AI_TUTOR.md and 2nd-handout.qmd.
-Follow-up to the Q&A titled "<previous Q&A title>":
+Follow-up to this Q&A:
 "<your follow-up question>"
-Append a Follow-up paragraph per AI_TUTOR.md §3.4.
+
+Please append a Follow-up paragraph following AI_TUTOR.md §3.4.
 ```
 
 **D. Index of accumulated Q&A**
 
+Open the handout, press **`⌘L`** / **`Ctrl+L`**, and ask:
+
 ```
-@workspace List the titles, anchors, and dates of every Q&A block currently
-in 2nd-handout.qmd. Output as a Markdown table.
+List the titles, anchors, and dates of every Q&A block currently
+in this handout. Output as a Markdown table.
 ```
 
 ---

@@ -64,7 +64,7 @@ re-attach it for every question.
 > with `⌘L` keeps the AI focused on your question.
 
 See [`AI_TUTOR.md`](../../AI_TUTOR.md) at the repo root for the full
-rule set the AI follows, and for more prompt templates.
+rule set and the Q&A block format.
 :::
 
 ---

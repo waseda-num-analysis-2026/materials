@@ -64,7 +64,7 @@ re-attach it for every question.
 appended to the end of the *Background* section below.
 
 See [`AI_TUTOR.md`](../../AI_TUTOR.md) at the repo root for the full
-rule set the AI follows, and for more prompt templates.
+rule set and the Q&A block format.
 :::
 
 ::: {.callout-tip collapse="true"}
