@@ -13,6 +13,7 @@ format:
     html-math-method: mathjax
     chalkboard:
       storage: chalkboardData_3rd
+      src: chalkboard.json
     title-slide-attributes:
       data-background-image: "images/image1.png"
       data-background-size: "contain"
