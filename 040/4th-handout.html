@@ -318,7 +318,7 @@ x =
 <p><span class="math display">\[
 \|x\|_\infty = \max\{|-1|, |2|, |-3|\} = 3.
 \]</span></p>
-<div id="879d644b" class="cell" data-execution_count="1">
+<div id="a969cc56" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> numpy <span class="im">import</span> linalg <span class="im">as</span> LA</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -340,7 +340,7 @@ x =
 </div>
 <div id="callout-3" class="callout-3-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<div id="f1332654" class="cell" data-execution_count="2">
+<div id="d7e6ef5d" class="cell" data-execution_count="2">
 <div class="cell-output cell-output-stdout">
 <pre><code>||x||_1     = 6.0
 ||x||_2     = 3.7416573867739413
@@ -415,8 +415,61 @@ M'\|x\|_A \leq \|x\|_B \leq M\|x\|_A
 \|x\|_\infty \leq \|x\|_2 \leq \sqrt{n}\,\|x\|_\infty.
 \tag{7}
 \]</span></p>
+<p>Here is a quick proof. Write</p>
+<p><span class="math display">\[
+m := \|x\|_\infty = \max_i |x_i|.
+\]</span></p>
+<p>First,</p>
+<p><span class="math display">\[
+\|x\|_\infty \leq \|x\|_2,
+\]</span></p>
+<p>because at least one component has absolute value <span class="math inline">\(m\)</span>, and therefore</p>
+<p><span class="math display">\[
+\|x\|_2^2
+= \sum_{i=1}^n |x_i|^2
+\geq m^2.
+\]</span></p>
+<p>Second,</p>
+<p><span class="math display">\[
+\|x\|_2 \leq \|x\|_1.
+\]</span></p>
+<p>Indeed,</p>
+<p><span class="math display">\[
+\|x\|_2^2
+= \sum_{i=1}^n |x_i|^2
+\leq
+\left(\sum_{i=1}^n |x_i|\right)^2
+= \|x\|_1^2.
+\]</span></p>
+<p>Third, by the Cauchy-Schwarz inequality,</p>
+<p><span class="math display">\[
+\|x\|_1
+= \sum_{i=1}^n |x_i|
+\leq
+\left(\sum_{i=1}^n 1^2\right)^{1/2}
+\left(\sum_{i=1}^n |x_i|^2\right)^{1/2}
+= \sqrt{n}\,\|x\|_2.
+\]</span></p>
+<p>Finally, since <span class="math inline">\(|x_i| \leq m\)</span> for every component,</p>
+<p><span class="math display">\[
+\|x\|_1
+= \sum_{i=1}^n |x_i|
+\leq nm
+= n\|x\|_\infty,
+\]</span></p>
+<p>and</p>
+<p><span class="math display">\[
+\|x\|_2^2
+= \sum_{i=1}^n |x_i|^2
+\leq nm^2,
+\]</span></p>
+<p>so</p>
+<p><span class="math display">\[
+\|x\|_2 \leq \sqrt{n}\,\|x\|_\infty.
+\]</span></p>
+<p>Combining these estimates gives all six inequalities in (5), (6), and (7).</p>
 <p>These are the inequalities you will check numerically in <strong>Exercise 4.2</strong>.</p>
-<div id="c80303c0" class="cell" data-execution_count="4">
+<div id="ed469735" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> numpy <span class="im">import</span> linalg <span class="im">as</span> LA</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -450,7 +503,7 @@ M'\|x\|_A \leq \|x\|_B \leq M\|x\|_A
 </div>
 <div id="callout-4" class="callout-4-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<div id="8d9f0bb8" class="cell" data-execution_count="5">
+<div id="403c3ee5" class="cell" data-execution_count="5">
 <div class="cell-output cell-output-stdout">
 <pre><code>x = [-0.79312248  0.24057128 -1.89632635  1.39577171  0.63829474]
 ||x||_2 &lt;= ||x||_1 &lt;= sqrt(n)||x||_2
@@ -549,7 +602,7 @@ A =
 \end{pmatrix}.
 \]</span></p>
 <p>The <span class="math inline">\(\ell^1\)</span> matrix norm is the maximum absolute column sum, and the <span class="math inline">\(\ell^\infty\)</span> matrix norm is the maximum absolute row sum.</p>
-<div id="8fff6656" class="cell" data-execution_count="6">
+<div id="75d5066e" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> numpy <span class="im">import</span> linalg <span class="im">as</span> LA</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -584,7 +637,7 @@ A =
 </div>
 <div id="callout-5" class="callout-5-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<div id="2579e4ea" class="cell" data-execution_count="7">
+<div id="49fefb61" class="cell" data-execution_count="7">
 <div class="cell-output cell-output-stdout">
 <pre><code>A =
 [[ 1. -2.  0.]
@@ -658,7 +711,7 @@ row sums    = [3. 8. 7.]
 </tbody>
 </table>
 <p>The exact runtime depends on the implementation and the matrix, but the important lesson is simple: the norm that is easiest to reason about is not always the cheapest one to compute.</p>
-<div id="c9f7c0b1" class="cell" data-execution_count="8">
+<div id="e1f78178" class="cell" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> time</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> numpy <span class="im">import</span> linalg <span class="im">as</span> LA</span>
@@ -690,12 +743,12 @@ row sums    = [3. 8. 7.]
 </div>
 <div id="callout-6" class="callout-6-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<div id="1e2d71fa" class="cell" data-execution_count="9">
+<div id="59a99762" class="cell" data-execution_count="9">
 <div class="cell-output cell-output-stdout">
-<pre><code>1-norm         : value=  868.2104, time=0.00050 sec
-infinity-norm  : value=  854.9725, time=0.00030 sec
+<pre><code>1-norm         : value=  868.2104, time=0.00026 sec
+infinity-norm  : value=  854.9725, time=0.00029 sec
 Frobenius norm : value= 1000.1246, time=0.00004 sec
-2-norm         : value=   63.2541, time=0.03652 sec</code></pre>
+2-norm         : value=   63.2541, time=0.03636 sec</code></pre>
 </div>
 </div>
 </div>
@@ -715,49 +768,54 @@ Frobenius norm : value= 1000.1246, time=0.00004 sec
 <thead>
 <tr class="header">
 <th>Object</th>
-<th>Main idea</th>
-<th>Common formulas</th>
+<th>Meaning</th>
+<th>Formula / key point</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td>Vector norm</td>
-<td>measures the size of a vector</td>
-<td><span class="math inline">\(\|x\|_1\)</span>, <span class="math inline">\(\|x\|_2\)</span>, <span class="math inline">\(\|x\|_\infty\)</span></td>
+<td>a function <span class="math inline">\(\|\cdot\|:\mathbb{R}^n\to\mathbb{R}\)</span> measuring vector size</td>
+<td>positivity, homogeneity, triangle inequality</td>
 </tr>
 <tr class="even">
-<td>Equivalent norms</td>
-<td>different norms are comparable in finite dimensions</td>
-<td>inequalities (5)–(7)</td>
+<td>Standard vector norms</td>
+<td>common ways to measure vectors</td>
+<td><span class="math inline">\(\|x\|_1=\sum_i|x_i|\)</span>, <span class="math inline">\(\|x\|_2=(\sum_i|x_i|^2)^{1/2}\)</span>, <span class="math inline">\(\|x\|_\infty=\max_i|x_i|\)</span></td>
 </tr>
 <tr class="odd">
 <td>Induced matrix norm</td>
-<td>maximum stretching factor of a matrix</td>
-<td><span class="math inline">\(\|A\| = \max_{x \neq 0} \|Ax\|/\|x\|\)</span></td>
+<td>maximum stretching factor of <span class="math inline">\(A\)</span> with respect to a chosen vector norm</td>
+<td><span class="math inline">\(\displaystyle \|A\|=\max_{x\ne0}\frac{\|Ax\|}{\|x\|}=\max_{\|x\|=1}\|Ax\|\)</span></td>
 </tr>
 <tr class="even">
+<td>Matrix norm properties</td>
+<td>the first three norm properties are the same as for vector norms; the extra useful ones concern products</td>
+<td><span class="math inline">\(\|Ax\|\le \|A\|\,\|x\|\)</span>, <span class="math inline">\(\|AB\|\le \|A\|\,\|B\|\)</span></td>
+</tr>
+<tr class="odd">
 <td>Matrix <span class="math inline">\(1\)</span>-norm</td>
-<td>maximum absolute column sum</td>
-<td><span class="math inline">\(\|A\|_1 = \max_j \sum_i |a_{ij}|\)</span></td>
-</tr>
-<tr class="odd">
-<td>Matrix <span class="math inline">\(\infty\)</span>-norm</td>
-<td>maximum absolute row sum</td>
-<td><span class="math inline">\(\|A\|_\infty = \max_i \sum_j |a_{ij}|\)</span></td>
+<td>largest absolute column sum</td>
+<td><span class="math inline">\(\displaystyle \|A\|_1=\max_j\sum_i |a_{ij}|\)</span>; computable in <span class="math inline">\(O(n^2)\)</span> for dense <span class="math inline">\(n\times n\)</span> matrices</td>
 </tr>
 <tr class="even">
-<td>Matrix <span class="math inline">\(2\)</span>-norm</td>
-<td>spectral norm</td>
-<td><span class="math inline">\(\|A\|_2 = \sqrt{\lambda_{\max}(A^T A)}\)</span></td>
+<td>Matrix <span class="math inline">\(\infty\)</span>-norm</td>
+<td>largest absolute row sum</td>
+<td><span class="math inline">\(\displaystyle \|A\|_\infty=\max_i\sum_j |a_{ij}|\)</span>; computable in <span class="math inline">\(O(n^2)\)</span></td>
 </tr>
 <tr class="odd">
+<td>Matrix <span class="math inline">\(2\)</span>-norm</td>
+<td>spectral norm, induced by the Euclidean norm</td>
+<td><span class="math inline">\(\displaystyle \|A\|_2=\sqrt{\lambda_{\max}(A^T A)}\)</span>; standard dense methods cost about <span class="math inline">\(O(n^3)\)</span></td>
+</tr>
+<tr class="even">
 <td>Frobenius norm</td>
-<td>easy-to-compute size of all entries</td>
-<td><span class="math inline">\(\|A\|_F = \sqrt{\sum_{i,j}|a_{ij}|^2}\)</span></td>
+<td>entrywise size of a matrix, not an induced norm here</td>
+<td><span class="math inline">\(\displaystyle \|A\|_F=\sqrt{\sum_{i,j}|a_{ij}|^2}\)</span>; computable in <span class="math inline">\(O(n^2)\)</span></td>
 </tr>
 </tbody>
 </table>
-<p>Norms are the language that lets us turn vague statements like “the error is small” or “the matrix is large” into precise mathematical statements that can be analyzed and computed.</p>
+<p>Norms are the language that lets us turn vague statements like “the error is small” or “the matrix is large” into precise mathematical statements that can be analyzed and computed. They also remind us that mathematical convenience and computational cost are different issues: some norms are natural for theory, while others are much cheaper to compute in practice.</p>
 <!-- -->
 
 </section>
@@ -3947,312 +4005,389 @@ Frobenius norm : value= 1000.1246, time=0.00004 sec
 <span id="cb10-328"><a href="#cb10-328" aria-hidden="true" tabindex="-1"></a>\tag{7}</span>
 <span id="cb10-329"><a href="#cb10-329" aria-hidden="true" tabindex="-1"></a>$$</span>
 <span id="cb10-330"><a href="#cb10-330" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-331"><a href="#cb10-331" aria-hidden="true" tabindex="-1"></a>These are the inequalities you will check numerically in **Exercise 4.2**.</span>
+<span id="cb10-331"><a href="#cb10-331" aria-hidden="true" tabindex="-1"></a>Here is a quick proof. Write</span>
 <span id="cb10-332"><a href="#cb10-332" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-335"><a href="#cb10-335" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb10-336"><a href="#cb10-336" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
-<span id="cb10-337"><a href="#cb10-337" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb10-338"><a href="#cb10-338" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> numpy <span class="im">import</span> linalg <span class="im">as</span> LA</span>
-<span id="cb10-339"><a href="#cb10-339" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-340"><a href="#cb10-340" aria-hidden="true" tabindex="-1"></a>rng <span class="op">=</span> np.random.default_rng(<span class="dv">2026</span>)</span>
-<span id="cb10-341"><a href="#cb10-341" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="dv">5</span></span>
-<span id="cb10-342"><a href="#cb10-342" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> rng.normal(size<span class="op">=</span>n)</span>
-<span id="cb10-343"><a href="#cb10-343" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-344"><a href="#cb10-344" aria-hidden="true" tabindex="-1"></a>norm_1 <span class="op">=</span> LA.norm(x, <span class="dv">1</span>)</span>
-<span id="cb10-345"><a href="#cb10-345" aria-hidden="true" tabindex="-1"></a>norm_2 <span class="op">=</span> LA.norm(x, <span class="dv">2</span>)</span>
-<span id="cb10-346"><a href="#cb10-346" aria-hidden="true" tabindex="-1"></a>norm_inf <span class="op">=</span> LA.norm(x, np.inf)</span>
-<span id="cb10-347"><a href="#cb10-347" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-348"><a href="#cb10-348" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"x ="</span>, x)</span>
-<span id="cb10-349"><a href="#cb10-349" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"||x||_2 &lt;= ||x||_1 &lt;= sqrt(n)||x||_2"</span>)</span>
-<span id="cb10-350"><a href="#cb10-350" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(norm_2, <span class="st">"&lt;="</span>, norm_1, <span class="st">"&lt;="</span>, np.sqrt(n) <span class="op">*</span> norm_2)</span>
-<span id="cb10-351"><a href="#cb10-351" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>()</span>
-<span id="cb10-352"><a href="#cb10-352" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"||x||_inf &lt;= ||x||_1 &lt;= n||x||_inf"</span>)</span>
-<span id="cb10-353"><a href="#cb10-353" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(norm_inf, <span class="st">"&lt;="</span>, norm_1, <span class="st">"&lt;="</span>, n <span class="op">*</span> norm_inf)</span>
-<span id="cb10-354"><a href="#cb10-354" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>()</span>
-<span id="cb10-355"><a href="#cb10-355" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"||x||_inf &lt;= ||x||_2 &lt;= sqrt(n)||x||_inf"</span>)</span>
-<span id="cb10-356"><a href="#cb10-356" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(norm_inf, <span class="st">"&lt;="</span>, norm_2, <span class="st">"&lt;="</span>, np.sqrt(n) <span class="op">*</span> norm_inf)</span>
-<span id="cb10-357"><a href="#cb10-357" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb10-333"><a href="#cb10-333" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb10-334"><a href="#cb10-334" aria-hidden="true" tabindex="-1"></a>m := <span class="sc">\|</span>x<span class="sc">\|</span>_\infty = \max_i |x_i|.</span>
+<span id="cb10-335"><a href="#cb10-335" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb10-336"><a href="#cb10-336" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-337"><a href="#cb10-337" aria-hidden="true" tabindex="-1"></a>First,</span>
+<span id="cb10-338"><a href="#cb10-338" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-339"><a href="#cb10-339" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb10-340"><a href="#cb10-340" aria-hidden="true" tabindex="-1"></a><span class="sc">\|</span>x<span class="sc">\|</span>_\infty \leq <span class="sc">\|</span>x<span class="sc">\|</span>_2,</span>
+<span id="cb10-341"><a href="#cb10-341" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb10-342"><a href="#cb10-342" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-343"><a href="#cb10-343" aria-hidden="true" tabindex="-1"></a>because at least one component has absolute value $m$, and therefore</span>
+<span id="cb10-344"><a href="#cb10-344" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-345"><a href="#cb10-345" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb10-346"><a href="#cb10-346" aria-hidden="true" tabindex="-1"></a><span class="sc">\|</span>x<span class="sc">\|</span>_2^2</span>
+<span id="cb10-347"><a href="#cb10-347" aria-hidden="true" tabindex="-1"></a>= \sum_{i=1}^n |x_i|^2</span>
+<span id="cb10-348"><a href="#cb10-348" aria-hidden="true" tabindex="-1"></a>\geq m^2.</span>
+<span id="cb10-349"><a href="#cb10-349" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb10-350"><a href="#cb10-350" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-351"><a href="#cb10-351" aria-hidden="true" tabindex="-1"></a>Second,</span>
+<span id="cb10-352"><a href="#cb10-352" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-353"><a href="#cb10-353" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb10-354"><a href="#cb10-354" aria-hidden="true" tabindex="-1"></a><span class="sc">\|</span>x<span class="sc">\|</span>_2 \leq <span class="sc">\|</span>x<span class="sc">\|</span>_1.</span>
+<span id="cb10-355"><a href="#cb10-355" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb10-356"><a href="#cb10-356" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-357"><a href="#cb10-357" aria-hidden="true" tabindex="-1"></a>Indeed,</span>
 <span id="cb10-358"><a href="#cb10-358" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-359"><a href="#cb10-359" aria-hidden="true" tabindex="-1"></a>::: {.callout-tip collapse="true"}</span>
-<span id="cb10-360"><a href="#cb10-360" aria-hidden="true" tabindex="-1"></a><span class="fu">## Click to reveal the output</span></span>
-<span id="cb10-361"><a href="#cb10-361" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-364"><a href="#cb10-364" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb10-365"><a href="#cb10-365" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
-<span id="cb10-366"><a href="#cb10-366" aria-hidden="true" tabindex="-1"></a>rng <span class="op">=</span> np.random.default_rng(<span class="dv">2026</span>)</span>
-<span id="cb10-367"><a href="#cb10-367" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="dv">5</span></span>
-<span id="cb10-368"><a href="#cb10-368" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> rng.normal(size<span class="op">=</span>n)</span>
-<span id="cb10-369"><a href="#cb10-369" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-370"><a href="#cb10-370" aria-hidden="true" tabindex="-1"></a>norm_1 <span class="op">=</span> LA.norm(x, <span class="dv">1</span>)</span>
-<span id="cb10-371"><a href="#cb10-371" aria-hidden="true" tabindex="-1"></a>norm_2 <span class="op">=</span> LA.norm(x, <span class="dv">2</span>)</span>
-<span id="cb10-372"><a href="#cb10-372" aria-hidden="true" tabindex="-1"></a>norm_inf <span class="op">=</span> LA.norm(x, np.inf)</span>
-<span id="cb10-373"><a href="#cb10-373" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-374"><a href="#cb10-374" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"x ="</span>, x)</span>
-<span id="cb10-375"><a href="#cb10-375" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"||x||_2 &lt;= ||x||_1 &lt;= sqrt(n)||x||_2"</span>)</span>
-<span id="cb10-376"><a href="#cb10-376" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(norm_2, <span class="st">"&lt;="</span>, norm_1, <span class="st">"&lt;="</span>, np.sqrt(n) <span class="op">*</span> norm_2)</span>
-<span id="cb10-377"><a href="#cb10-377" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>()</span>
-<span id="cb10-378"><a href="#cb10-378" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"||x||_inf &lt;= ||x||_1 &lt;= n||x||_inf"</span>)</span>
-<span id="cb10-379"><a href="#cb10-379" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(norm_inf, <span class="st">"&lt;="</span>, norm_1, <span class="st">"&lt;="</span>, n <span class="op">*</span> norm_inf)</span>
-<span id="cb10-380"><a href="#cb10-380" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>()</span>
-<span id="cb10-381"><a href="#cb10-381" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"||x||_inf &lt;= ||x||_2 &lt;= sqrt(n)||x||_inf"</span>)</span>
-<span id="cb10-382"><a href="#cb10-382" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(norm_inf, <span class="st">"&lt;="</span>, norm_2, <span class="st">"&lt;="</span>, np.sqrt(n) <span class="op">*</span> norm_inf)</span>
-<span id="cb10-383"><a href="#cb10-383" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb10-384"><a href="#cb10-384" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb10-385"><a href="#cb10-385" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-386"><a href="#cb10-386" aria-hidden="true" tabindex="-1"></a>---</span>
-<span id="cb10-387"><a href="#cb10-387" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-388"><a href="#cb10-388" aria-hidden="true" tabindex="-1"></a><span class="fu">## Matrix Norms {#sec-matrix-norms}</span></span>
-<span id="cb10-389"><a href="#cb10-389" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-390"><a href="#cb10-390" aria-hidden="true" tabindex="-1"></a><span class="fu">### Induced Matrix Norms</span></span>
-<span id="cb10-391"><a href="#cb10-391" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-392"><a href="#cb10-392" aria-hidden="true" tabindex="-1"></a>Let $A \in \mathbb{R}^{n \times n}$. Once a vector norm is fixed, the</span>
-<span id="cb10-393"><a href="#cb10-393" aria-hidden="true" tabindex="-1"></a>corresponding **induced matrix norm** or **operator norm** is defined by</span>
+<span id="cb10-359"><a href="#cb10-359" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb10-360"><a href="#cb10-360" aria-hidden="true" tabindex="-1"></a><span class="sc">\|</span>x<span class="sc">\|</span>_2^2</span>
+<span id="cb10-361"><a href="#cb10-361" aria-hidden="true" tabindex="-1"></a>= \sum_{i=1}^n |x_i|^2</span>
+<span id="cb10-362"><a href="#cb10-362" aria-hidden="true" tabindex="-1"></a>\leq</span>
+<span id="cb10-363"><a href="#cb10-363" aria-hidden="true" tabindex="-1"></a>\left(\sum_{i=1}^n |x_i|\right)^2</span>
+<span id="cb10-364"><a href="#cb10-364" aria-hidden="true" tabindex="-1"></a>= <span class="sc">\|</span>x<span class="sc">\|</span>_1^2.</span>
+<span id="cb10-365"><a href="#cb10-365" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb10-366"><a href="#cb10-366" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-367"><a href="#cb10-367" aria-hidden="true" tabindex="-1"></a>Third, by the Cauchy-Schwarz inequality,</span>
+<span id="cb10-368"><a href="#cb10-368" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-369"><a href="#cb10-369" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb10-370"><a href="#cb10-370" aria-hidden="true" tabindex="-1"></a><span class="sc">\|</span>x<span class="sc">\|</span>_1</span>
+<span id="cb10-371"><a href="#cb10-371" aria-hidden="true" tabindex="-1"></a>= \sum_{i=1}^n |x_i|</span>
+<span id="cb10-372"><a href="#cb10-372" aria-hidden="true" tabindex="-1"></a>\leq</span>
+<span id="cb10-373"><a href="#cb10-373" aria-hidden="true" tabindex="-1"></a>\left(\sum_{i=1}^n 1^2\right)^{1/2}</span>
+<span id="cb10-374"><a href="#cb10-374" aria-hidden="true" tabindex="-1"></a>\left(\sum_{i=1}^n |x_i|^2\right)^{1/2}</span>
+<span id="cb10-375"><a href="#cb10-375" aria-hidden="true" tabindex="-1"></a>= \sqrt{n}\,<span class="sc">\|</span>x<span class="sc">\|</span>_2.</span>
+<span id="cb10-376"><a href="#cb10-376" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb10-377"><a href="#cb10-377" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-378"><a href="#cb10-378" aria-hidden="true" tabindex="-1"></a>Finally, since $|x_i| \leq m$ for every component,</span>
+<span id="cb10-379"><a href="#cb10-379" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-380"><a href="#cb10-380" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb10-381"><a href="#cb10-381" aria-hidden="true" tabindex="-1"></a><span class="sc">\|</span>x<span class="sc">\|</span>_1</span>
+<span id="cb10-382"><a href="#cb10-382" aria-hidden="true" tabindex="-1"></a>= \sum_{i=1}^n |x_i|</span>
+<span id="cb10-383"><a href="#cb10-383" aria-hidden="true" tabindex="-1"></a>\leq nm</span>
+<span id="cb10-384"><a href="#cb10-384" aria-hidden="true" tabindex="-1"></a>= n<span class="sc">\|</span>x<span class="sc">\|</span>_\infty,</span>
+<span id="cb10-385"><a href="#cb10-385" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb10-386"><a href="#cb10-386" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-387"><a href="#cb10-387" aria-hidden="true" tabindex="-1"></a>and</span>
+<span id="cb10-388"><a href="#cb10-388" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-389"><a href="#cb10-389" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb10-390"><a href="#cb10-390" aria-hidden="true" tabindex="-1"></a><span class="sc">\|</span>x<span class="sc">\|</span>_2^2</span>
+<span id="cb10-391"><a href="#cb10-391" aria-hidden="true" tabindex="-1"></a>= \sum_{i=1}^n |x_i|^2</span>
+<span id="cb10-392"><a href="#cb10-392" aria-hidden="true" tabindex="-1"></a>\leq nm^2,</span>
+<span id="cb10-393"><a href="#cb10-393" aria-hidden="true" tabindex="-1"></a>$$</span>
 <span id="cb10-394"><a href="#cb10-394" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-395"><a href="#cb10-395" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb10-396"><a href="#cb10-396" aria-hidden="true" tabindex="-1"></a><span class="sc">\|</span>A<span class="sc">\|</span> = \max_{x \in \mathbb{R}^n \setminus <span class="sc">\{</span>0<span class="sc">\}</span>}</span>
-<span id="cb10-397"><a href="#cb10-397" aria-hidden="true" tabindex="-1"></a>\frac{<span class="sc">\|</span>Ax<span class="sc">\|</span>}{<span class="sc">\|</span>x<span class="sc">\|</span>}.</span>
-<span id="cb10-398"><a href="#cb10-398" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb10-399"><a href="#cb10-399" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-400"><a href="#cb10-400" aria-hidden="true" tabindex="-1"></a>This is the maximum stretching factor of the matrix $A$.</span>
-<span id="cb10-401"><a href="#cb10-401" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-402"><a href="#cb10-402" aria-hidden="true" tabindex="-1"></a>Equivalently,</span>
+<span id="cb10-395"><a href="#cb10-395" aria-hidden="true" tabindex="-1"></a>so</span>
+<span id="cb10-396"><a href="#cb10-396" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-397"><a href="#cb10-397" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb10-398"><a href="#cb10-398" aria-hidden="true" tabindex="-1"></a><span class="sc">\|</span>x<span class="sc">\|</span>_2 \leq \sqrt{n}\,\|x\|_\infty.</span>
+<span id="cb10-399"><a href="#cb10-399" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb10-400"><a href="#cb10-400" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-401"><a href="#cb10-401" aria-hidden="true" tabindex="-1"></a>Combining these estimates gives all six inequalities in (5), (6), and</span>
+<span id="cb10-402"><a href="#cb10-402" aria-hidden="true" tabindex="-1"></a>(7).</span>
 <span id="cb10-403"><a href="#cb10-403" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-404"><a href="#cb10-404" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb10-405"><a href="#cb10-405" aria-hidden="true" tabindex="-1"></a><span class="sc">\|</span>A<span class="sc">\|</span> = \max_{<span class="sc">\|</span>x<span class="sc">\|</span> = 1} <span class="sc">\|</span>Ax<span class="sc">\|</span>.</span>
-<span id="cb10-406"><a href="#cb10-406" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb10-407"><a href="#cb10-407" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-408"><a href="#cb10-408" aria-hidden="true" tabindex="-1"></a>Why? For any $x \neq 0$, define $y = x / <span class="sc">\|</span>x<span class="sc">\|</span>$. Then $<span class="sc">\|</span>y<span class="sc">\|</span> = 1$, and</span>
-<span id="cb10-409"><a href="#cb10-409" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-410"><a href="#cb10-410" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb10-411"><a href="#cb10-411" aria-hidden="true" tabindex="-1"></a>\frac{<span class="sc">\|</span>Ax<span class="sc">\|</span>}{<span class="sc">\|</span>x<span class="sc">\|</span>}</span>
-<span id="cb10-412"><a href="#cb10-412" aria-hidden="true" tabindex="-1"></a>=</span>
-<span id="cb10-413"><a href="#cb10-413" aria-hidden="true" tabindex="-1"></a>\left<span class="sc">\|</span>A\frac{x}{<span class="sc">\|</span>x<span class="sc">\|</span>}\right<span class="sc">\|</span></span>
-<span id="cb10-414"><a href="#cb10-414" aria-hidden="true" tabindex="-1"></a>=</span>
-<span id="cb10-415"><a href="#cb10-415" aria-hidden="true" tabindex="-1"></a><span class="sc">\|</span>Ay<span class="sc">\|</span>.</span>
-<span id="cb10-416"><a href="#cb10-416" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb10-417"><a href="#cb10-417" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-418"><a href="#cb10-418" aria-hidden="true" tabindex="-1"></a><span class="fu">### Basic Properties</span></span>
-<span id="cb10-419"><a href="#cb10-419" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-420"><a href="#cb10-420" aria-hidden="true" tabindex="-1"></a>The induced matrix norm satisfies the following properties:</span>
-<span id="cb10-421"><a href="#cb10-421" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-422"><a href="#cb10-422" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>$<span class="sc">\|</span>A<span class="sc">\|</span> \geq 0$, and $<span class="sc">\|</span>A<span class="sc">\|</span> = 0 \Longleftrightarrow A = 0$.</span>
-<span id="cb10-423"><a href="#cb10-423" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>$<span class="sc">\|</span>\alpha A<span class="sc">\|</span> = |\alpha|\,<span class="sc">\|</span>A<span class="sc">\|</span>$ for all $\alpha \in \mathbb{R}$.</span>
-<span id="cb10-424"><a href="#cb10-424" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>$<span class="sc">\|</span>A + B<span class="sc">\|</span> \leq <span class="sc">\|</span>A<span class="sc">\|</span> + <span class="sc">\|</span>B<span class="sc">\|</span>$.</span>
-<span id="cb10-425"><a href="#cb10-425" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span>$<span class="sc">\|</span>Ax<span class="sc">\|</span> \leq <span class="sc">\|</span>A<span class="sc">\|</span>\,<span class="sc">\|</span>x<span class="sc">\|</span>$ for all $x \in \mathbb{R}^n$.</span>
-<span id="cb10-426"><a href="#cb10-426" aria-hidden="true" tabindex="-1"></a><span class="ss">5. </span>$<span class="sc">\|</span>AB<span class="sc">\|</span> \leq <span class="sc">\|</span>A<span class="sc">\|</span>\,<span class="sc">\|</span>B<span class="sc">\|</span>$.</span>
-<span id="cb10-427"><a href="#cb10-427" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-428"><a href="#cb10-428" aria-hidden="true" tabindex="-1"></a>The last two inequalities are especially useful for error analysis,</span>
-<span id="cb10-429"><a href="#cb10-429" aria-hidden="true" tabindex="-1"></a>because matrices often represent transformations or iterative steps.</span>
-<span id="cb10-430"><a href="#cb10-430" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-431"><a href="#cb10-431" aria-hidden="true" tabindex="-1"></a><span class="fu">### Matrix $\ell^p$ Norms</span></span>
-<span id="cb10-432"><a href="#cb10-432" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-433"><a href="#cb10-433" aria-hidden="true" tabindex="-1"></a>The matrix norm induced by the vector $\ell^p$ norm is</span>
+<span id="cb10-404"><a href="#cb10-404" aria-hidden="true" tabindex="-1"></a>These are the inequalities you will check numerically in **Exercise 4.2**.</span>
+<span id="cb10-405"><a href="#cb10-405" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-408"><a href="#cb10-408" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb10-409"><a href="#cb10-409" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
+<span id="cb10-410"><a href="#cb10-410" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb10-411"><a href="#cb10-411" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> numpy <span class="im">import</span> linalg <span class="im">as</span> LA</span>
+<span id="cb10-412"><a href="#cb10-412" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-413"><a href="#cb10-413" aria-hidden="true" tabindex="-1"></a>rng <span class="op">=</span> np.random.default_rng(<span class="dv">2026</span>)</span>
+<span id="cb10-414"><a href="#cb10-414" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="dv">5</span></span>
+<span id="cb10-415"><a href="#cb10-415" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> rng.normal(size<span class="op">=</span>n)</span>
+<span id="cb10-416"><a href="#cb10-416" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-417"><a href="#cb10-417" aria-hidden="true" tabindex="-1"></a>norm_1 <span class="op">=</span> LA.norm(x, <span class="dv">1</span>)</span>
+<span id="cb10-418"><a href="#cb10-418" aria-hidden="true" tabindex="-1"></a>norm_2 <span class="op">=</span> LA.norm(x, <span class="dv">2</span>)</span>
+<span id="cb10-419"><a href="#cb10-419" aria-hidden="true" tabindex="-1"></a>norm_inf <span class="op">=</span> LA.norm(x, np.inf)</span>
+<span id="cb10-420"><a href="#cb10-420" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-421"><a href="#cb10-421" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"x ="</span>, x)</span>
+<span id="cb10-422"><a href="#cb10-422" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"||x||_2 &lt;= ||x||_1 &lt;= sqrt(n)||x||_2"</span>)</span>
+<span id="cb10-423"><a href="#cb10-423" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(norm_2, <span class="st">"&lt;="</span>, norm_1, <span class="st">"&lt;="</span>, np.sqrt(n) <span class="op">*</span> norm_2)</span>
+<span id="cb10-424"><a href="#cb10-424" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>()</span>
+<span id="cb10-425"><a href="#cb10-425" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"||x||_inf &lt;= ||x||_1 &lt;= n||x||_inf"</span>)</span>
+<span id="cb10-426"><a href="#cb10-426" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(norm_inf, <span class="st">"&lt;="</span>, norm_1, <span class="st">"&lt;="</span>, n <span class="op">*</span> norm_inf)</span>
+<span id="cb10-427"><a href="#cb10-427" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>()</span>
+<span id="cb10-428"><a href="#cb10-428" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"||x||_inf &lt;= ||x||_2 &lt;= sqrt(n)||x||_inf"</span>)</span>
+<span id="cb10-429"><a href="#cb10-429" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(norm_inf, <span class="st">"&lt;="</span>, norm_2, <span class="st">"&lt;="</span>, np.sqrt(n) <span class="op">*</span> norm_inf)</span>
+<span id="cb10-430"><a href="#cb10-430" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb10-431"><a href="#cb10-431" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-432"><a href="#cb10-432" aria-hidden="true" tabindex="-1"></a>::: {.callout-tip collapse="true"}</span>
+<span id="cb10-433"><a href="#cb10-433" aria-hidden="true" tabindex="-1"></a><span class="fu">## Click to reveal the output</span></span>
 <span id="cb10-434"><a href="#cb10-434" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-435"><a href="#cb10-435" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb10-436"><a href="#cb10-436" aria-hidden="true" tabindex="-1"></a><span class="sc">\|</span>A<span class="sc">\|</span>_p</span>
-<span id="cb10-437"><a href="#cb10-437" aria-hidden="true" tabindex="-1"></a>=</span>
-<span id="cb10-438"><a href="#cb10-438" aria-hidden="true" tabindex="-1"></a>\max_{x \in \mathbb{R}^n \setminus <span class="sc">\{</span>0<span class="sc">\}</span>}</span>
-<span id="cb10-439"><a href="#cb10-439" aria-hidden="true" tabindex="-1"></a>\frac{<span class="sc">\|</span>Ax<span class="sc">\|</span>_p}{<span class="sc">\|</span>x<span class="sc">\|</span>_p}.</span>
-<span id="cb10-440"><a href="#cb10-440" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb10-441"><a href="#cb10-441" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-442"><a href="#cb10-442" aria-hidden="true" tabindex="-1"></a>For $p = 1$ and $p = \infty$, there are simple formulas:</span>
-<span id="cb10-443"><a href="#cb10-443" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-444"><a href="#cb10-444" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb10-445"><a href="#cb10-445" aria-hidden="true" tabindex="-1"></a><span class="sc">\|</span>A<span class="sc">\|</span>_1</span>
-<span id="cb10-446"><a href="#cb10-446" aria-hidden="true" tabindex="-1"></a>=</span>
-<span id="cb10-447"><a href="#cb10-447" aria-hidden="true" tabindex="-1"></a>\max_{1 \leq j \leq n}</span>
-<span id="cb10-448"><a href="#cb10-448" aria-hidden="true" tabindex="-1"></a>\sum_{i=1}^n |a_{ij}|</span>
-<span id="cb10-449"><a href="#cb10-449" aria-hidden="true" tabindex="-1"></a>\qquad</span>
-<span id="cb10-450"><a href="#cb10-450" aria-hidden="true" tabindex="-1"></a>\text{(maximum column sum),}</span>
-<span id="cb10-451"><a href="#cb10-451" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb10-452"><a href="#cb10-452" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-453"><a href="#cb10-453" aria-hidden="true" tabindex="-1"></a>and</span>
-<span id="cb10-454"><a href="#cb10-454" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-455"><a href="#cb10-455" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb10-456"><a href="#cb10-456" aria-hidden="true" tabindex="-1"></a><span class="sc">\|</span>A<span class="sc">\|</span>_\infty</span>
-<span id="cb10-457"><a href="#cb10-457" aria-hidden="true" tabindex="-1"></a>=</span>
-<span id="cb10-458"><a href="#cb10-458" aria-hidden="true" tabindex="-1"></a>\max_{1 \leq i \leq n}</span>
-<span id="cb10-459"><a href="#cb10-459" aria-hidden="true" tabindex="-1"></a>\sum_{j=1}^n |a_{ij}|</span>
-<span id="cb10-460"><a href="#cb10-460" aria-hidden="true" tabindex="-1"></a>\qquad</span>
-<span id="cb10-461"><a href="#cb10-461" aria-hidden="true" tabindex="-1"></a>\text{(maximum row sum).}</span>
-<span id="cb10-462"><a href="#cb10-462" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb10-463"><a href="#cb10-463" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-464"><a href="#cb10-464" aria-hidden="true" tabindex="-1"></a>For $p = 2$, the induced matrix norm is the **spectral norm**:</span>
-<span id="cb10-465"><a href="#cb10-465" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-466"><a href="#cb10-466" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb10-467"><a href="#cb10-467" aria-hidden="true" tabindex="-1"></a><span class="sc">\|</span>A<span class="sc">\|</span>_2 = \sqrt{\lambda_{\max}(A^T A)},</span>
+<span id="cb10-437"><a href="#cb10-437" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb10-438"><a href="#cb10-438" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
+<span id="cb10-439"><a href="#cb10-439" aria-hidden="true" tabindex="-1"></a>rng <span class="op">=</span> np.random.default_rng(<span class="dv">2026</span>)</span>
+<span id="cb10-440"><a href="#cb10-440" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="dv">5</span></span>
+<span id="cb10-441"><a href="#cb10-441" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> rng.normal(size<span class="op">=</span>n)</span>
+<span id="cb10-442"><a href="#cb10-442" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-443"><a href="#cb10-443" aria-hidden="true" tabindex="-1"></a>norm_1 <span class="op">=</span> LA.norm(x, <span class="dv">1</span>)</span>
+<span id="cb10-444"><a href="#cb10-444" aria-hidden="true" tabindex="-1"></a>norm_2 <span class="op">=</span> LA.norm(x, <span class="dv">2</span>)</span>
+<span id="cb10-445"><a href="#cb10-445" aria-hidden="true" tabindex="-1"></a>norm_inf <span class="op">=</span> LA.norm(x, np.inf)</span>
+<span id="cb10-446"><a href="#cb10-446" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-447"><a href="#cb10-447" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"x ="</span>, x)</span>
+<span id="cb10-448"><a href="#cb10-448" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"||x||_2 &lt;= ||x||_1 &lt;= sqrt(n)||x||_2"</span>)</span>
+<span id="cb10-449"><a href="#cb10-449" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(norm_2, <span class="st">"&lt;="</span>, norm_1, <span class="st">"&lt;="</span>, np.sqrt(n) <span class="op">*</span> norm_2)</span>
+<span id="cb10-450"><a href="#cb10-450" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>()</span>
+<span id="cb10-451"><a href="#cb10-451" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"||x||_inf &lt;= ||x||_1 &lt;= n||x||_inf"</span>)</span>
+<span id="cb10-452"><a href="#cb10-452" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(norm_inf, <span class="st">"&lt;="</span>, norm_1, <span class="st">"&lt;="</span>, n <span class="op">*</span> norm_inf)</span>
+<span id="cb10-453"><a href="#cb10-453" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>()</span>
+<span id="cb10-454"><a href="#cb10-454" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"||x||_inf &lt;= ||x||_2 &lt;= sqrt(n)||x||_inf"</span>)</span>
+<span id="cb10-455"><a href="#cb10-455" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(norm_inf, <span class="st">"&lt;="</span>, norm_2, <span class="st">"&lt;="</span>, np.sqrt(n) <span class="op">*</span> norm_inf)</span>
+<span id="cb10-456"><a href="#cb10-456" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb10-457"><a href="#cb10-457" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb10-458"><a href="#cb10-458" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-459"><a href="#cb10-459" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb10-460"><a href="#cb10-460" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-461"><a href="#cb10-461" aria-hidden="true" tabindex="-1"></a><span class="fu">## Matrix Norms {#sec-matrix-norms}</span></span>
+<span id="cb10-462"><a href="#cb10-462" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-463"><a href="#cb10-463" aria-hidden="true" tabindex="-1"></a><span class="fu">### Induced Matrix Norms</span></span>
+<span id="cb10-464"><a href="#cb10-464" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-465"><a href="#cb10-465" aria-hidden="true" tabindex="-1"></a>Let $A \in \mathbb{R}^{n \times n}$. Once a vector norm is fixed, the</span>
+<span id="cb10-466"><a href="#cb10-466" aria-hidden="true" tabindex="-1"></a>corresponding **induced matrix norm** or **operator norm** is defined by</span>
+<span id="cb10-467"><a href="#cb10-467" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb10-468"><a href="#cb10-468" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb10-469"><a href="#cb10-469" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-470"><a href="#cb10-470" aria-hidden="true" tabindex="-1"></a>where $\lambda_{\max}(A^T A)$ is the largest eigenvalue of $A^T A$.</span>
-<span id="cb10-471"><a href="#cb10-471" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-472"><a href="#cb10-472" aria-hidden="true" tabindex="-1"></a><span class="fu">### Example</span></span>
-<span id="cb10-473"><a href="#cb10-473" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-474"><a href="#cb10-474" aria-hidden="true" tabindex="-1"></a>Let</span>
-<span id="cb10-475"><a href="#cb10-475" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-476"><a href="#cb10-476" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb10-477"><a href="#cb10-477" aria-hidden="true" tabindex="-1"></a>A =</span>
-<span id="cb10-478"><a href="#cb10-478" aria-hidden="true" tabindex="-1"></a>\begin{pmatrix}</span>
-<span id="cb10-479"><a href="#cb10-479" aria-hidden="true" tabindex="-1"></a>1 &amp; -2 &amp; 0<span class="sc">\\</span></span>
-<span id="cb10-480"><a href="#cb10-480" aria-hidden="true" tabindex="-1"></a>3 &amp; 4 &amp; -1<span class="sc">\\</span></span>
-<span id="cb10-481"><a href="#cb10-481" aria-hidden="true" tabindex="-1"></a>0 &amp; 2 &amp; 5</span>
-<span id="cb10-482"><a href="#cb10-482" aria-hidden="true" tabindex="-1"></a>\end{pmatrix}.</span>
+<span id="cb10-469"><a href="#cb10-469" aria-hidden="true" tabindex="-1"></a><span class="sc">\|</span>A<span class="sc">\|</span> = \max_{x \in \mathbb{R}^n \setminus <span class="sc">\{</span>0<span class="sc">\}</span>}</span>
+<span id="cb10-470"><a href="#cb10-470" aria-hidden="true" tabindex="-1"></a>\frac{<span class="sc">\|</span>Ax<span class="sc">\|</span>}{<span class="sc">\|</span>x<span class="sc">\|</span>}.</span>
+<span id="cb10-471"><a href="#cb10-471" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb10-472"><a href="#cb10-472" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-473"><a href="#cb10-473" aria-hidden="true" tabindex="-1"></a>This is the maximum stretching factor of the matrix $A$.</span>
+<span id="cb10-474"><a href="#cb10-474" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-475"><a href="#cb10-475" aria-hidden="true" tabindex="-1"></a>Equivalently,</span>
+<span id="cb10-476"><a href="#cb10-476" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-477"><a href="#cb10-477" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb10-478"><a href="#cb10-478" aria-hidden="true" tabindex="-1"></a><span class="sc">\|</span>A<span class="sc">\|</span> = \max_{<span class="sc">\|</span>x<span class="sc">\|</span> = 1} <span class="sc">\|</span>Ax<span class="sc">\|</span>.</span>
+<span id="cb10-479"><a href="#cb10-479" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb10-480"><a href="#cb10-480" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-481"><a href="#cb10-481" aria-hidden="true" tabindex="-1"></a>Why? For any $x \neq 0$, define $y = x / <span class="sc">\|</span>x<span class="sc">\|</span>$. Then $<span class="sc">\|</span>y<span class="sc">\|</span> = 1$, and</span>
+<span id="cb10-482"><a href="#cb10-482" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb10-483"><a href="#cb10-483" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb10-484"><a href="#cb10-484" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-485"><a href="#cb10-485" aria-hidden="true" tabindex="-1"></a>The $\ell^1$ matrix norm is the maximum absolute column sum, and the</span>
-<span id="cb10-486"><a href="#cb10-486" aria-hidden="true" tabindex="-1"></a>$\ell^\infty$ matrix norm is the maximum absolute row sum.</span>
-<span id="cb10-487"><a href="#cb10-487" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-490"><a href="#cb10-490" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb10-491"><a href="#cb10-491" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
-<span id="cb10-492"><a href="#cb10-492" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb10-493"><a href="#cb10-493" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> numpy <span class="im">import</span> linalg <span class="im">as</span> LA</span>
+<span id="cb10-484"><a href="#cb10-484" aria-hidden="true" tabindex="-1"></a>\frac{<span class="sc">\|</span>Ax<span class="sc">\|</span>}{<span class="sc">\|</span>x<span class="sc">\|</span>}</span>
+<span id="cb10-485"><a href="#cb10-485" aria-hidden="true" tabindex="-1"></a>=</span>
+<span id="cb10-486"><a href="#cb10-486" aria-hidden="true" tabindex="-1"></a>\left<span class="sc">\|</span>A\frac{x}{<span class="sc">\|</span>x<span class="sc">\|</span>}\right<span class="sc">\|</span></span>
+<span id="cb10-487"><a href="#cb10-487" aria-hidden="true" tabindex="-1"></a>=</span>
+<span id="cb10-488"><a href="#cb10-488" aria-hidden="true" tabindex="-1"></a><span class="sc">\|</span>Ay<span class="sc">\|</span>.</span>
+<span id="cb10-489"><a href="#cb10-489" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb10-490"><a href="#cb10-490" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-491"><a href="#cb10-491" aria-hidden="true" tabindex="-1"></a><span class="fu">### Basic Properties</span></span>
+<span id="cb10-492"><a href="#cb10-492" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-493"><a href="#cb10-493" aria-hidden="true" tabindex="-1"></a>The induced matrix norm satisfies the following properties:</span>
 <span id="cb10-494"><a href="#cb10-494" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-495"><a href="#cb10-495" aria-hidden="true" tabindex="-1"></a>A <span class="op">=</span> np.array([</span>
-<span id="cb10-496"><a href="#cb10-496" aria-hidden="true" tabindex="-1"></a>    [<span class="dv">1</span>, <span class="op">-</span><span class="dv">2</span>,  <span class="dv">0</span>],</span>
-<span id="cb10-497"><a href="#cb10-497" aria-hidden="true" tabindex="-1"></a>    [<span class="dv">3</span>,  <span class="dv">4</span>, <span class="op">-</span><span class="dv">1</span>],</span>
-<span id="cb10-498"><a href="#cb10-498" aria-hidden="true" tabindex="-1"></a>    [<span class="dv">0</span>,  <span class="dv">2</span>,  <span class="dv">5</span>],</span>
-<span id="cb10-499"><a href="#cb10-499" aria-hidden="true" tabindex="-1"></a>], dtype<span class="op">=</span><span class="bu">float</span>)</span>
+<span id="cb10-495"><a href="#cb10-495" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>$<span class="sc">\|</span>A<span class="sc">\|</span> \geq 0$, and $<span class="sc">\|</span>A<span class="sc">\|</span> = 0 \Longleftrightarrow A = 0$.</span>
+<span id="cb10-496"><a href="#cb10-496" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>$<span class="sc">\|</span>\alpha A<span class="sc">\|</span> = |\alpha|\,<span class="sc">\|</span>A<span class="sc">\|</span>$ for all $\alpha \in \mathbb{R}$.</span>
+<span id="cb10-497"><a href="#cb10-497" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>$<span class="sc">\|</span>A + B<span class="sc">\|</span> \leq <span class="sc">\|</span>A<span class="sc">\|</span> + <span class="sc">\|</span>B<span class="sc">\|</span>$.</span>
+<span id="cb10-498"><a href="#cb10-498" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span>$<span class="sc">\|</span>Ax<span class="sc">\|</span> \leq <span class="sc">\|</span>A<span class="sc">\|</span>\,<span class="sc">\|</span>x<span class="sc">\|</span>$ for all $x \in \mathbb{R}^n$.</span>
+<span id="cb10-499"><a href="#cb10-499" aria-hidden="true" tabindex="-1"></a><span class="ss">5. </span>$<span class="sc">\|</span>AB<span class="sc">\|</span> \leq <span class="sc">\|</span>A<span class="sc">\|</span>\,<span class="sc">\|</span>B<span class="sc">\|</span>$.</span>
 <span id="cb10-500"><a href="#cb10-500" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-501"><a href="#cb10-501" aria-hidden="true" tabindex="-1"></a>norm_1_by_hand <span class="op">=</span> np.<span class="bu">max</span>(np.<span class="bu">sum</span>(np.<span class="bu">abs</span>(A), axis<span class="op">=</span><span class="dv">0</span>))</span>
-<span id="cb10-502"><a href="#cb10-502" aria-hidden="true" tabindex="-1"></a>norm_inf_by_hand <span class="op">=</span> np.<span class="bu">max</span>(np.<span class="bu">sum</span>(np.<span class="bu">abs</span>(A), axis<span class="op">=</span><span class="dv">1</span>))</span>
+<span id="cb10-501"><a href="#cb10-501" aria-hidden="true" tabindex="-1"></a>The last two inequalities are especially useful for error analysis,</span>
+<span id="cb10-502"><a href="#cb10-502" aria-hidden="true" tabindex="-1"></a>because matrices often represent transformations or iterative steps.</span>
 <span id="cb10-503"><a href="#cb10-503" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-504"><a href="#cb10-504" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"A ="</span>)</span>
-<span id="cb10-505"><a href="#cb10-505" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(A)</span>
-<span id="cb10-506"><a href="#cb10-506" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"column sums ="</span>, np.<span class="bu">sum</span>(np.<span class="bu">abs</span>(A), axis<span class="op">=</span><span class="dv">0</span>))</span>
-<span id="cb10-507"><a href="#cb10-507" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"row sums    ="</span>, np.<span class="bu">sum</span>(np.<span class="bu">abs</span>(A), axis<span class="op">=</span><span class="dv">1</span>))</span>
-<span id="cb10-508"><a href="#cb10-508" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"||A||_1 by formula   ="</span>, norm_1_by_hand)</span>
-<span id="cb10-509"><a href="#cb10-509" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"||A||_1 by NumPy     ="</span>, LA.norm(A, <span class="dv">1</span>))</span>
-<span id="cb10-510"><a href="#cb10-510" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"||A||_inf by formula ="</span>, norm_inf_by_hand)</span>
-<span id="cb10-511"><a href="#cb10-511" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"||A||_inf by NumPy   ="</span>, LA.norm(A, np.inf))</span>
-<span id="cb10-512"><a href="#cb10-512" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"||A||_2 by NumPy     ="</span>, LA.norm(A, <span class="dv">2</span>))</span>
-<span id="cb10-513"><a href="#cb10-513" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb10-504"><a href="#cb10-504" aria-hidden="true" tabindex="-1"></a><span class="fu">### Matrix $\ell^p$ Norms</span></span>
+<span id="cb10-505"><a href="#cb10-505" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-506"><a href="#cb10-506" aria-hidden="true" tabindex="-1"></a>The matrix norm induced by the vector $\ell^p$ norm is</span>
+<span id="cb10-507"><a href="#cb10-507" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-508"><a href="#cb10-508" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb10-509"><a href="#cb10-509" aria-hidden="true" tabindex="-1"></a><span class="sc">\|</span>A<span class="sc">\|</span>_p</span>
+<span id="cb10-510"><a href="#cb10-510" aria-hidden="true" tabindex="-1"></a>=</span>
+<span id="cb10-511"><a href="#cb10-511" aria-hidden="true" tabindex="-1"></a>\max_{x \in \mathbb{R}^n \setminus <span class="sc">\{</span>0<span class="sc">\}</span>}</span>
+<span id="cb10-512"><a href="#cb10-512" aria-hidden="true" tabindex="-1"></a>\frac{<span class="sc">\|</span>Ax<span class="sc">\|</span>_p}{<span class="sc">\|</span>x<span class="sc">\|</span>_p}.</span>
+<span id="cb10-513"><a href="#cb10-513" aria-hidden="true" tabindex="-1"></a>$$</span>
 <span id="cb10-514"><a href="#cb10-514" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-515"><a href="#cb10-515" aria-hidden="true" tabindex="-1"></a>::: {.callout-tip collapse="true"}</span>
-<span id="cb10-516"><a href="#cb10-516" aria-hidden="true" tabindex="-1"></a><span class="fu">## Click to reveal the output</span></span>
-<span id="cb10-517"><a href="#cb10-517" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-520"><a href="#cb10-520" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb10-521"><a href="#cb10-521" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
-<span id="cb10-522"><a href="#cb10-522" aria-hidden="true" tabindex="-1"></a>A <span class="op">=</span> np.array([</span>
-<span id="cb10-523"><a href="#cb10-523" aria-hidden="true" tabindex="-1"></a>    [<span class="dv">1</span>, <span class="op">-</span><span class="dv">2</span>,  <span class="dv">0</span>],</span>
-<span id="cb10-524"><a href="#cb10-524" aria-hidden="true" tabindex="-1"></a>    [<span class="dv">3</span>,  <span class="dv">4</span>, <span class="op">-</span><span class="dv">1</span>],</span>
-<span id="cb10-525"><a href="#cb10-525" aria-hidden="true" tabindex="-1"></a>    [<span class="dv">0</span>,  <span class="dv">2</span>,  <span class="dv">5</span>],</span>
-<span id="cb10-526"><a href="#cb10-526" aria-hidden="true" tabindex="-1"></a>], dtype<span class="op">=</span><span class="bu">float</span>)</span>
+<span id="cb10-515"><a href="#cb10-515" aria-hidden="true" tabindex="-1"></a>For $p = 1$ and $p = \infty$, there are simple formulas:</span>
+<span id="cb10-516"><a href="#cb10-516" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-517"><a href="#cb10-517" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb10-518"><a href="#cb10-518" aria-hidden="true" tabindex="-1"></a><span class="sc">\|</span>A<span class="sc">\|</span>_1</span>
+<span id="cb10-519"><a href="#cb10-519" aria-hidden="true" tabindex="-1"></a>=</span>
+<span id="cb10-520"><a href="#cb10-520" aria-hidden="true" tabindex="-1"></a>\max_{1 \leq j \leq n}</span>
+<span id="cb10-521"><a href="#cb10-521" aria-hidden="true" tabindex="-1"></a>\sum_{i=1}^n |a_{ij}|</span>
+<span id="cb10-522"><a href="#cb10-522" aria-hidden="true" tabindex="-1"></a>\qquad</span>
+<span id="cb10-523"><a href="#cb10-523" aria-hidden="true" tabindex="-1"></a>\text{(maximum column sum),}</span>
+<span id="cb10-524"><a href="#cb10-524" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb10-525"><a href="#cb10-525" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-526"><a href="#cb10-526" aria-hidden="true" tabindex="-1"></a>and</span>
 <span id="cb10-527"><a href="#cb10-527" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-528"><a href="#cb10-528" aria-hidden="true" tabindex="-1"></a>norm_1_by_hand <span class="op">=</span> np.<span class="bu">max</span>(np.<span class="bu">sum</span>(np.<span class="bu">abs</span>(A), axis<span class="op">=</span><span class="dv">0</span>))</span>
-<span id="cb10-529"><a href="#cb10-529" aria-hidden="true" tabindex="-1"></a>norm_inf_by_hand <span class="op">=</span> np.<span class="bu">max</span>(np.<span class="bu">sum</span>(np.<span class="bu">abs</span>(A), axis<span class="op">=</span><span class="dv">1</span>))</span>
-<span id="cb10-530"><a href="#cb10-530" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-531"><a href="#cb10-531" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"A ="</span>)</span>
-<span id="cb10-532"><a href="#cb10-532" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(A)</span>
-<span id="cb10-533"><a href="#cb10-533" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"column sums ="</span>, np.<span class="bu">sum</span>(np.<span class="bu">abs</span>(A), axis<span class="op">=</span><span class="dv">0</span>))</span>
-<span id="cb10-534"><a href="#cb10-534" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"row sums    ="</span>, np.<span class="bu">sum</span>(np.<span class="bu">abs</span>(A), axis<span class="op">=</span><span class="dv">1</span>))</span>
-<span id="cb10-535"><a href="#cb10-535" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"||A||_1 by formula   ="</span>, norm_1_by_hand)</span>
-<span id="cb10-536"><a href="#cb10-536" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"||A||_1 by NumPy     ="</span>, LA.norm(A, <span class="dv">1</span>))</span>
-<span id="cb10-537"><a href="#cb10-537" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"||A||_inf by formula ="</span>, norm_inf_by_hand)</span>
-<span id="cb10-538"><a href="#cb10-538" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"||A||_inf by NumPy   ="</span>, LA.norm(A, np.inf))</span>
-<span id="cb10-539"><a href="#cb10-539" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"||A||_2 by NumPy     ="</span>, LA.norm(A, <span class="dv">2</span>))</span>
-<span id="cb10-540"><a href="#cb10-540" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb10-541"><a href="#cb10-541" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb10-528"><a href="#cb10-528" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb10-529"><a href="#cb10-529" aria-hidden="true" tabindex="-1"></a><span class="sc">\|</span>A<span class="sc">\|</span>_\infty</span>
+<span id="cb10-530"><a href="#cb10-530" aria-hidden="true" tabindex="-1"></a>=</span>
+<span id="cb10-531"><a href="#cb10-531" aria-hidden="true" tabindex="-1"></a>\max_{1 \leq i \leq n}</span>
+<span id="cb10-532"><a href="#cb10-532" aria-hidden="true" tabindex="-1"></a>\sum_{j=1}^n |a_{ij}|</span>
+<span id="cb10-533"><a href="#cb10-533" aria-hidden="true" tabindex="-1"></a>\qquad</span>
+<span id="cb10-534"><a href="#cb10-534" aria-hidden="true" tabindex="-1"></a>\text{(maximum row sum).}</span>
+<span id="cb10-535"><a href="#cb10-535" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb10-536"><a href="#cb10-536" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-537"><a href="#cb10-537" aria-hidden="true" tabindex="-1"></a>For $p = 2$, the induced matrix norm is the **spectral norm**:</span>
+<span id="cb10-538"><a href="#cb10-538" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-539"><a href="#cb10-539" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb10-540"><a href="#cb10-540" aria-hidden="true" tabindex="-1"></a><span class="sc">\|</span>A<span class="sc">\|</span>_2 = \sqrt{\lambda_{\max}(A^T A)},</span>
+<span id="cb10-541"><a href="#cb10-541" aria-hidden="true" tabindex="-1"></a>$$</span>
 <span id="cb10-542"><a href="#cb10-542" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-543"><a href="#cb10-543" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb10-543"><a href="#cb10-543" aria-hidden="true" tabindex="-1"></a>where $\lambda_{\max}(A^T A)$ is the largest eigenvalue of $A^T A$.</span>
 <span id="cb10-544"><a href="#cb10-544" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-545"><a href="#cb10-545" aria-hidden="true" tabindex="-1"></a><span class="fu">## Frobenius Norm and Computational Cost {#sec-frobenius}</span></span>
+<span id="cb10-545"><a href="#cb10-545" aria-hidden="true" tabindex="-1"></a><span class="fu">### Example</span></span>
 <span id="cb10-546"><a href="#cb10-546" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-547"><a href="#cb10-547" aria-hidden="true" tabindex="-1"></a>The spectral norm $<span class="sc">\|</span>A<span class="sc">\|</span>_2$ is mathematically natural, but it is often</span>
-<span id="cb10-548"><a href="#cb10-548" aria-hidden="true" tabindex="-1"></a>more expensive to compute because it requires singular values or</span>
-<span id="cb10-549"><a href="#cb10-549" aria-hidden="true" tabindex="-1"></a>eigenvalues of $A^T A$.</span>
-<span id="cb10-550"><a href="#cb10-550" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-551"><a href="#cb10-551" aria-hidden="true" tabindex="-1"></a>The **Frobenius norm** is defined by</span>
-<span id="cb10-552"><a href="#cb10-552" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-553"><a href="#cb10-553" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb10-554"><a href="#cb10-554" aria-hidden="true" tabindex="-1"></a><span class="sc">\|</span>A<span class="sc">\|</span>_F =</span>
-<span id="cb10-555"><a href="#cb10-555" aria-hidden="true" tabindex="-1"></a>\sqrt{\sum_{i,j=1}^n |a_{ij}|^2}.</span>
+<span id="cb10-547"><a href="#cb10-547" aria-hidden="true" tabindex="-1"></a>Let</span>
+<span id="cb10-548"><a href="#cb10-548" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-549"><a href="#cb10-549" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb10-550"><a href="#cb10-550" aria-hidden="true" tabindex="-1"></a>A =</span>
+<span id="cb10-551"><a href="#cb10-551" aria-hidden="true" tabindex="-1"></a>\begin{pmatrix}</span>
+<span id="cb10-552"><a href="#cb10-552" aria-hidden="true" tabindex="-1"></a>1 &amp; -2 &amp; 0<span class="sc">\\</span></span>
+<span id="cb10-553"><a href="#cb10-553" aria-hidden="true" tabindex="-1"></a>3 &amp; 4 &amp; -1<span class="sc">\\</span></span>
+<span id="cb10-554"><a href="#cb10-554" aria-hidden="true" tabindex="-1"></a>0 &amp; 2 &amp; 5</span>
+<span id="cb10-555"><a href="#cb10-555" aria-hidden="true" tabindex="-1"></a>\end{pmatrix}.</span>
 <span id="cb10-556"><a href="#cb10-556" aria-hidden="true" tabindex="-1"></a>$$</span>
 <span id="cb10-557"><a href="#cb10-557" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-558"><a href="#cb10-558" aria-hidden="true" tabindex="-1"></a>It is not the same as the induced $\ell^2$ matrix norm, but it is easy</span>
-<span id="cb10-559"><a href="#cb10-559" aria-hidden="true" tabindex="-1"></a>to compute and satisfies</span>
+<span id="cb10-558"><a href="#cb10-558" aria-hidden="true" tabindex="-1"></a>The $\ell^1$ matrix norm is the maximum absolute column sum, and the</span>
+<span id="cb10-559"><a href="#cb10-559" aria-hidden="true" tabindex="-1"></a>$\ell^\infty$ matrix norm is the maximum absolute row sum.</span>
 <span id="cb10-560"><a href="#cb10-560" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-561"><a href="#cb10-561" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb10-562"><a href="#cb10-562" aria-hidden="true" tabindex="-1"></a><span class="sc">\|</span>A<span class="sc">\|</span>_2 \leq <span class="sc">\|</span>A<span class="sc">\|</span>_F \leq \sqrt{n}\,<span class="sc">\|</span>A<span class="sc">\|</span>_2.</span>
-<span id="cb10-563"><a href="#cb10-563" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb10-564"><a href="#cb10-564" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-565"><a href="#cb10-565" aria-hidden="true" tabindex="-1"></a>This makes it useful as an estimate or upper bound.</span>
-<span id="cb10-566"><a href="#cb10-566" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-567"><a href="#cb10-567" aria-hidden="true" tabindex="-1"></a><span class="fu">### Complexity Comparison</span></span>
-<span id="cb10-568"><a href="#cb10-568" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-569"><a href="#cb10-569" aria-hidden="true" tabindex="-1"></a>For an $n \times n$ dense matrix:</span>
-<span id="cb10-570"><a href="#cb10-570" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-571"><a href="#cb10-571" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Norm <span class="pp">|</span> Typical computation <span class="pp">|</span> Rough cost <span class="pp">|</span></span>
-<span id="cb10-572"><a href="#cb10-572" aria-hidden="true" tabindex="-1"></a><span class="pp">|---|---|---|</span></span>
-<span id="cb10-573"><a href="#cb10-573" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> $<span class="sc">\|</span>A<span class="sc">\|</span>_1$ <span class="pp">|</span> maximum absolute column sum <span class="pp">|</span> $O(n^2)$ <span class="pp">|</span></span>
-<span id="cb10-574"><a href="#cb10-574" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> $<span class="sc">\|</span>A<span class="sc">\|</span>_\infty$ <span class="pp">|</span> maximum absolute row sum <span class="pp">|</span> $O(n^2)$ <span class="pp">|</span></span>
-<span id="cb10-575"><a href="#cb10-575" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> $<span class="sc">\|</span>A<span class="sc">\|</span>_F$ <span class="pp">|</span> square root of sum of squares <span class="pp">|</span> $O(n^2)$ <span class="pp">|</span></span>
-<span id="cb10-576"><a href="#cb10-576" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> $<span class="sc">\|</span>A<span class="sc">\|</span>_2$ <span class="pp">|</span> largest singular value / eigenvalue <span class="pp">|</span> about $O(n^3)$ for standard dense methods <span class="pp">|</span></span>
-<span id="cb10-577"><a href="#cb10-577" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-578"><a href="#cb10-578" aria-hidden="true" tabindex="-1"></a>The exact runtime depends on the implementation and the matrix, but the</span>
-<span id="cb10-579"><a href="#cb10-579" aria-hidden="true" tabindex="-1"></a>important lesson is simple: the norm that is easiest to reason about is</span>
-<span id="cb10-580"><a href="#cb10-580" aria-hidden="true" tabindex="-1"></a>not always the cheapest one to compute.</span>
-<span id="cb10-581"><a href="#cb10-581" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-584"><a href="#cb10-584" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb10-585"><a href="#cb10-585" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
-<span id="cb10-586"><a href="#cb10-586" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> time</span>
-<span id="cb10-587"><a href="#cb10-587" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb10-588"><a href="#cb10-588" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> numpy <span class="im">import</span> linalg <span class="im">as</span> LA</span>
-<span id="cb10-589"><a href="#cb10-589" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-590"><a href="#cb10-590" aria-hidden="true" tabindex="-1"></a>rng <span class="op">=</span> np.random.default_rng(<span class="dv">2026</span>)</span>
-<span id="cb10-591"><a href="#cb10-591" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="dv">1000</span></span>
-<span id="cb10-592"><a href="#cb10-592" aria-hidden="true" tabindex="-1"></a>A <span class="op">=</span> rng.normal(size<span class="op">=</span>(n, n))</span>
-<span id="cb10-593"><a href="#cb10-593" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-594"><a href="#cb10-594" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> label, ord_value <span class="kw">in</span> [</span>
-<span id="cb10-595"><a href="#cb10-595" aria-hidden="true" tabindex="-1"></a>    (<span class="st">"1-norm"</span>, <span class="dv">1</span>),</span>
-<span id="cb10-596"><a href="#cb10-596" aria-hidden="true" tabindex="-1"></a>    (<span class="st">"infinity-norm"</span>, np.inf),</span>
-<span id="cb10-597"><a href="#cb10-597" aria-hidden="true" tabindex="-1"></a>    (<span class="st">"Frobenius norm"</span>, <span class="st">"fro"</span>),</span>
-<span id="cb10-598"><a href="#cb10-598" aria-hidden="true" tabindex="-1"></a>    (<span class="st">"2-norm"</span>, <span class="dv">2</span>),</span>
-<span id="cb10-599"><a href="#cb10-599" aria-hidden="true" tabindex="-1"></a>]:</span>
-<span id="cb10-600"><a href="#cb10-600" aria-hidden="true" tabindex="-1"></a>    start <span class="op">=</span> time.perf_counter()</span>
-<span id="cb10-601"><a href="#cb10-601" aria-hidden="true" tabindex="-1"></a>    value <span class="op">=</span> LA.norm(A, ord_value)</span>
-<span id="cb10-602"><a href="#cb10-602" aria-hidden="true" tabindex="-1"></a>    elapsed <span class="op">=</span> time.perf_counter() <span class="op">-</span> start</span>
-<span id="cb10-603"><a href="#cb10-603" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>label<span class="sc">:15s}</span><span class="ss">: value=</span><span class="sc">{</span>value<span class="sc">:10.4f}</span><span class="ss">, time=</span><span class="sc">{</span>elapsed<span class="sc">:.5f}</span><span class="ss"> sec"</span>)</span>
-<span id="cb10-604"><a href="#cb10-604" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb10-605"><a href="#cb10-605" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-606"><a href="#cb10-606" aria-hidden="true" tabindex="-1"></a>::: {.callout-tip collapse="true"}</span>
-<span id="cb10-607"><a href="#cb10-607" aria-hidden="true" tabindex="-1"></a><span class="fu">## Click to reveal the output</span></span>
-<span id="cb10-608"><a href="#cb10-608" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-611"><a href="#cb10-611" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb10-612"><a href="#cb10-612" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
-<span id="cb10-613"><a href="#cb10-613" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> time</span>
-<span id="cb10-614"><a href="#cb10-614" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-615"><a href="#cb10-615" aria-hidden="true" tabindex="-1"></a>rng <span class="op">=</span> np.random.default_rng(<span class="dv">2026</span>)</span>
-<span id="cb10-616"><a href="#cb10-616" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="dv">1000</span></span>
-<span id="cb10-617"><a href="#cb10-617" aria-hidden="true" tabindex="-1"></a>A <span class="op">=</span> rng.normal(size<span class="op">=</span>(n, n))</span>
-<span id="cb10-618"><a href="#cb10-618" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-619"><a href="#cb10-619" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> label, ord_value <span class="kw">in</span> [</span>
-<span id="cb10-620"><a href="#cb10-620" aria-hidden="true" tabindex="-1"></a>    (<span class="st">"1-norm"</span>, <span class="dv">1</span>),</span>
-<span id="cb10-621"><a href="#cb10-621" aria-hidden="true" tabindex="-1"></a>    (<span class="st">"infinity-norm"</span>, np.inf),</span>
-<span id="cb10-622"><a href="#cb10-622" aria-hidden="true" tabindex="-1"></a>    (<span class="st">"Frobenius norm"</span>, <span class="st">"fro"</span>),</span>
-<span id="cb10-623"><a href="#cb10-623" aria-hidden="true" tabindex="-1"></a>    (<span class="st">"2-norm"</span>, <span class="dv">2</span>),</span>
-<span id="cb10-624"><a href="#cb10-624" aria-hidden="true" tabindex="-1"></a>]:</span>
-<span id="cb10-625"><a href="#cb10-625" aria-hidden="true" tabindex="-1"></a>    start <span class="op">=</span> time.perf_counter()</span>
-<span id="cb10-626"><a href="#cb10-626" aria-hidden="true" tabindex="-1"></a>    value <span class="op">=</span> LA.norm(A, ord_value)</span>
-<span id="cb10-627"><a href="#cb10-627" aria-hidden="true" tabindex="-1"></a>    elapsed <span class="op">=</span> time.perf_counter() <span class="op">-</span> start</span>
-<span id="cb10-628"><a href="#cb10-628" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>label<span class="sc">:15s}</span><span class="ss">: value=</span><span class="sc">{</span>value<span class="sc">:10.4f}</span><span class="ss">, time=</span><span class="sc">{</span>elapsed<span class="sc">:.5f}</span><span class="ss"> sec"</span>)</span>
-<span id="cb10-629"><a href="#cb10-629" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb10-630"><a href="#cb10-630" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb10-631"><a href="#cb10-631" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-632"><a href="#cb10-632" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb10-563"><a href="#cb10-563" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb10-564"><a href="#cb10-564" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
+<span id="cb10-565"><a href="#cb10-565" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb10-566"><a href="#cb10-566" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> numpy <span class="im">import</span> linalg <span class="im">as</span> LA</span>
+<span id="cb10-567"><a href="#cb10-567" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-568"><a href="#cb10-568" aria-hidden="true" tabindex="-1"></a>A <span class="op">=</span> np.array([</span>
+<span id="cb10-569"><a href="#cb10-569" aria-hidden="true" tabindex="-1"></a>    [<span class="dv">1</span>, <span class="op">-</span><span class="dv">2</span>,  <span class="dv">0</span>],</span>
+<span id="cb10-570"><a href="#cb10-570" aria-hidden="true" tabindex="-1"></a>    [<span class="dv">3</span>,  <span class="dv">4</span>, <span class="op">-</span><span class="dv">1</span>],</span>
+<span id="cb10-571"><a href="#cb10-571" aria-hidden="true" tabindex="-1"></a>    [<span class="dv">0</span>,  <span class="dv">2</span>,  <span class="dv">5</span>],</span>
+<span id="cb10-572"><a href="#cb10-572" aria-hidden="true" tabindex="-1"></a>], dtype<span class="op">=</span><span class="bu">float</span>)</span>
+<span id="cb10-573"><a href="#cb10-573" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-574"><a href="#cb10-574" aria-hidden="true" tabindex="-1"></a>norm_1_by_hand <span class="op">=</span> np.<span class="bu">max</span>(np.<span class="bu">sum</span>(np.<span class="bu">abs</span>(A), axis<span class="op">=</span><span class="dv">0</span>))</span>
+<span id="cb10-575"><a href="#cb10-575" aria-hidden="true" tabindex="-1"></a>norm_inf_by_hand <span class="op">=</span> np.<span class="bu">max</span>(np.<span class="bu">sum</span>(np.<span class="bu">abs</span>(A), axis<span class="op">=</span><span class="dv">1</span>))</span>
+<span id="cb10-576"><a href="#cb10-576" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-577"><a href="#cb10-577" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"A ="</span>)</span>
+<span id="cb10-578"><a href="#cb10-578" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(A)</span>
+<span id="cb10-579"><a href="#cb10-579" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"column sums ="</span>, np.<span class="bu">sum</span>(np.<span class="bu">abs</span>(A), axis<span class="op">=</span><span class="dv">0</span>))</span>
+<span id="cb10-580"><a href="#cb10-580" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"row sums    ="</span>, np.<span class="bu">sum</span>(np.<span class="bu">abs</span>(A), axis<span class="op">=</span><span class="dv">1</span>))</span>
+<span id="cb10-581"><a href="#cb10-581" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"||A||_1 by formula   ="</span>, norm_1_by_hand)</span>
+<span id="cb10-582"><a href="#cb10-582" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"||A||_1 by NumPy     ="</span>, LA.norm(A, <span class="dv">1</span>))</span>
+<span id="cb10-583"><a href="#cb10-583" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"||A||_inf by formula ="</span>, norm_inf_by_hand)</span>
+<span id="cb10-584"><a href="#cb10-584" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"||A||_inf by NumPy   ="</span>, LA.norm(A, np.inf))</span>
+<span id="cb10-585"><a href="#cb10-585" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"||A||_2 by NumPy     ="</span>, LA.norm(A, <span class="dv">2</span>))</span>
+<span id="cb10-586"><a href="#cb10-586" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb10-587"><a href="#cb10-587" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-588"><a href="#cb10-588" aria-hidden="true" tabindex="-1"></a>::: {.callout-tip collapse="true"}</span>
+<span id="cb10-589"><a href="#cb10-589" aria-hidden="true" tabindex="-1"></a><span class="fu">## Click to reveal the output</span></span>
+<span id="cb10-590"><a href="#cb10-590" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-593"><a href="#cb10-593" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb10-594"><a href="#cb10-594" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
+<span id="cb10-595"><a href="#cb10-595" aria-hidden="true" tabindex="-1"></a>A <span class="op">=</span> np.array([</span>
+<span id="cb10-596"><a href="#cb10-596" aria-hidden="true" tabindex="-1"></a>    [<span class="dv">1</span>, <span class="op">-</span><span class="dv">2</span>,  <span class="dv">0</span>],</span>
+<span id="cb10-597"><a href="#cb10-597" aria-hidden="true" tabindex="-1"></a>    [<span class="dv">3</span>,  <span class="dv">4</span>, <span class="op">-</span><span class="dv">1</span>],</span>
+<span id="cb10-598"><a href="#cb10-598" aria-hidden="true" tabindex="-1"></a>    [<span class="dv">0</span>,  <span class="dv">2</span>,  <span class="dv">5</span>],</span>
+<span id="cb10-599"><a href="#cb10-599" aria-hidden="true" tabindex="-1"></a>], dtype<span class="op">=</span><span class="bu">float</span>)</span>
+<span id="cb10-600"><a href="#cb10-600" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-601"><a href="#cb10-601" aria-hidden="true" tabindex="-1"></a>norm_1_by_hand <span class="op">=</span> np.<span class="bu">max</span>(np.<span class="bu">sum</span>(np.<span class="bu">abs</span>(A), axis<span class="op">=</span><span class="dv">0</span>))</span>
+<span id="cb10-602"><a href="#cb10-602" aria-hidden="true" tabindex="-1"></a>norm_inf_by_hand <span class="op">=</span> np.<span class="bu">max</span>(np.<span class="bu">sum</span>(np.<span class="bu">abs</span>(A), axis<span class="op">=</span><span class="dv">1</span>))</span>
+<span id="cb10-603"><a href="#cb10-603" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-604"><a href="#cb10-604" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"A ="</span>)</span>
+<span id="cb10-605"><a href="#cb10-605" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(A)</span>
+<span id="cb10-606"><a href="#cb10-606" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"column sums ="</span>, np.<span class="bu">sum</span>(np.<span class="bu">abs</span>(A), axis<span class="op">=</span><span class="dv">0</span>))</span>
+<span id="cb10-607"><a href="#cb10-607" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"row sums    ="</span>, np.<span class="bu">sum</span>(np.<span class="bu">abs</span>(A), axis<span class="op">=</span><span class="dv">1</span>))</span>
+<span id="cb10-608"><a href="#cb10-608" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"||A||_1 by formula   ="</span>, norm_1_by_hand)</span>
+<span id="cb10-609"><a href="#cb10-609" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"||A||_1 by NumPy     ="</span>, LA.norm(A, <span class="dv">1</span>))</span>
+<span id="cb10-610"><a href="#cb10-610" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"||A||_inf by formula ="</span>, norm_inf_by_hand)</span>
+<span id="cb10-611"><a href="#cb10-611" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"||A||_inf by NumPy   ="</span>, LA.norm(A, np.inf))</span>
+<span id="cb10-612"><a href="#cb10-612" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"||A||_2 by NumPy     ="</span>, LA.norm(A, <span class="dv">2</span>))</span>
+<span id="cb10-613"><a href="#cb10-613" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb10-614"><a href="#cb10-614" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb10-615"><a href="#cb10-615" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-616"><a href="#cb10-616" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb10-617"><a href="#cb10-617" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-618"><a href="#cb10-618" aria-hidden="true" tabindex="-1"></a><span class="fu">## Frobenius Norm and Computational Cost {#sec-frobenius}</span></span>
+<span id="cb10-619"><a href="#cb10-619" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-620"><a href="#cb10-620" aria-hidden="true" tabindex="-1"></a>The spectral norm $<span class="sc">\|</span>A<span class="sc">\|</span>_2$ is mathematically natural, but it is often</span>
+<span id="cb10-621"><a href="#cb10-621" aria-hidden="true" tabindex="-1"></a>more expensive to compute because it requires singular values or</span>
+<span id="cb10-622"><a href="#cb10-622" aria-hidden="true" tabindex="-1"></a>eigenvalues of $A^T A$.</span>
+<span id="cb10-623"><a href="#cb10-623" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-624"><a href="#cb10-624" aria-hidden="true" tabindex="-1"></a>The **Frobenius norm** is defined by</span>
+<span id="cb10-625"><a href="#cb10-625" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-626"><a href="#cb10-626" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb10-627"><a href="#cb10-627" aria-hidden="true" tabindex="-1"></a><span class="sc">\|</span>A<span class="sc">\|</span>_F =</span>
+<span id="cb10-628"><a href="#cb10-628" aria-hidden="true" tabindex="-1"></a>\sqrt{\sum_{i,j=1}^n |a_{ij}|^2}.</span>
+<span id="cb10-629"><a href="#cb10-629" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb10-630"><a href="#cb10-630" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-631"><a href="#cb10-631" aria-hidden="true" tabindex="-1"></a>It is not the same as the induced $\ell^2$ matrix norm, but it is easy</span>
+<span id="cb10-632"><a href="#cb10-632" aria-hidden="true" tabindex="-1"></a>to compute and satisfies</span>
 <span id="cb10-633"><a href="#cb10-633" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-634"><a href="#cb10-634" aria-hidden="true" tabindex="-1"></a><span class="fu">## Summary {#sec-summary}</span></span>
-<span id="cb10-635"><a href="#cb10-635" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-636"><a href="#cb10-636" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Object <span class="pp">|</span> Main idea <span class="pp">|</span> Common formulas <span class="pp">|</span></span>
-<span id="cb10-637"><a href="#cb10-637" aria-hidden="true" tabindex="-1"></a><span class="pp">|---|---|---|</span></span>
-<span id="cb10-638"><a href="#cb10-638" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Vector norm <span class="pp">|</span> measures the size of a vector <span class="pp">|</span> $<span class="sc">\|</span>x<span class="sc">\|</span>_1$, $\|x\|_2$, $\|x\|_\infty$ <span class="pp">|</span></span>
-<span id="cb10-639"><a href="#cb10-639" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Equivalent norms <span class="pp">|</span> different norms are comparable in finite dimensions <span class="pp">|</span> inequalities (5)--(7) <span class="pp">|</span></span>
-<span id="cb10-640"><a href="#cb10-640" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Induced matrix norm <span class="pp">|</span> maximum stretching factor of a matrix <span class="pp">|</span> $<span class="sc">\|</span>A<span class="sc">\|</span> = \max_{x \neq 0} <span class="sc">\|</span>Ax<span class="sc">\|</span>/<span class="sc">\|</span>x<span class="sc">\|</span>$ <span class="pp">|</span></span>
-<span id="cb10-641"><a href="#cb10-641" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Matrix $1$-norm <span class="pp">|</span> maximum absolute column sum <span class="pp">|</span> $<span class="sc">\|</span>A<span class="sc">\|</span>_1 = \max_j \sum_i |a_{ij}<span class="pp">|</span>$ <span class="pp">|</span></span>
-<span id="cb10-642"><a href="#cb10-642" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Matrix $\infty$-norm <span class="pp">|</span> maximum absolute row sum <span class="pp">|</span> $<span class="sc">\|</span>A<span class="sc">\|</span>_\infty = \max_i \sum_j |a_{ij}<span class="pp">|</span>$ <span class="pp">|</span></span>
-<span id="cb10-643"><a href="#cb10-643" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Matrix $2$-norm <span class="pp">|</span> spectral norm <span class="pp">|</span> $<span class="sc">\|</span>A<span class="sc">\|</span>_2 = \sqrt{\lambda_{\max}(A^T A)}$ <span class="pp">|</span></span>
-<span id="cb10-644"><a href="#cb10-644" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Frobenius norm <span class="pp">|</span> easy-to-compute size of all entries <span class="pp">|</span> $<span class="sc">\|</span>A<span class="sc">\|</span>_F = \sqrt{\sum_{i,j}|a_{ij}<span class="pp">|</span>^2}$ <span class="pp">|</span></span>
-<span id="cb10-645"><a href="#cb10-645" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-646"><a href="#cb10-646" aria-hidden="true" tabindex="-1"></a>Norms are the language that lets us turn vague statements like "the</span>
-<span id="cb10-647"><a href="#cb10-647" aria-hidden="true" tabindex="-1"></a>error is small" or "the matrix is large" into precise mathematical</span>
-<span id="cb10-648"><a href="#cb10-648" aria-hidden="true" tabindex="-1"></a>statements that can be analyzed and computed.</span>
+<span id="cb10-634"><a href="#cb10-634" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb10-635"><a href="#cb10-635" aria-hidden="true" tabindex="-1"></a><span class="sc">\|</span>A<span class="sc">\|</span>_2 \leq <span class="sc">\|</span>A<span class="sc">\|</span>_F \leq \sqrt{n}\,<span class="sc">\|</span>A<span class="sc">\|</span>_2.</span>
+<span id="cb10-636"><a href="#cb10-636" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb10-637"><a href="#cb10-637" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-638"><a href="#cb10-638" aria-hidden="true" tabindex="-1"></a>This makes it useful as an estimate or upper bound.</span>
+<span id="cb10-639"><a href="#cb10-639" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-640"><a href="#cb10-640" aria-hidden="true" tabindex="-1"></a><span class="fu">### Complexity Comparison</span></span>
+<span id="cb10-641"><a href="#cb10-641" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-642"><a href="#cb10-642" aria-hidden="true" tabindex="-1"></a>For an $n \times n$ dense matrix:</span>
+<span id="cb10-643"><a href="#cb10-643" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-644"><a href="#cb10-644" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Norm <span class="pp">|</span> Typical computation <span class="pp">|</span> Rough cost <span class="pp">|</span></span>
+<span id="cb10-645"><a href="#cb10-645" aria-hidden="true" tabindex="-1"></a><span class="pp">|---|---|---|</span></span>
+<span id="cb10-646"><a href="#cb10-646" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> $<span class="sc">\|</span>A<span class="sc">\|</span>_1$ <span class="pp">|</span> maximum absolute column sum <span class="pp">|</span> $O(n^2)$ <span class="pp">|</span></span>
+<span id="cb10-647"><a href="#cb10-647" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> $<span class="sc">\|</span>A<span class="sc">\|</span>_\infty$ <span class="pp">|</span> maximum absolute row sum <span class="pp">|</span> $O(n^2)$ <span class="pp">|</span></span>
+<span id="cb10-648"><a href="#cb10-648" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> $<span class="sc">\|</span>A<span class="sc">\|</span>_F$ <span class="pp">|</span> square root of sum of squares <span class="pp">|</span> $O(n^2)$ <span class="pp">|</span></span>
+<span id="cb10-649"><a href="#cb10-649" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> $<span class="sc">\|</span>A<span class="sc">\|</span>_2$ <span class="pp">|</span> largest singular value / eigenvalue <span class="pp">|</span> about $O(n^3)$ for standard dense methods <span class="pp">|</span></span>
+<span id="cb10-650"><a href="#cb10-650" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-651"><a href="#cb10-651" aria-hidden="true" tabindex="-1"></a>The exact runtime depends on the implementation and the matrix, but the</span>
+<span id="cb10-652"><a href="#cb10-652" aria-hidden="true" tabindex="-1"></a>important lesson is simple: the norm that is easiest to reason about is</span>
+<span id="cb10-653"><a href="#cb10-653" aria-hidden="true" tabindex="-1"></a>not always the cheapest one to compute.</span>
+<span id="cb10-654"><a href="#cb10-654" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-657"><a href="#cb10-657" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb10-658"><a href="#cb10-658" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
+<span id="cb10-659"><a href="#cb10-659" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> time</span>
+<span id="cb10-660"><a href="#cb10-660" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb10-661"><a href="#cb10-661" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> numpy <span class="im">import</span> linalg <span class="im">as</span> LA</span>
+<span id="cb10-662"><a href="#cb10-662" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-663"><a href="#cb10-663" aria-hidden="true" tabindex="-1"></a>rng <span class="op">=</span> np.random.default_rng(<span class="dv">2026</span>)</span>
+<span id="cb10-664"><a href="#cb10-664" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="dv">1000</span></span>
+<span id="cb10-665"><a href="#cb10-665" aria-hidden="true" tabindex="-1"></a>A <span class="op">=</span> rng.normal(size<span class="op">=</span>(n, n))</span>
+<span id="cb10-666"><a href="#cb10-666" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-667"><a href="#cb10-667" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> label, ord_value <span class="kw">in</span> [</span>
+<span id="cb10-668"><a href="#cb10-668" aria-hidden="true" tabindex="-1"></a>    (<span class="st">"1-norm"</span>, <span class="dv">1</span>),</span>
+<span id="cb10-669"><a href="#cb10-669" aria-hidden="true" tabindex="-1"></a>    (<span class="st">"infinity-norm"</span>, np.inf),</span>
+<span id="cb10-670"><a href="#cb10-670" aria-hidden="true" tabindex="-1"></a>    (<span class="st">"Frobenius norm"</span>, <span class="st">"fro"</span>),</span>
+<span id="cb10-671"><a href="#cb10-671" aria-hidden="true" tabindex="-1"></a>    (<span class="st">"2-norm"</span>, <span class="dv">2</span>),</span>
+<span id="cb10-672"><a href="#cb10-672" aria-hidden="true" tabindex="-1"></a>]:</span>
+<span id="cb10-673"><a href="#cb10-673" aria-hidden="true" tabindex="-1"></a>    start <span class="op">=</span> time.perf_counter()</span>
+<span id="cb10-674"><a href="#cb10-674" aria-hidden="true" tabindex="-1"></a>    value <span class="op">=</span> LA.norm(A, ord_value)</span>
+<span id="cb10-675"><a href="#cb10-675" aria-hidden="true" tabindex="-1"></a>    elapsed <span class="op">=</span> time.perf_counter() <span class="op">-</span> start</span>
+<span id="cb10-676"><a href="#cb10-676" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>label<span class="sc">:15s}</span><span class="ss">: value=</span><span class="sc">{</span>value<span class="sc">:10.4f}</span><span class="ss">, time=</span><span class="sc">{</span>elapsed<span class="sc">:.5f}</span><span class="ss"> sec"</span>)</span>
+<span id="cb10-677"><a href="#cb10-677" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb10-678"><a href="#cb10-678" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-679"><a href="#cb10-679" aria-hidden="true" tabindex="-1"></a>::: {.callout-tip collapse="true"}</span>
+<span id="cb10-680"><a href="#cb10-680" aria-hidden="true" tabindex="-1"></a><span class="fu">## Click to reveal the output</span></span>
+<span id="cb10-681"><a href="#cb10-681" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-684"><a href="#cb10-684" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb10-685"><a href="#cb10-685" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
+<span id="cb10-686"><a href="#cb10-686" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> time</span>
+<span id="cb10-687"><a href="#cb10-687" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-688"><a href="#cb10-688" aria-hidden="true" tabindex="-1"></a>rng <span class="op">=</span> np.random.default_rng(<span class="dv">2026</span>)</span>
+<span id="cb10-689"><a href="#cb10-689" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="dv">1000</span></span>
+<span id="cb10-690"><a href="#cb10-690" aria-hidden="true" tabindex="-1"></a>A <span class="op">=</span> rng.normal(size<span class="op">=</span>(n, n))</span>
+<span id="cb10-691"><a href="#cb10-691" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-692"><a href="#cb10-692" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> label, ord_value <span class="kw">in</span> [</span>
+<span id="cb10-693"><a href="#cb10-693" aria-hidden="true" tabindex="-1"></a>    (<span class="st">"1-norm"</span>, <span class="dv">1</span>),</span>
+<span id="cb10-694"><a href="#cb10-694" aria-hidden="true" tabindex="-1"></a>    (<span class="st">"infinity-norm"</span>, np.inf),</span>
+<span id="cb10-695"><a href="#cb10-695" aria-hidden="true" tabindex="-1"></a>    (<span class="st">"Frobenius norm"</span>, <span class="st">"fro"</span>),</span>
+<span id="cb10-696"><a href="#cb10-696" aria-hidden="true" tabindex="-1"></a>    (<span class="st">"2-norm"</span>, <span class="dv">2</span>),</span>
+<span id="cb10-697"><a href="#cb10-697" aria-hidden="true" tabindex="-1"></a>]:</span>
+<span id="cb10-698"><a href="#cb10-698" aria-hidden="true" tabindex="-1"></a>    start <span class="op">=</span> time.perf_counter()</span>
+<span id="cb10-699"><a href="#cb10-699" aria-hidden="true" tabindex="-1"></a>    value <span class="op">=</span> LA.norm(A, ord_value)</span>
+<span id="cb10-700"><a href="#cb10-700" aria-hidden="true" tabindex="-1"></a>    elapsed <span class="op">=</span> time.perf_counter() <span class="op">-</span> start</span>
+<span id="cb10-701"><a href="#cb10-701" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>label<span class="sc">:15s}</span><span class="ss">: value=</span><span class="sc">{</span>value<span class="sc">:10.4f}</span><span class="ss">, time=</span><span class="sc">{</span>elapsed<span class="sc">:.5f}</span><span class="ss"> sec"</span>)</span>
+<span id="cb10-702"><a href="#cb10-702" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb10-703"><a href="#cb10-703" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb10-704"><a href="#cb10-704" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-705"><a href="#cb10-705" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb10-706"><a href="#cb10-706" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-707"><a href="#cb10-707" aria-hidden="true" tabindex="-1"></a><span class="fu">## Summary {#sec-summary}</span></span>
+<span id="cb10-708"><a href="#cb10-708" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-709"><a href="#cb10-709" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Object <span class="pp">|</span> Meaning <span class="pp">|</span> Formula / key point <span class="pp">|</span></span>
+<span id="cb10-710"><a href="#cb10-710" aria-hidden="true" tabindex="-1"></a><span class="pp">|---|---|---|</span></span>
+<span id="cb10-711"><a href="#cb10-711" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Vector norm <span class="pp">|</span> a function $<span class="sc">\|</span>\cdot<span class="sc">\|</span>:\mathbb{R}^n\to\mathbb{R}$ measuring vector size <span class="pp">|</span> positivity, homogeneity, triangle inequality <span class="pp">|</span></span>
+<span id="cb10-712"><a href="#cb10-712" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Standard vector norms <span class="pp">|</span> common ways to measure vectors <span class="pp">|</span> $<span class="sc">\|</span>x<span class="sc">\|</span>_1=\sum_i|x_i|$, $\|x\|_2=(\sum_i|x_i|^2)^{1/2}$, $\|x\|_\infty=\max_i<span class="pp">|</span>x_i<span class="pp">|</span>$ <span class="pp">|</span></span>
+<span id="cb10-713"><a href="#cb10-713" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Induced matrix norm <span class="pp">|</span> maximum stretching factor of $A$ with respect to a chosen vector norm <span class="pp">|</span> $\displaystyle <span class="sc">\|</span>A<span class="sc">\|</span>=\max_{x\ne0}\frac{<span class="sc">\|</span>Ax<span class="sc">\|</span>}{<span class="sc">\|</span>x<span class="sc">\|</span>}=\max_{<span class="sc">\|</span>x<span class="sc">\|</span>=1}<span class="sc">\|</span>Ax<span class="sc">\|</span>$ <span class="pp">|</span></span>
+<span id="cb10-714"><a href="#cb10-714" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Matrix norm properties <span class="pp">|</span> the first three norm properties are the same as for vector norms; the extra useful ones concern products <span class="pp">|</span> $<span class="sc">\|</span>Ax<span class="sc">\|</span>\le <span class="sc">\|</span>A<span class="sc">\|</span>\,<span class="sc">\|</span>x<span class="sc">\|</span>$, $<span class="sc">\|</span>AB<span class="sc">\|</span>\le <span class="sc">\|</span>A<span class="sc">\|</span>\,<span class="sc">\|</span>B<span class="sc">\|</span>$ <span class="pp">|</span></span>
+<span id="cb10-715"><a href="#cb10-715" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Matrix $1$-norm <span class="pp">|</span> largest absolute column sum <span class="pp">|</span> $\displaystyle <span class="sc">\|</span>A<span class="sc">\|</span>_1=\max_j\sum_i |a_{ij}<span class="pp">|</span>$; computable in $O(n^2)$ for dense $n\times n$ matrices <span class="pp">|</span></span>
+<span id="cb10-716"><a href="#cb10-716" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Matrix $\infty$-norm <span class="pp">|</span> largest absolute row sum <span class="pp">|</span> $\displaystyle <span class="sc">\|</span>A<span class="sc">\|</span>_\infty=\max_i\sum_j |a_{ij}<span class="pp">|</span>$; computable in $O(n^2)$ <span class="pp">|</span></span>
+<span id="cb10-717"><a href="#cb10-717" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Matrix $2$-norm <span class="pp">|</span> spectral norm, induced by the Euclidean norm <span class="pp">|</span> $\displaystyle <span class="sc">\|</span>A<span class="sc">\|</span>_2=\sqrt{\lambda_{\max}(A^T A)}$; standard dense methods cost about $O(n^3)$ <span class="pp">|</span></span>
+<span id="cb10-718"><a href="#cb10-718" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Frobenius norm <span class="pp">|</span> entrywise size of a matrix, not an induced norm here <span class="pp">|</span> $\displaystyle <span class="sc">\|</span>A<span class="sc">\|</span>_F=\sqrt{\sum_{i,j}|a_{ij}<span class="pp">|</span>^2}$; computable in $O(n^2)$ <span class="pp">|</span></span>
+<span id="cb10-719"><a href="#cb10-719" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-720"><a href="#cb10-720" aria-hidden="true" tabindex="-1"></a>Norms are the language that lets us turn vague statements like "the</span>
+<span id="cb10-721"><a href="#cb10-721" aria-hidden="true" tabindex="-1"></a>error is small" or "the matrix is large" into precise mathematical</span>
+<span id="cb10-722"><a href="#cb10-722" aria-hidden="true" tabindex="-1"></a>statements that can be analyzed and computed. They also remind us that</span>
+<span id="cb10-723"><a href="#cb10-723" aria-hidden="true" tabindex="-1"></a>mathematical convenience and computational cost are different issues:</span>
+<span id="cb10-724"><a href="#cb10-724" aria-hidden="true" tabindex="-1"></a>some norms are natural for theory, while others are much cheaper to</span>
+<span id="cb10-725"><a href="#cb10-725" aria-hidden="true" tabindex="-1"></a>compute in practice.</span>
 </code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->

@@ -322,6 +322,79 @@ $$
 \tag{7}
 $$
 
+Here is a quick proof. Write
+
+$$
+m := \|x\|_\infty = \max_i |x_i|.
+$$
+
+First,
+
+$$
+\|x\|_\infty \leq \|x\|_2,
+$$
+
+because at least one component has absolute value $m$, and therefore
+
+$$
+\|x\|_2^2
+= \sum_{i=1}^n |x_i|^2
+\geq m^2.
+$$
+
+Second,
+
+$$
+\|x\|_2 \leq \|x\|_1.
+$$
+
+Indeed,
+
+$$
+\|x\|_2^2
+= \sum_{i=1}^n |x_i|^2
+\leq
+\left(\sum_{i=1}^n |x_i|\right)^2
+= \|x\|_1^2.
+$$
+
+Third, by the Cauchy-Schwarz inequality,
+
+$$
+\|x\|_1
+= \sum_{i=1}^n |x_i|
+\leq
+\left(\sum_{i=1}^n 1^2\right)^{1/2}
+\left(\sum_{i=1}^n |x_i|^2\right)^{1/2}
+= \sqrt{n}\,\|x\|_2.
+$$
+
+Finally, since $|x_i| \leq m$ for every component,
+
+$$
+\|x\|_1
+= \sum_{i=1}^n |x_i|
+\leq nm
+= n\|x\|_\infty,
+$$
+
+and
+
+$$
+\|x\|_2^2
+= \sum_{i=1}^n |x_i|^2
+\leq nm^2,
+$$
+
+so
+
+$$
+\|x\|_2 \leq \sqrt{n}\,\|x\|_\infty.
+$$
+
+Combining these estimates gives all six inequalities in (5), (6), and
+(7).
+
 These are the inequalities you will check numerically in **Exercise 4.2**.
 
 ```{python}
@@ -615,16 +688,20 @@ for label, ord_value in [
 
 ## Summary {#sec-summary}
 
-| Object | Main idea | Common formulas |
+| Object | Meaning | Formula / key point |
 |---|---|---|
-| Vector norm | measures the size of a vector | $\|x\|_1$, $\|x\|_2$, $\|x\|_\infty$ |
-| Equivalent norms | different norms are comparable in finite dimensions | inequalities (5)--(7) |
-| Induced matrix norm | maximum stretching factor of a matrix | $\|A\| = \max_{x \neq 0} \|Ax\|/\|x\|$ |
-| Matrix $1$-norm | maximum absolute column sum | $\|A\|_1 = \max_j \sum_i |a_{ij}|$ |
-| Matrix $\infty$-norm | maximum absolute row sum | $\|A\|_\infty = \max_i \sum_j |a_{ij}|$ |
-| Matrix $2$-norm | spectral norm | $\|A\|_2 = \sqrt{\lambda_{\max}(A^T A)}$ |
-| Frobenius norm | easy-to-compute size of all entries | $\|A\|_F = \sqrt{\sum_{i,j}|a_{ij}|^2}$ |
+| Vector norm | a function $\|\cdot\|:\mathbb{R}^n\to\mathbb{R}$ measuring vector size | positivity, homogeneity, triangle inequality |
+| Standard vector norms | common ways to measure vectors | $\|x\|_1=\sum_i|x_i|$, $\|x\|_2=(\sum_i|x_i|^2)^{1/2}$, $\|x\|_\infty=\max_i|x_i|$ |
+| Induced matrix norm | maximum stretching factor of $A$ with respect to a chosen vector norm | $\displaystyle \|A\|=\max_{x\ne0}\frac{\|Ax\|}{\|x\|}=\max_{\|x\|=1}\|Ax\|$ |
+| Matrix norm properties | the first three norm properties are the same as for vector norms; the extra useful ones concern products | $\|Ax\|\le \|A\|\,\|x\|$, $\|AB\|\le \|A\|\,\|B\|$ |
+| Matrix $1$-norm | largest absolute column sum | $\displaystyle \|A\|_1=\max_j\sum_i |a_{ij}|$; computable in $O(n^2)$ for dense $n\times n$ matrices |
+| Matrix $\infty$-norm | largest absolute row sum | $\displaystyle \|A\|_\infty=\max_i\sum_j |a_{ij}|$; computable in $O(n^2)$ |
+| Matrix $2$-norm | spectral norm, induced by the Euclidean norm | $\displaystyle \|A\|_2=\sqrt{\lambda_{\max}(A^T A)}$; standard dense methods cost about $O(n^3)$ |
+| Frobenius norm | entrywise size of a matrix, not an induced norm here | $\displaystyle \|A\|_F=\sqrt{\sum_{i,j}|a_{ij}|^2}$; computable in $O(n^2)$ |
 
 Norms are the language that lets us turn vague statements like "the
 error is small" or "the matrix is large" into precise mathematical
-statements that can be analyzed and computed.
+statements that can be analyzed and computed. They also remind us that
+mathematical convenience and computational cost are different issues:
+some norms are natural for theory, while others are much cheaper to
+compute in practice.
