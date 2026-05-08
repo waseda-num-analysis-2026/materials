@@ -17,6 +17,8 @@ Materials are organized by lecture number:
 | `020/` | Errors and Cancellation | [Slides](https://waseda-num-analysis-2026.github.io/materials/020/2nd.html) · [Handout](https://waseda-num-analysis-2026.github.io/materials/020/2nd-handout.html) · [Python Guidelines](https://waseda-num-analysis-2026.github.io/materials/020/python_guidelines/python_guidelines.html) | [Watch](https://youtu.be/SKz0dKh1vtI) |
 | `030/` | Floating-Point Numbers | [Slides](https://waseda-num-analysis-2026.github.io/materials/030/3rd.html) · [Handout](https://waseda-num-analysis-2026.github.io/materials/030/3rd-handout.html) | [Watch](https://youtu.be/9_d11bJozUY) |
 | `040/` | Vector Norms and Matrix Norms | [Slides](https://waseda-num-analysis-2026.github.io/materials/040/4th.html) · [Handout](https://waseda-num-analysis-2026.github.io/materials/040/4th-handout.html) | TBA |
+| `050/` | Linear Systems I: Stationary Iterative Methods | TBA | TBA |
+| `060/` | Linear Systems II: Conjugate Gradient Method | TBA | TBA |
 | ...    | ... | ... | ... |
 
 ## Tutorial Videos
@@ -48,6 +50,12 @@ Short how-to videos to help you get started:
 | 4.1 | Prove the Standard Vector Norms Are Norms | [Access](https://classroom.github.com/a/IIB7mFi7) | **May 14, 23:59** |
 | 4.2 | Verify Norm Inequalities Numerically | same repo as 4.1 | **May 14, 23:59** |
 | 4.3 | Random Search for Matrix Norms (+ optional challenge) | same repo as 4.1 | **May 14, 23:59** |
+
+## Past Exams
+
+| Year | Exam | Files |
+|------|------|-------|
+| 2025 | Midterm Examination | [PDF](https://waseda-num-analysis-2026.github.io/materials/past_exams/2025_midterm/2025_midterm.pdf) |
 
 ## Setup (one-time)
 
