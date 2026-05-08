@@ -25,6 +25,14 @@ execute:
 jupyter: python3
 ---
 
+<script>
+window.__ANNOTATION_V4_AUTOLOAD__ = {
+  url: "lecture-4-vector-norms-and-matrix-norms__2026-05-08-04-04-03.json",
+  enable: true,
+  tool: "cursor",
+};
+</script>
+
 ::: {.callout-tip collapse="true"}
 ## How to use this handout — Evolving Study Notes with an AI Tutor
 

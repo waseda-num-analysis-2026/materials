@@ -1163,6 +1163,38 @@
     reader.readAsText(file);
   }
 
+  async function autoLoadJsonIfConfigured() {
+    const cfg = window.__ANNOTATION_V4_AUTOLOAD__;
+    if (!cfg) return;
+    const url = typeof cfg === "string" ? cfg : cfg.url;
+    if (!url) return;
+    try {
+      const res = await fetch(url, { cache: "no-store" });
+      if (!res.ok) {
+        throw new Error(res.status + " " + res.statusText);
+      }
+      const data = await res.json();
+      if (!data || !Array.isArray(data.strokes)) {
+        throw new Error("not a valid annotation file");
+      }
+      strokes = realignStrokesToCurrentDocument(data);
+      if (cfg.enable) {
+        setEnabled(true);
+      }
+      if (cfg.tool && TOOLS.includes(cfg.tool)) {
+        setTool(cfg.tool);
+      }
+      redraw();
+      if (window.console) {
+        console.info("[annotation v4] auto-loaded: " + url);
+      }
+    } catch (err) {
+      if (window.console) {
+        console.warn("[annotation v4] auto-load failed:", url, err);
+      }
+    }
+  }
+
   // Convert any loaded stroke into v4-fractional in-memory format
   // so the rest of the app only deals with one shape:
   //   • Already v4 → kept as-is.
@@ -1375,6 +1407,7 @@
         if (canvas.style.display !== "none") redraw();
       });
     }, { passive: true });
+    autoLoadJsonIfConfigured();
   }
 
   if (document.readyState === "loading") {
