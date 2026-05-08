@@ -318,7 +318,7 @@ x =
 <p><span class="math display">\[
 \|x\|_\infty = \max\{|-1|, |2|, |-3|\} = 3.
 \]</span></p>
-<div id="c82146a5" class="cell" data-execution_count="1">
+<div id="af5df0b6" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> numpy <span class="im">import</span> linalg <span class="im">as</span> LA</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -340,7 +340,7 @@ x =
 </div>
 <div id="callout-3" class="callout-3-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<div id="62d1cd28" class="cell" data-execution_count="2">
+<div id="77c813f4" class="cell" data-execution_count="2">
 <div class="cell-output cell-output-stdout">
 <pre><code>||x||_1     = 6.0
 ||x||_2     = 3.7416573867739413
@@ -469,7 +469,7 @@ m := \|x\|_\infty = \max_i |x_i|.
 \]</span></p>
 <p>Combining these estimates gives all six inequalities in (5), (6), and (7).</p>
 <p>These are the inequalities you will check numerically in <strong>Exercise 4.2</strong>.</p>
-<div id="47126024" class="cell" data-execution_count="4">
+<div id="a8ee1066" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> numpy <span class="im">import</span> linalg <span class="im">as</span> LA</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -503,7 +503,7 @@ m := \|x\|_\infty = \max_i |x_i|.
 </div>
 <div id="callout-4" class="callout-4-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<div id="54f5eec5" class="cell" data-execution_count="5">
+<div id="c719f1cb" class="cell" data-execution_count="5">
 <div class="cell-output cell-output-stdout">
 <pre><code>x = [-0.79312248  0.24057128 -1.89632635  1.39577171  0.63829474]
 ||x||_2 &lt;= ||x||_1 &lt;= sqrt(n)||x||_2
@@ -602,7 +602,7 @@ A =
 \end{pmatrix}.
 \]</span></p>
 <p>The <span class="math inline">\(\ell^1\)</span> matrix norm is the maximum absolute column sum, and the <span class="math inline">\(\ell^\infty\)</span> matrix norm is the maximum absolute row sum.</p>
-<div id="7e23a9a6" class="cell" data-execution_count="6">
+<div id="3a8d3332" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> numpy <span class="im">import</span> linalg <span class="im">as</span> LA</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -637,7 +637,7 @@ A =
 </div>
 <div id="callout-5" class="callout-5-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<div id="3960e7ea" class="cell" data-execution_count="7">
+<div id="7493ef38" class="cell" data-execution_count="7">
 <div class="cell-output cell-output-stdout">
 <pre><code>A =
 [[ 1. -2.  0.]
@@ -711,7 +711,7 @@ row sums    = [3. 8. 7.]
 </tbody>
 </table>
 <p>The exact runtime depends on the implementation and the matrix, but the important lesson is simple: the norm that is easiest to reason about is not always the cheapest one to compute.</p>
-<div id="c15dd4d8" class="cell" data-execution_count="8">
+<div id="97f4aa95" class="cell" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> time</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> numpy <span class="im">import</span> linalg <span class="im">as</span> LA</span>
@@ -743,12 +743,12 @@ row sums    = [3. 8. 7.]
 </div>
 <div id="callout-6" class="callout-6-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<div id="0fa4eb68" class="cell" data-execution_count="9">
+<div id="ebce4599" class="cell" data-execution_count="9">
 <div class="cell-output cell-output-stdout">
-<pre><code>1-norm         : value=  868.2104, time=0.00053 sec
-infinity-norm  : value=  854.9725, time=0.00025 sec
+<pre><code>1-norm         : value=  868.2104, time=0.00057 sec
+infinity-norm  : value=  854.9725, time=0.00028 sec
 Frobenius norm : value= 1000.1246, time=0.00004 sec
-2-norm         : value=   63.2541, time=0.03620 sec</code></pre>
+2-norm         : value=   63.2541, time=0.03654 sec</code></pre>
 </div>
 </div>
 </div>
@@ -1127,6 +1127,8 @@ Frobenius norm : value= 1000.1246, time=0.00004 sec
     e.preventDefault();
     const events = e.getCoalescedEvents ? e.getCoalescedEvents() : [e];
     const sx = window.scrollX, sy = window.scrollY;
+    const newCount = events.length;
+    if (newCount === 0) return;
     for (const ev of events) {
       currentStroke.points.push({
         x: ev.clientX + sx, y: ev.clientY + sy, p: ev.pressure || 0.5,
@@ -1153,10 +1155,17 @@ Frobenius norm : value= 1000.1246, time=0.00004 sec
     }
     ctx.lineWidth = currentStroke.width;
     ctx.beginPath();
-    // Convert document coords back to viewport for drawing on the
-    // fixed-position canvas.
-    ctx.moveTo(pts[pts.length - 2].x - sx, pts[pts.length - 2].y - sy);
-    ctx.lineTo(pts[pts.length - 1].x - sx, pts[pts.length - 1].y - sy);
+    // Draw a CONNECTED sub-path covering ALL points added in this
+    // callback (not just the last segment). When the browser
+    // coalesces several pointermoves into one, drawing only the
+    // last segment leaves visible gaps between the previous draw's
+    // tail and this draw's head, which renders as a dashed line.
+    // Starting from the last already-drawn point fixes the gap.
+    const startIdx = Math.max(0, pts.length - newCount - 1);
+    ctx.moveTo(pts[startIdx].x - sx, pts[startIdx].y - sy);
+    for (let i = startIdx + 1; i < pts.length; i++) {
+      ctx.lineTo(pts[i].x - sx, pts[i].y - sy);
+    }
     ctx.stroke();
     ctx.restore();
   }
@@ -1282,17 +1291,26 @@ Frobenius norm : value= 1000.1246, time=0.00004 sec
     hlBtn.id = "annotation-highlighter";
     eraserBtn.id = "annotation-eraser";
 
-    const colorWrap = el("div", { style: { display: "flex", gap: "4px" } });
+    const colorWrap = el("div", {
+      // Slightly more gap + horizontal padding so the "selected"
+      // outline (see updateColorPalette) doesn't get clipped on
+      // the leftmost / rightmost swatch.
+      style: { display: "flex", gap: "8px", padding: "0 4px" },
+    });
     COLORS.forEach(c => {
       const sw = el("button", {
         type: "button",
         title: c.name,
         "data-color": c.value,
+        // Stable hook for updateColorPalette() to apply the
+        // "selected" indicator across all swatches.
+        "data-annotation-color": c.value,
         style: {
           width: "22px", height: "22px",
           background: c.value,
           border: "2px solid #ffffff",
           outline: "1px solid #9ca3af",
+          outlineOffset: "0",
           borderRadius: "50%",
           cursor: "pointer",
           padding: "0",
@@ -1535,12 +1553,36 @@ Frobenius norm : value= 1000.1246, time=0.00004 sec
 
     updateCursor();
     updateCanvasInteractivity();
+    // Tool switch may have restored a per-tool color above; keep
+    // the palette indicator in sync.
+    updateColorPalette();
   }
   function setColor(c) {
     color = c;
     // Remember per-tool so switching back restores it.
     if (tool === "pen" || tool === "highlighter") TOOL_COLOR[tool] = c;
     updateCursor();
+    updateColorPalette();
+  }
+
+  // Visually mark the currently active color in the palette by
+  // giving it a thick blue ring (matching the highlight on the
+  // active tool button). All other swatches revert to the default
+  // 1px gray outline.
+  function updateColorPalette() {
+    const swatches = document.querySelectorAll(
+      "#annotation-toolbar [data-annotation-color]"
+    );
+    swatches.forEach(sw => {
+      const isSelected = sw.getAttribute("data-annotation-color") === color;
+      if (isSelected) {
+        sw.style.outline = "3px solid #2563eb";
+        sw.style.outlineOffset = "2px";
+      } else {
+        sw.style.outline = "1px solid #9ca3af";
+        sw.style.outlineOffset = "0";
+      }
+    });
   }
   function setWidth(w) {
     width = w;
@@ -2339,6 +2381,16 @@ Frobenius norm : value= 1000.1246, time=0.00004 sec
     e.preventDefault();
     const events = e.getCoalescedEvents ? e.getCoalescedEvents() : [e];
 
+    // Number of new points this callback adds. We need this to draw
+    // a CONNECTED path covering ALL of them — not just the last
+    // segment — otherwise fast strokes (where the browser coalesces
+    // multiple pointermoves) end up with visible gaps and look like
+    // a dashed line. (The redraw() path used by zoom/resize hides
+    // the bug because it walks every point in one beginPath, which
+    // is exactly what we now do here too.)
+    const newCount = events.length;
+    if (newCount === 0) return;
+
     if (currentStroke.v === 4) {
       // Re-fetch the anchor's current rect on every move so the
       // stroke "rides" the anchor even if the user scrolls / zooms
@@ -2373,10 +2425,17 @@ Frobenius norm : value= 1000.1246, time=0.00004 sec
       // scale = 1 and lineWidth equals the captured width.
       ctx.lineWidth = currentStroke.width;
       ctx.beginPath();
-      const prev = pts[pts.length - 2];
-      const curr = pts[pts.length - 1];
-      ctx.moveTo(r.left + prev.fx * r.width, r.top + prev.fy * r.height);
-      ctx.lineTo(r.left + curr.fx * r.width, r.top + curr.fy * r.height);
+      // startIdx = the LAST point already drawn before this callback
+      // (i.e. the point right before the first new one). Drawing
+      // moveTo(startIdx) → lineTo(...all new points...) makes the
+      // new sub-path connect cleanly to the strokes already painted.
+      const startIdx = Math.max(0, pts.length - newCount - 1);
+      const start = pts[startIdx];
+      ctx.moveTo(r.left + start.fx * r.width, r.top + start.fy * r.height);
+      for (let i = startIdx + 1; i < pts.length; i++) {
+        const p = pts[i];
+        ctx.lineTo(r.left + p.fx * r.width, r.top + p.fy * r.height);
+      }
       ctx.stroke();
       ctx.restore();
     } else {
@@ -2400,8 +2459,11 @@ Frobenius norm : value= 1000.1246, time=0.00004 sec
       }
       ctx.lineWidth = currentStroke.width;
       ctx.beginPath();
-      ctx.moveTo(pts[pts.length - 2].x - sx, pts[pts.length - 2].y - sy);
-      ctx.lineTo(pts[pts.length - 1].x - sx, pts[pts.length - 1].y - sy);
+      const startIdx = Math.max(0, pts.length - newCount - 1);
+      ctx.moveTo(pts[startIdx].x - sx, pts[startIdx].y - sy);
+      for (let i = startIdx + 1; i < pts.length; i++) {
+        ctx.lineTo(pts[i].x - sx, pts[i].y - sy);
+      }
       ctx.stroke();
       ctx.restore();
     }
@@ -2528,17 +2590,28 @@ Frobenius norm : value= 1000.1246, time=0.00004 sec
     hlBtn.id = "annotation-highlighter";
     eraserBtn.id = "annotation-eraser";
 
-    const colorWrap = el("div", { style: { display: "flex", gap: "4px" } });
+    const colorWrap = el("div", {
+      // The selected swatch is highlighted with a thicker blue
+      // outline + offset (see updateColorPalette). Adding small
+      // horizontal padding keeps the highlight from being clipped
+      // when the leftmost / rightmost swatch is the selected one.
+      style: { display: "flex", gap: "8px", padding: "0 4px" },
+    });
     COLORS.forEach(c => {
       const sw = el("button", {
         type: "button",
         title: c.name,
         "data-color": c.value,
+        // Stable hook used by updateColorPalette() to apply the
+        // "selected" indicator across all swatches whenever the
+        // current color changes.
+        "data-annotation-color": c.value,
         style: {
           width: "22px", height: "22px",
           background: c.value,
           border: "2px solid #ffffff",
           outline: "1px solid #9ca3af",
+          outlineOffset: "0",
           borderRadius: "50%",
           cursor: "pointer",
           padding: "0",
@@ -2781,12 +2854,36 @@ Frobenius norm : value= 1000.1246, time=0.00004 sec
 
     updateCursor();
     updateCanvasInteractivity();
+    // Tool switch also restored a per-tool color above; reflect it
+    // in the palette indicator.
+    updateColorPalette();
   }
   function setColor(c) {
     color = c;
     // Remember per-tool so switching back restores it.
     if (tool === "pen" || tool === "highlighter") TOOL_COLOR[tool] = c;
     updateCursor();
+    updateColorPalette();
+  }
+
+  // Visually mark the currently active color in the palette by
+  // giving it a thick blue ring (matching the highlight used on the
+  // active tool button). All other swatches revert to the default
+  // 1px gray outline.
+  function updateColorPalette() {
+    const swatches = document.querySelectorAll(
+      "#annotation-toolbar [data-annotation-color]"
+    );
+    swatches.forEach(sw => {
+      const isSelected = sw.getAttribute("data-annotation-color") === color;
+      if (isSelected) {
+        sw.style.outline = "3px solid #2563eb";
+        sw.style.outlineOffset = "2px";
+      } else {
+        sw.style.outline = "1px solid #9ca3af";
+        sw.style.outlineOffset = "0";
+      }
+    });
   }
   function setWidth(w) {
     width = w;

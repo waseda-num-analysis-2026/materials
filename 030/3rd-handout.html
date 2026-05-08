@@ -6,7 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2026-05-07">
+<meta name="dcterms.date" content="2026-05-08">
 
 <title>Lecture 3 — Floating-Point Numbers in Computers</title>
 <style>
@@ -152,7 +152,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">May 7, 2026</p>
+      <p class="date">May 8, 2026</p>
     </div>
   </div>
   
@@ -549,7 +549,7 @@ M
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<div id="2ff1d6ec" class="cell" data-execution_count="2">
+<div id="1df189e1" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sys</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>fi <span class="op">=</span> sys.float_info</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -578,7 +578,7 @@ M
 </div>
 <div id="callout-6" class="callout-6-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<div id="d57a3b15" class="cell" data-execution_count="3">
+<div id="403d31ff" class="cell" data-execution_count="3">
 <div class="cell-output cell-output-stdout">
 <pre><code>m_d  formula = 2**-1074                = 4.940656e-324
 
@@ -736,7 +736,7 @@ Figure&nbsp;4: Tie-breaking by ties-to-even: when <span class="math inline">\(x\
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<div id="3892e855" class="cell" data-execution_count="7">
+<div id="8c1a28bb" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>eps <span class="op">=</span> <span class="dv">2</span><span class="op">**-</span><span class="dv">52</span>   <span class="co"># = the gap between 1 and the next float64</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"(1 + ε/4)  - 1 = </span><span class="sc">{</span>(<span class="dv">1</span> <span class="op">+</span> eps<span class="op">/</span><span class="dv">4</span>)     <span class="op">-</span> <span class="dv">1</span><span class="sc">!r}</span><span class="ss">"</span>)</span>
@@ -755,7 +755,7 @@ Figure&nbsp;4: Tie-breaking by ties-to-even: when <span class="math inline">\(x\
 </div>
 <div id="callout-9" class="callout-9-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<div id="9d4d2102" class="cell" data-execution_count="8">
+<div id="5c62aaa9" class="cell" data-execution_count="8">
 <div class="cell-output cell-output-stdout">
 <pre><code>(1 + ε/4)  - 1 = 0.0
 (1 + ε/2)  - 1 = 0.0
@@ -1133,6 +1133,8 @@ Figure&nbsp;4: Tie-breaking by ties-to-even: when <span class="math inline">\(x\
     e.preventDefault();
     const events = e.getCoalescedEvents ? e.getCoalescedEvents() : [e];
     const sx = window.scrollX, sy = window.scrollY;
+    const newCount = events.length;
+    if (newCount === 0) return;
     for (const ev of events) {
       currentStroke.points.push({
         x: ev.clientX + sx, y: ev.clientY + sy, p: ev.pressure || 0.5,
@@ -1159,10 +1161,17 @@ Figure&nbsp;4: Tie-breaking by ties-to-even: when <span class="math inline">\(x\
     }
     ctx.lineWidth = currentStroke.width;
     ctx.beginPath();
-    // Convert document coords back to viewport for drawing on the
-    // fixed-position canvas.
-    ctx.moveTo(pts[pts.length - 2].x - sx, pts[pts.length - 2].y - sy);
-    ctx.lineTo(pts[pts.length - 1].x - sx, pts[pts.length - 1].y - sy);
+    // Draw a CONNECTED sub-path covering ALL points added in this
+    // callback (not just the last segment). When the browser
+    // coalesces several pointermoves into one, drawing only the
+    // last segment leaves visible gaps between the previous draw's
+    // tail and this draw's head, which renders as a dashed line.
+    // Starting from the last already-drawn point fixes the gap.
+    const startIdx = Math.max(0, pts.length - newCount - 1);
+    ctx.moveTo(pts[startIdx].x - sx, pts[startIdx].y - sy);
+    for (let i = startIdx + 1; i < pts.length; i++) {
+      ctx.lineTo(pts[i].x - sx, pts[i].y - sy);
+    }
     ctx.stroke();
     ctx.restore();
   }
@@ -1288,17 +1297,26 @@ Figure&nbsp;4: Tie-breaking by ties-to-even: when <span class="math inline">\(x\
     hlBtn.id = "annotation-highlighter";
     eraserBtn.id = "annotation-eraser";
 
-    const colorWrap = el("div", { style: { display: "flex", gap: "4px" } });
+    const colorWrap = el("div", {
+      // Slightly more gap + horizontal padding so the "selected"
+      // outline (see updateColorPalette) doesn't get clipped on
+      // the leftmost / rightmost swatch.
+      style: { display: "flex", gap: "8px", padding: "0 4px" },
+    });
     COLORS.forEach(c => {
       const sw = el("button", {
         type: "button",
         title: c.name,
         "data-color": c.value,
+        // Stable hook for updateColorPalette() to apply the
+        // "selected" indicator across all swatches.
+        "data-annotation-color": c.value,
         style: {
           width: "22px", height: "22px",
           background: c.value,
           border: "2px solid #ffffff",
           outline: "1px solid #9ca3af",
+          outlineOffset: "0",
           borderRadius: "50%",
           cursor: "pointer",
           padding: "0",
@@ -1541,12 +1559,36 @@ Figure&nbsp;4: Tie-breaking by ties-to-even: when <span class="math inline">\(x\
 
     updateCursor();
     updateCanvasInteractivity();
+    // Tool switch may have restored a per-tool color above; keep
+    // the palette indicator in sync.
+    updateColorPalette();
   }
   function setColor(c) {
     color = c;
     // Remember per-tool so switching back restores it.
     if (tool === "pen" || tool === "highlighter") TOOL_COLOR[tool] = c;
     updateCursor();
+    updateColorPalette();
+  }
+
+  // Visually mark the currently active color in the palette by
+  // giving it a thick blue ring (matching the highlight on the
+  // active tool button). All other swatches revert to the default
+  // 1px gray outline.
+  function updateColorPalette() {
+    const swatches = document.querySelectorAll(
+      "#annotation-toolbar [data-annotation-color]"
+    );
+    swatches.forEach(sw => {
+      const isSelected = sw.getAttribute("data-annotation-color") === color;
+      if (isSelected) {
+        sw.style.outline = "3px solid #2563eb";
+        sw.style.outlineOffset = "2px";
+      } else {
+        sw.style.outline = "1px solid #9ca3af";
+        sw.style.outlineOffset = "0";
+      }
+    });
   }
   function setWidth(w) {
     width = w;
@@ -1932,10 +1974,36 @@ Figure&nbsp;4: Tie-breaking by ties-to-even: when <span class="math inline">\(x\
     }, { passive: true });
   }
 
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", init);
-  } else {
+  // Coexistence guard: a per-document v4 overlay (annotation-v4.html)
+  // may also be injected after this file. v4 sets
+  // window.__ANNOTATION_V4_ACTIVE__ synchronously as its IIFE runs.
+  // We defer our init by one microtask/DOMContentLoaded so the flag
+  // (set later in body) is observable, and bail if v4 is taking over.
+  function bootstrap() {
+    if (window.__ANNOTATION_V4_ACTIVE__) {
+      // Diagnostic: makes it obvious in devtools when v4 is taking
+      // over (otherwise it's hard to tell which copy is live on a
+      // page that includes both files).
+      if (window.console) {
+        console.info(
+          "[annotation v3] bypassed — v4 (annotation-v4.html) is " +
+          "active on this page."
+        );
+      }
+      return;
+    }
+    if (window.console) {
+      console.info("[annotation v3] init");
+    }
     init();
+  }
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", bootstrap);
+  } else {
+    // Body already parsed (e.g. injected dynamically). Yield to a
+    // microtask so any v4 script later in the same parse can still
+    // set its flag before we check it.
+    Promise.resolve().then(bootstrap);
   }
 })();
 </script>

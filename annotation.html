@@ -303,6 +303,8 @@
     e.preventDefault();
     const events = e.getCoalescedEvents ? e.getCoalescedEvents() : [e];
     const sx = window.scrollX, sy = window.scrollY;
+    const newCount = events.length;
+    if (newCount === 0) return;
     for (const ev of events) {
       currentStroke.points.push({
         x: ev.clientX + sx, y: ev.clientY + sy, p: ev.pressure || 0.5,
@@ -329,10 +331,17 @@
     }
     ctx.lineWidth = currentStroke.width;
     ctx.beginPath();
-    // Convert document coords back to viewport for drawing on the
-    // fixed-position canvas.
-    ctx.moveTo(pts[pts.length - 2].x - sx, pts[pts.length - 2].y - sy);
-    ctx.lineTo(pts[pts.length - 1].x - sx, pts[pts.length - 1].y - sy);
+    // Draw a CONNECTED sub-path covering ALL points added in this
+    // callback (not just the last segment). When the browser
+    // coalesces several pointermoves into one, drawing only the
+    // last segment leaves visible gaps between the previous draw's
+    // tail and this draw's head, which renders as a dashed line.
+    // Starting from the last already-drawn point fixes the gap.
+    const startIdx = Math.max(0, pts.length - newCount - 1);
+    ctx.moveTo(pts[startIdx].x - sx, pts[startIdx].y - sy);
+    for (let i = startIdx + 1; i < pts.length; i++) {
+      ctx.lineTo(pts[i].x - sx, pts[i].y - sy);
+    }
     ctx.stroke();
     ctx.restore();
   }
@@ -458,17 +467,26 @@
     hlBtn.id = "annotation-highlighter";
     eraserBtn.id = "annotation-eraser";
 
-    const colorWrap = el("div", { style: { display: "flex", gap: "4px" } });
+    const colorWrap = el("div", {
+      // Slightly more gap + horizontal padding so the "selected"
+      // outline (see updateColorPalette) doesn't get clipped on
+      // the leftmost / rightmost swatch.
+      style: { display: "flex", gap: "8px", padding: "0 4px" },
+    });
     COLORS.forEach(c => {
       const sw = el("button", {
         type: "button",
         title: c.name,
         "data-color": c.value,
+        // Stable hook for updateColorPalette() to apply the
+        // "selected" indicator across all swatches.
+        "data-annotation-color": c.value,
         style: {
           width: "22px", height: "22px",
           background: c.value,
           border: "2px solid #ffffff",
           outline: "1px solid #9ca3af",
+          outlineOffset: "0",
           borderRadius: "50%",
           cursor: "pointer",
           padding: "0",
@@ -711,12 +729,36 @@
 
     updateCursor();
     updateCanvasInteractivity();
+    // Tool switch may have restored a per-tool color above; keep
+    // the palette indicator in sync.
+    updateColorPalette();
   }
   function setColor(c) {
     color = c;
     // Remember per-tool so switching back restores it.
     if (tool === "pen" || tool === "highlighter") TOOL_COLOR[tool] = c;
     updateCursor();
+    updateColorPalette();
+  }
+
+  // Visually mark the currently active color in the palette by
+  // giving it a thick blue ring (matching the highlight on the
+  // active tool button). All other swatches revert to the default
+  // 1px gray outline.
+  function updateColorPalette() {
+    const swatches = document.querySelectorAll(
+      "#annotation-toolbar [data-annotation-color]"
+    );
+    swatches.forEach(sw => {
+      const isSelected = sw.getAttribute("data-annotation-color") === color;
+      if (isSelected) {
+        sw.style.outline = "3px solid #2563eb";
+        sw.style.outlineOffset = "2px";
+      } else {
+        sw.style.outline = "1px solid #9ca3af";
+        sw.style.outlineOffset = "0";
+      }
+    });
   }
   function setWidth(w) {
     width = w;
