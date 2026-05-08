@@ -318,7 +318,7 @@ x =
 <p><span class="math display">\[
 \|x\|_\infty = \max\{|-1|, |2|, |-3|\} = 3.
 \]</span></p>
-<div id="af5df0b6" class="cell" data-execution_count="1">
+<div id="e0aa51b7" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> numpy <span class="im">import</span> linalg <span class="im">as</span> LA</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -340,7 +340,7 @@ x =
 </div>
 <div id="callout-3" class="callout-3-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<div id="77c813f4" class="cell" data-execution_count="2">
+<div id="497745d2" class="cell" data-execution_count="2">
 <div class="cell-output cell-output-stdout">
 <pre><code>||x||_1     = 6.0
 ||x||_2     = 3.7416573867739413
@@ -469,7 +469,7 @@ m := \|x\|_\infty = \max_i |x_i|.
 \]</span></p>
 <p>Combining these estimates gives all six inequalities in (5), (6), and (7).</p>
 <p>These are the inequalities you will check numerically in <strong>Exercise 4.2</strong>.</p>
-<div id="a8ee1066" class="cell" data-execution_count="4">
+<div id="08ade1a5" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> numpy <span class="im">import</span> linalg <span class="im">as</span> LA</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -503,7 +503,7 @@ m := \|x\|_\infty = \max_i |x_i|.
 </div>
 <div id="callout-4" class="callout-4-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<div id="c719f1cb" class="cell" data-execution_count="5">
+<div id="a8d96b74" class="cell" data-execution_count="5">
 <div class="cell-output cell-output-stdout">
 <pre><code>x = [-0.79312248  0.24057128 -1.89632635  1.39577171  0.63829474]
 ||x||_2 &lt;= ||x||_1 &lt;= sqrt(n)||x||_2
@@ -602,7 +602,7 @@ A =
 \end{pmatrix}.
 \]</span></p>
 <p>The <span class="math inline">\(\ell^1\)</span> matrix norm is the maximum absolute column sum, and the <span class="math inline">\(\ell^\infty\)</span> matrix norm is the maximum absolute row sum.</p>
-<div id="3a8d3332" class="cell" data-execution_count="6">
+<div id="b631d3e8" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> numpy <span class="im">import</span> linalg <span class="im">as</span> LA</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -637,7 +637,7 @@ A =
 </div>
 <div id="callout-5" class="callout-5-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<div id="7493ef38" class="cell" data-execution_count="7">
+<div id="769a57b8" class="cell" data-execution_count="7">
 <div class="cell-output cell-output-stdout">
 <pre><code>A =
 [[ 1. -2.  0.]
@@ -711,7 +711,7 @@ row sums    = [3. 8. 7.]
 </tbody>
 </table>
 <p>The exact runtime depends on the implementation and the matrix, but the important lesson is simple: the norm that is easiest to reason about is not always the cheapest one to compute.</p>
-<div id="97f4aa95" class="cell" data-execution_count="8">
+<div id="c906284d" class="cell" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> time</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> numpy <span class="im">import</span> linalg <span class="im">as</span> LA</span>
@@ -743,12 +743,12 @@ row sums    = [3. 8. 7.]
 </div>
 <div id="callout-6" class="callout-6-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<div id="ebce4599" class="cell" data-execution_count="9">
+<div id="33a1db1c" class="cell" data-execution_count="9">
 <div class="cell-output cell-output-stdout">
-<pre><code>1-norm         : value=  868.2104, time=0.00057 sec
-infinity-norm  : value=  854.9725, time=0.00028 sec
+<pre><code>1-norm         : value=  868.2104, time=0.00058 sec
+infinity-norm  : value=  854.9725, time=0.00025 sec
 Frobenius norm : value= 1000.1246, time=0.00004 sec
-2-norm         : value=   63.2541, time=0.03654 sec</code></pre>
+2-norm         : value=   63.2541, time=0.03629 sec</code></pre>
 </div>
 </div>
 </div>
@@ -944,8 +944,13 @@ Frobenius norm : value= 1000.1246, time=0.00004 sec
         height: "100vh",
         zIndex: "2147483646",
         pointerEvents: "none",
-        // pan-y: vertical touch-scroll still works while pen draws
-        touchAction: "pan-y",
+        // Default touch-action allows finger scroll + pinch-zoom while
+        // a drawing tool is active. We dynamically downgrade to "none"
+        // for the brief window where a pen pointer is in proximity
+        // (see pointerenter/pointerleave handlers in init), so pen
+        // strokes — including vertical ones — can't be hijacked by
+        // the browser as a scroll gesture on Surface-class devices.
+        touchAction: "pan-y pinch-zoom",
         background: "transparent",
         cursor: "crosshair",
         display: "none",
@@ -1951,6 +1956,23 @@ Frobenius norm : value= 1000.1246, time=0.00004 sec
     canvas.addEventListener("pointermove", onPointerMove);
     canvas.addEventListener("pointerup", onPointerUp);
     canvas.addEventListener("pointercancel", onPointerUp);
+
+    // Per-pointer-type touch-action policy: while a stylus pen is
+    // hovering near the canvas, lock touch-action to "none" so the
+    // browser can't pre-empt a vertical pen drag as a scroll
+    // gesture. The moment the pen leaves proximity we restore the
+    // touch-friendly default so finger swipes scroll the page again.
+    canvas.addEventListener("pointerenter", (e) => {
+      if (e.pointerType === "pen") {
+        canvas.style.touchAction = "none";
+      }
+    });
+    canvas.addEventListener("pointerleave", (e) => {
+      if (e.pointerType === "pen") {
+        canvas.style.touchAction = "pan-y pinch-zoom";
+      }
+    });
+
     window.addEventListener("resize", () => {
       resizeCanvas();
       clampToolbarPosition();
@@ -2174,22 +2196,20 @@ Frobenius norm : value= 1000.1246, time=0.00004 sec
         // leaves the scrollbar fully solid and interactable.
         zIndex: "2147483646",
         pointerEvents: "none",
-        // touch-action: none — surrender NO drag axis to the browser.
-        // Otherwise Surface (and similar pen-on-tablet devices) would
-        // see a vertical pen drag as "user wants to pan-y" and steal
-        // the gesture for page scrolling, so the user can't draw
-        // vertical lines.
+        // Default touch-action allows the page to be scrolled (pan-y)
+        // and pinch-zoomed with the user's finger even while a drawing
+        // tool is active. We then dynamically downgrade to "none" for
+        // the brief window where a pen pointer is in proximity to the
+        // canvas (see pointerenter/pointerleave handlers in init), so
+        // that vertical pen strokes can't be hijacked by the browser
+        // as a scroll gesture on Surface-class devices.
         //
-        // Trade-off: while a drawing tool is active, finger swipes on
-        // the canvas no longer scroll the page. Workarounds the user
-        // already has:
-        //   • ↖ Cursor tool (keeps strokes visible, lets the page
-        //     handle pointer events again)
-        //   • mouse wheel / two-finger scroll (wheel events, not
-        //     pointer events — unaffected by touch-action)
-        //   • scrollbar / keyboard (PgUp/PgDn/Space/arrows)
-        //   • Esc to turn annotation OFF (then scroll, then Alt+A back)
-        touchAction: "none",
+        // Pointer-type policy:
+        //   • pen   → drawing (touch-action flips to "none" via hover)
+        //   • mouse → drawing (touch-action does not gate mouse)
+        //   • touch → scroll / pinch-zoom (filtered out of drawing
+        //             handlers by isDrawingPointer)
+        touchAction: "pan-y pinch-zoom",
         background: "transparent",
         cursor: "crosshair",
         display: "none",
@@ -3334,6 +3354,28 @@ Frobenius norm : value= 1000.1246, time=0.00004 sec
     canvas.addEventListener("pointermove", onPointerMove);
     canvas.addEventListener("pointerup", onPointerUp);
     canvas.addEventListener("pointercancel", onPointerUp);
+
+    // Per-pointer-type touch-action policy (Surface / iPad pens):
+    // The CSS `touch-action` property is per-element, not per-pointer-
+    // type, so we can't statically allow "touch scrolls but pen
+    // draws". Instead we exploit the fact that active stylus pens
+    // (Surface Pen, Apple Pencil, etc.) emit `pointerover` /
+    // `pointerenter` while still HOVERING above the screen, before
+    // they make contact. We use that proximity window to flip the
+    // canvas' touch-action to "none", so when the pen finally touches
+    // down the browser doesn't pre-empt the gesture as a vertical
+    // pan. As soon as the pen leaves proximity we restore the touch-
+    // friendly default so finger swipes scroll the page again.
+    canvas.addEventListener("pointerenter", (e) => {
+      if (e.pointerType === "pen") {
+        canvas.style.touchAction = "none";
+      }
+    });
+    canvas.addEventListener("pointerleave", (e) => {
+      if (e.pointerType === "pen") {
+        canvas.style.touchAction = "pan-y pinch-zoom";
+      }
+    });
     window.addEventListener("resize", () => {
       resizeCanvas();
       clampToolbarPosition();

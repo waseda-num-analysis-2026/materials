@@ -120,8 +120,13 @@
         height: "100vh",
         zIndex: "2147483646",
         pointerEvents: "none",
-        // pan-y: vertical touch-scroll still works while pen draws
-        touchAction: "pan-y",
+        // Default touch-action allows finger scroll + pinch-zoom while
+        // a drawing tool is active. We dynamically downgrade to "none"
+        // for the brief window where a pen pointer is in proximity
+        // (see pointerenter/pointerleave handlers in init), so pen
+        // strokes — including vertical ones — can't be hijacked by
+        // the browser as a scroll gesture on Surface-class devices.
+        touchAction: "pan-y pinch-zoom",
         background: "transparent",
         cursor: "crosshair",
         display: "none",
@@ -1127,6 +1132,23 @@
     canvas.addEventListener("pointermove", onPointerMove);
     canvas.addEventListener("pointerup", onPointerUp);
     canvas.addEventListener("pointercancel", onPointerUp);
+
+    // Per-pointer-type touch-action policy: while a stylus pen is
+    // hovering near the canvas, lock touch-action to "none" so the
+    // browser can't pre-empt a vertical pen drag as a scroll
+    // gesture. The moment the pen leaves proximity we restore the
+    // touch-friendly default so finger swipes scroll the page again.
+    canvas.addEventListener("pointerenter", (e) => {
+      if (e.pointerType === "pen") {
+        canvas.style.touchAction = "none";
+      }
+    });
+    canvas.addEventListener("pointerleave", (e) => {
+      if (e.pointerType === "pen") {
+        canvas.style.touchAction = "pan-y pinch-zoom";
+      }
+    });
+
     window.addEventListener("resize", () => {
       resizeCanvas();
       clampToolbarPosition();
