@@ -1,7 +1,46 @@
 <!--
-  annotation.html — Pen-tablet annotation overlay for Quarto HTML
-  ---------------------------------------------------------------
-  Injected via _quarto.yml `format.html.include-after-body`.
+  annotation-v4.html — Pen-tablet annotation overlay for Quarto HTML
+  -----------------------------------------------------------------
+  Experimental v4 layout-relative variant of annotation.html.
+  Currently injected via per-document YAML override on
+  4th-handout.qmd; other handouts continue to use annotation.html.
+
+  WHAT'S NEW IN v4 (vs v3 in annotation.html)
+  -------------------------------------------
+  Storage format: each stroke point is stored as fractional
+  coordinates (fx, fy) ∈ [0, 1]² *inside* the smallest [id]-bearing
+  ancestor element at the draw point. At render time we look up the
+  anchor by id, get its current getBoundingClientRect(), and compute:
+
+      viewport_x = anchor.left + fx * anchor.width
+      viewport_y = anchor.top  + fy * anchor.height
+
+  Why this is the right primitive (per W3C/PDF.js community
+  consensus — see 2026 search "html canvas annotation overlay
+  browser zoom relative coordinates"):
+    • Browser page-zoom: anchor.width / .height scale uniformly,
+      so (fx, fy) maps to the correct visual location automatically.
+      No scale factor to compute.
+    • Stroke thickness ALSO scales with zoom:
+          lineWidth = savedWidth * (currentAnchorWidth / savedAnchorWidth)
+      → notes feel like part of the underlying document content.
+    • Window resize / responsive reflow: anchor reflows with content;
+      the fractional location stays meaningful.
+    • Cross-machine font drift: anchor's aspect ratio may shift
+      slightly (e.g. text wraps to one extra line), which stretches
+      strokes proportionally — best-effort but tolerant.
+
+  Backward compatibility
+  ----------------------
+    • Loading a v3 JSON: in-memory conversion to v4 happens at load
+      time (anchor.left/top + width/height + saved doc-coords →
+      fractional). No re-save needed for the strokes to render
+      correctly.
+    • Loading a v2 JSON (legacy unanchored): rendered as raw
+      doc-coords (zoom-fragile); the next Save .json upgrades them
+      to v4 if anchors can be found.
+    • Saved files are always v4.
+
   • Vanilla JS only (no external dependencies)
   • Pointer Events API (mouse / pen / touch all unified)
   • Toolbar: cursor / pen / highlighter / eraser / color / width /
@@ -10,15 +49,6 @@
   • Cursor tool: keeps annotation mode ON (existing strokes stay
     visible) but lets the page handle pointer events again so the
     user can scroll, click links, use the TOC, etc.
-  • Save/Load annotations as JSON (v3 format anchors each stroke to
-    the nearest [id] element so cross-machine loads — e.g. saved on
-    Windows, loaded on macOS — line up despite font drift). Anchored
-    strokes also automatically follow browser-zoom changes and
-    window resizes (delta applied per draw, no reload needed).
-  • Loading a legacy v2 file on the same machine where it was saved
-    auto-upgrades each stroke to v3 by attaching an anchor based on
-    the current layout — re-saving then produces a fully portable
-    v3 file.
   • Toolbar is draggable via the ⋮⋮ grip; can be hidden via the ✕
     button (a small ✏ launcher appears at top-right while hidden).
     Position and visibility persist across reloads via localStorage.
@@ -33,6 +63,20 @@
 <script>
 (function () {
   "use strict";
+
+  // ── Coexistence with annotation.html (v3) ─────────────────────
+  // Quarto's include-after-body MERGES project-level and document-
+  // level entries (rather than replacing), so when a handout opts
+  // into v4 via document YAML, BOTH annotation.html and
+  // annotation-v4.html end up injected. Without coordination, v3
+  // would create #annotation-canvas first and v4's init() would
+  // bail (its existing guard is `if (#annotation-canvas) return`).
+  //
+  // The fix: we set this flag synchronously as v4's IIFE runs.
+  // annotation.html (v3) was patched to defer its init to a
+  // microtask and bail when this flag is set, so v4 wins on any
+  // page that loads both files.
+  window.__ANNOTATION_V4_ACTIVE__ = true;
 
   const COLORS = [
     { name: "black",  value: "#111827" },
@@ -120,8 +164,22 @@
         height: "100vh",
         zIndex: "2147483646",
         pointerEvents: "none",
-        // pan-y: vertical touch-scroll still works while pen draws
-        touchAction: "pan-y",
+        // touch-action: none — surrender NO drag axis to the browser.
+        // Otherwise Surface (and similar pen-on-tablet devices) would
+        // see a vertical pen drag as "user wants to pan-y" and steal
+        // the gesture for page scrolling, so the user can't draw
+        // vertical lines.
+        //
+        // Trade-off: while a drawing tool is active, finger swipes on
+        // the canvas no longer scroll the page. Workarounds the user
+        // already has:
+        //   • ↖ Cursor tool (keeps strokes visible, lets the page
+        //     handle pointer events again)
+        //   • mouse wheel / two-finger scroll (wheel events, not
+        //     pointer events — unaffected by touch-action)
+        //   • scrollbar / keyboard (PgUp/PgDn/Space/arrows)
+        //   • Esc to turn annotation OFF (then scroll, then Alt+A back)
+        touchAction: "none",
         background: "transparent",
         cursor: "crosshair",
         display: "none",
@@ -154,70 +212,45 @@
     for (const s of strokes) drawStroke(s, anchorCache);
   }
 
-  // Stroke points are stored in DOCUMENT coordinates (pageX/pageY)
-  // as captured at draw time. When drawing on the fixed-position
-  // canvas we subtract the current scroll offset (so strokes scroll
-  // with the page) AND apply an anchor-relative transform that
-  // keeps strokes glued to the underlying content across
-  //   • scrolling (anchor's document-coord position is invariant
-  //     under scroll, so the transform is the identity — fast path)
-  //   • browser zoom (Chrome's page-zoom scales CSS pixel values,
-  //     so zoom_ratio = current_anchor.width / saved_anchor.width.
-  //     We scale the stroke's offset from its anchor by this ratio.)
-  //   • window resize / responsive reflow (anchor reflows with
-  //     content; the transform compensates)
-  //   • cross-machine font drift (saved anchor was at the origin
-  //     machine's CSS px, current anchor is at this machine's CSS
-  //     px — the transform absorbs the difference)
+  // v4 strokes carry anchor-relative fractional coordinates
+  // (fx, fy) ∈ [0, 1]² of the anchor element's bounding box. At
+  // render time we re-fetch the anchor's current rect and convert
+  // back to viewport pixels. Browser zoom and reflow are absorbed
+  // for free because both the anchor and the viewport coordinates
+  // come from the SAME live layout snapshot.
   //
-  // Transform per point:
-  //   new = anchor_now + (saved - anchor_saved) * scale
-  // Falls back to identity when no anchor is available, and to a
-  // pure translation when the anchor predates width/height capture.
+  // Stroke thickness scales with zoom too:
+  //     lineWidth = savedWidth * (anchorNow.width / anchorSaved.width)
+  // so notes thicken when zoomed in (matching how the underlying
+  // text gets bigger), instead of staying a fixed CSS-px size.
+  //
+  // Legacy unanchored (v2) strokes hold raw doc-coord points and
+  // render via a translation-only fallback (zoom-fragile, but
+  // preserved for backward compatibility while loading old files).
   function drawStroke(s, anchorCache) {
     if (!s.points || s.points.length === 0) return;
     const sx = window.scrollX, sy = window.scrollY;
 
-    let useAnchor = false;
-    let aSavedLeft = 0, aSavedTop = 0;
-    let aNowLeft = 0, aNowTop = 0;
+    let rect = null;
     let scale = 1.0;
-
     if (s.anchor && s.anchor.id) {
-      let pos;
       if (anchorCache && anchorCache.has(s.anchor.id)) {
-        pos = anchorCache.get(s.anchor.id);
+        rect = anchorCache.get(s.anchor.id);
       } else {
         const el = document.getElementById(s.anchor.id);
         if (el) {
           const r = el.getBoundingClientRect();
-          pos = {
-            left: r.left + window.scrollX,
-            top: r.top + window.scrollY,
-            width: r.width,
-            height: r.height,
-          };
-        } else {
-          pos = null;
+          if (r.width > 0 && r.height > 0) {
+            rect = { left: r.left, top: r.top, width: r.width, height: r.height };
+          }
         }
-        if (anchorCache) anchorCache.set(s.anchor.id, pos);
+        if (anchorCache) anchorCache.set(s.anchor.id, rect);
       }
-      if (pos) {
-        useAnchor = true;
-        aSavedLeft = s.anchor.left;
-        aSavedTop = s.anchor.top;
-        aNowLeft = pos.left;
-        aNowTop = pos.top;
-        // Use the anchor's width as the zoom-ratio signal (height
-        // is noisier — small text elements have integer-rounded
-        // heights). Width tracks zoom faithfully because anchor
-        // text reflows in proportion to the zoom factor.
-        if (s.anchor.width > 0 && pos.width > 0) {
-          scale = pos.width / s.anchor.width;
-          // Clamp tiny noise (< 0.5%) to identity to avoid
-          // accumulating sub-pixel drift on every redraw.
-          if (Math.abs(scale - 1) < 0.005) scale = 1;
-        }
+      if (rect && s.anchor.savedWidth > 0) {
+        scale = rect.width / s.anchor.savedWidth;
+        // Clamp sub-pixel noise to identity to keep the stroke
+        // visually stable when the layout hasn't actually changed.
+        if (Math.abs(scale - 1) < 0.005) scale = 1;
       }
     }
 
@@ -235,27 +268,28 @@
       ctx.lineCap = "butt";
       ctx.lineJoin = "round";
     } else {
-      // pen
       ctx.globalCompositeOperation = "source-over";
       ctx.strokeStyle = s.color;
       ctx.lineCap = "round";
       ctx.lineJoin = "round";
     }
-    ctx.lineWidth = s.width;
+    ctx.lineWidth = (s.width || 4) * scale;
     ctx.beginPath();
     const [p0, ...rest] = s.points;
-    if (useAnchor) {
-      ctx.moveTo(
-        aNowLeft + (p0.x - aSavedLeft) * scale - sx,
-        aNowTop  + (p0.y - aSavedTop)  * scale - sy
-      );
+    const isFractional = (p0.fx !== undefined);
+    if (rect && isFractional) {
+      // v4 path: fractional → viewport via current anchor rect.
+      ctx.moveTo(rect.left + p0.fx * rect.width, rect.top + p0.fy * rect.height);
       for (const p of rest) {
-        ctx.lineTo(
-          aNowLeft + (p.x - aSavedLeft) * scale - sx,
-          aNowTop  + (p.y - aSavedTop)  * scale - sy
-        );
+        ctx.lineTo(rect.left + p.fx * rect.width, rect.top + p.fy * rect.height);
       }
+    } else if (isFractional) {
+      // v4 stroke whose anchor element no longer exists on the
+      // page — skip silently. (Logged once per anchor at load time.)
+      ctx.restore();
+      return;
     } else {
+      // Legacy v2 unanchored — render at saved doc coords.
       ctx.moveTo(p0.x - sx, p0.y - sy);
       for (const p of rest) ctx.lineTo(p.x - sx, p.y - sy);
     }
@@ -280,21 +314,42 @@
     const w = (e.pointerType === "pen" && e.pressure > 0)
       ? Math.max(1, width * (e.pressure * 1.5 + 0.4))
       : width;
-    const startX = e.clientX + window.scrollX;
-    const startY = e.clientY + window.scrollY;
-    // Store in DOCUMENT coordinates so the stroke "sticks" to the
-    // page when the user scrolls. Also pin the stroke to the nearest
-    // [id]-bearing content element so cross-machine loads can
-    // reapply the offset against that element's current position.
-    currentStroke = {
-      tool, color, width: w,
-      anchor: findNearestAnchorAbove(startX, startY),
-      points: [{
-        x: startX,
-        y: startY,
-        p: e.pressure || 0.5,
-      }],
-    };
+
+    // v4: pin the stroke to the smallest [id]-bearing element under
+    // the pointer (preferred), or fall back to the nearest [id]
+    // above when the click landed on margins / unnamed wrappers.
+    const anchorEl = findContainingAnchor(e.clientX, e.clientY)
+                  || findFallbackAnchorElement(e.clientX, e.clientY);
+    if (anchorEl) {
+      const r = anchorEl.getBoundingClientRect();
+      currentStroke = {
+        v: 4,
+        tool, color, width: w,
+        anchor: {
+          id: anchorEl.id,
+          savedWidth:  r.width,
+          savedHeight: r.height,
+        },
+        points: [{
+          fx: (e.clientX - r.left) / r.width,
+          fy: (e.clientY - r.top)  / r.height,
+          p: e.pressure || 0.5,
+        }],
+      };
+    } else {
+      // No usable anchor on the entire page — extremely unusual.
+      // Fall back to legacy v2 doc-coord storage; the stroke will
+      // render via the no-anchor fallback in drawStroke.
+      currentStroke = {
+        tool, color, width: w,
+        anchor: null,
+        points: [{
+          x: e.clientX + window.scrollX,
+          y: e.clientY + window.scrollY,
+          p: e.pressure || 0.5,
+        }],
+      };
+    }
     strokes.push(currentStroke);
   }
   function onPointerMove(e) {
@@ -302,39 +357,73 @@
     if (!isDrawingPointer(e)) return;
     e.preventDefault();
     const events = e.getCoalescedEvents ? e.getCoalescedEvents() : [e];
-    const sx = window.scrollX, sy = window.scrollY;
-    for (const ev of events) {
-      currentStroke.points.push({
-        x: ev.clientX + sx, y: ev.clientY + sy, p: ev.pressure || 0.5,
-      });
-    }
-    const pts = currentStroke.points;
-    if (pts.length < 2) return;
 
-    // Highlighter: redraw the whole canvas so transparent strokes don't
-    // pile up alpha at every segment joint. Pen / eraser stay
-    // incremental for snappy feedback.
-    if (currentStroke.tool === "highlighter") {
-      redraw();
-      return;
-    }
+    if (currentStroke.v === 4) {
+      // Re-fetch the anchor's current rect on every move so the
+      // stroke "rides" the anchor even if the user scrolls / zooms
+      // mid-stroke (rare, but free to support).
+      const anchorEl = document.getElementById(currentStroke.anchor.id);
+      if (!anchorEl) return;
+      const r = anchorEl.getBoundingClientRect();
+      if (r.width <= 0 || r.height <= 0) return;
+      for (const ev of events) {
+        currentStroke.points.push({
+          fx: (ev.clientX - r.left) / r.width,
+          fy: (ev.clientY - r.top)  / r.height,
+          p: ev.pressure || 0.5,
+        });
+      }
+      const pts = currentStroke.points;
+      if (pts.length < 2) return;
 
-    ctx.save();
-    if (currentStroke.tool === "eraser") {
-      ctx.globalCompositeOperation = "destination-out";
-      ctx.strokeStyle = "rgba(0,0,0,1)";
+      if (currentStroke.tool === "highlighter") {
+        redraw();
+        return;
+      }
+      ctx.save();
+      if (currentStroke.tool === "eraser") {
+        ctx.globalCompositeOperation = "destination-out";
+        ctx.strokeStyle = "rgba(0,0,0,1)";
+      } else {
+        ctx.globalCompositeOperation = "source-over";
+        ctx.strokeStyle = currentStroke.color;
+      }
+      // Mid-stroke: anchor's current rect equals the saved rect, so
+      // scale = 1 and lineWidth equals the captured width.
+      ctx.lineWidth = currentStroke.width;
+      ctx.beginPath();
+      const prev = pts[pts.length - 2];
+      const curr = pts[pts.length - 1];
+      ctx.moveTo(r.left + prev.fx * r.width, r.top + prev.fy * r.height);
+      ctx.lineTo(r.left + curr.fx * r.width, r.top + curr.fy * r.height);
+      ctx.stroke();
+      ctx.restore();
     } else {
-      ctx.globalCompositeOperation = "source-over";
-      ctx.strokeStyle = currentStroke.color;
+      // Legacy unanchored fallback — doc-coord live drawing.
+      const sx = window.scrollX, sy = window.scrollY;
+      for (const ev of events) {
+        currentStroke.points.push({
+          x: ev.clientX + sx, y: ev.clientY + sy, p: ev.pressure || 0.5,
+        });
+      }
+      const pts = currentStroke.points;
+      if (pts.length < 2) return;
+      if (currentStroke.tool === "highlighter") { redraw(); return; }
+      ctx.save();
+      if (currentStroke.tool === "eraser") {
+        ctx.globalCompositeOperation = "destination-out";
+        ctx.strokeStyle = "rgba(0,0,0,1)";
+      } else {
+        ctx.globalCompositeOperation = "source-over";
+        ctx.strokeStyle = currentStroke.color;
+      }
+      ctx.lineWidth = currentStroke.width;
+      ctx.beginPath();
+      ctx.moveTo(pts[pts.length - 2].x - sx, pts[pts.length - 2].y - sy);
+      ctx.lineTo(pts[pts.length - 1].x - sx, pts[pts.length - 1].y - sy);
+      ctx.stroke();
+      ctx.restore();
     }
-    ctx.lineWidth = currentStroke.width;
-    ctx.beginPath();
-    // Convert document coords back to viewport for drawing on the
-    // fixed-position canvas.
-    ctx.moveTo(pts[pts.length - 2].x - sx, pts[pts.length - 2].y - sy);
-    ctx.lineTo(pts[pts.length - 1].x - sx, pts[pts.length - 1].y - sy);
-    ctx.stroke();
-    ctx.restore();
   }
   function onPointerUp(e) {
     if (!enabled || !drawing) return;
@@ -844,69 +933,115 @@
       id: best.id,
       top: r.top + window.scrollY,
       left: r.left + window.scrollX,
-      // width / height are also captured so drawStroke can detect
-      // browser-zoom changes: in Chrome's page-zoom, getBoundingClientRect
-      // returns CSS pixel values that scale with the zoom factor, so
-      //   scale = current_anchor.width / saved_anchor.width
-      // gives the zoom-ratio between save and load (= 1.0 if zoom
-      // unchanged) and lets us scale the stroke's offset from the
-      // anchor accordingly.
       width: r.width,
       height: r.height,
     };
   }
 
-  function saveJson() {
-    // Two on-save upgrades:
-    //   • Any stroke without an anchor at all gets one attached
-    //     (covers v2 files loaded into the page).
-    //   • Any anchor lacking width/height gets those backfilled
-    //     from the current anchor element (so older v3 files
-    //     drawn before width/height capture become zoom-robust).
-    // Both upgrades trust the user's "save" click as confirmation
-    // that the strokes currently look aligned with the live page.
-    let attached = 0;
-    let backfilled = 0;
-    const strokesOut = strokes.map((s) => {
-      if (s.anchor && s.anchor.id) {
-        if (s.anchor.width === undefined || s.anchor.height === undefined) {
-          const el = document.getElementById(s.anchor.id);
-          if (el) {
-            const r = el.getBoundingClientRect();
-            backfilled++;
-            return {
-              ...s,
-              anchor: { ...s.anchor, width: r.width, height: r.height },
-            };
-          }
+  // ── v4 anchor lookup ──────────────────────────────────────────
+  // findContainingAnchor: the deepest [id]-bearing element whose
+  //   bounding box covers (clientX, clientY). Returns the element
+  //   so the caller can compute a fresh getBoundingClientRect() for
+  //   fractional-coord arithmetic. This is the preferred anchor
+  //   because the stroke's first point is GUARANTEED to lie inside
+  //   it, giving fractional coords in [0, 1]² (well-defined even
+  //   if the anchor reflows to a slightly different shape).
+  function findContainingAnchor(clientX, clientY) {
+    let elements = [];
+    if (document.elementsFromPoint) {
+      elements = document.elementsFromPoint(clientX, clientY);
+    } else {
+      const single = document.elementFromPoint(clientX, clientY);
+      if (single) elements = [single];
+    }
+    for (const target of elements) {
+      if (!target) continue;
+      // Skip our own annotation overlay / toolbar layers.
+      if (target === canvas) continue;
+      if (target.id === "annotation-toolbar" ||
+          target.id === "annotation-canvas") continue;
+      if (target.closest && target.closest("#annotation-toolbar")) continue;
+      let cur = target;
+      while (cur && cur !== document.body) {
+        if (cur.id && isContentAnchor(cur)) {
+          const r = cur.getBoundingClientRect();
+          if (r.width > 0 && r.height > 0) return cur;
         }
-        return s;
+        cur = cur.parentElement;
       }
+    }
+    return null;
+  }
+
+  // findFallbackAnchorElement: same heuristic as
+  // findNearestAnchorAbove (nearest [id] preceding the click) but
+  // returns the DOM element instead of a saved-anchor object.
+  // Used when findContainingAnchor returns null (e.g. user clicked
+  // on a margin / wrapper without an [id]).
+  function findFallbackAnchorElement(clientX, clientY) {
+    const absY = clientY + window.scrollY;
+    const list = getAnchorList();
+    let best = null;
+    let bestTop = -Infinity;
+    for (const el of list) {
+      const r = el.getBoundingClientRect();
+      if (r.width === 0 && r.height === 0) continue;
+      const top = r.top + window.scrollY;
+      if (top <= absY + 4 && top > bestTop) {
+        best = el;
+        bestTop = top;
+      }
+    }
+    return best;
+  }
+
+  function saveJson() {
+    // Best-effort on-save upgrade: convert any legacy v2 unanchored
+    // strokes to v4 fractional, using the current layout to find an
+    // anchor. The user clicking "Save" implies the strokes currently
+    // look aligned with the live page, so it's safe to bake the
+    // current anchor rect in as the saved one.
+    let attached = 0;
+    const strokesOut = strokes.map((s) => {
+      if (s.v === 4) return s;
       if (!s.points || s.points.length === 0) return s;
       const p0 = s.points[0];
-      const anchor = findNearestAnchorAbove(p0.x, p0.y);
-      if (!anchor) return s;
+      if (p0.fx !== undefined) return { ...s, v: 4 };
+
+      // p0.x / p0.y are doc-coords. Convert to viewport (clientX/Y)
+      // for elementFromPoint hit-testing.
+      const clientX = p0.x - window.scrollX;
+      const clientY = p0.y - window.scrollY;
+      const el = findContainingAnchor(clientX, clientY)
+              || findFallbackAnchorElement(clientX, clientY);
+      if (!el) return s;
+      const r = el.getBoundingClientRect();
+      if (r.width <= 0 || r.height <= 0) return s;
       attached++;
-      return { ...s, anchor };
+      return {
+        v: 4,
+        tool: s.tool, color: s.color, width: s.width,
+        anchor: { id: el.id, savedWidth: r.width, savedHeight: r.height },
+        points: s.points.map(p => ({
+          fx: (p.x - (r.left + window.scrollX)) / r.width,
+          fy: (p.y - (r.top  + window.scrollY)) / r.height,
+          p: p.p,
+        })),
+      };
     });
-    if (attached > 0 || backfilled > 0) {
-      // Persist the upgrade so a subsequent save / undo sees the
-      // anchored strokes too.
+    if (attached > 0) {
       strokes = strokesOut;
       if (window.console) {
-        const parts = [];
-        if (attached > 0)   parts.push("anchored=" + attached);
-        if (backfilled > 0) parts.push("backfilled-dimensions=" + backfilled);
         console.info(
-          "[annotation] On-save upgrade: " + parts.join(", ") +
+          "[annotation v4] On-save upgrade: anchored=" + attached +
           " — file is now zoom-robust."
         );
       }
     }
 
     const data = {
-      version: 3,                       // v3 = anchored strokes
-      coordinates: "document+anchor",   // pageX/pageY plus per-stroke anchor
+      version: 4,                                  // v4 = fractional anchored strokes
+      coordinates: "anchor-relative-fraction",     // (fx, fy) ∈ [0,1]² of anchor rect
       url: location.href,
       title: document.title,
       savedAt: new Date().toISOString(),
@@ -955,45 +1090,75 @@
     reader.readAsText(file);
   }
 
-  // Strokes are placed at their saved coordinates as-is. Anchored
-  // strokes get a per-frame translation in drawStroke (so zoom /
-  // resize / scroll all "just work"); unanchored ones simply sit
-  // at their saved coordinates. The decision of when to attach an
-  // anchor to an unanchored stroke is deferred to save time
-  // (saveJson) — by then the user has had a chance to verify
-  // visually that the strokes are aligned with the current page.
-  // Doing it at load time would be brittle because the heuristic
-  // for "same machine?" (comparing document.scrollWidth/Height)
-  // is not stable enough in practice.
+  // Convert any loaded stroke into v4-fractional in-memory format
+  // so the rest of the app only deals with one shape:
+  //   • Already v4 → kept as-is.
+  //   • v3 (anchor + saved doc-coords + saved width/height) →
+  //     compute (fx, fy) = (p.x - anchor.left)/anchor.width,
+  //                         (p.y - anchor.top)/anchor.height
+  //     using the SAVED anchor rect so the conversion is exact and
+  //     does NOT depend on the current layout.
+  //   • v3 missing width/height → unfortunately ambiguous; treat
+  //     as legacy unanchored.
+  //   • v2 unanchored → kept as-is; rendered via doc-coord fallback.
   function realignStrokesToCurrentDocument(data) {
     const strokesIn = Array.isArray(data.strokes) ? data.strokes : [];
     if (strokesIn.length === 0) return [];
 
-    if (window.console) {
-      const anchored = strokesIn.filter(s => s.anchor && s.anchor.id).length;
-      const unanchored = strokesIn.length - anchored;
-      console.info(
-        "[annotation] Loaded v" + (data.version || "?") + ": " +
-        "anchored=" + anchored + " unanchored=" + unanchored +
-        " (" + strokesIn.length + " total)."
-      );
-      if (anchored > 0) {
-        console.info(
-          "[annotation] Anchored strokes follow zoom / resize / " +
-          "reflow automatically (delta is applied per draw)."
-        );
+    let v4Count = 0, v3to4 = 0, missing = 0, unanchored = 0;
+    const out = [];
+    for (const s of strokesIn) {
+      const isFractional = s.points && s.points.length > 0
+                        && s.points[0].fx !== undefined;
+      if (s.v === 4 || isFractional) {
+        v4Count++;
+        out.push({ ...s, v: 4 });
+        continue;
       }
-      if (unanchored > 0) {
+      // v3 with full anchor (top/left/width/height + doc-coord points)
+      if (s.anchor && s.anchor.id
+          && typeof s.anchor.left === "number" && typeof s.anchor.top === "number"
+          && s.anchor.width > 0 && s.anchor.height > 0
+          && s.points && s.points.length > 0
+          && s.points[0].x !== undefined) {
+        const aL = s.anchor.left, aT = s.anchor.top;
+        const aW = s.anchor.width, aH = s.anchor.height;
+        out.push({
+          v: 4,
+          tool: s.tool, color: s.color, width: s.width,
+          anchor: { id: s.anchor.id, savedWidth: aW, savedHeight: aH },
+          points: s.points.map(p => ({
+            fx: (p.x - aL) / aW,
+            fy: (p.y - aT) / aH,
+            p: p.p,
+          })),
+        });
+        v3to4++;
+        continue;
+      }
+      if (s.anchor && s.anchor.id) {
+        missing++;  // v3-ish but missing dimensions; skip the conversion
+      } else {
+        unanchored++;
+      }
+      // Keep as legacy unanchored — render via the doc-coord fallback.
+      out.push(s);
+    }
+    if (window.console) {
+      console.info(
+        "[annotation v4] Loaded v" + (data.version || "?") + ": " +
+        "v4=" + v4Count + " v3→v4=" + v3to4 +
+        " v3-no-dims=" + missing + " unanchored=" + unanchored
+      );
+      if (missing > 0 || unanchored > 0) {
         console.info(
-          "[annotation] Unanchored strokes will be auto-anchored " +
-          "the next time you click Save .json — provided the strokes " +
-          "look aligned with the current page (i.e. you're on the " +
-          "machine where they were drawn)."
+          "[annotation v4] Strokes without enough info to convert " +
+          "render at raw saved coords (zoom-fragile). Save .json on " +
+          "the original layout to upgrade them to v4."
         );
       }
     }
-
-    return strokesIn;
+    return out;
   }
 
   // Browsers do not allow JS to point a file picker at an arbitrary
@@ -1089,6 +1254,15 @@
       resizeCanvas();
       clampToolbarPosition();
     });
+    // Browser page-zoom doesn't always fire `resize` on `window`,
+    // but it does notify VisualViewport — listen there too so v4
+    // strokes immediately re-render at the new zoom level.
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener("resize", () => {
+        resizeCanvas();
+        clampToolbarPosition();
+      });
+    }
     window.addEventListener("keydown", onKeyDown);
     // Re-render whenever the user scrolls so strokes appear locked to
     // the underlying page content.
@@ -1102,22 +1276,10 @@
     }, { passive: true });
   }
 
-  // Coexistence guard: a per-document v4 overlay (annotation-v4.html)
-  // may also be injected after this file. v4 sets
-  // window.__ANNOTATION_V4_ACTIVE__ synchronously as its IIFE runs.
-  // We defer our init by one microtask/DOMContentLoaded so the flag
-  // (set later in body) is observable, and bail if v4 is taking over.
-  function bootstrap() {
-    if (window.__ANNOTATION_V4_ACTIVE__) return;
-    init();
-  }
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", bootstrap);
+    document.addEventListener("DOMContentLoaded", init);
   } else {
-    // Body already parsed (e.g. injected dynamically). Yield to a
-    // microtask so any v4 script later in the same parse can still
-    // set its flag before we check it.
-    Promise.resolve().then(bootstrap);
+    init();
   }
 })();
 </script>

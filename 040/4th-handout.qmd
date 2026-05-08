@@ -13,6 +13,12 @@ format:
     code-fold: false
     code-tools: true
     highlight-style: github
+    # Experimental v4 annotation overlay: stores stroke points as
+    # anchor-relative fractional coordinates so they follow browser
+    # page-zoom (and notes scale with the surrounding text).
+    # Other handouts continue to use the v3 annotation.html.
+    include-after-body:
+      - ../annotation-v4.html
 execute:
   echo: true
   eval: true
