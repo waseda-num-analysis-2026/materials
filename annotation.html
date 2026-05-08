@@ -1108,7 +1108,21 @@
   // We defer our init by one microtask/DOMContentLoaded so the flag
   // (set later in body) is observable, and bail if v4 is taking over.
   function bootstrap() {
-    if (window.__ANNOTATION_V4_ACTIVE__) return;
+    if (window.__ANNOTATION_V4_ACTIVE__) {
+      // Diagnostic: makes it obvious in devtools when v4 is taking
+      // over (otherwise it's hard to tell which copy is live on a
+      // page that includes both files).
+      if (window.console) {
+        console.info(
+          "[annotation v3] bypassed — v4 (annotation-v4.html) is " +
+          "active on this page."
+        );
+      }
+      return;
+    }
+    if (window.console) {
+      console.info("[annotation v3] init");
+    }
     init();
   }
   if (document.readyState === "loading") {

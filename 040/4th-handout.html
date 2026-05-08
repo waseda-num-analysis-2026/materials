@@ -318,7 +318,7 @@ x =
 <p><span class="math display">\[
 \|x\|_\infty = \max\{|-1|, |2|, |-3|\} = 3.
 \]</span></p>
-<div id="a969cc56" class="cell" data-execution_count="1">
+<div id="c82146a5" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> numpy <span class="im">import</span> linalg <span class="im">as</span> LA</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -340,7 +340,7 @@ x =
 </div>
 <div id="callout-3" class="callout-3-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<div id="d7e6ef5d" class="cell" data-execution_count="2">
+<div id="62d1cd28" class="cell" data-execution_count="2">
 <div class="cell-output cell-output-stdout">
 <pre><code>||x||_1     = 6.0
 ||x||_2     = 3.7416573867739413
@@ -469,7 +469,7 @@ m := \|x\|_\infty = \max_i |x_i|.
 \]</span></p>
 <p>Combining these estimates gives all six inequalities in (5), (6), and (7).</p>
 <p>These are the inequalities you will check numerically in <strong>Exercise 4.2</strong>.</p>
-<div id="ed469735" class="cell" data-execution_count="4">
+<div id="47126024" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> numpy <span class="im">import</span> linalg <span class="im">as</span> LA</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -503,7 +503,7 @@ m := \|x\|_\infty = \max_i |x_i|.
 </div>
 <div id="callout-4" class="callout-4-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<div id="403c3ee5" class="cell" data-execution_count="5">
+<div id="54f5eec5" class="cell" data-execution_count="5">
 <div class="cell-output cell-output-stdout">
 <pre><code>x = [-0.79312248  0.24057128 -1.89632635  1.39577171  0.63829474]
 ||x||_2 &lt;= ||x||_1 &lt;= sqrt(n)||x||_2
@@ -602,7 +602,7 @@ A =
 \end{pmatrix}.
 \]</span></p>
 <p>The <span class="math inline">\(\ell^1\)</span> matrix norm is the maximum absolute column sum, and the <span class="math inline">\(\ell^\infty\)</span> matrix norm is the maximum absolute row sum.</p>
-<div id="75d5066e" class="cell" data-execution_count="6">
+<div id="7e23a9a6" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> numpy <span class="im">import</span> linalg <span class="im">as</span> LA</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -637,7 +637,7 @@ A =
 </div>
 <div id="callout-5" class="callout-5-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<div id="49fefb61" class="cell" data-execution_count="7">
+<div id="3960e7ea" class="cell" data-execution_count="7">
 <div class="cell-output cell-output-stdout">
 <pre><code>A =
 [[ 1. -2.  0.]
@@ -711,7 +711,7 @@ row sums    = [3. 8. 7.]
 </tbody>
 </table>
 <p>The exact runtime depends on the implementation and the matrix, but the important lesson is simple: the norm that is easiest to reason about is not always the cheapest one to compute.</p>
-<div id="e1f78178" class="cell" data-execution_count="8">
+<div id="c15dd4d8" class="cell" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> time</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> numpy <span class="im">import</span> linalg <span class="im">as</span> LA</span>
@@ -743,12 +743,12 @@ row sums    = [3. 8. 7.]
 </div>
 <div id="callout-6" class="callout-6-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<div id="59a99762" class="cell" data-execution_count="9">
+<div id="0fa4eb68" class="cell" data-execution_count="9">
 <div class="cell-output cell-output-stdout">
-<pre><code>1-norm         : value=  868.2104, time=0.00026 sec
-infinity-norm  : value=  854.9725, time=0.00029 sec
+<pre><code>1-norm         : value=  868.2104, time=0.00053 sec
+infinity-norm  : value=  854.9725, time=0.00025 sec
 Frobenius norm : value= 1000.1246, time=0.00004 sec
-2-norm         : value=   63.2541, time=0.03636 sec</code></pre>
+2-norm         : value=   63.2541, time=0.03620 sec</code></pre>
 </div>
 </div>
 </div>
@@ -1932,7 +1932,21 @@ Frobenius norm : value= 1000.1246, time=0.00004 sec
   // We defer our init by one microtask/DOMContentLoaded so the flag
   // (set later in body) is observable, and bail if v4 is taking over.
   function bootstrap() {
-    if (window.__ANNOTATION_V4_ACTIVE__) return;
+    if (window.__ANNOTATION_V4_ACTIVE__) {
+      // Diagnostic: makes it obvious in devtools when v4 is taking
+      // over (otherwise it's hard to tell which copy is live on a
+      // page that includes both files).
+      if (window.console) {
+        console.info(
+          "[annotation v3] bypassed — v4 (annotation-v4.html) is " +
+          "active on this page."
+        );
+      }
+      return;
+    }
+    if (window.console) {
+      console.info("[annotation v3] init");
+    }
     init();
   }
   if (document.readyState === "loading") {
@@ -2106,9 +2120,16 @@ Frobenius norm : value= 1000.1246, time=0.00004 sec
       id: "annotation-canvas",
       style: {
         position: "fixed",
-        inset: "0",
-        width: "100vw",
-        height: "100vh",
+        top: "0",
+        left: "0",
+        // Width/height are set in JS (resizeCanvas) so we can use
+        // documentElement.clientWidth/Height — which EXCLUDES the
+        // browser scrollbar. Why this matters: with touch-action:
+        // none, Edge on Windows touch devices renders a "no-scroll
+        // here" hint (the scrollbar appears dashed/ghosted) on any
+        // touch-action:none element that overlaps the scrollbar
+        // area. Keeping the canvas inside the content area only
+        // leaves the scrollbar fully solid and interactable.
         zIndex: "2147483646",
         pointerEvents: "none",
         // touch-action: none — surrender NO drag axis to the browser.
@@ -2130,6 +2151,10 @@ Frobenius norm : value= 1000.1246, time=0.00004 sec
         background: "transparent",
         cursor: "crosshair",
         display: "none",
+        // Suppress any user-agent focus outline; the canvas can be
+        // implicitly focused while drawing on some browsers and a
+        // dashed outline at the viewport edge is visually distracting.
+        outline: "none",
       },
     });
     document.body.appendChild(c);
@@ -2139,8 +2164,17 @@ Frobenius norm : value= 1000.1246, time=0.00004 sec
   function resizeCanvas() {
     if (!canvas) return;
     const dpr = window.devicePixelRatio || 1;
-    canvas.width  = Math.floor(window.innerWidth  * dpr);
-    canvas.height = Math.floor(window.innerHeight * dpr);
+    // documentElement.clientWidth/Height = viewport CSS px MINUS
+    // the browser scrollbar (when it's present). We deliberately
+    // do not use window.innerWidth/innerHeight here because those
+    // include the scrollbar area on Chrome / Edge, which would
+    // cause the canvas to overlap it (see makeCanvas comment).
+    const cssW = document.documentElement.clientWidth;
+    const cssH = document.documentElement.clientHeight;
+    canvas.style.width  = cssW + "px";
+    canvas.style.height = cssH + "px";
+    canvas.width  = Math.floor(cssW * dpr);
+    canvas.height = Math.floor(cssH * dpr);
     ctx = canvas.getContext("2d");
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.lineCap = "round";
@@ -3183,6 +3217,12 @@ Frobenius norm : value= 1000.1246, time=0.00004 sec
 
   function init() {
     if (document.getElementById("annotation-canvas")) return;
+    if (window.console) {
+      console.info(
+        "[annotation v4] init — anchor-relative fractional " +
+        "coordinates active."
+      );
+    }
     canvas = makeCanvas();
     resizeCanvas();
     toolbar = makeToolbar();

@@ -159,9 +159,16 @@
       id: "annotation-canvas",
       style: {
         position: "fixed",
-        inset: "0",
-        width: "100vw",
-        height: "100vh",
+        top: "0",
+        left: "0",
+        // Width/height are set in JS (resizeCanvas) so we can use
+        // documentElement.clientWidth/Height — which EXCLUDES the
+        // browser scrollbar. Why this matters: with touch-action:
+        // none, Edge on Windows touch devices renders a "no-scroll
+        // here" hint (the scrollbar appears dashed/ghosted) on any
+        // touch-action:none element that overlaps the scrollbar
+        // area. Keeping the canvas inside the content area only
+        // leaves the scrollbar fully solid and interactable.
         zIndex: "2147483646",
         pointerEvents: "none",
         // touch-action: none — surrender NO drag axis to the browser.
@@ -183,6 +190,10 @@
         background: "transparent",
         cursor: "crosshair",
         display: "none",
+        // Suppress any user-agent focus outline; the canvas can be
+        // implicitly focused while drawing on some browsers and a
+        // dashed outline at the viewport edge is visually distracting.
+        outline: "none",
       },
     });
     document.body.appendChild(c);
@@ -192,8 +203,17 @@
   function resizeCanvas() {
     if (!canvas) return;
     const dpr = window.devicePixelRatio || 1;
-    canvas.width  = Math.floor(window.innerWidth  * dpr);
-    canvas.height = Math.floor(window.innerHeight * dpr);
+    // documentElement.clientWidth/Height = viewport CSS px MINUS
+    // the browser scrollbar (when it's present). We deliberately
+    // do not use window.innerWidth/innerHeight here because those
+    // include the scrollbar area on Chrome / Edge, which would
+    // cause the canvas to overlap it (see makeCanvas comment).
+    const cssW = document.documentElement.clientWidth;
+    const cssH = document.documentElement.clientHeight;
+    canvas.style.width  = cssW + "px";
+    canvas.style.height = cssH + "px";
+    canvas.width  = Math.floor(cssW * dpr);
+    canvas.height = Math.floor(cssH * dpr);
     ctx = canvas.getContext("2d");
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.lineCap = "round";
@@ -1236,6 +1256,12 @@
 
   function init() {
     if (document.getElementById("annotation-canvas")) return;
+    if (window.console) {
+      console.info(
+        "[annotation v4] init — anchor-relative fractional " +
+        "coordinates active."
+      );
+    }
     canvas = makeCanvas();
     resizeCanvas();
     toolbar = makeToolbar();
