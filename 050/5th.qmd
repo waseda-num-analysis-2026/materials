@@ -1,0 +1,182 @@
+---
+title: "Numerical Analysis"
+subtitle: "Foundations and Exercises"
+author:
+  - name: "TANAKA, Kazuaki (田中 一成)"
+    email: "k.tanaka@aoni.waseda.jp"
+    affiliations:
+      - name: "Global Center for Science and Engineering, Waseda University"
+format:
+  revealjs:
+    theme: [default, ../030/custom.scss]
+    slide-number: true
+    html-math-method: mathjax
+    chalkboard:
+      storage: chalkboardData_5th
+    title-slide-attributes:
+      data-background-image: "../030/images/image1.png"
+      data-background-size: "contain"
+      data-background-opacity: "0.15"
+---
+
+## Before We Start {.smaller}
+
+```{=html}
+<div class="mission-tip" style="margin-top:0.6em; margin-bottom:0.8em;">
+  <div class="mission-tip-icon">📥</div>
+  <div class="mission-tip-content">
+    <strong>Please pull the latest course materials repository.</strong>
+  </div>
+</div>
+
+<div style="display:flex; flex-direction:column; gap:0.5em; margin-bottom:0.8em;">
+  <div>
+    <div style="font-size:0.78em; color:#888; margin-bottom:0.2em;">Already cloned</div>
+    <pre style="margin:0; background:#1e1e2e; color:#cdd6f4; border-radius:8px; padding:0.5em 1em; font-size:0.78em; line-height:1.5;"><code>cd materials
+git pull</code></pre>
+  </div>
+</div>
+
+<div style="background:#f0f4ff; border-left:3px solid #4472C4; border-radius:6px; padding:0.6em 1em; font-size:0.82em;">
+  <strong>Today's materials</strong>:
+  <table style="margin-top:0.4em; border-collapse:collapse; width:100%;">
+    <tr><td style="padding:0.15em 0.6em 0.15em 0;"><code>050/5th.qmd</code></td><td style="color:#555;">slides — logistics and assignments</td></tr>
+    <tr><td style="padding:0.15em 0.6em 0.15em 0;"><code>050/linear-equations-handout.qmd</code></td><td style="color:#555;">📘 <strong>shared handout for Lectures 5 and 6</strong></td></tr>
+    <tr><td style="padding:0.15em 0.6em 0.15em 0;"><code>050/linear-equations-handout.html</code></td><td style="color:#555;">rendered shared handout</td></tr>
+  </table>
+</div>
+```
+
+## Today's Main Material {.smaller}
+
+```{=html}
+<div style="background:#e8f5e9; border-left:4px solid #2e7d32; border-radius:8px; padding:0.8em 1em; margin-bottom:0.7em;">
+  <div style="font-size:0.82em; color:#1b5e20; font-weight:700; letter-spacing:0.04em;">LECTURE 5</div>
+  <div style="font-size:1.05em; margin-top:0.2em;"><strong>Linear Systems I: Introduction to Stationary Iterative Methods</strong></div>
+  <div style="font-size:0.84em; color:#455a64; margin-top:0.25em;">
+    Use the shared Lectures 5--6 handout. Today we focus on Sections 1--9.
+  </div>
+</div>
+
+<div style="display:grid; grid-template-columns:1fr; gap:0.8em;">
+  <div style="background:#fff8e1; border:1px solid #ffe082; border-radius:10px; padding:0.75em 0.9em;">
+    <div style="font-size:0.8em; color:#e65100; font-weight:700;">Today's scope</div>
+    <ul style="font-size:0.83em; line-height:1.55; margin:0.4em 0 0 1.2em;">
+      <li>systems of linear equations and conditioning</li>
+      <li>direct methods vs iterative methods</li>
+      <li>Jacobi method and Gauss-Seidel method</li>
+      <li>basic implementation and numerical observation of residuals</li>
+    </ul>
+  </div>
+</div>
+```
+
+## Reminder — Previous Assignments {.smaller}
+
+```{=html}
+<div style="display:flex; flex-direction:column; gap:0.55em; font-size:0.86em;">
+  <div style="background:#fff3e0; border-left:4px solid #ef6c00; border-radius:6px; padding:0.55em 0.85em;">
+    Ex 3.0--3.3 and Ex 4.0--4.3 are due <strong>May 14 (Thu), 23:59 JST</strong>.
+  </div>
+  <div style="background:#f3e5f5; border-left:4px solid #7b1fa2; border-radius:6px; padding:0.55em 0.85em;">
+    Ex 3.2 video pair work will be handled in class when announced.
+  </div>
+</div>
+```
+
+## Exercise 5.0 — Evolve the Shared Handout with AI {.smaller .exercise-slide}
+
+<div style="padding-left: 2em; margin-top: 0.5em; margin-bottom: 0.4em;">
+  <strong>Repository:</strong> same as Ex 5.1
+  &nbsp;&nbsp;|&nbsp;&nbsp; <strong>Submit:</strong> <code>linear-equations-handout.qmd</code> (your edited copy)
+  &nbsp;&nbsp;|&nbsp;&nbsp; <strong style="color: #d84315;">Deadline: May 21 (Thu), 23:59 JST</strong>
+</div>
+
+While studying the shared Lectures 5--6 handout, insert at least
+**3 Q&A blocks** of your own using the protocol in
+[`AI_TUTOR.md`](https://github.com/waseda-num-analysis-2026/materials/blob/main/AI_TUTOR.md).
+
+For Ex 5.0, focus on Sections 1--9.
+
+## Exercise 5.1 — Understanding Matrix Condition Numbers {.smaller .exercise-slide}
+
+<div style="padding-left: 2em; margin-top: 0.5em; margin-bottom: 0.4em;">
+  <strong>Repository:</strong> Ex 5 — GitHub Classroom link TBA
+  &nbsp;&nbsp;|&nbsp;&nbsp; <strong>Edit:</strong> <code>ex5-1.qmd</code>
+  &nbsp;&nbsp;|&nbsp;&nbsp; <strong style="color: #d84315;">Deadline: May 21 (Thu), 23:59 JST</strong>
+</div>
+
+Your tasks are:
+
+- use a concrete $2\times 2$ matrix example to explain geometrically
+  what a large matrix condition number means
+  (hint: it may help to draw how a matrix transforms the unit circle or
+  the unit square $[0,1]^2$),
+- create well-conditioned and ill-conditioned $2\times 2$ matrices,
+- create $10\times 10$ matrices with good and bad matrix condition
+  numbers,
+- run the same perturbation experiment for those matrices and compare
+  how strongly the well-conditioned and ill-conditioned matrices amplify
+  input errors.
+
+## Exercise 5.2 — Direct Solvers: `solve` vs `inv` {.smaller .exercise-slide}
+
+<div style="padding-left: 2em; margin-top: 0.5em; margin-bottom: 0.4em;">
+  <strong>Repository:</strong> same as Ex 5.1
+  &nbsp;&nbsp;|&nbsp;&nbsp; <strong>Edit:</strong> <code>ex5-2.qmd</code>
+  &nbsp;&nbsp;|&nbsp;&nbsp; <strong style="color: #d84315;">Deadline: May 21 (Thu), 23:59 JST</strong>
+</div>
+
+Using the matrices from Ex 5.1, compare `numpy.linalg.solve(A, b)` and
+`numpy.linalg.inv(A) @ b` in terms of:
+
+- computation time,
+- relative residual,
+- relative error of the solution,
+- matrix condition number,
+- and what these functions do internally.
+
+Optional extension: investigate `scipy.linalg.solve(A, b, assume_a="gen")`,
+including how the `assume_a` keyword argument lets SciPy use extra matrix
+structure such as symmetric positive definiteness.
+
+## Exercise 5.3 — Stationary Iterative Methods {.smaller .exercise-slide}
+
+<div style="padding-left: 2em; margin-top: 0.5em; margin-bottom: 0.4em;">
+  <strong>Repository:</strong> same as Ex 5.1
+  &nbsp;&nbsp;|&nbsp;&nbsp; <strong>Edit:</strong> <code>ex5-3.qmd</code>
+  &nbsp;&nbsp;|&nbsp;&nbsp; <strong style="color: #d84315;">Deadline: May 21 (Thu), 23:59 JST</strong>
+</div>
+
+Implement two stationary iterative methods for solving $Ax=b$.
+
+At this point in the course, you are not expected to give a convergence
+analysis. The goal is to understand how the Jacobi and Gauss-Seidel
+updates work, run them on prepared examples, and observe when their
+behavior is similar or different.
+
+In this report, you will:
+
+1. implement the Jacobi method,
+2. implement the Gauss-Seidel method,
+3. test both methods on the prepared systems,
+4. compare the number of iterations and residual histories.
+
+## Assignments and Preparation {.smaller}
+
+```{=html}
+<div class="assign-list">
+  <div class="assign-card">
+    <div class="assign-num">1</div>
+    <div class="assign-body">
+      <p>Accept the <strong>Ex 5 GitHub Classroom</strong> link when announced.</p>
+      <ul>
+        <li>One repository will contain Ex 5.0, 5.1, 5.2, and 5.3</li>
+        <li>The handout is shared with Lecture 6: <code>050/linear-equations-handout.qmd</code></li>
+        <li><strong>Deadline:</strong> <span class="assign-due">May 21 (Thu), 23:59 JST</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+```
+
