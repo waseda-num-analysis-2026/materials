@@ -101,7 +101,7 @@ For Ex 5.0, focus on Sections 1--9.
 ## Exercise 5.1 — Understanding Matrix Condition Numbers {.smaller .exercise-slide}
 
 <div style="padding-left: 2em; margin-top: 0.5em; margin-bottom: 0.4em;">
-  <strong>Repository:</strong> Ex 5 — GitHub Classroom link TBA
+  <strong>Repository:</strong> <a href="https://classroom.github.com/a/0oWVw7DP">Ex 5 — GitHub Classroom</a>
   &nbsp;&nbsp;|&nbsp;&nbsp; <strong>Edit:</strong> <code>ex5-1.qmd</code>
   &nbsp;&nbsp;|&nbsp;&nbsp; <strong style="color: #d84315;">Deadline: May 21 (Thu), 23:59 JST</strong>
 </div>
