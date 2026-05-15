@@ -17,7 +17,7 @@ Materials are organized by lecture number:
 | `020/` | Errors and Cancellation | [Slides](https://waseda-num-analysis-2026.github.io/materials/020/2nd.html) · [Handout](https://waseda-num-analysis-2026.github.io/materials/020/2nd-handout.html) · [Python Guidelines](https://waseda-num-analysis-2026.github.io/materials/020/python_guidelines/python_guidelines.html) | [Watch](https://youtu.be/SKz0dKh1vtI) |
 | `030/` | Floating-Point Numbers | [Slides](https://waseda-num-analysis-2026.github.io/materials/030/3rd.html) · [Handout](https://waseda-num-analysis-2026.github.io/materials/030/3rd-handout.html) | [Watch](https://youtu.be/9_d11bJozUY) |
 | `040/` | Vector Norms and Matrix Norms | [Slides](https://waseda-num-analysis-2026.github.io/materials/040/4th.html) · [Handout](https://waseda-num-analysis-2026.github.io/materials/040/4th-handout.html) | [Watch](https://youtu.be/pO3IbMeOQkk) |
-| `050/` | Linear Systems I: Introduction to Stationary Iterative Methods | TBA | TBA |
+| `050/` | Linear Systems I: Introduction to Stationary Iterative Methods | [Slides](https://waseda-num-analysis-2026.github.io/materials/050/5th.html) · [Handout](https://waseda-num-analysis-2026.github.io/materials/050/linear-equations-handout.html) · [QMD](050/linear-equations-handout.qmd) | TBA |
 | `060/` | Linear Systems II: Stationary Iteration Analysis and Conjugate Gradient | TBA | TBA |
 | `past_exams/` | Past Exams | [2025 Midterm](https://waseda-num-analysis-2026.github.io/materials/past_exams/2025_midterm/2025_midterm.pdf) | — |
 | ...    | ... | ... | ... |

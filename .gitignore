@@ -5,6 +5,13 @@
 *.quarto_ipynb
 *.quarto_ipynb_*
 
+# Local full-version backups for temporary lecture cuts
+050/linear-equations-handout-full.qmd
+050/linear-equations-handout-full.html
+
+# Lecture 6 materials are still being prepared
+060/
+
 # Python virtual environments
 .venv/
 venv/

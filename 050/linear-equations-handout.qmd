@@ -1,0 +1,873 @@
+---
+title: "Lectures 5--6 — Linear Systems and Iterative Methods"
+subtitle: "Handout: Foundations of and Exercises in Numerical Analysis"
+date: today
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    toc-title: "Contents"
+    number-sections: true
+    html-math-method: mathjax
+    theme: cosmo
+    code-fold: false
+    code-tools: true
+    highlight-style: github
+    # Experimental v4 annotation overlay: stores stroke points as
+    # anchor-relative fractional coordinates so they follow browser
+    # page-zoom (and notes scale with the surrounding text).
+    include-after-body:
+      - ../annotation-v4.html
+execute:
+  echo: true
+  eval: true
+jupyter: python3
+---
+
+<style>
+/* Slide-like styling only for the introductory part of this handout. */
+#sec-linear-systems,
+#sec-direct-iterative {
+  margin: 2.2rem 0;
+}
+
+#sec-linear-systems > h2,
+#sec-direct-iterative > h2 {
+  margin: 0 0 1rem;
+  padding: 0.75rem 1rem;
+  border-left: 8px solid #3b6cff;
+  border-radius: 12px;
+  background: #eef4ff;
+  color: #17356f;
+  font-size: 1.9rem;
+  font-weight: 800;
+}
+
+.intro-slide {
+  margin: 1.25rem 0;
+  padding: 1.45rem 1.6rem;
+  border: 1px solid #d9e3f7;
+  border-radius: 20px;
+  background: linear-gradient(135deg, #ffffff 0%, #f6f9ff 100%);
+  box-shadow: 0 12px 28px rgba(31, 45, 61, 0.10);
+}
+
+.intro-slide h3 {
+  margin-top: 0;
+  color: #244fa3;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+}
+
+.intro-slide strong {
+  color: #d9480f;
+  font-weight: 800;
+}
+
+.big-message {
+  margin: 0.7rem 0 1rem;
+  color: #17233c;
+  font-size: 1.35rem;
+  font-weight: 750;
+  line-height: 1.45;
+}
+
+.hero-equation {
+  margin: 1rem auto;
+  padding: 0.75rem 1rem;
+  max-width: 360px;
+  border: 1px solid #c8d6f5;
+  border-radius: 14px;
+  background: #f1f5ff;
+  color: #17356f;
+  text-align: center;
+  box-shadow: 0 4px 10px rgba(31, 45, 61, 0.06);
+}
+
+.hero-equation mjx-container {
+  color: #17356f;
+  font-size: 125%;
+}
+
+.symbol-strip,
+.tag-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  margin-top: 0.8rem;
+}
+
+.tag {
+  display: inline-block;
+  padding: 0.35rem 0.65rem;
+  border-radius: 999px;
+  background: #e9f0ff;
+  color: #284b9b;
+  font-weight: 700;
+}
+
+.slide-grid,
+.method-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.slide-card,
+.method-card {
+  padding: 1rem 1.05rem;
+  border-radius: 16px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 6px 16px rgba(31, 45, 61, 0.07);
+}
+
+.slide-card h4,
+.method-card h3 {
+  margin-top: 0;
+  color: #17356f;
+  font-weight: 800;
+}
+
+.method-card.direct {
+  border-top: 7px solid #2f80ed;
+}
+
+.method-card.iterative {
+  border-top: 7px solid #20a66a;
+}
+
+.method-card ul,
+.slide-card ul {
+  margin-bottom: 0;
+}
+
+.method-card li,
+.slide-card li {
+  margin: 0.25rem 0;
+}
+</style>
+
+::: {.callout-tip collapse="true"}
+## How to use this handout — Evolving Study Notes with an AI Tutor
+
+This handout is the **shared main material for Lectures 5 and 6**.
+The companion slides (`5th.html` and `6th.html`) are only for class
+logistics and assignment instructions.
+
+Like the previous handouts, this file is designed to grow with you.
+Whenever a line confuses you, ask the AI tutor and insert a Q&A block
+following [`AI_TUTOR.md`](../AI_TUTOR.md).
+
+For Exercise 5.0 or 6.0, copy this handout into the corresponding
+assignment repository and add your own Q&A blocks there.
+:::
+
+## Roadmap {.unnumbered}
+
+This handout is split across two lectures:
+
+| Session | Main topics |
+|---|---|
+| Lecture 5 | linear systems, conditioning, and an introduction to stationary iterative methods (Jacobi and Gauss-Seidel) |
+| Lecture 6 | convergence analysis of stationary iterations, symmetric positive definite matrices, conjugate gradient method, and preconditioning |
+
+---
+
+## Systems of Linear Equations {#sec-linear-systems}
+
+::: {.intro-slide}
+### Key Message {.unnumbered .unlisted}
+
+<p class="big-message">
+Many numerical problems ask us to find <strong>many unknowns at once</strong>.
+The simplest and most typical model is a <strong>system of linear equations</strong>.
+</p>
+
+<div class="hero-equation">
+
+$$
+Ax=b,
+$$
+
+</div>
+
+<div class="symbol-strip">
+<span class="tag">$A$: coefficient matrix</span>
+<span class="tag">$x$: unknown vector</span>
+<span class="tag">$b$: given right-hand side</span>
+</div>
+:::
+
+::: {.intro-slide}
+### Example: from equations to matrix form {.unnumbered .unlisted}
+
+$$
+\begin{cases}
+2x+4y+6z=6,\\
+3x+8y+7z=15,\\
+5x+7y+21z=24
+\end{cases}
+$$
+
+This system becomes the compact matrix equation **$Ax=b$**:
+
+$$
+A=
+\begin{pmatrix}
+2&4&6\\
+3&8&7\\
+5&7&21
+\end{pmatrix},
+\qquad
+b=
+\begin{pmatrix}
+6\\15\\24
+\end{pmatrix}.
+$$
+:::
+
+::: {.intro-slide}
+### Why do linear systems appear everywhere? {.unnumbered .unlisted}
+
+<p class="big-message">
+Many complicated numerical problems are solved by repeatedly creating
+<strong>linear subproblems</strong>.
+</p>
+
+:::: {.slide-grid}
+::::: {.slide-card}
+#### Nonlinear Equations {.unnumbered .unlisted}
+Newton's method repeatedly solves a **linearized system**.
+::::
+
+::::: {.slide-card}
+#### Optimization {.unnumbered .unlisted}
+Local models often lead to **linear algebra subproblems**.
+::::
+
+::::: {.slide-card}
+#### Differential Equations {.unnumbered .unlisted}
+Discretization often produces a **large linear system**.
+:::::
+
+::::: {.slide-card}
+#### Data and Simulation {.unnumbered .unlisted}
+Many parameters must be determined **simultaneously**.
+:::::
+::::
+
+<p class="big-message">
+So <strong>solving $Ax=b$</strong> is a building block for many later methods.
+</p>
+:::
+
+---
+
+## Direct and Iterative Methods {#sec-direct-iterative}
+
+::: {.intro-slide}
+### Two strategies for solving $Ax=b$ {.unnumbered .unlisted}
+
+:::: {.method-grid}
+::::: {.method-card .direct}
+### Direct Methods {.unnumbered .unlisted}
+
+<p class="big-message">Solve by a finite sequence of algebraic operations.</p>
+
+**Examples:** Gaussian elimination, LU factorization, Cholesky factorization
+
+**Strengths:** stable, widely applicable
+
+**Weaknesses:** large memory, dense cost about **$O(n^3)$**
+
+<div class="tag-row">
+<span class="tag">dense matrices</span>
+<span class="tag">medium size</span>
+</div>
+:::::
+
+::::: {.method-card .iterative}
+### Iterative Methods {.unnumbered .unlisted}
+
+<p class="big-message">Generate approximations that hopefully converge.</p>
+
+$$
+x^{(0)}, x^{(1)}, x^{(2)},\ldots \longrightarrow x
+$$
+
+**Examples:** Jacobi, Gauss-Seidel, Krylov methods, CG
+
+**Strengths:** small memory, cheap iterations
+
+**Weaknesses:** convergence is not automatic
+
+<div class="tag-row">
+<span class="tag">sparse matrices</span>
+<span class="tag">large scale</span>
+</div>
+:::::
+::::
+:::
+
+::: {.intro-slide}
+### Iterative methods: two families {.unnumbered .unlisted}
+
+:::: {.slide-grid}
+::::: {.slide-card}
+#### Stationary {.unnumbered .unlisted}
+
+Same update rule at every step.
+
+**Jacobi**, **Gauss-Seidel**
+:::::
+
+::::: {.slide-card}
+#### Nonstationary {.unnumbered .unlisted}
+
+The update rule changes using information generated during computation.
+
+**Krylov methods**, **Conjugate Gradient (CG)**
+:::::
+::::
+
+<p class="big-message">
+Lecture 5 starts with <strong>stationary methods</strong>; Lecture 6 moves to
+<strong>CG and preconditioning</strong>.
+</p>
+:::
+
+---
+
+## Conditioning of Linear Systems {#sec-conditioning}
+
+Let $A$ be nonsingular. The condition number of $A$ with respect to a
+matrix norm is
+
+$$
+\operatorname{cond}(A) = \|A\|\,\|A^{-1}\|.
+$$
+
+Because $I=AA^{-1}$,
+
+$$
+1=\|I\|=\|AA^{-1}\|\leq \|A\|\,\|A^{-1}\|
+=\operatorname{cond}(A),
+$$
+
+so $\operatorname{cond}(A)\geq 1$.  The value depends on the norm being
+used, such as $\ell^1$, $\ell^2$, or $\ell^\infty$.
+
+:::: {.callout-tip collapse="true" title="Definition: singular values"}
+For a matrix $A\in\mathbb{R}^{n\times n}$, the **singular values**
+$\sigma_1\geq \sigma_2\geq \cdots \geq \sigma_n\geq 0$
+are the nonnegative square roots of the eigenvalues of $A^T A$:
+
+$$
+\sigma_i=\sqrt{\lambda_i(A^T A)},
+\qquad i=1,2,\ldots,n.
+$$
+
+Equivalently, they are the diagonal entries of $\Sigma$ in the singular
+value decomposition
+
+$$
+A=U\Sigma V^T,
+$$
+
+where $U,V$ are orthogonal and $\Sigma=\operatorname{diag}(\sigma_1,\ldots,\sigma_n)$.
+
+The largest and smallest singular values are denoted
+
+$$
+\sigma_{\max}(A)=\sigma_1,
+\qquad
+\sigma_{\min}(A)=\sigma_n.
+$$
+
+For symmetric positive definite $A$, the singular values coincide with
+the eigenvalues.
+::::
+
+:::: {.callout-note collapse="true" title="Remark: 2-norm condition number"}
+For the 2-norm, the condition number can be written using singular
+values:
+
+$$
+\operatorname{cond}_2(A)
+=
+\|A\|_2\,\|A^{-1}\|_2
+=
+\frac{\sigma_{\max}(A)}{\sigma_{\min}(A)},
+$$
+::::
+
+For the linear system $Ax=b$, suppose $b$ is perturbed to
+$b+\Delta b$, and the solution changes from $x$ to $x+\Delta x$:
+
+$$
+A(x+\Delta x)=b+\Delta b.
+$$
+
+Then
+
+$$
+A\Delta x=\Delta b,
+\qquad
+\Delta x=A^{-1}\Delta b.
+$$
+
+Using matrix norms,
+
+$$
+\|\Delta x\|
+\leq
+\|A^{-1}\|\,\|\Delta b\|.
+$$
+
+Also, since $b=Ax$,
+
+$$
+\|b\|\leq \|A\|\,\|x\|.
+$$
+
+Combining these estimates gives
+
+$$
+\frac{\|\Delta x\|}{\|x\|}
+\leq
+\operatorname{cond}(A)
+\frac{\|\Delta b\|}{\|b\|}.
+$$
+
+A large condition number means that a small relative perturbation in
+$b$ can cause a large relative perturbation in the solution.
+
+::: {.callout-note title="What the following code does"}
+For each test matrix $A$, we first choose the exact solution
+
+$$
+x_* = (1,1,\ldots,1)^T.
+$$
+
+Then we define the right-hand side by
+
+$$
+b = Ax_*,
+$$
+
+so the exact answer is known in advance.  Next, we solve the perturbed
+system
+
+$$
+A\widehat{x} = b + \Delta b,
+\qquad
+\frac{\|\Delta b\|}{\|b\|}\approx 10^{-8}.
+$$
+
+Finally, we compare the relative perturbation in $b$ with the relative
+error in the computed solution:
+
+$$
+\texttt{rel\_b}
+=
+\frac{\|\Delta b\|}{\|b\|},
+\qquad
+\texttt{rel\_x}
+=
+\frac{\|\widehat{x}-x_*\|}{\|x_*\|}.
+$$
+
+The surprising point is that $\widehat{x}$ can be far from
+$(1,1,\ldots,1)^T$ even when $\Delta b$ is tiny.
+:::
+
+```{python}
+#| eval: false
+import numpy as np
+from numpy import linalg as LA
+
+def perturbation_demo(A, rng, eps=1e-8):
+    n = A.shape[0]
+
+    # Set the exact solution by hand:
+    #     x = (1, 1, ..., 1)^T.
+    # Then define b from Ax = b, so we know the true answer in advance.
+    x_true = np.ones(n)
+    b = A @ x_true
+
+    # Add a very small relative perturbation to the right-hand side b.
+    # This models the situation where data or rounding errors slightly
+    # change the system from Ax = b to Ax = b + db.
+    db = eps * LA.norm(b) * rng.normal(size=n)
+    x_hat = LA.solve(A, b + db)
+
+    # rel_b measures the relative size of the perturbation in b:
+    #     ||db|| / ||b||.
+    # rel_x measures the resulting relative error in the solution:
+    #     ||x_hat - x_true|| / ||x_true||.
+    rel_b = LA.norm(db) / LA.norm(b)
+    rel_x = LA.norm(x_hat - x_true) / LA.norm(x_true)
+    return LA.cond(A), rel_b, rel_x, x_hat
+
+# These matrices are 10x10 examples prepared for this experiment.
+# They have very different condition numbers, so the same small
+# perturbation in b produces very different errors in x.
+matrices = {
+    "A1": np.loadtxt("data/A1.txt", delimiter=","),
+    "A2": np.loadtxt("data/A2.txt", delimiter=","),
+    "A3": np.loadtxt("data/A3.txt", delimiter=","),
+}
+
+rng = np.random.default_rng(2026)
+np.set_printoptions(precision=3, suppress=False)
+
+# Display the true solution first.  The surprising point is that
+# the computed solution can be far from this vector even though the
+# right-hand side perturbation is tiny.
+print("true solution x =", np.ones(10))
+print()
+
+for name, A in matrices.items():
+    cond_A, rel_b, rel_x, x_hat = perturbation_demo(A, rng)
+    print(f"{name}: cond(A)={cond_A:10.2e}, "
+          f"rel_b={rel_b:10.2e}, "
+          f"relative error in x={rel_x:10.2e}")
+    print("computed x =", x_hat)
+    print()
+```
+
+::: {.callout-tip collapse="true"}
+## Click to reveal the output
+
+```{python}
+#| echo: false
+import numpy as np
+from numpy import linalg as LA
+
+def perturbation_demo(A, rng, eps=1e-8):
+    n = A.shape[0]
+
+    # Set the exact solution by hand:
+    #     x = (1, 1, ..., 1)^T.
+    # Then define b from Ax = b, so we know the true answer in advance.
+    x_true = np.ones(n)
+    b = A @ x_true
+
+    # Add a very small relative perturbation to the right-hand side b.
+    # This models the situation where data or rounding errors slightly
+    # change the system from Ax = b to Ax = b + db.
+    db = eps * LA.norm(b) * rng.normal(size=n)
+    x_hat = LA.solve(A, b + db)
+
+    # rel_b measures the relative size of the perturbation in b:
+    #     ||db|| / ||b||.
+    # rel_x measures the resulting relative error in the solution:
+    #     ||x_hat - x_true|| / ||x_true||.
+    rel_b = LA.norm(db) / LA.norm(b)
+    rel_x = LA.norm(x_hat - x_true) / LA.norm(x_true)
+    return LA.cond(A), rel_b, rel_x, x_hat
+
+# These matrices are 10x10 examples prepared for this experiment.
+# They have very different condition numbers, so the same small
+# perturbation in b produces very different errors in x.
+matrices = {
+    "A1": np.loadtxt("data/A1.txt", delimiter=","),
+    "A2": np.loadtxt("data/A2.txt", delimiter=","),
+    "A3": np.loadtxt("data/A3.txt", delimiter=","),
+}
+
+rng = np.random.default_rng(2026)
+np.set_printoptions(precision=3, suppress=False)
+
+# Display the true solution first.  The surprising point is that
+# the computed solution can be far from this vector even though the
+# right-hand side perturbation is tiny.
+print("true solution x =", np.ones(10))
+print()
+
+for name, A in matrices.items():
+    cond_A, rel_b, rel_x, x_hat = perturbation_demo(A, rng)
+    print(f"{name}: cond(A)={cond_A:10.2e}, "
+          f"rel_b={rel_b:10.2e}, "
+          f"relative error in x={rel_x:10.2e}")
+    print("computed x =", x_hat)
+    print()
+```
+:::
+
+---
+
+## Matrix Splitting {#sec-splitting}
+
+For stationary iterative methods, write
+
+$$
+A = D+L+U,
+$$
+
+where
+
+- $D$ is the diagonal part of $A$,
+- $L$ is the strictly lower triangular part of $A$,
+- $U$ is the strictly upper triangular part of $A$.
+
+Then
+
+$$
+Ax=b
+$$
+
+becomes
+
+$$
+(D+L+U)x=b.
+$$
+
+Different rearrangements of this equation lead to different iterative
+methods.
+
+In the next two methods, the update will have the form
+
+$$
+x^{(k+1)} = g(x^{(k)}),
+$$
+
+which is called a **fixed-point iteration**.  Here, $g$ is an affine map
+of the form $g(x)=Mx+c$.
+
+---
+
+## Jacobi Method {#sec-jacobi}
+
+The Jacobi method rearranges
+
+$$
+Dx=-(L+U)x+b.
+$$
+
+Starting from an initial guess $x^{(0)}$, define
+
+$$
+x^{(k+1)}
+=
+D^{-1}\{b-(L+U)x^{(k)}\}.
+$$
+
+Componentwise, this is
+
+$$
+x_i^{(k+1)}
+=
+\frac{1}{a_{ii}}
+\left(
+b_i-\sum_{j\ne i}a_{ij}x_j^{(k)}
+\right).
+$$
+
+All components of the new vector are computed from the old vector.
+
+---
+
+## Gauss-Seidel Method {#sec-gauss-seidel}
+
+The Gauss-Seidel method rearranges
+
+$$
+(D+L)x=-Ux+b.
+$$
+
+Starting from $x^{(0)}$, define
+
+$$
+x^{(k+1)}
+=
+(D+L)^{-1}(b-Ux^{(k)}).
+$$
+
+Componentwise,
+
+$$
+x_i^{(k+1)}
+=
+\frac{1}{a_{ii}}
+\left(
+b_i
+-\sum_{j<i}a_{ij}x_j^{(k+1)}
+-\sum_{j>i}a_{ij}x_j^{(k)}
+\right).
+$$
+
+The newest available values are used immediately.
+
+---
+
+## Stopping Criterion {#sec-stopping-criterion}
+
+For a small tolerance $\varepsilon>0$, a stationary iteration must be
+stopped in finite time.  Two common criteria are based on the size of the
+update and the size of the residual.
+
+::: {.callout-note title="Stopping criterion 1: relative update"}
+Stop when successive approximations change little:
+
+$$
+\frac{\|x^{(k+1)}-x^{(k)}\|}
+{\|x^{(k)}\|}
+<\varepsilon.
+$$
+
+This is easy to compute, but it can sometimes stop before the equation
+$Ax=b$ is solved accurately enough.
+:::
+
+::: {.callout-note title="Stopping criterion 2: relative residual"}
+Stop when the residual is small compared with the right-hand side:
+
+$$
+\frac{\|Ax^{(k)}-b\|}
+{\|b\|}
+<\varepsilon.
+$$
+
+This is more reliable, but it costs more because we must compute the
+residual $Ax^{(k)}-b$.
+::::
+
+---
+
+## Jacobi Implementation {#sec-jacobi-implementation}
+
+```{python}
+#| eval: false
+import numpy as np
+from numpy import linalg as LA
+```
+
+```{python}
+#| eval: false
+def jacobi(A, b, x0=None, tol=1e-10, max_iter=500):
+    A = np.asarray(A, dtype=float)
+    b = np.asarray(b, dtype=float)
+    n = len(b)
+    x = np.zeros(n) if x0 is None else np.asarray(x0, dtype=float).copy()
+
+    D = np.diag(A)
+    R = A - np.diagflat(D)
+    residuals = []
+
+    for k in range(max_iter):
+        x_new = (b - R @ x) / D
+        residual = LA.norm(b - A @ x_new)
+        residuals.append(residual)
+
+        if residual < tol:
+            return x_new, k + 1, np.array(residuals)
+
+        x = x_new
+
+    return x, max_iter, np.array(residuals)
+
+import matplotlib.pyplot as plt
+
+A_demo = np.array([
+    [10.0, -1.0,  2.0],
+    [-2.0, 10.0, -3.0],
+    [ 1.0, -5.0, 10.0],
+])
+x_true = np.ones(3)
+b_demo = A_demo @ x_true
+
+x_j, it_j, res_j = jacobi(A_demo, b_demo, tol=1e-10)
+print("Jacobi solution :", x_j)
+print("iterations      :", it_j)
+print("error vs true x :", LA.norm(x_j - x_true))
+
+print("\nConvergence history (selected iterations)")
+print(f"{'k':>4} | {'||b - A x_k||':>16}")
+print("-" * 25)
+sample = sorted(set([0, 1, 2, 5, 10, 20, len(res_j) - 1]))
+for k in sample:
+    if 0 <= k < len(res_j):
+        print(f"{k:4d} | {res_j[k]:16.3e}")
+
+plt.figure(figsize=(6, 4))
+plt.semilogy(res_j, marker="o")
+plt.xlabel("iteration $k$")
+plt.ylabel(r"residual $\|b - A x^{(k)}\|$")
+plt.title("Jacobi convergence")
+plt.grid(True, which="both", linestyle=":")
+plt.show()
+```
+
+::: {.callout-tip collapse="true"}
+## Click to reveal the output
+
+```{python}
+#| echo: false
+import numpy as np
+from numpy import linalg as LA
+import matplotlib.pyplot as plt
+
+def jacobi(A, b, x0=None, tol=1e-10, max_iter=500):
+    A = np.asarray(A, dtype=float)
+    b = np.asarray(b, dtype=float)
+    n = len(b)
+    x = np.zeros(n) if x0 is None else np.asarray(x0, dtype=float).copy()
+
+    D = np.diag(A)
+    R = A - np.diagflat(D)
+    residuals = []
+
+    for k in range(max_iter):
+        x_new = (b - R @ x) / D
+        residual = LA.norm(b - A @ x_new)
+        residuals.append(residual)
+
+        if residual < tol:
+            return x_new, k + 1, np.array(residuals)
+
+        x = x_new
+
+    return x, max_iter, np.array(residuals)
+
+A_demo = np.array([
+    [10.0, -1.0,  2.0],
+    [-2.0, 10.0, -3.0],
+    [ 1.0, -5.0, 10.0],
+])
+x_true = np.ones(3)
+b_demo = A_demo @ x_true
+
+x_j, it_j, res_j = jacobi(A_demo, b_demo, tol=1e-10)
+print("Jacobi solution :", x_j)
+print("iterations      :", it_j)
+print("error vs true x :", LA.norm(x_j - x_true))
+
+print("\nConvergence history (selected iterations)")
+print(f"{'k':>4} | {'||b - A x_k||':>16}")
+print("-" * 25)
+sample = sorted(set([0, 1, 2, 5, 10, 20, len(res_j) - 1]))
+for k in sample:
+    if 0 <= k < len(res_j):
+        print(f"{k:4d} | {res_j[k]:16.3e}")
+
+plt.figure(figsize=(6, 4))
+plt.semilogy(res_j, marker="o")
+plt.xlabel("iteration $k$")
+plt.ylabel(r"residual $\|b - A x^{(k)}\|$")
+plt.title("Jacobi convergence")
+plt.grid(True, which="both", linestyle=":")
+plt.show()
+```
+:::
+
+## To Be Announced {#sec-tba}
+
+The remaining topics will be covered in the next lecture.
+
+:::: {.callout-note title="TBA"}
+Sections from **Iteration Matrices and Convergence** onward are temporarily
+hidden for today's class.  They will be restored in the full version of
+this handout.
+::::
