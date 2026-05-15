@@ -51,6 +51,10 @@ Short how-to videos to help you get started:
 | 4.1 | Prove the Standard Vector Norms Are Norms | [Access](https://classroom.github.com/a/IIB7mFi7) | **May 14, 23:59** |
 | 4.2 | Verify Norm Inequalities Numerically | same repo as 4.1 | **May 14, 23:59** |
 | 4.3 | Random Search for Matrix Norms (+ optional challenge) | same repo as 4.1 | **May 14, 23:59** |
+| 5.0 | Evolve the Handout with AI (≥ 3 Q&A in `linear-equations-handout.qmd`, focused on Sections 1--9, see [`AI_TUTOR.md`](AI_TUTOR.md)) | same repo as 5.1 | **May 21, 23:59** |
+| 5.1 | Understanding Matrix Condition Numbers | [Access](https://classroom.github.com/a/0oWVw7DP) | **May 21, 23:59** |
+| 5.2 | Direct Solvers: `solve` vs `inv` | same repo as 5.1 | **May 21, 23:59** |
+| 5.3 | Stationary Iterative Methods: Jacobi and Gauss-Seidel | same repo as 5.1 | **May 21, 23:59** |
 
 ## Past Exams
 
