@@ -1,0 +1,174 @@
+---
+title: "Numerical Analysis"
+subtitle: "Foundations and Exercises"
+author:
+  - name: "TANAKA, Kazuaki (田中 一成)"
+    email: "k.tanaka@aoni.waseda.jp"
+    affiliations:
+      - name: "Global Center for Science and Engineering, Waseda University"
+format:
+  revealjs:
+    theme: [default, ../030/custom.scss]
+    slide-number: true
+    html-math-method: mathjax
+    chalkboard:
+      storage: chalkboardData_6th
+    title-slide-attributes:
+      data-background-image: "../030/images/image1.png"
+      data-background-size: "contain"
+      data-background-opacity: "0.15"
+---
+
+## Before We Start {.smaller}
+
+```{=html}
+<div class="mission-tip" style="margin-top:0.6em; margin-bottom:0.8em;">
+  <div class="mission-tip-icon">📥</div>
+  <div class="mission-tip-content">
+    <strong>Please pull the latest course materials repository.</strong>
+  </div>
+</div>
+
+<div style="display:flex; flex-direction:column; gap:0.5em; margin-bottom:0.8em;">
+  <div>
+    <div style="font-size:0.78em; color:#888; margin-bottom:0.2em;">Already cloned</div>
+    <pre style="margin:0; background:#1e1e2e; color:#cdd6f4; border-radius:8px; padding:0.5em 1em; font-size:0.78em; line-height:1.5;"><code>cd materials
+git pull</code></pre>
+  </div>
+</div>
+
+<div style="background:#f0f4ff; border-left:3px solid #4472C4; border-radius:6px; padding:0.6em 1em; font-size:0.82em;">
+  <strong>Today's materials</strong>:
+  <table style="margin-top:0.4em; border-collapse:collapse; width:100%;">
+    <tr><td style="padding:0.15em 0.6em 0.15em 0;"><code>060/6th.qmd</code></td><td style="color:#555;">slides — logistics and assignments</td></tr>
+    <tr><td style="padding:0.15em 0.6em 0.15em 0;"><code>050/linear-equations-handout.qmd</code></td><td style="color:#555;">📘 <strong>shared handout with Lecture 5</strong></td></tr>
+    <tr><td style="padding:0.15em 0.6em 0.15em 0;"><code>050/linear-equations-handout.html</code></td><td style="color:#555;">rendered shared handout</td></tr>
+  </table>
+</div>
+```
+
+## Today's Main Material {.smaller}
+
+```{=html}
+<div style="background:#e8f5e9; border-left:4px solid #2e7d32; border-radius:8px; padding:0.8em 1em; margin-bottom:0.7em;">
+  <div style="font-size:0.82em; color:#1b5e20; font-weight:700; letter-spacing:0.04em;">LECTURE 6</div>
+  <div style="font-size:1.05em; margin-top:0.2em;"><strong>Linear Systems II: Stationary Iteration Analysis and Conjugate Gradient</strong></div>
+  <div style="font-size:0.84em; color:#455a64; margin-top:0.25em;">
+    Use the shared Lectures 5--6 handout. Today we focus on Sections 9 onward.
+  </div>
+</div>
+
+<div style="display:grid; grid-template-columns:1fr; gap:0.8em;">
+  <div style="background:#fff8e1; border:1px solid #ffe082; border-radius:10px; padding:0.75em 0.9em;">
+    <div style="font-size:0.8em; color:#e65100; font-weight:700;">Today's scope</div>
+    <ul style="font-size:0.83em; line-height:1.55; margin:0.4em 0 0 1.2em;">
+      <li>analysis of stationary iterative methods</li>
+      <li>conjugate gradient method and its analysis</li>
+    </ul>
+  </div>
+</div>
+```
+
+## Reminder — Ex 5 {.smaller}
+
+```{=html}
+<div style="display:flex; flex-direction:column; gap:0.55em; font-size:0.86em;">
+  <div style="background:#fff3e0; border-left:4px solid #ef6c00; border-radius:6px; padding:0.55em 0.85em;">
+    Ex 5 uses the same shared handout as today's class. Keep your Ex 5 repository separate from Ex 6.
+  </div>
+  <div style="background:#e3f2fd; border-left:4px solid #1976d2; border-radius:6px; padding:0.55em 0.85em;">
+    If you have grading or assignment questions, reply in the relevant GitHub Issue or ask in Mattermost <code>#question</code>.
+  </div>
+</div>
+```
+
+## Exercise 6.0 — Evolve the Shared Handout with AI {.smaller .exercise-slide}
+
+<div style="padding-left: 2em; margin-top: 0.5em; margin-bottom: 0.4em;">
+  <strong>Repository:</strong> same as Ex 6.1
+  &nbsp;&nbsp;|&nbsp;&nbsp; <strong>Submit:</strong> <code>linear-equations-handout.qmd</code> (your edited copy)
+  &nbsp;&nbsp;|&nbsp;&nbsp; <strong style="color: #d84315;">Deadline: May 28 (Thu), 23:59 JST</strong>
+</div>
+
+While studying the shared Lectures 5--6 handout, insert at least
+**3 Q&A blocks** of your own using the protocol in
+[`AI_TUTOR.md`](https://github.com/waseda-num-analysis-2026/materials/blob/main/AI_TUTOR.md).
+
+For Ex 6.0, focus on Sections 9 onward. Preconditioning is optional
+reading.
+
+## Exercise 6.1 — Gauss-Seidel Convergence Proof {.smaller .exercise-slide}
+
+<div style="padding-left: 2em; margin-top: 0.5em; margin-bottom: 0.4em;">
+  <strong>Repository:</strong> <a href="https://classroom.github.com/a/5mG6RAg1">Ex 6 — GitHub Classroom</a>
+  &nbsp;&nbsp;|&nbsp;&nbsp; <strong>Edit:</strong> <code>ex6-1.qmd</code>
+  &nbsp;&nbsp;|&nbsp;&nbsp; <strong style="color: #d84315;">Deadline: May 28 (Thu), 23:59 JST</strong>
+</div>
+
+Complete the proof that Gauss-Seidel converges when $A$ is strictly
+diagonally dominant. You may choose a proof strategy, such as a
+spectral-radius argument, an infinity-norm argument, or an error
+contraction argument.
+
+## Exercise 6.2 — Stationary Iteration Convergence {.smaller .exercise-slide}
+
+<div style="padding-left: 2em; margin-top: 0.5em; margin-bottom: 0.4em;">
+  <strong>Repository:</strong> same as Ex 6.1
+  &nbsp;&nbsp;|&nbsp;&nbsp; <strong>Edit:</strong> <code>ex6-2.qmd</code>
+  &nbsp;&nbsp;|&nbsp;&nbsp; <strong style="color: #d84315;">Deadline: May 28 (Thu), 23:59 JST</strong>
+</div>
+
+Investigate convergence and divergence of Jacobi and Gauss-Seidel for
+strictly diagonally dominant and non-strictly-diagonally-dominant
+matrices.
+
+## Exercise 6.3 — Implement Conjugate Gradient {.smaller .exercise-slide}
+
+<div style="padding-left: 2em; margin-top: 0.5em; margin-bottom: 0.4em;">
+  <strong>Repository:</strong> same as Ex 6.1
+  &nbsp;&nbsp;|&nbsp;&nbsp; <strong>Edit:</strong> <code>ex6-3.qmd</code>
+  &nbsp;&nbsp;|&nbsp;&nbsp; <strong style="color: #d84315;">Deadline: May 28 (Thu), 23:59 JST</strong>
+</div>
+
+Implement the conjugate gradient method for SPD systems and test it on
+matrices with different condition numbers.
+
+## Exercise 6.4 — CG Mini Report {.smaller .exercise-slide}
+
+<div style="padding-left: 2em; margin-top: 0.5em; margin-bottom: 0.4em;">
+  <strong>Repository:</strong> same as Ex 6.1
+  &nbsp;&nbsp;|&nbsp;&nbsp; <strong>Edit:</strong> <code>ex6-4.qmd</code>
+  &nbsp;&nbsp;|&nbsp;&nbsp; <strong style="color: #d84315;">Deadline: May 28 (Thu), 23:59 JST</strong>
+</div>
+
+Choose one CG-related topic, set your own question, and prepare a short
+report with one numerical experiment. The goal is to practice writing a
+small evidence-based report; there is no single correct topic.
+
+Possible directions:
+
+- convergence rate and condition number
+- comparison with Jacobi / Gauss-Seidel
+- preconditioning
+- applications of CG
+
+## Assignments and Preparation {.smaller}
+
+```{=html}
+<div class="assign-list">
+  <div class="assign-card">
+    <div class="assign-num">1</div>
+    <div class="assign-body">
+      <p>Accept the <a href="https://classroom.github.com/a/5mG6RAg1"><strong>Ex 6 GitHub Classroom</strong></a> link.</p>
+      <ul>
+        <li>Ex 6 is a separate repository from Ex 5 because the deadline is managed separately</li>
+        <li>The handout is still shared with Lecture 5: <code>050/linear-equations-handout.qmd</code></li>
+        <li><strong>IMPORTANT:</strong> <strong>Render each <code>.qmd</code> file and push the rendered <code>.html</code> files together with the corresponding <code>*_files/</code> directories.</strong></li>
+        <li><strong>IMPORTANT:</strong> <strong>After pushing, open your GitHub repository in a browser and check that the rendered HTML files are visible.</strong></li>
+        <li><strong>Deadline:</strong> <span class="assign-due">May 28 (Thu), 23:59 JST</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+```
+
