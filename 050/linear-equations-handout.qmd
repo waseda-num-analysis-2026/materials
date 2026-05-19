@@ -24,6 +24,14 @@ execute:
 jupyter: python3
 ---
 
+<script>
+window.__ANNOTATION_V4_AUTOLOAD__ = {
+  url: "lectures-5-6-linear-systems-and-iterative-methods__2026-05-19-05-34-09.json",
+  enable: true,
+  tool: "cursor",
+};
+</script>
+
 <style>
 /* Slide-like styling only for the introductory part of this handout. */
 #sec-linear-systems,

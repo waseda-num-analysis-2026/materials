@@ -97,11 +97,16 @@
   // (existing strokes stay visible) but lets the page receive pointer
   // events again, so the user can scroll, click links, use the TOC,
   // etc. without first turning annotation OFF.
-  const TOOLS = ["cursor", "pen", "highlighter", "eraser"];
+  // "select" is a manipulation tool: drag a marquee to select existing
+  // strokes, then drag the selection to MOVE or drag a corner/edge
+  // handle to RESIZE. Delete/Backspace removes the selection, Esc
+  // clears it. See the "Selection / move / resize" section below for
+  // implementation details.
+  const TOOLS = ["cursor", "pen", "highlighter", "select", "eraser"];
 
   // Default stroke width for each tool (must be a value present in WIDTHS).
-  // "cursor" intentionally has no entry — switching to cursor leaves
-  // the previously selected width unchanged.
+  // "cursor" / "select" intentionally have no entry — switching to
+  // them leaves the previously selected width unchanged.
   const DEFAULT_WIDTH = {
     pen: 4,
     highlighter: 16,
@@ -137,8 +142,26 @@
     cursor: null,                 // cursor ignores color
     pen: COLORS[0].value,         // black
     highlighter: COLORS[4].value, // yellow
+    select: null,                 // select ignores color
     eraser: null,                 // eraser ignores color
   };
+
+  // ── Selection / move / resize state ────────────────────────────
+  // Used only by the "select" tool. The selection holds references
+  // to existing entries in `strokes[]`, plus a per-drag snapshot of
+  // each stroke's points in VIEWPORT coordinates. We compute the
+  // new viewport position from that snapshot on every pointermove
+  // and re-express the result in the stroke's anchor frame, so we
+  // never accumulate floating-point drift across many small moves.
+  let selectedStrokes = new Set();   // Set<stroke ref>
+  let selectionMode = null;          // null|"marquee"|"moving"|"resizing"
+  let marqueeRect = null;            // {x0,y0,x1,y1} viewport coords
+  let dragOriginClient = null;       // {x,y} pointer at drag start
+  let dragStartBBox = null;          // {left,top,right,bottom,width,height}
+  let dragSnapshot = null;           // Map<stroke,{anchorId,points,width,...}>
+  let resizeHandle = null;           // "nw"|"n"|"ne"|"e"|"se"|"s"|"sw"|"w"
+  const SELECTION_HANDLE_RADIUS = 5;   // visual radius of corner/edge dot
+  const SELECTION_HANDLE_HIT_PX = 12;  // generous hit slop for pen tip
 
   function el(tag, props = {}, children = []) {
     const node = document.createElement(tag);
@@ -169,7 +192,15 @@
         // touch-action:none element that overlaps the scrollbar
         // area. Keeping the canvas inside the content area only
         // leaves the scrollbar fully solid and interactable.
-        zIndex: "2147483646",
+        //
+        // z-index: 2147483647 = INT32_MAX. Highest value any CSS
+        // engine accepts. We DELIBERATELY tie with the toolbar's
+        // z-index (also 2147483647) and rely on DOM order to keep
+        // the toolbar visually above the canvas: the toolbar is
+        // appended to <body> AFTER the canvas inside init(), so
+        // for ties later DOM wins. Same trick keeps both above any
+        // page content that might also try to claim INT32_MAX.
+        zIndex: "2147483647",
         pointerEvents: "none",
         // Default touch-action allows the page to be scrolled (pan-y)
         // and pinch-zoomed with the user's finger even while a drawing
@@ -194,8 +225,102 @@
         outline: "none",
       },
     });
-    document.body.appendChild(c);
+    getOverlayHost().appendChild(c);
     return c;
+  }
+
+  // ── Overlay host: mount above <body>, not inside it ────────────
+  // We append the canvas / toolbar / show-button to the <html>
+  // element instead of <body>. Two reasons:
+  //
+  //   1. <body> is itself a single descendant of <html>, so
+  //      anything inside body — no matter how nested or how high
+  //      its z-index — is stacked at body's level (z-index auto =
+  //      0) within the ROOT stacking context. By living as a
+  //      *sibling* of <body>, our canvas competes at the root
+  //      level too, with its own INT32_MAX z-index, and is
+  //      therefore guaranteed to render above every body subtree
+  //      regardless of nested transform / filter / isolation
+  //      stacking contexts inside body.
+  //
+  //   2. <body> is a frequent target for runtime DOM injection
+  //      (MathJax helpers, modal portals, agent toolbars, etc.).
+  //      Even with z-index ties resolved by DOM order, those
+  //      siblings created AFTER us would cover our overlay until
+  //      the next redraw moved us back. Mounting outside <body>
+  //      side-steps the whole class of issues.
+  //
+  // Browsers accept additional element children of <html> beyond
+  // <head> and <body>; the canvas is purely visual and the
+  // toolbar/show-button stay fully interactive (event listeners,
+  // localStorage state, drag, keyboard shortcuts all unchanged).
+  function getOverlayHost() {
+    return document.documentElement;
+  }
+
+  // ── Keep our overlay above any later-injected DOM ──────────────
+  // Even when mounted to <html>, *some* pages append further
+  // siblings (e.g. browser-extension overlays). On every redraw,
+  // ensure the canvas → toolbar → showBtn trio sits at the end of
+  // the host (and in that DOM order) so the toolbar wins the tie
+  // against the canvas (DOM-order rule for ties), and both win
+  // against anything else at the same z-index. No-op when already
+  // in the right position.
+  function ensureOverlayOnTop() {
+    const host = getOverlayHost();
+    if (!canvas || !host) return;
+    const expected = [canvas];
+    if (toolbar) expected.push(toolbar);
+    if (showBtn) expected.push(showBtn);
+    // Skip cheaply if nothing has changed: the last N children of
+    // host should already match `expected` in order.
+    const kids = host.children;
+    let alreadyOk = (kids.length >= expected.length);
+    if (alreadyOk) {
+      const offset = kids.length - expected.length;
+      for (let i = 0; i < expected.length; i++) {
+        if (kids[offset + i] !== expected[i]) { alreadyOk = false; break; }
+      }
+    }
+    if (alreadyOk) return;
+    for (const el of expected) host.appendChild(el);
+  }
+
+  // Diagnostic: warn once if any ancestor of the canvas creates a
+  // stacking context that would trap our overlay below sibling
+  // page content. transform / filter / will-change: transform /
+  // perspective / contain: paint / etc. all turn `position:fixed`
+  // descendants from "viewport-relative + root stacking" into
+  // "ancestor-relative + nested stacking", which is the textbook
+  // way for highly z-indexed overlays to nevertheless render
+  // BEHIND nearby page elements.
+  let _stackingAncestorWarned = false;
+  function warnIfStackingAncestor() {
+    if (_stackingAncestorWarned || !canvas || !window.getComputedStyle) return;
+    let el = canvas.parentElement;
+    while (el && el !== document.documentElement) {
+      const cs = getComputedStyle(el);
+      const offenders = [];
+      if (cs.transform && cs.transform !== "none")           offenders.push("transform=" + cs.transform);
+      if (cs.filter && cs.filter !== "none")                 offenders.push("filter=" + cs.filter);
+      if (cs.backdropFilter && cs.backdropFilter !== "none") offenders.push("backdrop-filter=" + cs.backdropFilter);
+      if (cs.perspective && cs.perspective !== "none")       offenders.push("perspective=" + cs.perspective);
+      if (cs.willChange && /transform|filter|perspective/.test(cs.willChange))
+        offenders.push("will-change=" + cs.willChange);
+      if (cs.contain && /paint|layout/.test(cs.contain))     offenders.push("contain=" + cs.contain);
+      if (offenders.length) {
+        _stackingAncestorWarned = true;
+        if (window.console) {
+          console.warn(
+            "[annotation v4] Ancestor with stacking-context CSS — " +
+            "the annotation canvas may render BEHIND nearby content. " +
+            "Element:", el, "\nOffending properties:", offenders.join(", ")
+          );
+        }
+        return;
+      }
+      el = el.parentElement;
+    }
   }
 
   function resizeCanvas() {
@@ -219,15 +344,564 @@
     redraw();
   }
 
+  // ──────────────────────────────────────────────────────────────
+  // NOTE: a large debug instrumentation block (z-order / display-
+  // math / toolbar / render-coverage audits, build-marker, Option+D
+  // bbox overlay, Option+E disable-eraser toggle, runtime log POST
+  // helper) used to live here. It was removed after the 2026-05-16
+  // eraser-bake fix landed. See
+  //   2026/010_materials/annotation-v4.README.md  (§3 + §4)
+  // for the full hypothesis log and copy-pasteable templates to
+  // re-instrument when debugging resumes.
+  // ──────────────────────────────────────────────────────────────
+
   function redraw() {
     if (!ctx) return;
+    // Some pages dynamically append children to <body> after we've
+    // initialized (MathJax containers, modal portals, third-party
+    // overlays). Re-pin our canvas + toolbar to the END of <body>
+    // so they keep winning the z-index tiebreaker. Cheap when no-op.
+    ensureOverlayOnTop();
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     // Per-redraw cache of anchor positions: at most one
     // getBoundingClientRect per unique anchor id. Browser zoom or
     // window resize will fire a fresh redraw, so the cache always
     // reflects the current layout.
     const anchorCache = new Map();
-    for (const s of strokes) drawStroke(s, anchorCache);
+    for (const s of strokes) {
+      drawStroke(s, anchorCache);
+    }
+    drawSelectionOverlay(anchorCache);
+  }
+
+  // ── Selection geometry helpers ─────────────────────────────────
+  // Compute the viewport-coords bounding box of a single stroke,
+  // re-using the per-redraw anchor rect cache.
+  function strokeViewportBBox(s, anchorCache) {
+    if (!s || !s.points || s.points.length === 0) return null;
+    const p0 = s.points[0];
+    let r = null;
+    if (p0.fx === undefined) {
+      // Legacy (v2) unanchored — points already in doc coords.
+      let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+      for (const p of s.points) {
+        const vx = p.x - window.scrollX;
+        const vy = p.y - window.scrollY;
+        if (vx < minX) minX = vx;
+        if (vy < minY) minY = vy;
+        if (vx > maxX) maxX = vx;
+        if (vy > maxY) maxY = vy;
+      }
+      return { left: minX, top: minY, right: maxX, bottom: maxY };
+    }
+    if (!s.anchor || !s.anchor.id) return null;
+    if (anchorCache && anchorCache.has(s.anchor.id)) {
+      r = anchorCache.get(s.anchor.id);
+    } else {
+      const el = document.getElementById(s.anchor.id);
+      if (el) {
+        const rect = el.getBoundingClientRect();
+        if (rect.width > 0 && rect.height > 0) {
+          r = { left: rect.left, top: rect.top, width: rect.width, height: rect.height };
+        }
+      }
+      if (anchorCache) anchorCache.set(s.anchor.id, r);
+    }
+    if (!r) return null;
+    let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+    for (const p of s.points) {
+      const vx = r.left + p.fx * r.width;
+      const vy = r.top  + p.fy * r.height;
+      if (vx < minX) minX = vx;
+      if (vy < minY) minY = vy;
+      if (vx > maxX) maxX = vx;
+      if (vy > maxY) maxY = vy;
+    }
+    return { left: minX, top: minY, right: maxX, bottom: maxY };
+  }
+
+  function getSelectionViewportBBox() {
+    if (!selectedStrokes || selectedStrokes.size === 0) return null;
+    const cache = new Map();
+    let left = Infinity, top = Infinity, right = -Infinity, bottom = -Infinity;
+    for (const s of selectedStrokes) {
+      const b = strokeViewportBBox(s, cache);
+      if (!b) continue;
+      if (b.left   < left)   left   = b.left;
+      if (b.top    < top)    top    = b.top;
+      if (b.right  > right)  right  = b.right;
+      if (b.bottom > bottom) bottom = b.bottom;
+    }
+    if (left === Infinity) return null;
+    return { left, top, right, bottom };
+  }
+
+  function rectsIntersect(a, b) {
+    return !(a.right < b.left || a.left > b.right ||
+             a.bottom < b.top || a.top > b.bottom);
+  }
+
+  function pointInRect(x, y, rect) {
+    return x >= rect.left && x <= rect.right &&
+           y >= rect.top  && y <= rect.bottom;
+  }
+
+  // Returns the 8 selection handles (4 corners + 4 edge midpoints)
+  // for `bbox` in viewport coords, each tagged with the CSS cursor
+  // it should show on hover.
+  function selectionHandlePositions(bbox) {
+    if (!bbox) return [];
+    const cx = (bbox.left + bbox.right) / 2;
+    const cy = (bbox.top + bbox.bottom) / 2;
+    return [
+      { name: "nw", x: bbox.left,  y: bbox.top,    cursor: "nwse-resize" },
+      { name: "n",  x: cx,         y: bbox.top,    cursor: "ns-resize"   },
+      { name: "ne", x: bbox.right, y: bbox.top,    cursor: "nesw-resize" },
+      { name: "e",  x: bbox.right, y: cy,          cursor: "ew-resize"   },
+      { name: "se", x: bbox.right, y: bbox.bottom, cursor: "nwse-resize" },
+      { name: "s",  x: cx,         y: bbox.bottom, cursor: "ns-resize"   },
+      { name: "sw", x: bbox.left,  y: bbox.bottom, cursor: "nesw-resize" },
+      { name: "w",  x: bbox.left,  y: cy,          cursor: "ew-resize"   },
+    ];
+  }
+
+  function hitTestSelectionHandle(clientX, clientY, bbox) {
+    const handles = selectionHandlePositions(bbox);
+    const r2 = SELECTION_HANDLE_HIT_PX * SELECTION_HANDLE_HIT_PX;
+    for (const h of handles) {
+      const dx = clientX - h.x, dy = clientY - h.y;
+      if (dx*dx + dy*dy <= r2) return h;
+    }
+    return null;
+  }
+
+  // Snapshot the viewport position of every selected stroke's
+  // points so move/resize can reproject from a stable origin
+  // instead of accumulating per-frame deltas (which would slowly
+  // drift due to fp arithmetic / anchor reflows).
+  function snapshotSelected() {
+    const snap = new Map();
+    for (const s of selectedStrokes) {
+      if (!s.points || s.points.length === 0) continue;
+      const p0 = s.points[0];
+      const pts = [];
+      if (p0.fx === undefined) {
+        for (const p of s.points) {
+          pts.push({
+            vx: p.x - window.scrollX,
+            vy: p.y - window.scrollY,
+            p: p.p,
+          });
+        }
+        snap.set(s, { isLegacy: true, anchorId: null,
+                      points: pts, width: s.width });
+      } else {
+        if (!s.anchor || !s.anchor.id) continue;
+        const el = document.getElementById(s.anchor.id);
+        if (!el) continue;
+        const r = el.getBoundingClientRect();
+        if (r.width <= 0 || r.height <= 0) continue;
+        for (const p of s.points) {
+          pts.push({
+            vx: r.left + p.fx * r.width,
+            vy: r.top  + p.fy * r.height,
+            p: p.p,
+          });
+        }
+        snap.set(s, { isLegacy: false, anchorId: s.anchor.id,
+                      points: pts, width: s.width });
+      }
+    }
+    return snap;
+  }
+
+  // Apply an affine transform (pivot + scale + translate) to every
+  // snapshotted stroke and re-express the result in the stroke's
+  // CURRENT anchor frame so the existing renderer just works.
+  //   v' = pivot + (v - pivot) * scale + translate
+  function applyTransformFromSnapshot(t) {
+    if (!dragSnapshot) return;
+    for (const [s, snap] of dragSnapshot) {
+      let arect = null;
+      if (!snap.isLegacy) {
+        const el = document.getElementById(snap.anchorId);
+        if (!el) continue;
+        const r = el.getBoundingClientRect();
+        if (r.width <= 0 || r.height <= 0) continue;
+        arect = { left: r.left, top: r.top, w: r.width, h: r.height };
+      }
+      s.width = Math.max(0.5, snap.width * t.widthScale);
+      s.points = snap.points.map((p) => {
+        const vx2 = t.ox + (p.vx - t.ox) * t.sx + t.tx;
+        const vy2 = t.oy + (p.vy - t.oy) * t.sy + t.ty;
+        if (snap.isLegacy) {
+          return { x: vx2 + window.scrollX, y: vy2 + window.scrollY, p: p.p };
+        }
+        return {
+          fx: (vx2 - arect.left) / arect.w,
+          fy: (vy2 - arect.top)  / arect.h,
+          p: p.p,
+        };
+      });
+    }
+  }
+
+  // After the user releases the pointer at the end of a move or
+  // resize, re-anchor each transformed stroke to the deepest fine
+  // anchor at its first point's new viewport position, so future
+  // toggles / scrolls move it together with the surrounding text.
+  function reanchorSelectedAfterTransform() {
+    const rectCache = buildAnchorRectCache();
+    for (const s of Array.from(selectedStrokes)) {
+      const moved = reanchorStrokeAfterMove(s, rectCache);
+      if (moved === s) continue;
+      const idx = strokes.indexOf(s);
+      if (idx >= 0) strokes[idx] = moved;
+      selectedStrokes.delete(s);
+      selectedStrokes.add(moved);
+    }
+  }
+
+  // Re-anchor a stroke that the user has just MOVED or RESIZED with
+  // the select tool. Differs from reanchorStrokeToFinestContainer
+  // (which is for load-time migration) in three ways:
+  //
+  //   1. Picks the new anchor by the stroke's BBOX CENTER, not its
+  //      first point. A pen stroke that spans two paragraphs would
+  //      otherwise hand over the whole stroke to the upper paragraph
+  //      and then drift visually as soon as anything reflows the
+  //      gap between them.
+  //
+  //   2. NO area-vs-old-area guard. The original anchor is now
+  //      irrelevant — the user explicitly dropped the stroke
+  //      somewhere else. Always replace when we find a valid new
+  //      anchor at the new position, even if it has the same area
+  //      as (or is slightly larger than) the original (paragraph-
+  //      to-paragraph moves are exactly this case).
+  //
+  //   3. Bare minimum filtering: only refuses to re-anchor when no
+  //      valid candidate exists at all (which means the stroke was
+  //      dropped entirely outside the document content; rare).
+  //
+  // Skipping these fixes is what the user perceived as "moved
+  // strokes hiding behind HTML": when re-anchor was refused, the
+  // stroke kept its old anchor with fx/fy values way outside [0,1].
+  // It rendered correctly *immediately*, but the very next layout
+  // change (a callout toggle, a window resize, a font load) shifted
+  // the original anchor and dragged the stroke off-screen with it.
+  function reanchorStrokeAfterMove(s, rectCache) {
+    if (!s || !s.anchor || !s.anchor.id) return s;
+    if (!s.points || s.points.length === 0) return s;
+    const p0 = s.points[0];
+    if (p0.fx === undefined) return s; // legacy unanchored — leave it
+    const oldEl = document.getElementById(s.anchor.id);
+    if (!oldEl) return s;
+    const oldRect = oldEl.getBoundingClientRect();
+    if (oldRect.width <= 0 || oldRect.height <= 0) return s;
+
+    const sx = window.scrollX, sy = window.scrollY;
+    let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+    for (const p of s.points) {
+      const dx = oldRect.left + sx + p.fx * oldRect.width;
+      const dy = oldRect.top  + sy + p.fy * oldRect.height;
+      if (dx < minX) minX = dx;
+      if (dy < minY) minY = dy;
+      if (dx > maxX) maxX = dx;
+      if (dy > maxY) maxY = dy;
+    }
+    const cx = (minX + maxX) / 2;
+    const cy = (minY + maxY) / 2;
+
+    let pick = findSmallestContainingAnchor(rectCache, cx, cy);
+    // If the smallest-containing anchor is a COARSE container (a
+    // <section>, <article>, etc. — i.e. the chapter-level wrapper),
+    // prefer the nearest fine paragraph anchor instead. Sections in
+    // a Quarto handout are MANY thousands of pixels tall (we've seen
+    // h≈2627 in the logs); pinning a stroke to one means any reflow
+    // inside the section (callout toggle, MathJax late render,
+    // image load) shifts the stroke by `fy × Δsection_height` —
+    // tens to hundreds of pixels for a single callout open. That
+    // drift is what the user perceives as "the arrow disappeared
+    // behind the math formula" — the stroke is still on top of all
+    // HTML (canvas mounted on <html> with INT32_MAX z-index), but
+    // it has visibly drifted away from where they dropped it, and
+    // they see a math glyph at the expected location instead.
+    if (!pick || isCoarseAnchorEl(pick.el)) {
+      const fine = findNearestFineAnchorVertically(rectCache, cx, cy);
+      if (fine) pick = fine;
+    }
+    if (pick && isInSidebar(pick.el)) {
+      const main = findNearestFineAnchorVertically(
+        rectCache, cx, cy, { mainColumnOnly: true }
+      );
+      if (main) pick = main;
+    }
+    if (!pick) return s;
+    if (pick.el === oldEl) return s;
+
+    const out = {
+      ...s,
+      v: 4,
+      anchor: {
+        id: pick.el.id,
+        savedWidth:  pick.width,
+        savedHeight: pick.height,
+      },
+      points: s.points.map((p) => {
+        const px = oldRect.left + sx + p.fx * oldRect.width;
+        const py = oldRect.top  + sy + p.fy * oldRect.height;
+        return {
+          fx: (px - pick.left) / pick.width,
+          fy: (py - pick.top)  / pick.height,
+          p: p.p,
+        };
+      }),
+    };
+    return out;
+  }
+
+  function clearSelection() {
+    selectedStrokes = new Set();
+    marqueeRect = null;
+    selectionMode = null;
+    dragSnapshot = null;
+    dragOriginClient = null;
+    dragStartBBox = null;
+    resizeHandle = null;
+    if (canvas && tool === "select") canvas.style.cursor = "crosshair";
+    redraw();
+  }
+
+  function deleteSelected() {
+    if (selectedStrokes.size === 0) return;
+    strokes = strokes.filter((s) => !selectedStrokes.has(s));
+    clearSelection();
+  }
+
+  // ── Selection rendering ────────────────────────────────────────
+  // Draws (a) per-stroke dashed outlines for each selected stroke,
+  // (b) the union bounding box with corner/edge handles, and
+  // (c) the live marquee rectangle while the user is drag-selecting.
+  function drawSelectionOverlay(anchorCache) {
+    if (!ctx) return;
+    if (selectedStrokes && selectedStrokes.size > 0) {
+      ctx.save();
+      ctx.globalCompositeOperation = "source-over";
+      ctx.globalAlpha = 1;
+      ctx.strokeStyle = "rgba(37, 99, 235, 0.55)";
+      ctx.lineWidth = 1.5;
+      ctx.setLineDash([5, 3]);
+      for (const s of selectedStrokes) {
+        const b = strokeViewportBBox(s, anchorCache);
+        if (!b) continue;
+        ctx.strokeRect(b.left - 2, b.top - 2,
+                       b.right - b.left + 4, b.bottom - b.top + 4);
+      }
+      ctx.restore();
+    }
+    const bbox = getSelectionViewportBBox();
+    if (bbox) {
+      ctx.save();
+      ctx.globalCompositeOperation = "source-over";
+      ctx.globalAlpha = 1;
+      ctx.strokeStyle = "#2563eb";
+      ctx.lineWidth = 1.5;
+      ctx.setLineDash([8, 4]);
+      ctx.strokeRect(bbox.left, bbox.top,
+                     bbox.right - bbox.left, bbox.bottom - bbox.top);
+      ctx.setLineDash([]);
+      const handles = selectionHandlePositions(bbox);
+      for (const h of handles) {
+        ctx.fillStyle = "#ffffff";
+        ctx.strokeStyle = "#2563eb";
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.arc(h.x, h.y, SELECTION_HANDLE_RADIUS, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+      }
+      ctx.restore();
+    }
+    if (marqueeRect) {
+      ctx.save();
+      ctx.globalCompositeOperation = "source-over";
+      ctx.globalAlpha = 1;
+      ctx.fillStyle = "rgba(37, 99, 235, 0.10)";
+      ctx.strokeStyle = "rgba(37, 99, 235, 0.7)";
+      ctx.lineWidth = 1.5;
+      ctx.setLineDash([4, 3]);
+      const x = Math.min(marqueeRect.x0, marqueeRect.x1);
+      const y = Math.min(marqueeRect.y0, marqueeRect.y1);
+      const w = Math.abs(marqueeRect.x1 - marqueeRect.x0);
+      const h = Math.abs(marqueeRect.y1 - marqueeRect.y0);
+      ctx.fillRect(x, y, w, h);
+      ctx.strokeRect(x, y, w, h);
+      ctx.restore();
+    }
+  }
+
+  // ── Selection-tool pointer dispatch ────────────────────────────
+  function handleSelectPointerDown(e) {
+    e.preventDefault();
+    try { canvas.setPointerCapture(e.pointerId); } catch (_) {}
+    const bbox = getSelectionViewportBBox();
+    if (bbox) {
+      const h = hitTestSelectionHandle(e.clientX, e.clientY, bbox);
+      if (h) {
+        selectionMode = "resizing";
+        resizeHandle = h.name;
+        dragOriginClient = { x: e.clientX, y: e.clientY };
+        dragStartBBox = {
+          left: bbox.left, top: bbox.top,
+          right: bbox.right, bottom: bbox.bottom,
+          width: bbox.right - bbox.left,
+          height: bbox.bottom - bbox.top,
+        };
+        dragSnapshot = snapshotSelected();
+        canvas.style.cursor = h.cursor;
+        return;
+      }
+      if (pointInRect(e.clientX, e.clientY, bbox)) {
+        selectionMode = "moving";
+        dragOriginClient = { x: e.clientX, y: e.clientY };
+        dragStartBBox = {
+          left: bbox.left, top: bbox.top,
+          right: bbox.right, bottom: bbox.bottom,
+          width: bbox.right - bbox.left,
+          height: bbox.bottom - bbox.top,
+        };
+        dragSnapshot = snapshotSelected();
+        canvas.style.cursor = "grabbing";
+        return;
+      }
+    }
+    // Otherwise: clear any existing selection and start a new
+    // marquee. We commit the marquee on pointerup.
+    selectedStrokes = new Set();
+    selectionMode = "marquee";
+    marqueeRect = { x0: e.clientX, y0: e.clientY,
+                    x1: e.clientX, y1: e.clientY };
+    redraw();
+  }
+
+  function handleSelectPointerMove(e) {
+    if (!selectionMode) {
+      // Hover state: update cursor to hint move / resize affordances.
+      const bbox = getSelectionViewportBBox();
+      if (bbox) {
+        const h = hitTestSelectionHandle(e.clientX, e.clientY, bbox);
+        if (h) { canvas.style.cursor = h.cursor; return; }
+        if (pointInRect(e.clientX, e.clientY, bbox)) {
+          canvas.style.cursor = "move"; return;
+        }
+      }
+      canvas.style.cursor = "crosshair";
+      return;
+    }
+    e.preventDefault();
+    if (selectionMode === "marquee") {
+      marqueeRect.x1 = e.clientX;
+      marqueeRect.y1 = e.clientY;
+      redraw();
+    } else if (selectionMode === "moving") {
+      const dx = e.clientX - dragOriginClient.x;
+      const dy = e.clientY - dragOriginClient.y;
+      applyTransformFromSnapshot({
+        ox: 0, oy: 0, sx: 1, sy: 1, tx: dx, ty: dy, widthScale: 1,
+      });
+      redraw();
+    } else if (selectionMode === "resizing") {
+      applyTransformFromSnapshot(computeResizeTransform(e.clientX, e.clientY));
+      redraw();
+    }
+  }
+
+  function handleSelectPointerUp(e) {
+    if (!selectionMode) return;
+    e.preventDefault();
+    try { canvas.releasePointerCapture(e.pointerId); } catch (_) {}
+    if (selectionMode === "marquee") {
+      finishMarquee();
+    } else if (selectionMode === "moving" || selectionMode === "resizing") {
+      reanchorSelectedAfterTransform();
+    }
+    selectionMode = null;
+    marqueeRect = null;
+    dragSnapshot = null;
+    dragOriginClient = null;
+    dragStartBBox = null;
+    resizeHandle = null;
+    canvas.style.cursor = "crosshair";
+    redraw();
+  }
+
+  function finishMarquee() {
+    if (!marqueeRect) return;
+    const m = {
+      left:   Math.min(marqueeRect.x0, marqueeRect.x1),
+      right:  Math.max(marqueeRect.x0, marqueeRect.x1),
+      top:    Math.min(marqueeRect.y0, marqueeRect.y1),
+      bottom: Math.max(marqueeRect.y0, marqueeRect.y1),
+    };
+    // Treat tiny drags as a "click on empty space" → leave selection
+    // empty. Otherwise pick up every stroke whose bbox overlaps the
+    // marquee. Eraser strokes are intentionally NOT selectable: they
+    // only exist to subtract from the visual rendering and have no
+    // independent meaning to the user.
+    if (m.right - m.left < 3 && m.bottom - m.top < 3) {
+      selectedStrokes = new Set();
+      return;
+    }
+    const cache = new Map();
+    selectedStrokes = new Set();
+    for (const s of strokes) {
+      if (s.tool === "eraser") continue;
+      const b = strokeViewportBBox(s, cache);
+      if (!b) continue;
+      if (rectsIntersect(b, m)) selectedStrokes.add(s);
+    }
+  }
+
+  // Convert (clientX, clientY) of the dragged handle into an affine
+  // transform around the OPPOSITE corner / edge of the bbox. Corner
+  // handles do uniform scale (preserve aspect ratio); edge handles
+  // scale only along their axis. Stroke widths scale by the
+  // geometric mean of |sx| · |sy| so they feel proportional.
+  function computeResizeTransform(clientX, clientY) {
+    const b = dragStartBBox;
+    let pivotX, pivotY, edgeX, edgeY;
+    switch (resizeHandle) {
+      case "nw": pivotX = b.right; pivotY = b.bottom; edgeX = b.left;  edgeY = b.top;    break;
+      case "ne": pivotX = b.left;  pivotY = b.bottom; edgeX = b.right; edgeY = b.top;    break;
+      case "se": pivotX = b.left;  pivotY = b.top;    edgeX = b.right; edgeY = b.bottom; break;
+      case "sw": pivotX = b.right; pivotY = b.top;    edgeX = b.left;  edgeY = b.bottom; break;
+      case "n":  pivotX = (b.left+b.right)/2; pivotY = b.bottom; edgeX = pivotX; edgeY = b.top;    break;
+      case "s":  pivotX = (b.left+b.right)/2; pivotY = b.top;    edgeX = pivotX; edgeY = b.bottom; break;
+      case "e":  pivotX = b.left;             pivotY = (b.top+b.bottom)/2; edgeX = b.right; edgeY = pivotY; break;
+      case "w":  pivotX = b.right;            pivotY = (b.top+b.bottom)/2; edgeX = b.left;  edgeY = pivotY; break;
+    }
+    const isCorner = resizeHandle.length === 2;
+    const useX = resizeHandle.includes("e") || resizeHandle.includes("w");
+    const useY = resizeHandle.includes("n") || resizeHandle.includes("s");
+    const dxOrig = edgeX - pivotX;
+    const dyOrig = edgeY - pivotY;
+    const dxNew  = clientX - pivotX;
+    const dyNew  = clientY - pivotY;
+    let sx = 1, sy = 1;
+    if (useX && Math.abs(dxOrig) > 1) sx = dxNew / dxOrig;
+    if (useY && Math.abs(dyOrig) > 1) sy = dyNew / dyOrig;
+    if (isCorner) {
+      // Uniform scale: take the magnitude average, preserve sign.
+      const u = (Math.abs(sx) + Math.abs(sy)) / 2 || 1;
+      sx = (sx === 0 ? 1 : Math.sign(sx)) * u;
+      sy = (sy === 0 ? 1 : Math.sign(sy)) * u;
+    }
+    // Floor very tiny scales so the bbox can't collapse to zero.
+    const MIN = 0.05;
+    if (Math.abs(sx) < MIN) sx = (sx < 0 ? -MIN : MIN);
+    if (Math.abs(sy) < MIN) sy = (sy < 0 ? -MIN : MIN);
+    const widthScale = Math.sqrt(Math.abs(sx) * Math.abs(sy)) || 1;
+    return { ox: pivotX, oy: pivotY, sx, sy, tx: 0, ty: 0, widthScale };
   }
 
   // v4 strokes carry anchor-relative fractional coordinates
@@ -303,7 +977,7 @@
       }
     } else if (isFractional) {
       // v4 stroke whose anchor element no longer exists on the
-      // page — skip silently. (Logged once per anchor at load time.)
+      // page — skip silently.
       ctx.restore();
       return;
     } else {
@@ -326,6 +1000,7 @@
     if (!enabled) return;
     if (!isDrawingPointer(e)) return;
     if (e.button !== undefined && e.button !== 0) return;
+    if (tool === "select") { handleSelectPointerDown(e); return; }
     e.preventDefault();
     canvas.setPointerCapture(e.pointerId);
     drawing = true;
@@ -336,8 +1011,45 @@
     // v4: pin the stroke to the smallest [id]-bearing element under
     // the pointer (preferred), or fall back to the nearest [id]
     // above when the click landed on margins / unnamed wrappers.
-    const anchorEl = findContainingAnchor(e.clientX, e.clientY)
-                  || findFallbackAnchorElement(e.clientX, e.clientY);
+    //
+    // Two layered overrides on top of the generic lookup:
+    //
+    //   (a) ERASER inherits the OVERLAPPING pen/highlighter stroke's
+    //       anchor whenever possible. Without this, an eraser drawn
+    //       across a stroke can land on a different anchor element
+    //       (very common when erasing a stroke that crosses into
+    //       the right margin sidebar) and then drift away from its
+    //       target on the next reflow — the visible "erase, then
+    //       comes back on scroll" symptom.
+    //
+    //   (b) Anchors that fall INSIDE the right-margin sidebar
+    //       (#quarto-margin-sidebar / #TOC) are redirected to the
+    //       closest fine anchor in the main body column at the
+    //       same vertical position. This makes the sidebar usable
+    //       as a normal note area: the stroke renders visually in
+    //       the sidebar (fx > 1 is allowed) but moves with the
+    //       body content it relates to instead of staying pinned
+    //       to a sticky sidebar.
+    let anchorEl = null;
+    if (tool === "eraser") {
+      // Eraser hit-test radius = the eraser's own stroke width.
+      // (With a Surface pen, `width` here is the user-selected
+      // width, not the pressure-modulated `w` variable.)
+      const overlap = findOverlappingStrokeAt(
+        e.clientX, e.clientY, Math.max(8, width)
+      );
+      if (overlap && overlap.anchor && overlap.anchor.id) {
+        anchorEl = document.getElementById(overlap.anchor.id);
+      }
+    }
+    if (!anchorEl) {
+      anchorEl = findContainingAnchor(e.clientX, e.clientY)
+              || findFallbackAnchorElement(e.clientX, e.clientY);
+      if (anchorEl && isInSidebar(anchorEl)) {
+        const main = findMainColumnAnchorAtY(e.clientY);
+        if (main) anchorEl = main;
+      }
+    }
     if (anchorEl) {
       const r = anchorEl.getBoundingClientRect();
       currentStroke = {
@@ -371,8 +1083,10 @@
     strokes.push(currentStroke);
   }
   function onPointerMove(e) {
-    if (!enabled || !drawing) return;
+    if (!enabled) return;
     if (!isDrawingPointer(e)) return;
+    if (tool === "select") { handleSelectPointerMove(e); return; }
+    if (!drawing) return;
     e.preventDefault();
     const events = e.getCoalescedEvents ? e.getCoalescedEvents() : [e];
 
@@ -464,8 +1178,10 @@
     }
   }
   function onPointerUp(e) {
-    if (!enabled || !drawing) return;
+    if (!enabled) return;
     if (!isDrawingPointer(e)) return;
+    if (tool === "select") { handleSelectPointerUp(e); return; }
+    if (!drawing) return;
     e.preventDefault();
     drawing = false;
     currentStroke = null;
@@ -481,6 +1197,10 @@
     cursor: "pointer",
     font: "13px/1.2 system-ui, -apple-system, sans-serif",
     minWidth: "32px",
+    // Wrapper sets pointer-events: none so strokes underneath stay
+    // visible (and clickable for select/erase) in the gaps between
+    // buttons; each button has to explicitly re-enable hit-testing.
+    pointerEvents: "auto",
   };
 
   function makeBtn(label, onClick, opts = {}) {
@@ -493,6 +1213,24 @@
   }
 
   function makeToolbar() {
+    // ── Idle / hover background opacity ───────────────────────────
+    // The toolbar is mounted on top of the annotation canvas with the
+    // same z-index, so anything painted under it (strokes drawn on the
+    // canvas) is obscured by the toolbar's background / border / box-
+    // shadow box. The display-math-audit log confirmed this: the math
+    // at viewport y≈7–29 (top of viewport) consistently had
+    // `DIV#annotation-toolbar` as the topmost element at its center,
+    // and the toolbar's flex-wrap layout makes it ~800px wide on a
+    // 1512px viewport — wide enough to cover the document column.
+    //
+    // Going through 55% white background still washed out strokes
+    // (red pen on a 55% white film looks pale enough that the user
+    // perceives it as "hidden behind the equation"). Switch the
+    // entire wrapper to fully transparent at idle so every stroke
+    // shows through cleanly. The individual buttons retain their own
+    // backgrounds so they stay legible. On hover we restore the
+    // background + border + shadow so the user can read and aim at
+    // the buttons reliably.
     const bar = el("div", {
       id: "annotation-toolbar",
       style: {
@@ -504,14 +1242,38 @@
         flexWrap: "wrap",
         gap: "6px",
         padding: "8px 10px",
-        background: "rgba(255,255,255,0.96)",
-        border: "1px solid #d1d5db",
+        background: "transparent",
+        border: "1px solid transparent",
         borderRadius: "10px",
-        boxShadow: "0 4px 14px rgba(0,0,0,0.10)",
+        boxShadow: "none",
         font: "13px/1.2 system-ui, -apple-system, sans-serif",
         alignItems: "center",
         userSelect: "none",
+        // Disable hit-testing on the wrapper itself so the canvas
+        // catches pointer events in the gaps between buttons. Each
+        // button (and the drag handle) explicitly re-enables
+        // pointer-events:auto so they remain clickable.
+        pointerEvents: "none",
+        transition: "background-color 120ms ease, border-color 120ms ease, box-shadow 120ms ease",
       },
+    });
+    const TOOLBAR_BG_HOVER = "rgba(255,255,255,0.97)";
+    // Hover handlers fire from BUTTON children (because wrapper has
+    // pointerEvents: none); the bubbled `pointerover` / `pointerout`
+    // on the wrapper still let us swap to opaque so the user can
+    // read the buttons reliably. We don't reset on pointerout from
+    // a child to a sibling button (relatedTarget is inside the bar);
+    // only on actual exit.
+    bar.addEventListener("pointerover", () => {
+      bar.style.background = TOOLBAR_BG_HOVER;
+      bar.style.borderColor = "#d1d5db";
+      bar.style.boxShadow = "0 4px 14px rgba(0,0,0,0.10)";
+    });
+    bar.addEventListener("pointerout", (e) => {
+      if (e.relatedTarget && bar.contains(e.relatedTarget)) return;
+      bar.style.background = "transparent";
+      bar.style.borderColor = "transparent";
+      bar.style.boxShadow = "none";
     });
 
     // ── Drag handle ────────────────────────────────────────────
@@ -529,6 +1291,7 @@
         font: "16px/1 system-ui, -apple-system, sans-serif",
         userSelect: "none",
         touchAction: "none",
+        pointerEvents: "auto",
       },
     }, "⋮⋮");
 
@@ -579,10 +1342,16 @@
     });
     const penBtn = makeBtn("Pen", () => setTool("pen"));
     const hlBtn = makeBtn("Highlighter", () => setTool("highlighter"));
+    const selectBtn = makeBtn("⬚ Select", () => setTool("select"), {
+      title: "Select — drag a marquee to pick strokes, then drag " +
+             "the box to MOVE or drag a corner / edge to RESIZE. " +
+             "Delete / Backspace removes the selection. Esc clears it. (S)",
+    });
     const eraserBtn = makeBtn("Eraser", () => setTool("eraser"));
     cursorBtn.id = "annotation-cursor";
     penBtn.id = "annotation-pen";
     hlBtn.id = "annotation-highlighter";
+    selectBtn.id = "annotation-select";
     eraserBtn.id = "annotation-eraser";
 
     const colorWrap = el("div", {
@@ -590,7 +1359,7 @@
       // outline + offset (see updateColorPalette). Adding small
       // horizontal padding keeps the highlight from being clipped
       // when the leftmost / rightmost swatch is the selected one.
-      style: { display: "flex", gap: "8px", padding: "0 4px" },
+      style: { display: "flex", gap: "8px", padding: "0 4px", pointerEvents: "auto" },
     });
     COLORS.forEach(c => {
       const sw = el("button", {
@@ -610,6 +1379,7 @@
           borderRadius: "50%",
           cursor: "pointer",
           padding: "0",
+          pointerEvents: "auto",
         },
         onclick: () => setColor(c.value),
       });
@@ -675,6 +1445,7 @@
     bar.appendChild(cursorBtn);
     bar.appendChild(penBtn);
     bar.appendChild(hlBtn);
+    bar.appendChild(selectBtn);
     bar.appendChild(eraserBtn);
     bar.appendChild(sep());
     bar.appendChild(colorWrap);
@@ -689,7 +1460,7 @@
     bar.appendChild(sep());
     bar.appendChild(hideBtn);
 
-    document.body.appendChild(bar);
+    getOverlayHost().appendChild(bar);
     return bar;
   }
 
@@ -761,7 +1532,13 @@
   // so the user can always bring the toolbar back without remembering
   // the keyboard shortcut.
   function makeShowButton() {
-    return el("button", {
+    // Same idle/hover transparency story as the toolbar (see the
+    // long comment in makeToolbar for the rationale): a 36×36 button
+    // pinned at the top of the viewport will hide any stroke that
+    // happens to be under it. Keep it mostly see-through at rest.
+    const SHOWBTN_BG_IDLE  = "rgba(255,255,255,0.55)";
+    const SHOWBTN_BG_HOVER = "rgba(255,255,255,0.97)";
+    const btn = el("button", {
       type: "button",
       title: "Show annotation toolbar (Alt+T)",
       style: {
@@ -773,7 +1550,7 @@
         height: "36px",
         borderRadius: "50%",
         border: "1px solid #d1d5db",
-        background: "rgba(255,255,255,0.96)",
+        background: SHOWBTN_BG_IDLE,
         color: "#111827",
         boxShadow: "0 4px 14px rgba(0,0,0,0.10)",
         cursor: "pointer",
@@ -782,9 +1559,17 @@
         alignItems: "center",
         justifyContent: "center",
         padding: "0",
+        transition: "background-color 120ms ease",
       },
       onclick: () => setToolbarVisible(true),
     }, "✏");
+    btn.addEventListener("pointerenter", () => {
+      btn.style.background = SHOWBTN_BG_HOVER;
+    });
+    btn.addEventListener("pointerleave", () => {
+      btn.style.background = SHOWBTN_BG_IDLE;
+    });
+    return btn;
   }
 
   // Sync the canvas's pointer-events / display with the current
@@ -820,10 +1605,15 @@
   function setTool(t) {
     if (!TOOLS.includes(t)) return;
     // Cancel any in-progress stroke when switching to the
-    // non-drawing cursor tool.
-    if (t === "cursor" && drawing) {
+    // non-drawing cursor / select tools.
+    if ((t === "cursor" || t === "select") && drawing) {
       drawing = false;
       currentStroke = null;
+    }
+    // Switching AWAY from select drops any active selection so the
+    // overlay UI doesn't linger over other tools.
+    if (tool === "select" && t !== "select") {
+      clearSelection();
     }
     tool = t;
 
@@ -841,10 +1631,12 @@
     const c   = document.getElementById("annotation-cursor");
     const p   = document.getElementById("annotation-pen");
     const h   = document.getElementById("annotation-highlighter");
+    const se  = document.getElementById("annotation-select");
     const e2  = document.getElementById("annotation-eraser");
     if (c)  c.style.outline  = tool === "cursor"      ? "2px solid #2563eb" : "none";
     if (p)  p.style.outline  = tool === "pen"         ? "2px solid #2563eb" : "none";
     if (h)  h.style.outline  = tool === "highlighter" ? "2px solid #2563eb" : "none";
+    if (se) se.style.outline = tool === "select"      ? "2px solid #2563eb" : "none";
     if (e2) e2.style.outline = tool === "eraser"      ? "2px solid #2563eb" : "none";
 
     updateCursor();
@@ -899,6 +1691,13 @@
     // own cursor is moot. Reset to default for tidiness.
     if (tool === "cursor") {
       canvas.style.cursor = "default";
+      return;
+    }
+    // Select tool: a plain crosshair while the user hovers empty
+    // space; handleSelectPointerMove swaps in `move` / `*-resize`
+    // when the pointer is over the selection bbox or its handles.
+    if (tool === "select") {
+      canvas.style.cursor = "crosshair";
       return;
     }
     const MIN_VIS = 10;
@@ -964,6 +1763,93 @@
     "quarto-document-content",
   ]);
   let anchorListCache = null;
+
+  // ── Fine-grained synthetic anchors ─────────────────────────────
+  // Quarto attaches `id` to <section>, headings, code cells and
+  // figures, but NOT to <p>, <li>, <summary>, <blockquote>, etc.
+  // That means the smallest [id]-bearing ancestor of most click
+  // targets is the *whole section* — often several thousand pixels
+  // tall. Fractional coordinates inside such an anchor preserve
+  // position only for uniform scale changes (browser zoom). They
+  // do NOT preserve position when content INSIDE the section
+  // reflows (e.g. a Quarto callout `<details>` is toggled open):
+  // the section grows by Δh, and a stroke at fy = 0.7 moves only
+  // 0.7·Δh while the underlying text moves by Δh → visible drift.
+  //
+  // Fix: walk the DOM once at init() and assign deterministic
+  // synthetic ids to leaf-ish layout blocks that don't reflow
+  // internally. With those in place, findContainingAnchor() picks
+  // the paragraph / list-item / summary instead of the section,
+  // and the stroke's fractional coords land inside an element that
+  // simply translates as a rigid body when other siblings expand.
+  //
+  // Determinism: ids are assigned in document order (ann-fine-1,
+  // ann-fine-2, ...). For a stable .qmd source they are stable
+  // across re-renders, so saved annotations referencing them keep
+  // working. Strokes saved BEFORE fine anchors existed (e.g.
+  // anchored to a section id) are migrated by
+  // realignStrokesToCurrentDocument() at load time — see
+  // reanchorStrokeToFinestContainer.
+  //
+  // Why we DO NOT include <details> / .callout themselves: those
+  // are exactly the elements that grow when toggled, so anchoring
+  // to them recreates the original problem at a smaller scale.
+  // Anchor to their *children* (summary + inner <p>, <li>, ...)
+  // instead, which translate but don't stretch.
+  const FINE_ANCHOR_SELECTOR = [
+    "p", "li", "dt", "dd",
+    "blockquote", "pre",
+    "figure", "table",
+    "summary",
+    "h1", "h2", "h3", "h4", "h5", "h6",
+    "hr",
+  ].join(",");
+  const FINE_ANCHOR_PREFIX = "ann-fine-";
+
+  // Quarto's right-margin sidebar (the "roadmap" / TOC column) is
+  // CSS `position: sticky`, so any stroke anchored INSIDE it stays
+  // pinned to the viewport while the underlying body scrolls. That
+  // creates two annoying symptoms:
+  //   1. Eraser strokes drawn over body content but starting in the
+  //      sidebar drift away from the pen strokes they were meant
+  //      to remove → "erase appears to work, then comes back on
+  //      scroll".
+  //   2. Notes drawn directly in the sidebar don't follow the
+  //      content they're commenting on.
+  // Fix: when a click would anchor in the sidebar, redirect the
+  // anchor to the closest fine anchor in the main column at the
+  // same vertical position. Resulting strokes have fx > 1 (i.e.
+  // they render to the right of the anchor rect), which is fine —
+  // they appear visually in the sidebar but move with the main
+  // column on reflow.
+  const SIDEBAR_SELECTOR = "#quarto-margin-sidebar, #TOC";
+
+  function isInSidebar(el) {
+    return !!(el && el.closest && el.closest(SIDEBAR_SELECTOR));
+  }
+
+  function ensureFineAnchors() {
+    let counter = 0;
+    for (const el of document.querySelectorAll(FINE_ANCHOR_SELECTOR)) {
+      if (el.id) continue;
+      if (el.closest("#TOC")) continue;
+      if (el.closest("#annotation-toolbar")) continue;
+      if (el.closest("#annotation-canvas")) continue;
+      counter++;
+      el.id = FINE_ANCHOR_PREFIX + counter;
+    }
+    if (counter > 0 && window.console) {
+      console.info(
+        "[annotation v4] ensureFineAnchors: assigned " + counter +
+        " synthetic ids (" + FINE_ANCHOR_PREFIX + "1.." +
+        FINE_ANCHOR_PREFIX + counter + ") to leaf layout blocks " +
+        "so strokes anchor to paragraphs / list-items / summaries " +
+        "instead of whole sections."
+      );
+    }
+    // Newly added ids invalidate any cached anchor list.
+    anchorListCache = null;
+  }
 
   function isContentAnchor(el) {
     if (!el || !el.id) return false;
@@ -1041,6 +1927,69 @@
           if (r.width > 0 && r.height > 0) return cur;
         }
         cur = cur.parentElement;
+      }
+    }
+    return null;
+  }
+
+  // findMainColumnAnchorAtY: pick the closest fine-anchor element
+  // in the MAIN body column (i.e. NOT inside the right margin
+  // sidebar / TOC) by vertical distance to clientY. Used by the
+  // sidebar redirect logic so a stroke drawn over the roadmap is
+  // anchored to the body paragraph it visually relates to.
+  //
+  // Cost: O(N_fine_anchors) per call. We only call this once per
+  // pointerdown when the click landed in the sidebar, so it's
+  // cheap enough.
+  function findMainColumnAnchorAtY(clientY) {
+    const fine = document.querySelectorAll(
+      "[id^='" + FINE_ANCHOR_PREFIX + "']"
+    );
+    let best = null;
+    let bestDist = Infinity;
+    for (const el of fine) {
+      if (isInSidebar(el)) continue;
+      const r = el.getBoundingClientRect();
+      if (r.width <= 0 || r.height <= 0) continue;
+      let dist;
+      if (clientY < r.top)         dist = r.top - clientY;
+      else if (clientY > r.bottom) dist = clientY - r.bottom;
+      else                         dist = 0;
+      if (dist < bestDist) { bestDist = dist; best = el; }
+    }
+    return best;
+  }
+
+  // findOverlappingStrokeAt: return the topmost (latest-drawn)
+  // pen / highlighter stroke whose any point lies within `radius`
+  // viewport-pixels of (clientX, clientY). Used by the eraser so
+  // it inherits the SAME anchor as the stroke it's about to cover
+  // — that keeps the eraser and target locked together through any
+  // subsequent scroll / toggle reflow, instead of drifting apart
+  // when they happen to be anchored to different elements.
+  function findOverlappingStrokeAt(clientX, clientY, radius) {
+    const r2 = radius * radius;
+    const rectByAnchor = new Map();
+    for (let i = strokes.length - 1; i >= 0; i--) {
+      const s = strokes[i];
+      if (!s || !s.points || s.points.length === 0) continue;
+      if (s.tool === "eraser") continue;
+      if (!s.anchor || !s.anchor.id) continue;
+      const p0 = s.points[0];
+      if (p0.fx === undefined) continue; // legacy unanchored
+      let r = rectByAnchor.get(s.anchor.id);
+      if (r === undefined) {
+        const el = document.getElementById(s.anchor.id);
+        r = el ? el.getBoundingClientRect() : null;
+        rectByAnchor.set(s.anchor.id, r);
+      }
+      if (!r || r.width <= 0 || r.height <= 0) continue;
+      for (const p of s.points) {
+        if (p.fx === undefined) continue;
+        const px = r.left + p.fx * r.width;
+        const py = r.top  + p.fy * r.height;
+        const dx = px - clientX, dy = py - clientY;
+        if (dx*dx + dy*dy <= r2) return s;
       }
     }
     return null;
@@ -1195,6 +2144,342 @@
     }
   }
 
+  // ── Document-coord anchor lookup (off-screen-safe) ────────────
+  // findContainingAnchor() relies on elementsFromPoint(), which is
+  // documented to return an empty list for points OUTSIDE the
+  // current visible viewport. That's fine while drawing (the user
+  // can only click visible content), but at LOAD time most strokes
+  // are off-screen, so re-anchoring via elementsFromPoint silently
+  // skipped them — they stayed pinned to their coarse section
+  // anchors, which is exactly the "barely moves on toggle" symptom
+  // the user reported.
+  //
+  // This helper instead walks every cached content anchor once and
+  // returns the smallest-area one whose CURRENT bounding rect (in
+  // document coordinates) contains the point. It works regardless
+  // of scroll position. Cost is O(N_anchors) per call ≈ a few ms
+  // for an entire handout's worth of strokes — only paid at load.
+  //
+  // We also cache the rects in a single pass keyed by the anchor
+  // element so the per-stroke loop in reanchorAllStrokes() doesn't
+  // recompute getBoundingClientRect() N times for the same element.
+  function buildAnchorRectCache() {
+    const list = getAnchorList();
+    const sx = window.scrollX, sy = window.scrollY;
+    const cache = [];
+    for (const el of list) {
+      const r = el.getBoundingClientRect();
+      if (r.width <= 0 || r.height <= 0) continue;
+      cache.push({
+        el,
+        left:   r.left + sx,
+        top:    r.top  + sy,
+        right:  r.left + sx + r.width,
+        bottom: r.top  + sy + r.height,
+        width:  r.width,
+        height: r.height,
+        area:   r.width * r.height,
+      });
+    }
+    return cache;
+  }
+
+  function findSmallestContainingAnchor(rectCache, dx, dy) {
+    let best = null;
+    let bestArea = Infinity;
+    for (const c of rectCache) {
+      if (dx < c.left || dx > c.right)  continue;
+      if (dy < c.top  || dy > c.bottom) continue;
+      if (c.area < bestArea) { bestArea = c.area; best = c; }
+    }
+    return best;
+  }
+
+  // True for chapter-/section-level wrappers that contain many
+  // paragraphs and therefore have huge heights. Anchoring strokes
+  // to these makes them drift wildly on any in-section reflow (see
+  // the long comment in reanchorStrokeAfterMove).
+  function isCoarseAnchorEl(el) {
+    if (!el) return true;
+    const tag = el.tagName;
+    if (tag === "SECTION" || tag === "ARTICLE" || tag === "MAIN" ||
+        tag === "ASIDE"   || tag === "NAV"     || tag === "HEADER" ||
+        tag === "FOOTER"  || tag === "BODY"    || tag === "HTML") {
+      return true;
+    }
+    // Quarto wraps sections in <div class="section level2"> in some
+    // configurations; treat those as coarse too.
+    if (tag === "DIV" && el.classList && el.classList.contains("section")) {
+      return true;
+    }
+    return false;
+  }
+
+  // Fallback for points that fall in inter-paragraph whitespace
+  // (so no <p>/<li> contains them). Pick the closest fine anchor
+  // by vertical distance — that's almost always the paragraph the
+  // user intended to mark up.
+  function findNearestFineAnchorVertically(rectCache, dx, dy, opts) {
+    const mainOnly = opts && opts.mainColumnOnly;
+    let best = null;
+    let bestDist = Infinity;
+    for (const c of rectCache) {
+      if (!c.el.id || !c.el.id.startsWith(FINE_ANCHOR_PREFIX)) continue;
+      if (mainOnly && isInSidebar(c.el)) continue;
+      let dist;
+      if (dy < c.top)         dist = c.top - dy;
+      else if (dy > c.bottom) dist = dy - c.bottom;
+      else                    dist = 0;
+      // Tiny horizontal-out penalty so we prefer something the
+      // stroke actually overlaps horizontally when distances tie.
+      if (dx < c.left || dx > c.right) dist += 0.5;
+      if (dist < bestDist) { bestDist = dist; best = c; }
+    }
+    return best;
+  }
+
+  // Migrate a v4 stroke whose anchor is too COARSE (e.g. a top-
+  // level <section>) to the deepest [id]-bearing element currently
+  // located at the stroke's first point. Geometry is preserved
+  // exactly: every point keeps its current viewport position; we
+  // just re-express it in fractional coordinates of the new, finer
+  // anchor.
+  //
+  // Why bother: section-level anchors stretch when callouts inside
+  // them are toggled open (see ensureFineAnchors). A paragraph- or
+  // list-item-level anchor does not — it just translates — so the
+  // stroke moves the SAME amount as the underlying text instead of
+  // a small fraction of it.
+  //
+  // Caveats:
+  //   • The "deepest" lookup is anchored to the FIRST point. If a
+  //     stroke spans multiple paragraphs, later points end up with
+  //     fx/fy outside [0,1] of the new anchor — fine, the stroke
+  //     still renders as a rigid body translated by the first
+  //     paragraph's reflow. Multi-paragraph strokes that need
+  //     pixel-perfect tracking across reflows are out of scope.
+  //   • If the user has already toggled callouts open BEFORE
+  //     loading the JSON, the saved anchor's current rect is
+  //     stretched, so the computed viewport position no longer
+  //     matches where the stroke was originally drawn. In that
+  //     case, re-anchoring picks the wrong paragraph. Best practice
+  //     is to load before toggling — same as before this fix.
+  function reanchorStrokeToFinestContainer(s, rectCache) {
+    if (!s || !s.anchor || !s.anchor.id) return s;
+    if (!s.points || s.points.length === 0) return s;
+    const p0 = s.points[0];
+    if (p0.fx === undefined) return s; // legacy unanchored — leave it
+    const oldEl = document.getElementById(s.anchor.id);
+    if (!oldEl) return s;
+    const oldRect = oldEl.getBoundingClientRect();
+    if (oldRect.width <= 0 || oldRect.height <= 0) return s;
+    const oldArea = oldRect.width * oldRect.height;
+
+    // Document-coord position of the stroke's first point.
+    const dx = oldRect.left + window.scrollX + p0.fx * oldRect.width;
+    const dy = oldRect.top  + window.scrollY + p0.fy * oldRect.height;
+
+    // 1) deepest containing anchor (covers most strokes that landed
+    //    on text within a paragraph).
+    let pick = findSmallestContainingAnchor(rectCache, dx, dy);
+    // 2) If the containing anchor is still as coarse as the saved
+    //    one (e.g. the click was in inter-paragraph whitespace),
+    //    fall back to the nearest fine anchor by vertical distance.
+    if (!pick || pick.el === oldEl || pick.area >= oldArea) {
+      pick = findNearestFineAnchorVertically(rectCache, dx, dy);
+    }
+    // 3) If the chosen anchor lives in the right margin sidebar
+    //    (#quarto-margin-sidebar / #TOC), redirect to the closest
+    //    fine anchor in the MAIN body column at the same vertical
+    //    position. The stroke keeps its absolute viewport position
+    //    via the fx/fy recompute below; afterward it tracks the
+    //    body column rather than the sticky sidebar.
+    if (pick && isInSidebar(pick.el)) {
+      const main = findNearestFineAnchorVertically(
+        rectCache, dx, dy, { mainColumnOnly: true }
+      );
+      if (main) pick = main;
+    }
+    if (!pick || pick.el === oldEl) return s;
+    if (pick.area >= oldArea && !isInSidebar(oldEl)) return s;
+
+    return {
+      ...s,
+      v: 4,
+      anchor: {
+        id: pick.el.id,
+        savedWidth:  pick.width,
+        savedHeight: pick.height,
+      },
+      points: s.points.map((p) => {
+        const px = oldRect.left + window.scrollX + p.fx * oldRect.width;
+        const py = oldRect.top  + window.scrollY + p.fy * oldRect.height;
+        return {
+          fx: (px - pick.left) / pick.width,
+          fy: (py - pick.top)  / pick.height,
+          p: p.p,
+        };
+      }),
+    };
+  }
+
+  // Compute current document-coord points for a stroke, using its
+  // anchor's CURRENT bounding rect. Returns [] if the stroke is
+  // unanchored or its anchor is missing / collapsed.
+  //
+  // Used by bakeErasersIntoStrokes to compare eraser paths against
+  // pen/highlighter paths in a coordinate system that both share
+  // (so layout drift between save and load doesn't matter, as long
+  // as both anchors moved similarly — which they do when they're
+  // the same anchor or near each other in the same column).
+  function strokeDocPoints(s) {
+    if (!s || !s.points || s.points.length === 0) return [];
+    if (s.points[0].fx === undefined) {
+      return s.points.map(p => ({ x: p.x, y: p.y }));
+    }
+    if (!s.anchor || !s.anchor.id) return [];
+    const el = document.getElementById(s.anchor.id);
+    if (!el) return [];
+    const r = el.getBoundingClientRect();
+    if (r.width <= 0 || r.height <= 0) return [];
+    const sx = window.scrollX, sy = window.scrollY;
+    return s.points.map(p => ({
+      x: r.left + sx + p.fx * r.width,
+      y: r.top  + sy + p.fy * r.height,
+    }));
+  }
+
+  function pointsBBox(pts) {
+    if (!pts || pts.length === 0) return null;
+    let l = Infinity, t = Infinity, r = -Infinity, b = -Infinity;
+    for (const p of pts) {
+      if (p.x < l) l = p.x;
+      if (p.y < t) t = p.y;
+      if (p.x > r) r = p.x;
+      if (p.y > b) b = p.y;
+    }
+    return { l, t, r, b };
+  }
+
+  // Squared distance from point (px, py) to the line segment (ax,ay)→(bx,by).
+  function pointToSegmentDistSq(px, py, ax, ay, bx, by) {
+    const vx = bx - ax, vy = by - ay;
+    const wx = px - ax, wy = py - ay;
+    const c1 = vx * wx + vy * wy;
+    if (c1 <= 0) return wx * wx + wy * wy;
+    const c2 = vx * vx + vy * vy;
+    if (c2 <= c1) {
+      const dx = px - bx, dy = py - by;
+      return dx * dx + dy * dy;
+    }
+    const t = c1 / c2;
+    const projx = ax + t * vx, projy = ay + t * vy;
+    const dx = px - projx, dy = py - projy;
+    return dx * dx + dy * dy;
+  }
+
+  // Bake each eraser stroke into the prior pen/highlighter strokes
+  // (vector erase), then drop the eraser strokes from the array.
+  //
+  // Why: at render time, eraser strokes use canvas globalComposite-
+  // Operation = "destination-out", which silently wipes any pixels
+  // currently underneath. After save → load, both pens and erasers
+  // get re-anchored independently and reflow drift can move an
+  // eraser onto pens it was never meant to touch — and worse, any
+  // pen the user drags into the eraser's swept area later in the
+  // session vanishes the moment they let go (confirmed via
+  // Option+E: turning eraser rendering off restored every "hidden"
+  // stroke immediately).
+  //
+  // Algorithm (preserves the original draw timeline):
+  //   • Walk strokes in saved order.
+  //   • For each eraser, mark the points of every prior pen /
+  //     highlighter stroke that fall within eraser_width/2 of any
+  //     segment of the eraser path (in current doc coords).
+  //   • Drop those points; if a stroke has no points left, drop it.
+  //   • Drop the eraser stroke itself.
+  //
+  // The result is a clean, vector-only stroke list with the user's
+  // intent (which marks should stay erased) baked in. Subsequent
+  // saves naturally write a clean file.
+  function bakeErasersIntoStrokes(strokes) {
+    const docs = strokes.map(strokeDocPoints);
+    const bbs  = docs.map(pointsBBox);
+    let erasersFound = 0;
+    let pointsRemoved = 0;
+
+    for (let i = 0; i < strokes.length; i++) {
+      const s = strokes[i];
+      if (!s || s.tool !== 'eraser') continue;
+      erasersFound++;
+      const erasePts = docs[i];
+      const eraseBb  = bbs[i];
+      if (!eraseBb || erasePts.length === 0) continue;
+      const r  = (s.width || 4) / 2;
+      const r2 = r * r;
+      const ebbX = { l: eraseBb.l - r, t: eraseBb.t - r,
+                     r: eraseBb.r + r, b: eraseBb.b + r };
+
+      for (let j = 0; j < i; j++) {
+        const p = strokes[j];
+        if (!p || p.tool === 'eraser') continue;
+        if (!p.points || p.points.length === 0) continue;
+        const penPts = docs[j];
+        const penBb  = bbs[j];
+        if (!penPts || penPts.length === 0 || !penBb) continue;
+        // Quick reject: skip pens whose bbox doesn't overlap the
+        // expanded eraser bbox.
+        if (penBb.r < ebbX.l || penBb.l > ebbX.r ||
+            penBb.b < ebbX.t || penBb.t > ebbX.b) continue;
+
+        const keepIdx = [];
+        for (let k = 0; k < penPts.length; k++) {
+          const px = penPts[k].x, py = penPts[k].y;
+          let erased = false;
+          // First check: distance to any eraser POINT (cheap, catches
+          // most cases since eraser paths are densely sampled).
+          for (let l = 0; l < erasePts.length; l++) {
+            const dx = px - erasePts[l].x;
+            const dy = py - erasePts[l].y;
+            if (dx * dx + dy * dy < r2) { erased = true; break; }
+          }
+          // Second check: distance to any eraser SEGMENT (catches
+          // cases where the eraser stroke has long sparse segments).
+          if (!erased) {
+            for (let l = 1; l < erasePts.length; l++) {
+              const a = erasePts[l - 1], b = erasePts[l];
+              if (pointToSegmentDistSq(px, py, a.x, a.y, b.x, b.y) < r2) {
+                erased = true; break;
+              }
+            }
+          }
+          if (erased) pointsRemoved++;
+          else keepIdx.push(k);
+        }
+
+        if (keepIdx.length !== p.points.length) {
+          p.points = keepIdx.map(k => p.points[k]);
+          // Refresh cached doc points / bbox for the trimmed stroke
+          // so that any LATER eraser in this same pass sees the
+          // up-to-date geometry.
+          docs[j] = strokeDocPoints(p);
+          bbs[j]  = pointsBBox(docs[j]);
+        }
+      }
+    }
+
+    // Drop erasers and now-empty pens.
+    const out = [];
+    for (let i = 0; i < strokes.length; i++) {
+      const s = strokes[i];
+      if (!s) continue;
+      if (s.tool === 'eraser') continue;
+      if (s.points && s.points.length === 0) continue;
+      out.push(s);
+    }
+    return out;
+  }
+
   // Convert any loaded stroke into v4-fractional in-memory format
   // so the rest of the app only deals with one shape:
   //   • Already v4 → kept as-is.
@@ -1263,7 +2548,75 @@
         );
       }
     }
-    return out;
+
+    // ── Re-anchor pass: migrate coarse (section-level) anchors to
+    // the deepest synthetic / content anchor at each stroke's
+    // current document-coord position. We build the anchor rect
+    // cache ONCE up front (one getBoundingClientRect per anchor)
+    // and reuse it across all strokes — see
+    // reanchorStrokeToFinestContainer for the per-stroke geometry-
+    // preserving construction. Document-coord lookup is required
+    // because most strokes are off-screen at load time, and
+    // elementsFromPoint() returns nothing for off-screen points.
+    // ── Eraser bake: convert eraser strokes into vector edits of
+    // the prior pen/highlighter strokes, then drop them from the
+    // array. Why this is necessary:
+    //
+    //   The canvas renderer applies erasers via globalComposite-
+    //   Operation = "destination-out", which erases ANY pixels
+    //   currently underneath. After save → load, both pens and
+    //   erasers are re-anchored independently. Layout drift
+    //   (MathJax late render, callout state, font swap) shifts
+    //   anchors by varying amounts, so an eraser saved over pen A
+    //   can end up rendering over pen B. Worse, when the user
+    //   moves a stroke into an eraser's swept area, the eraser
+    //   silently wipes it out — exactly the "moved strokes hide
+    //   behind the math formula" symptom (confirmed: with all
+    //   erasers disabled via Option+E, every stroke became
+    //   visible immediately).
+    //
+    // Baking at load time fixes this by:
+    //   1. Walking strokes in their saved order (so semantics match
+    //      the original draw timeline).
+    //   2. For every eraser, removing the points of every prior
+    //      pen/highlighter stroke that fall within eraser_width/2
+    //      in CURRENT doc coords.
+    //   3. Dropping the eraser stroke and any pen left with no
+    //      points.
+    //
+    // Saved files written from this point on naturally contain no
+    // eraser strokes (they were already baked into the survivors),
+    // so re-saving migrates the file forward.
+    const erasersInInput = out.filter(s => s && s.tool === 'eraser').length;
+    const bakedOut = bakeErasersIntoStrokes(out);
+    if (window.console && erasersInInput > 0) {
+      const survivedPen = bakedOut.filter(s => s && s.tool !== 'eraser').length;
+      console.info(
+        "[annotation v4] Baked " + erasersInInput + " eraser stroke(s) " +
+        "into prior pen/highlighter strokes; " + survivedPen +
+        " stroke(s) remain (was " + out.length + "). " +
+        "Re-saving will write a clean file with no eraser strokes."
+      );
+    }
+    out.length = 0;
+    for (const s of bakedOut) out.push(s);
+
+    const rectCache = buildAnchorRectCache();
+    let migrated = 0;
+    const finalOut = out.map((s) => {
+      const finer = reanchorStrokeToFinestContainer(s, rectCache);
+      if (finer !== s) migrated++;
+      return finer;
+    });
+    if (migrated > 0 && window.console) {
+      console.info(
+        "[annotation v4] Re-anchored " + migrated + "/" + out.length +
+        " stroke(s) to finer (paragraph / list-item / summary) " +
+        "anchors. They now translate with the underlying content " +
+        "when other callouts expand or collapse."
+      );
+    }
+    return finalOut;
   }
 
   // Browsers do not allow JS to point a file picker at an arbitrary
@@ -1324,18 +2677,35 @@
       return;
     }
     if (!enabled) return;
+    // Avoid stealing keys while the user is typing in an input.
+    const tgt = e.target;
+    const inField = tgt && (tgt.tagName === "INPUT" ||
+                            tgt.tagName === "TEXTAREA" ||
+                            tgt.isContentEditable);
     if ((e.metaKey || e.ctrlKey) && e.key === "z") {
       e.preventDefault(); undo();
-    } else if (e.key === "c" || e.key === "C") {
+    } else if (!inField && (e.key === "c" || e.key === "C")) {
       setTool("cursor");
-    } else if (e.key === "p" || e.key === "P") {
+    } else if (!inField && (e.key === "p" || e.key === "P")) {
       setTool("pen");
-    } else if (e.key === "h" || e.key === "H") {
+    } else if (!inField && (e.key === "h" || e.key === "H")) {
       setTool("highlighter");
-    } else if (e.key === "e" || e.key === "E") {
+    } else if (!inField && (e.key === "s" || e.key === "S")) {
+      setTool("select");
+    } else if (!inField && (e.key === "e" || e.key === "E")) {
       setTool("eraser");
+    } else if ((e.key === "Delete" || e.key === "Backspace")
+               && tool === "select" && selectedStrokes.size > 0) {
+      e.preventDefault();
+      deleteSelected();
     } else if (e.key === "Escape") {
-      setEnabled(false);
+      // In select mode, Esc clears the active selection first;
+      // a second Esc (now with empty selection) turns annotation off.
+      if (tool === "select" && selectedStrokes.size > 0) {
+        clearSelection();
+      } else {
+        setEnabled(false);
+      }
     }
   }
 
@@ -1351,11 +2721,17 @@
     resizeCanvas();
     toolbar = makeToolbar();
     showBtn = makeShowButton();
-    document.body.appendChild(showBtn);
+    getOverlayHost().appendChild(showBtn);
     // Restore previous position + visibility (if any).
     restoreToolbarPosition();
     restoreToolbarVisibility();
     setTool("pen");
+
+    // Assign synthetic ids to <p> / <li> / <summary> / etc. BEFORE
+    // any stroke is loaded or drawn, so both load-time re-anchoring
+    // and live findContainingAnchor() calls land on paragraph-level
+    // anchors instead of whole sections.
+    ensureFineAnchors();
 
     canvas.addEventListener("pointerdown", onPointerDown);
     canvas.addEventListener("pointermove", onPointerMove);
@@ -1407,6 +2783,57 @@
         if (canvas.style.display !== "none") redraw();
       });
     }, { passive: true });
+
+    // ── Layout-change reflow handling ──────────────────────────────
+    // Opening or closing a Quarto callout (collapsible <details>),
+    // an image finishing to load, a font swap, etc. all reflow the
+    // page WITHOUT firing scroll / resize. v4 strokes are anchored
+    // to specific [id] elements via fractional coordinates, so they
+    // would render correctly IF we redrew — but the canvas only
+    // refreshed on scroll/resize, leaving notes for content BELOW
+    // the change visibly out of sync with the underlying anchors.
+    //
+    // Fix: observe layout changes and trigger a coalesced redraw.
+    //   • ResizeObserver on document.body catches the typical case
+    //     (a toggle expanding pushes total page height up / down).
+    //   • A capture-phase `toggle` listener catches <details> opens
+    //     immediately, even before ResizeObserver delivers the
+    //     resulting size change.
+    // Both schedule the same rAF so we only paint once per frame.
+    //
+    // Note re: backward compatibility — the JSON format is untouched
+    // (same v4 anchor + fx/fy strokes); this only changes WHEN we
+    // redraw, not WHAT we draw, so previously saved annotations keep
+    // working as-is.
+    let layoutRaf = 0;
+    const scheduleLayoutRedraw = () => {
+      if (layoutRaf) return;
+      layoutRaf = requestAnimationFrame(() => {
+        layoutRaf = 0;
+        // The set of [id]-bearing elements may change when Quarto
+        // injects/removes nodes (rare, but cheap to invalidate).
+        anchorListCache = null;
+        if (canvas && canvas.style.display !== "none") redraw();
+      });
+    };
+    if (typeof ResizeObserver !== "undefined") {
+      try {
+        const layoutObserver = new ResizeObserver(scheduleLayoutRedraw);
+        layoutObserver.observe(document.body);
+      } catch (_) {
+        // Older engines: silently skip; toggle listener still helps.
+      }
+    }
+    // `toggle` does not bubble, so we listen in the capture phase to
+    // catch every <details> on the page (callouts, code-folding, etc.)
+    // without having to attach individually.
+    document.addEventListener("toggle", scheduleLayoutRedraw, true);
+
+    // Diagnostic: warn (once) if any ancestor of the canvas creates
+    // a stacking context. That's the only realistic way our INT32_MAX
+    // z-index can still leave strokes "behind" page content.
+    warnIfStackingAncestor();
+
     autoLoadJsonIfConfigured();
   }
 
