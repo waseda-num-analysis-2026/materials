@@ -1,6 +1,9 @@
 # Archive (unused files)
 **/archive/
 
+# Local demos and scratch work (not for publication)
+050/local/
+
 # Quarto intermediate files
 *.quarto_ipynb
 *.quarto_ipynb_*
