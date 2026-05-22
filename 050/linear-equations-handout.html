@@ -175,7 +175,7 @@ window.Quarto = {
 
 <script>
 window.__ANNOTATION_V4_AUTOLOAD__ = {
-  url: "lectures-5-6-linear-systems-and-iterative-methods__2026-05-22-08-22-16.json",
+  url: "lectures-5-6-linear-systems-and-iterative-methods__2026-05-22-10-52-54.json",
   enable: true,
   tool: "cursor",
 };
@@ -626,7 +626,7 @@ A\widehat{x} = b + \Delta b,
 <p>The surprising point is that <span class="math inline">\(\widehat{x}\)</span> can be far from <span class="math inline">\((1,1,\ldots,1)^T\)</span> even when <span class="math inline">\(\Delta b\)</span> is tiny.</p>
 </div>
 </div>
-<div id="abc742a1" class="cell" data-execution_count="1">
+<div id="1ca43ea5" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> numpy <span class="im">import</span> linalg <span class="im">as</span> LA</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -691,7 +691,7 @@ A\widehat{x} = b + \Delta b,
 </div>
 <div id="callout-5" class="callout-5-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<div id="7117a365" class="cell" data-execution_count="2">
+<div id="5bb12a3e" class="cell" data-execution_count="2">
 <div class="cell-output cell-output-stdout">
 <pre><code>true solution x = [1. 1. 1. 1. 1. 1. 1. 1. 1. 1.]
 
@@ -834,11 +834,11 @@ b_i
 </section>
 <section id="sec-jacobi-implementation" class="level3" data-number="4.5">
 <h3 data-number="4.5" class="anchored" data-anchor-id="sec-jacobi-implementation"><span class="header-section-number">4.5</span> Jacobi Implementation</h3>
-<div id="80fc808c" class="cell" data-execution_count="3">
+<div id="12f2e912" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> numpy <span class="im">import</span> linalg <span class="im">as</span> LA</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="45e78147" class="cell" data-execution_count="4">
+<div id="c492a1b9" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> jacobi(A, b, x0<span class="op">=</span><span class="va">None</span>, tol<span class="op">=</span><span class="fl">1e-10</span>, max_iter<span class="op">=</span><span class="dv">500</span>):</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    A <span class="op">=</span> np.asarray(A, dtype<span class="op">=</span><span class="bu">float</span>)</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    b <span class="op">=</span> np.asarray(b, dtype<span class="op">=</span><span class="bu">float</span>)</span>
@@ -904,7 +904,7 @@ b_i
 </div>
 <div id="callout-8" class="callout-8-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<div id="fef10aa5" class="cell" data-execution_count="5">
+<div id="99225bbe" class="cell" data-execution_count="5">
 <div class="cell-output cell-output-stdout">
 <pre><code>Jacobi solution : [1. 1. 1.]
 iterations      : 35
@@ -1203,7 +1203,7 @@ r_{k+1}+\beta_k p_k.
 </div>
 <div id="callout-18" class="callout-18-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<div id="7ffc5c73" class="cell" data-execution_count="6">
+<div id="f9d56ff4" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> conjugate_gradient(A, b, x0<span class="op">=</span><span class="va">None</span>, tol<span class="op">=</span><span class="fl">1e-10</span>, max_iter<span class="op">=</span><span class="va">None</span>):</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    A <span class="op">=</span> np.asarray(A, dtype<span class="op">=</span><span class="bu">float</span>)</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    b <span class="op">=</span> np.asarray(b, dtype<span class="op">=</span><span class="bu">float</span>)</span>
@@ -1276,7 +1276,7 @@ r_{k+1}+\beta_k p_k.
 </div>
 <div id="callout-19" class="callout-19-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<div id="b4d2ce70" class="cell" data-execution_count="7">
+<div id="bc791766" class="cell" data-execution_count="7">
 <div class="cell-output cell-output-stdout">
 <pre><code>cond(A)         : 1.00e+02
 iterations      : 20
@@ -1387,7 +1387,7 @@ x^{(m)}=x^*
 </div>
 </div>
 <p>The key message is that CG is fast when <span class="math inline">\(A\)</span> is well-conditioned. A small <span class="math inline">\(\kappa_2(A)\)</span> makes the contraction factor in the bound much smaller than <span class="math inline">\(1\)</span>.</p>
-<div id="12867cc8" class="cell" data-execution_count="8">
+<div id="8ad6bc98" class="cell" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> random_spd(n, condition_number<span class="op">=</span><span class="dv">10</span>, seed<span class="op">=</span><span class="dv">2026</span>):</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    rng <span class="op">=</span> np.random.default_rng(seed)</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    Q, _ <span class="op">=</span> LA.qr(rng.normal(size<span class="op">=</span>(n, n)))</span>
@@ -1429,7 +1429,7 @@ x^{(m)}=x^*
 </div>
 <div id="callout-23" class="callout-23-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<div id="9565d83d" class="cell" data-execution_count="9">
+<div id="f11f0431" class="cell" data-execution_count="9">
 <div class="cell-output cell-output-stdout">
 <pre><code>cond(A) ≈     10.0, CG iterations = 20, final residual = 2.72e-18
 cond(A) ≈    100.0, CG iterations = 20, final residual = 2.72e-14
@@ -6212,7 +6212,7 @@ Pz=r
 <span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">script</span><span class="dt">&gt;</span></span>
 <span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a><span class="bu">window</span><span class="op">.</span><span class="at">__ANNOTATION_V4_AUTOLOAD__</span> <span class="op">=</span> {</span>
-<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a>  <span class="dt">url</span><span class="op">:</span> <span class="st">"lectures-5-6-linear-systems-and-iterative-methods__2026-05-22-08-22-16.json"</span><span class="op">,</span></span>
+<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a>  <span class="dt">url</span><span class="op">:</span> <span class="st">"lectures-5-6-linear-systems-and-iterative-methods__2026-05-22-10-52-54.json"</span><span class="op">,</span></span>
 <span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a>  <span class="dt">enable</span><span class="op">:</span> <span class="kw">true</span><span class="op">,</span></span>
 <span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a>  <span class="dt">tool</span><span class="op">:</span> <span class="st">"cursor"</span><span class="op">,</span></span>
 <span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a>}<span class="op">;</span></span>
