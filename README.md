@@ -60,6 +60,8 @@ Short how-to videos to help you get started:
 | 6.2 | Stationary Iteration Convergence | same repo as 6.1 | **May 28, 23:59** |
 | 6.3 | Implement the Conjugate Gradient Method | same repo as 6.1 | **May 28, 23:59** |
 | 6.4 | CG Mini Report | same repo as 6.1 | **May 28, 23:59** |
+| 7.1 | Fixed-Point Iteration on a Cubic | [Access](https://classroom.github.com/a/j3EgKp5b) | **June 4, 23:59** |
+| 7.2 | Comparing Root-Finding Methods | same repo as 7.1 | **June 4, 23:59** |
 
 ## Past Exams
 

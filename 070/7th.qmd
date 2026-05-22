@@ -1,0 +1,155 @@
+---
+title: "Numerical Analysis"
+subtitle: "Foundations and Exercises"
+author:
+  - name: "TANAKA, Kazuaki (田中 一成)"
+    email: "k.tanaka@aoni.waseda.jp"
+    affiliations:
+      - name: "Global Center for Science and Engineering, Waseda University"
+format:
+  revealjs:
+    theme: [default, ../030/custom.scss]
+    slide-number: true
+    html-math-method: mathjax
+    chalkboard:
+      storage: chalkboardData_7th
+    title-slide-attributes:
+      data-background-image: "../030/images/image1.png"
+      data-background-size: "contain"
+      data-background-opacity: "0.15"
+---
+
+## Before We Start {.smaller}
+
+```{=html}
+<div class="mission-tip" style="margin-top:0.6em; margin-bottom:0.8em;">
+  <div class="mission-tip-icon">📥</div>
+  <div class="mission-tip-content">
+    <strong>Please pull the latest course materials repository.</strong>
+  </div>
+</div>
+
+<div style="display:flex; flex-direction:column; gap:0.5em; margin-bottom:0.8em;">
+  <div>
+    <div style="font-size:0.78em; color:#888; margin-bottom:0.2em;">Already cloned</div>
+    <pre style="margin:0; background:#1e1e2e; color:#cdd6f4; border-radius:8px; padding:0.5em 1em; font-size:0.78em; line-height:1.5;"><code>cd materials
+git pull</code></pre>
+  </div>
+</div>
+
+<div style="background:#f0f4ff; border-left:3px solid #4472C4; border-radius:6px; padding:0.6em 1em; font-size:0.82em;">
+  <strong>Today's materials</strong>:
+  <table style="margin-top:0.4em; border-collapse:collapse; width:100%;">
+    <tr><td style="padding:0.15em 0.6em 0.15em 0;"><code>070/7th.qmd</code></td><td style="color:#555;">slides — logistics and assignments</td></tr>
+    <tr><td style="padding:0.15em 0.6em 0.15em 0;"><code>070/nonlinear-equations-handout.qmd</code></td><td style="color:#555;">📘 <strong>shared handout for Lectures 7 and 8</strong></td></tr>
+    <tr><td style="padding:0.15em 0.6em 0.15em 0;"><code>070/nonlinear-equations-handout.html</code></td><td style="color:#555;">rendered shared handout</td></tr>
+  </table>
+</div>
+```
+
+## Today's Main Material {.smaller}
+
+```{=html}
+<div style="background:#e8f5e9; border-left:4px solid #2e7d32; border-radius:8px; padding:0.8em 1em; margin-bottom:0.7em;">
+  <div style="font-size:0.82em; color:#1b5e20; font-weight:700; letter-spacing:0.04em;">LECTURE 7</div>
+  <div style="font-size:1.05em; margin-top:0.2em;"><strong>Nonlinear Equations I: Fixed-Point Iteration and Newton's Method</strong></div>
+  <div style="font-size:0.84em; color:#455a64; margin-top:0.25em;">
+    Use the shared Lectures 7--8 handout. Today we focus on Sections 1--3.
+  </div>
+</div>
+
+<div style="display:grid; grid-template-columns:1fr; gap:0.8em;">
+  <div style="background:#fff8e1; border:1px solid #ffe082; border-radius:10px; padding:0.75em 0.9em;">
+    <div style="font-size:0.8em; color:#e65100; font-weight:700;">Today's scope</div>
+    <ul style="font-size:0.83em; line-height:1.55; margin:0.4em 0 0 1.2em;">
+      <li>fixed-point iteration and rearranging \(f(x)=0\) into \(x=g(x)\)</li>
+      <li>local convergence via \(|g'(x^*)| &lt; 1\)</li>
+      <li>one-dimensional Newton's method and quadratic convergence</li>
+    </ul>
+  </div>
+</div>
+```
+
+## Reminder — Ex 6 {.smaller}
+
+```{=html}
+<div style="display:flex; flex-direction:column; gap:0.55em; font-size:0.86em;">
+  <div style="background:#fff3e0; border-left:4px solid #ef6c00; border-radius:6px; padding:0.55em 0.85em;">
+    Ex 6.0--6.4 are due <strong>May 28 (Thu), 23:59 JST</strong>.
+  </div>
+  <div style="background:#e3f2fd; border-left:4px solid #1976d2; border-radius:6px; padding:0.55em 0.85em;">
+    If you have grading or assignment questions, reply in the relevant GitHub Issue or ask in Mattermost <code>#question</code>.
+  </div>
+</div>
+```
+
+## Exercise 7.1 — Fixed-Point Iteration on a Cubic {.smaller .exercise-slide}
+
+<div style="padding-left: 2em; margin-top: 0.5em; margin-bottom: 0.4em;">
+  <strong>Format:</strong> Individual Work
+  &nbsp;&nbsp;|&nbsp;&nbsp; <strong>Repository:</strong> <a href="https://classroom.github.com/a/j3EgKp5b">Ex 7 — GitHub Classroom</a>
+  &nbsp;&nbsp;|&nbsp;&nbsp; <strong>Edit:</strong> <code>ex7-1.qmd</code>
+  &nbsp;&nbsp;|&nbsp;&nbsp; <strong style="color: #d84315;">Deadline: June 4 (Thu), 23:59 JST</strong>
+</div>
+
+Solve $f(x)=x^3-3x-1=0$ (real roots $\approx 1.88,\,-0.35,\,-1.53$) by implementing and comparing the following three fixed-point maps:
+
+```{=html}
+<div style="display:flex; justify-content:center; align-items:center; gap:1.2em; margin:0.35em 0 0.5em; font-size:0.82em; line-height:1.35;">
+  <div>\(g_1(x)=\dfrac{x^3-1}{3}\)</div>
+  <span style="margin:0 0.15em;">,&nbsp;&nbsp;</span>
+  <div>\(g_2(x)=\dfrac{3x+1}{x^2}\) (\(x\neq 0\))</div>
+  <span style="margin:0 0.15em;">,&nbsp;&nbsp;</span>
+  <div>\(g_3(x)=\sqrt[3]{3x+1}\)</div>
+</div>
+```
+
+**Tasks:**
+
+- Implement all three methods
+- Run numerical experiments from initial guesses near each root
+- Visualize convergent methods (AI permitted; plots recommended)
+- Compute $|g'(x^*)|$ at each root and compare with the local convergence corollary in the handout
+- Write a short discussion (theory vs experiment, root sensitivity, method comparison)
+
+## Exercise 7.2 — Comparing Root-Finding Methods {.smaller .exercise-slide}
+
+<div style="padding-left: 2em; margin-top: 0.5em; margin-bottom: 0.4em;">
+  <strong>Format:</strong> Individual Work
+  &nbsp;&nbsp;|&nbsp;&nbsp; <strong>Repository:</strong> same as Ex 7.1
+  &nbsp;&nbsp;|&nbsp;&nbsp; <strong>Edit:</strong> <code>ex7-2.qmd</code>
+  &nbsp;&nbsp;|&nbsp;&nbsp; <strong style="color: #d84315;">Deadline: June 4 (Thu), 23:59 JST</strong>
+</div>
+
+For $f(x)=x-\cos x=0$ (unique real root $\approx 0.7391$), implement and compare:
+
+1. **Newton's method** — use $f'(x_k)$ at each step
+2. **Simplified Newton's method** — use $f'(x_0)$ only once
+3. **Bisection method** — halve a bracketing interval (a template may be provided)
+
+**Tasks:**
+
+- Compare the number of iterations, function/derivative evaluations, convergence rate, and robustness
+- Plot the error history (AI permitted; plots recommended)
+
+## Assignments and Preparation {.smaller}
+
+```{=html}
+<div class="assign-list">
+  <div class="assign-card">
+    <div class="assign-num">1</div>
+    <div class="assign-body">
+      <p>Accept the <a href="https://classroom.github.com/a/j3EgKp5b"><strong>Ex 7 GitHub Classroom</strong></a> link.</p>
+      <ul>
+        <li>Study the shared handout: <code>070/nonlinear-equations-handout.html</code> (Sections 1--3 for Lecture 7)</li>
+        <li>Ex 7.1 is <strong>Individual Work</strong></li>
+        <li>Ex 7.2 is <strong>Individual Work</strong></li>
+        <li><strong>IMPORTANT:</strong> render each submission file and push the rendered output together with any <code>*_files/</code> directories</li>
+        <li><strong>IMPORTANT:</strong> after pushing, open your GitHub repository in a browser and confirm the rendered files are visible</li>
+        <li>Report AI use as instructed in the assignment template</li>
+        <li><strong>Deadline:</strong> <span class="assign-due">June 4 (Thu), 23:59 JST</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+```
