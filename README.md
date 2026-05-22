@@ -18,7 +18,7 @@ Materials are organized by lecture number:
 | `030/` | Floating-Point Numbers | [Slides](https://waseda-num-analysis-2026.github.io/materials/030/3rd.html) · [Handout](https://waseda-num-analysis-2026.github.io/materials/030/3rd-handout.html) | [Watch](https://youtu.be/9_d11bJozUY) |
 | `040/` | Vector Norms and Matrix Norms | [Slides](https://waseda-num-analysis-2026.github.io/materials/040/4th.html) · [Handout](https://waseda-num-analysis-2026.github.io/materials/040/4th-handout.html) | [Watch](https://youtu.be/pO3IbMeOQkk) |
 | `050/` | Linear Systems I: Introduction to Stationary Iterative Methods | [Slides](https://waseda-num-analysis-2026.github.io/materials/050/5th.html) · [Handout](https://waseda-num-analysis-2026.github.io/materials/050/linear-equations-handout.html) *(shared with Lecture 6; section numbering updated in Lecture 6: formerly Sections 9 onward are now Sections 5 onward)* | [Watch](https://youtu.be/IQz3JCf-uL0) |
-| `060/` | Linear Systems II: Stationary Iteration Analysis and Conjugate Gradient | [Slides](https://waseda-num-analysis-2026.github.io/materials/060/6th.html) | TBA |
+| `060/` | Linear Systems II: Stationary Iteration Analysis and Conjugate Gradient | [Slides](https://waseda-num-analysis-2026.github.io/materials/060/6th.html) | [Watch](https://youtu.be/TZi5rjMUX2U) |
 | `past_exams/` | Past Exams | [2025 Midterm](https://waseda-num-analysis-2026.github.io/materials/past_exams/2025_midterm/2025_midterm.pdf) | — |
 | ...    | ... | ... | ... |
 
