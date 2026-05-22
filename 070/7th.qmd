@@ -68,19 +68,6 @@ git pull</code></pre>
 </div>
 ```
 
-## Reminder — Ex 6 {.smaller}
-
-```{=html}
-<div style="display:flex; flex-direction:column; gap:0.55em; font-size:0.86em;">
-  <div style="background:#fff3e0; border-left:4px solid #ef6c00; border-radius:6px; padding:0.55em 0.85em;">
-    Ex 6.0--6.4 are due <strong>May 28 (Thu), 23:59 JST</strong>.
-  </div>
-  <div style="background:#e3f2fd; border-left:4px solid #1976d2; border-radius:6px; padding:0.55em 0.85em;">
-    If you have grading or assignment questions, reply in the relevant GitHub Issue or ask in Mattermost <code>#question</code>.
-  </div>
-</div>
-```
-
 ## Exercise 7.1 — Fixed-Point Iteration on a Cubic {.smaller .exercise-slide}
 
 <div style="padding-left: 2em; margin-top: 0.5em; margin-bottom: 0.4em;">
