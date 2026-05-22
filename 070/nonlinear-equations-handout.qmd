@@ -1,0 +1,845 @@
+---
+title: "Lectures 7--8 — Nonlinear Equations"
+subtitle: "Handout: Foundations of and Exercises in Numerical Analysis"
+date: today
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    toc-title: "Contents"
+    number-sections: true
+    html-math-method: mathjax
+    theme: cosmo
+    code-fold: false
+    code-tools: true
+    highlight-style: github
+    include-after-body:
+      - ../annotation-v4.html
+execute:
+  echo: true
+  eval: true
+jupyter: python3
+---
+
+<script>
+window.__ANNOTATION_V4_AUTOLOAD__ = {
+  url: "lectures-7-8-nonlinear-equations__placeholder.json",
+  enable: false,
+  tool: "cursor",
+};
+</script>
+
+::: {.callout-tip collapse="true"}
+## How to use this handout — Evolving Study Notes with an AI Tutor
+
+This handout is the **shared main material for Lectures 7 and 8**.
+The companion slides (`7th.html` and `8th.html`) are only for class
+logistics and assignment instructions.
+
+Like the previous handouts, this file is designed to grow with you.
+Whenever a line confuses you, ask the AI tutor and insert a Q&A block
+following [`AI_TUTOR.md`](../AI_TUTOR.md).
+:::
+
+## Roadmap {.unnumbered}
+
+This handout is split across two lectures:
+
+| Lecture | Main topics |
+|---|---|
+| Lecture 7 | fixed-point iteration, convergence via $|g'(x^*)|$, and one-dimensional Newton's method |
+| Lecture 8 | comparison of root-finding methods, multi-dimensional Newton's method, and an introduction to simultaneous polynomial root finding |
+
+---
+
+## Nonlinear Equations {#sec-nonlinear-intro}
+
+We consider the problem of finding a solution to a **nonlinear equation**
+
+$$
+f(x) = 0,
+$$
+
+where $f$ is a nonlinear function. In the general setting, $f$ may map
+$\mathbb{R}^n$ to $\mathbb{R}^n$, so we are solving a **system of nonlinear
+equations**
+
+$$
+\mathbf{f}(\mathbf{x}) = \mathbf{0}.
+$$
+
+In Lectures 5--6 we studied **linear** systems $A\mathbf{x}=\mathbf{b}$.
+Nonlinear problems are harder because there is usually no closed-form
+formula for the solution.
+
+::: {.callout-note}
+## Connection to linear systems
+
+In Lectures 5--6 we learned numerical methods for linear equations and
+linear systems. For the nonlinear equations treated here, solutions
+usually cannot be written in closed form, so we improve approximations
+iteratively.
+
+The key idea is to replace a nonlinear problem, near the current
+approximation, with a linear one. In one dimension, **Newton's method**
+uses a tangent-line (first-order) approximation to obtain the next iterate.
+In several variables, the same idea leads to solving a linear system
+involving the Jacobian matrix.
+
+Thus, even when the original problem is nonlinear, the linear-algebra
+tools from Lectures 5--6 remain essential.
+:::
+
+---
+
+## Fixed-Point Iteration {#sec-fixed-point}
+
+For simplicity, we first work in one dimension ($n=1$).
+
+::: {.callout-note title="Fixed-point iteration"}
+Let $g$ be a function on some interval $I \subset \mathbb{R}$.
+The iteration
+
+$$
+x_{k+1} = g(x_k), \qquad k=0,1,2,\ldots
+$$
+
+is called the **fixed-point iterative method**.
+:::
+
+If the sequence $\{x_k\}$ converges to $x^*$ and $g$ is continuous, then
+
+$$
+x^* = g(x^*),
+$$
+
+so $x^*$ is a **fixed point** of $g$.
+
+The root-finding problem $f(x)=0$ and the fixed-point problem $x=g(x)$
+are linked: from the same $f$, we may construct **several**
+iteration functions $g$. **Newton's method**, developed in the next section,
+is one important special choice.
+
+### Rearranging $f(x)=0$ into $x=g(x)$ {#sec-fixed-point-forms}
+
+Consider
+
+$$
+f(x) = x^3 - 3x - 1 = 0,
+$$
+
+which has three real roots approximately $x \approx 1.88,\,-0.35,\,-1.53$.
+
+- **Form 1.** From $x^3 - 1 = 3x$, define
+  $$
+  g_1(x) = \frac{x^3 - 1}{3}.
+  $$
+- **Form 2.** From $x^3 = 3x + 1$, with $x \neq 0$, define
+  $$
+  g_2(x) = \frac{3x + 1}{x^2}.
+  $$
+- **Form 3.** From $x^3 = 3x + 1$, define
+  $$
+  g_3(x) = \sqrt[3]{3x + 1}.
+  $$
+
+Different choices of $g$ can converge to different roots, or fail to converge
+at all, even for the same equation $f(x)=0$.
+
+```{python}
+import numpy as np
+
+def fixed_point_iteration(g, x0, max_iter=50, tol=1e-10):
+    """Fixed-point iteration x_{k+1} = g(x_k)."""
+    x_history = [float(x0)]
+    x = float(x0)
+    for k in range(max_iter):
+        x_new = g(x)
+        x_history.append(x_new)
+        if abs(x_new - x) < tol:
+            return x_history, True
+        x = x_new
+    return x_history, False
+
+def g1(x):
+    return (x**3 - 1) / 3
+
+def g2(x):
+    return (3 * x + 1) / (x**2)
+
+def g3(x):
+    return np.cbrt(3 * x + 1)
+
+x0 = -1.0
+for name, g in [("g1", g1), ("g2", g2), ("g3", g3)]:
+    hist, ok = fixed_point_iteration(g, x0)
+    status = "converged" if ok else "did not converge"
+    print(f"{name}: {status}, last value = {hist[-1]:.8f}")
+```
+
+### Convergence of fixed-point iteration {#sec-fixed-point-convergence}
+
+::: {.callout-note title="Theorem (convergence of fixed-point iteration)"}
+Suppose $g(x)=x$ has a solution $x^*$ and $g \in C^1(I)$ on
+$I = [x^*-d,\, x^*+d]$ for some $d>0$. If
+
+$$
+|g'(x)| \le \lambda < 1 \quad \text{for all } x \in I,
+$$
+
+then:
+
+1. the iteration $x_{k+1}=g(x_k)$ converges to $x^*$ for every
+   $x_0 \in I$;
+2. $x^*$ is the unique fixed point of $g$ in $I$;
+3. with $\epsilon_k = |x_{k+1}-x_k|$,
+   $$
+   \frac{\epsilon_k}{1+\lambda}
+   \le |x_k - x^*|
+   \le \frac{\epsilon_k}{1-\lambda}
+   \le \frac{\lambda^k}{1-\lambda}\,\epsilon_0.
+   $$
+:::
+
+::: {.callout-note title="Corollary (local contraction near a fixed point)"}
+Suppose $g(x)=x$ has a solution $x^*$ and $g'$ is continuous near $x^*$.
+If $|g'(x^*)| < 1$, then for some interval $I \ni x^*$ the conditions of
+the theorem hold with $0<\lambda<1$.
+:::
+
+**Idea of the corollary.** Let
+$\varepsilon = \frac{1-|g'(x^*)|}{2}$. By continuity of $g'$ near $x^*$,
+there is a neighborhood where $|g'(x)| \le (1+|g'(x^*)|)/2 < 1$.
+That $\lambda$ gives a contraction on a small interval around $x^*$.
+
+**Practical reading.** To predict whether fixed-point iteration converges
+locally to a root, check $|g'(x^*)|$ at the target fixed point. Values
+smaller than $1$ suggest local convergence, and values closer to $0$
+usually indicate faster convergence; values larger than $1$ suggest
+divergence.
+
+---
+
+## One-Dimensional Newton's Method {#sec-newton-1d}
+
+::: {.callout-note title="Newton's method, 1D"}
+Let $f$ be twice continuously differentiable on an open interval.
+**Newton's method** for $f(x)=0$ is
+
+$$
+x_{k+1} = x_k - \frac{f(x_k)}{f'(x_k)}, \qquad k=0,1,2,\ldots
+$$
+
+This is fixed-point iteration with
+$g(x) = x - f(x)/f'(x)$.
+:::
+
+Once $x_0$ is chosen, the iteration can be applied unless $f'(x_k)=0$ for
+some $k$.
+
+### Other classical root-finding methods {#sec-other-1d-methods}
+
+From the same $f(x)=0$, several other iterations are common:
+
+- **Simplified Newton's method**
+  $$
+  x_{k+1} = x_k - \frac{f(x_k)}{f'(x_0)}.
+  $$
+  The derivative is evaluated only once (cheaper per step, but usually
+  slower convergence than full Newton).
+
+- **Secant method** (needs $x_0$ and $x_1$)
+  $$
+  x_{k+1} = x_k - \frac{x_k - x_{k-1}}{f(x_k)-f(x_{k-1})}\,f(x_k),
+  \qquad k=1,2,\ldots
+  $$
+  The secant slope approximates $f'(x_k)$ without an explicit derivative.
+
+- **Bisection method** (needs $f(a)f(b)<0$)
+  Repeatedly halve a bracketing interval $[a,b]$. It is robust and always
+  converges (linear rate), but it is hard to extend directly to many
+  dimensions.
+
+```{python}
+def newton_method(f, df, x0, max_iter=50, tol=1e-12):
+    """Newton's method for f(x)=0."""
+    x_history = [float(x0)]
+    x = float(x0)
+    for k in range(max_iter):
+        dfx = df(x)
+        if abs(dfx) < 1e-15:
+            return x_history, False
+        x_new = x - f(x) / dfx
+        x_history.append(x_new)
+        if abs(f(x_new)) < tol:
+            return x_history, True
+        x = x_new
+    return x_history, False
+
+def f_cubic(x):
+    return x**3 - 3 * x - 1
+
+def df_cubic(x):
+    return 3 * x**2 - 3
+
+for x0 in [-2.0, -0.5, 2.0]:
+    hist, ok = newton_method(f_cubic, df_cubic, x0)
+    print(
+        f"x0 = {x0:4.1f} | converged: {ok} | "
+        f"iterations: {len(hist)-1:2d} | root ≈ {hist[-1]: .12f}"
+    )
+```
+
+### Convergence of Newton's method {#sec-newton-1d-convergence}
+
+::: {.callout-note title="Theorem (local convergence of Newton's method)"}
+Suppose $f(x)=0$ has a solution $x^*$ with $f'(x^*)\neq 0$ and $f''$ is
+continuous near $x^*$. Then Newton's method converges to $x^*$ if $x_0$
+is sufficiently close to $x^*$.
+:::
+
+Here, a root $x^*$ satisfying $f'(x^*)\neq 0$ is called a **simple root**.
+In other words, the graph crosses the $x$-axis with nonzero slope rather
+than merely touching it. For example, $x^*=1$ is a simple root of
+$f(x)=x-1$, but it is not a simple root of $f(x)=(x-1)^2$ because
+$f'(1)=0$.
+
+**Proof.** Define $g(x)=x-\dfrac{f(x)}{f'(x)}$. Newton's method is the fixed-point
+iteration $x_{k+1}=g(x_k)$.
+
+Since $f'(x^*)\neq 0$ and $f'$ is continuous, we have $f'(x)\neq 0$ in a
+neighborhood of $x^*$. Hence $g$ is $C^1$ there. By the quotient rule,
+
+$$
+g'(x)
+= 1-\frac{f'(x)^2-f(x)f''(x)}{f'(x)^2}
+= \frac{f(x)f''(x)}{f'(x)^2}
+\qquad \text{near } x^*.
+$$
+
+Because $f(x^*)=0$,
+
+$$
+g'(x^*)=\frac{f(x^*)f''(x^*)}{(f'(x^*))^2}=0<1.
+$$
+
+Therefore, by the corollary on local contraction near a fixed point, if $x_0$ is
+sufficiently close to $x^*$, then $x_{k+1}=g(x_k)$ converges to $x^*$.
+$\square$
+
+::: {.callout-note title="Theorem (quadratic convergence)"}
+Under the same assumptions, when $x_0 \neq x^*$,
+
+$$
+\lim_{k\to\infty} \frac{x_{k+1}-x^*}{(x_k-x^*)^2}
+= \frac{f''(x^*)}{2f'(x^*)}.
+$$
+:::
+
+**Proof.** By Taylor's theorem, there exists $\xi_k$ between $x^*$ and $x_k$ such
+that
+
+$$
+f(x^*)=f(x_k)+f'(x_k)(x^*-x_k)+\frac12 f''(\xi_k)(x^*-x_k)^2.
+$$
+
+Since $f(x^*)=0$,
+
+$$
+f(x_k)+f'(x_k)(x^*-x_k)=-\frac12 f''(\xi_k)(x^*-x_k)^2.
+$$
+
+From the Newton update $x_{k+1}=x_k-\dfrac{f(x_k)}{f'(x_k)}$,
+
+$$
+\begin{aligned}
+x_{k+1}-x^*
+&= x_k-\frac{f(x_k)}{f'(x_k)}-x^*
+= \frac{f'(x_k)(x_k-x^*)-f(x_k)}{f'(x_k)} \\
+&= -\frac{1}{f'(x_k)}\bigl(f(x_k)+f'(x_k)(x^*-x_k)\bigr)
+= \frac{f''(\xi_k)}{2f'(x_k)}(x_k-x^*)^2.
+\end{aligned}
+$$
+
+Because $\xi_k$ lies between $x^*$ and $x_k$, we have $\xi_k\to x^*$ as
+$x_k\to x^*$. Continuity of $f'$ and $f''$ gives $f'(x_k)\to f'(x^*)$ and
+$f''(\xi_k)\to f''(x^*)$. Hence
+
+$$
+\lim_{k\to\infty}\frac{x_{k+1}-x^*}{(x_k-x^*)^2}
+= \frac{f''(x^*)}{2f'(x^*)}.
+$$
+$\square$
+
+So, near a simple root, Newton's method typically converges **much faster**
+than a plain contraction ($|g'|<1$): errors often behave like the square of
+the previous error once close enough.
+
+Note: This code is long because it uses HTML to make the output easier to read.
+Therefore, the code is collapsed in a toggle.
+
+```{python}
+#| code-fold: true
+#| code-summary: "Show display code"
+from IPython.display import HTML, display
+
+def analyze_quadratic_convergence(x_history, x_true, f=None, df=None, ddf=None):
+    """Display step-by-step errors and convergence rates (quadratic check)."""
+    errors = [abs(x - x_true) for x in x_history]
+    rows = []
+    if f is not None and df is not None and ddf is not None:
+        theory = ddf(x_true) / (2 * df(x_true))
+        theory_html = (
+            f"<p>Theoretical constant: "
+            f"\\(f''(x^*)/(2f'(x^*)) \\approx {theory:.6f}\\)</p>"
+        )
+    else:
+        theory_html = ""
+    for k in range(len(errors) - 1):
+        ek, ek1 = errors[k], errors[k + 1]
+        if ek <= 1e-15 or ek1 <= 1e-15:
+            continue
+        r_quad = ek1 / (ek ** 2)
+        p_est = np.log(ek1) / np.log(ek) if 0 < ek1 < ek < 1 else float("nan")
+        rows.append(
+            "<tr>"
+            f"<td>{k}</td>"
+            f"<td>{ek:.3e}</td>"
+            f"<td>{ek1:.3e}</td>"
+            f"<td>{r_quad:.4f}</td>"
+            f"<td>{p_est:.3f}</td>"
+            "</tr>"
+        )
+    display(HTML(f"""
+    <style>
+      .quadratic-check {{
+        border-collapse: collapse;
+        margin: 0.6em 0 1em;
+      }}
+      .quadratic-check th,
+      .quadratic-check td {{
+        border: 1px solid #888;
+        padding: 0.35em 0.6em;
+      }}
+      .quadratic-check th {{
+        text-align: center;
+      }}
+      .quadratic-check td {{
+        text-align: right;
+        font-variant-numeric: tabular-nums;
+      }}
+    </style>
+    <p>For quadratic convergence, \\(r_k=e_{{k+1}}/e_k^2\\) should approach
+    a constant, and the estimated order \\(p_k\\) should approach 2.</p>
+    {theory_html}
+    <table class="quadratic-check">
+      <thead>
+        <tr>
+          <th>\\(k\\)</th>
+          <th>\\(e_k\\)</th>
+          <th>\\(e_{{k+1}}\\)</th>
+          <th>\\(r_k=e_{{k+1}}/e_k^2\\)</th>
+          <th>estimated order \\(p_k\\)</th>
+        </tr>
+      </thead>
+      <tbody>
+        {''.join(rows)}
+      </tbody>
+    </table>
+    """))
+
+x_ref_hist, _ = newton_method(f_cubic, df_cubic, 1.5, tol=1e-15)
+x_ref = x_ref_hist[-1]
+test_hist, _ = newton_method(f_cubic, df_cubic, 1.5, max_iter=8, tol=1e-14)
+analyze_quadratic_convergence(
+    test_hist, x_ref, f=f_cubic, df=df_cubic, ddf=lambda x: 6 * x
+)
+```
+
+---
+
+## Multi-Dimensional Newton's Method {#sec-newton-md}
+
+One-dimensional Newton's method extends to systems
+$\mathbf{f}(\mathbf{x})=\mathbf{0}$ with $\mathbf{x}\in\mathbb{R}^n$.
+
+For $n=2$, write
+
+$$
+\begin{bmatrix} f(x,y) \\ g(x,y) \end{bmatrix}
+=
+\begin{bmatrix} 0 \\ 0 \end{bmatrix}.
+$$
+
+::: {.callout-note title="Example (circle and parabola)"}
+Consider
+
+$$
+\begin{cases}
+x^2 + y^2 - 1 = 0,\\
+y - x^2 = 0.
+\end{cases}
+$$
+
+Geometrically, we seek intersections of the unit circle and the parabola
+$y=x^2$.
+:::
+
+Newton's update is
+
+$$
+\begin{bmatrix} x_{k+1} \\ y_{k+1} \end{bmatrix}
+=
+\begin{bmatrix} x_k \\ y_k \end{bmatrix}
+-
+\begin{bmatrix}
+f_x(x_k,y_k) & f_y(x_k,y_k)\\
+g_x(x_k,y_k) & g_y(x_k,y_k)
+\end{bmatrix}^{-1}
+\begin{bmatrix} f(x_k,y_k) \\ g(x_k,y_k) \end{bmatrix}.
+$$
+
+In vector form, with the **Jacobian matrix**
+$J_{\mathbf{f}}(\mathbf{x}_k)$,
+
+$$
+\mathbf{x}_{k+1}
+= \mathbf{x}_k - J_{\mathbf{f}}(\mathbf{x}_k)^{-1}\mathbf{f}(\mathbf{x}_k).
+$$
+
+In practice we solve the linear system
+
+$$
+J_{\mathbf{f}}(\mathbf{x}_k)\,\Delta\mathbf{x}_k = -\mathbf{f}(\mathbf{x}_k),
+\qquad
+\mathbf{x}_{k+1} = \mathbf{x}_k + \Delta\mathbf{x}_k,
+$$
+
+which is exactly the kind of linear algebra step studied in Lectures 5--6.
+
+```{python}
+def newton_method_nd(f_vec, jacobian, x0, max_iter=50, tol=1e-10):
+    """Newton's method for f(x)=0 in R^n."""
+    x_history = [np.array(x0, dtype=float)]
+    x = np.array(x0, dtype=float)
+    for k in range(max_iter):
+        f_val = f_vec(x)
+        J = jacobian(x)
+        delta = np.linalg.solve(J, -f_val)
+        x_new = x + delta
+        x_history.append(x_new.copy())
+        if np.linalg.norm(f_vec(x_new)) < tol:
+            return x_history, True
+        x = x_new
+    return x_history, False
+
+def f_circle_parabola(x):
+    return np.array([x[0] ** 2 + x[1] ** 2 - 1, x[1] - x[0] ** 2])
+
+def jacobian_circle_parabola(x):
+    return np.array([[2 * x[0], 2 * x[1]], [-2 * x[0], 1.0]])
+
+hist2d, ok2d = newton_method_nd(
+    f_circle_parabola, jacobian_circle_parabola, [1.0, 1.0]
+)
+sol = hist2d[-1]
+print("2D Newton converged:", ok2d)
+print(f"Solution: x = {sol[0]:.8f}, y = {sol[1]:.8f}")
+print("Residual norm:", np.linalg.norm(f_circle_parabola(sol)))
+```
+
+::: {.callout-warning}
+## When Newton may fail in higher dimensions
+
+Newton's method needs $J_{\mathbf{f}}(\mathbf{x}_k)$ to be nonsingular at each
+step. Near singular Jacobians, the iteration can stall or diverge. To choose
+a good initial guess, it is important to understand the geometric structure of
+the problem: where the solutions are likely to be, how curves or surfaces
+intersect, and whether the Jacobian may become nearly singular.
+:::
+
+---
+
+## Polynomial Roots {#sec-polynomial-roots}
+
+Consider a complex polynomial
+
+$$
+f(x) = a_0 + a_1 x + \cdots + a_n x^n, \qquad a_n \neq 0.
+$$
+
+By the fundamental theorem of algebra, $f$ has $n$ roots in $\mathbb{C}$
+(counting multiplicity). Finding **all** roots at once is a different task
+from finding one root of a scalar equation.
+
+### Durand--Kerner method (DK method) {#sec-dk-method}
+
+::: {.callout-note title="Durand--Kerner method"}
+The **Durand--Kerner method** updates $n$ approximations
+$x_1^{(k)},\ldots,x_n^{(k)}$ simultaneously:
+
+$$
+x_i^{(k+1)}
+= x_i^{(k)}
+- \frac{f(x_i^{(k)})}
+{a_n \displaystyle\prod_{j\neq i} (x_i^{(k)} - x_j^{(k)})}.
+$$
+
+If $x_i^{(k)} = x_j^{(k)}$ for some $j\neq i$, the implementation must avoid
+division by zero (a common fix is to skip that update for the colliding pair).
+:::
+
+**Heuristic.** If $f(x)=a_n\prod_{j=1}^n (x-r_j)$ and the current approximations
+are close to the true roots, then
+
+$$
+f'(x_i^{(k)}) \approx a_n \prod_{j\neq i} (x_i^{(k)} - x_j^{(k)}),
+$$
+
+so the DK update resembles a Newton step applied to each root simultaneously.
+
+::: {.callout-note collapse="true" title="Why this approximation holds"}
+This approximation comes from an exact identity at the true roots. By the
+product rule,
+
+$$
+f'(x)
+=a_n\sum_{m=1}^n \prod_{\ell\neq m}(x-r_\ell).
+$$
+
+Setting $x=r_i$, every term with $m\neq i$ contains the factor $(r_i-r_i)$ and
+therefore vanishes. Hence
+
+$$
+f'(r_i)=a_n\prod_{j\neq i}(r_i-r_j).
+$$
+
+If $x_i^{(k)}\approx r_i$ and $x_j^{(k)}\approx r_j$, then
+
+$$
+\begin{aligned}
+f'(x_i^{(k)})
+&\approx f'(r_i) \\
+&=a_n\prod_{j\neq i}(r_i-r_j) \\
+&\approx a_n\prod_{j\neq i}(x_i^{(k)}-x_j^{(k)}).
+\end{aligned}
+$$
+:::
+
+**Initial values.** One useful choice of initial values places the $x_j^{(0)}$
+on a circle in the complex plane with radius
+
+$$
+r := \max_{0\le i\le n-1} \left(
+n\left|\frac{a_i}{a_n}\right|
+\right)^{\frac{1}{n-i}},
+$$
+
+for example
+
+$$
+x_j^{(0)} = r \exp\!\left(
+\left(\frac{2\pi(j-1)}{n} + \frac{\pi}{2n}\right)i
+\right).
+$$
+
+::: {.callout-note title="Remark (Aberth-type initial values)"}
+More sophisticated initial values include **Aberth-type initial values**.
+For details, see Section 4 of
+[Aberth (1973), *Math. Comp.* 27(122), 339--344](https://www.ams.org/journals/mcom/1973-27-122/S0025-5718-1973-0329236-7/).
+:::
+
+### Examples {#sec-dk-examples}
+
+$$
+f(z)=z^4-1=0.
+$$
+
+Using the formula above with $n=4$, $a_4=1$, and $a_0=-1$, we take
+$r=4^{1/4}=\sqrt{2}$ and
+
+$$
+z_j^{(0)}
+=\sqrt{2}\exp\!\left(
+\left(\frac{2\pi(j-1)}{4}+\frac{\pi}{8}\right)i
+\right),
+\qquad j=1,2,3,4.
+$$
+
+The implementation details can be left to the assignment. Here we only use
+the trajectory plot and the final table to see how the DK method tracks
+several roots simultaneously.
+
+As a more visual 20th-degree example, also consider
+
+$$
+f(z)=z^{20}-z^{17}-z^{14}+2z^{10}-z^6+z^3-1=0.
+$$
+
+Using the same initial-value formula, the nonzero coefficients give
+$r=\max\{20^{1/20},20^{1/17},20^{1/14},40^{1/10},20^{1/6},20^{1/3}\}=20^{1/3}$, so take
+
+$$
+z_j^{(0)}
+=20^{1/3}\exp\!\left(
+\left(\frac{2\pi(j-1)}{20}+\frac{\pi}{40}\right)i
+\right),
+\qquad j=1,\ldots,20.
+$$
+
+```{python}
+#| echo: false
+import matplotlib.pyplot as plt
+from IPython.display import HTML, display
+
+def durand_kerner_demo(poly, z0, max_iter=50, tol=1e-12):
+    """Return the DK iteration history for a monic polynomial."""
+    z = np.array(z0, dtype=complex)
+    history = [z.copy()]
+    for k in range(max_iter):
+        z_new = z.copy()
+        for i in range(len(z)):
+            denom = np.prod([z[i] - z[j] for j in range(len(z)) if j != i])
+            z_new[i] = z[i] - poly(z[i]) / denom
+        history.append(z_new.copy())
+        if np.max(np.abs(z_new - z)) < tol:
+            return np.array(history), True, k + 1
+        z = z_new
+    return np.array(history), False, max_iter
+
+def format_complex(z):
+    sign = "+" if z.imag >= 0 else "-"
+    return f"{z.real:.10f} {sign} {abs(z.imag):.10f}i"
+
+n = 4
+r = 4 ** (1 / 4)
+angles = 2 * np.pi * np.arange(n) / n + np.pi / (2 * n)
+z0 = r * np.exp(1j * angles)
+
+poly = lambda z: z**4 - 1
+history, converged, iterations = durand_kerner_demo(poly, z0)
+true_roots = np.array([1, 1j, -1, -1j], dtype=complex)
+
+fig, ax = plt.subplots(figsize=(5, 5))
+for j in range(n):
+    ax.plot(history[:, j].real, history[:, j].imag, marker="o", markersize=3)
+    ax.scatter(z0[j].real, z0[j].imag, marker="s", s=60, label=f"initial {j+1}")
+ax.scatter(true_roots.real, true_roots.imag, marker="*", s=140, color="black", label="true roots")
+ax.axhline(0, color="gray", linewidth=0.8)
+ax.axvline(0, color="gray", linewidth=0.8)
+ax.set_aspect("equal", adjustable="box")
+ax.set_xlabel("Real part")
+ax.set_ylabel("Imaginary part")
+ax.set_title(r"Durand--Kerner iteration for $z^4-1=0$")
+ax.legend(loc="upper right", fontsize=8)
+plt.show()
+
+rows = []
+for j, z_final in enumerate(history[-1]):
+    nearest = true_roots[np.argmin(np.abs(true_roots - z_final))]
+    rows.append(
+        "<tr>"
+        f"<td>{j+1}</td>"
+        f"<td>{format_complex(z0[j])}</td>"
+        f"<td>{format_complex(z_final)}</td>"
+        f"<td>{format_complex(nearest)}</td>"
+        f"<td>{abs(poly(z_final)):.2e}</td>"
+        "</tr>"
+    )
+
+display(HTML(f"""
+<p>Converged: {converged}; iterations: {iterations}</p>
+<table style="border-collapse: collapse; margin: 0.6em 0 1em;">
+  <thead>
+    <tr>
+      <th style="border:1px solid #888; padding:0.35em 0.6em;">j</th>
+      <th style="border:1px solid #888; padding:0.35em 0.6em;">initial value</th>
+      <th style="border:1px solid #888; padding:0.35em 0.6em;">final approximation</th>
+      <th style="border:1px solid #888; padding:0.35em 0.6em;">nearest true root</th>
+      <th style="border:1px solid #888; padding:0.35em 0.6em;">|f(z)|</th>
+    </tr>
+  </thead>
+  <tbody>
+    {''.join(rows)}
+  </tbody>
+</table>
+"""))
+
+n20 = 20
+r20 = 20 ** (1 / 3)
+angles20 = 2 * np.pi * np.arange(n20) / n20 + np.pi / (2 * n20)
+z0_20 = r20 * np.exp(1j * angles20)
+
+coeff20 = np.zeros(n20 + 1, dtype=complex)
+coeff20[0] = 1      # z^20
+coeff20[3] = -1     # z^17
+coeff20[6] = -1     # z^14
+coeff20[10] = 2     # z^10
+coeff20[14] = -1    # z^6
+coeff20[17] = 1     # z^3
+coeff20[20] = -1    # constant term
+poly20 = lambda z: np.polyval(coeff20, z)
+history20, converged20, iterations20 = durand_kerner_demo(
+    poly20, z0_20, max_iter=100
+)
+true_roots20 = np.roots(coeff20)
+
+fig, ax = plt.subplots(figsize=(6, 6))
+colors = plt.cm.hsv(np.linspace(0, 1, n20, endpoint=False))
+for j, color in enumerate(colors):
+    ax.plot(
+        history20[:, j].real,
+        history20[:, j].imag,
+        marker="o",
+        markersize=2,
+        linewidth=1.1,
+        alpha=0.85,
+        color=color,
+    )
+    ax.scatter(z0_20[j].real, z0_20[j].imag, marker="s", s=18, color=color)
+ax.scatter(true_roots20.real, true_roots20.imag, marker="*", s=70, color="black")
+ax.axhline(0, color="gray", linewidth=0.8)
+ax.axvline(0, color="gray", linewidth=0.8)
+ax.set_aspect("equal", adjustable="box")
+ax.set_xlabel("Real part")
+ax.set_ylabel("Imaginary part")
+ax.set_title(
+    "Durand--Kerner iteration for\n"
+    r"$z^{20}-z^{17}-z^{14}+2z^{10}-z^6+z^3-1=0$"
+)
+ax.scatter(
+    history20[-1].real,
+    history20[-1].imag,
+    marker="o",
+    s=55,
+    facecolors="none",
+    edgecolors="black",
+    linewidths=1.2,
+    label="final approximations",
+)
+ax.legend(loc="upper right", fontsize=8)
+plt.show()
+
+nearest_dist20 = [
+    np.min(np.abs(true_roots20 - z_final)) for z_final in history20[-1]
+]
+display(HTML(
+    f"<p>20th-degree example "
+    f"(<code>f(z)=z^20 - z^17 - z^14 + 2z^10 - z^6 + z^3 - 1</code>): "
+    f"converged: {converged20}; "
+    f"iterations: {iterations20}; "
+    f"max |f(z_j)|: {np.max(np.abs(poly20(history20[-1]))):.2e}; "
+    f"max distance to true roots: {max(nearest_dist20):.2e}</p>"
+))
+```
+
+---
+
+## Summary {#sec-summary}
+
+| Topic | Main idea |
+|---|---|
+| Fixed-point iteration | Write $x=g(x)$; local convergence if $|g'(x^*)|<1$ |
+| Newton (1D) | $x_{k+1}=x_k-f(x_k)/f'(x_k)$; quadratic convergence near a simple root |
+| Newton ($n$D) | Solve $J\Delta\mathbf{x}=-\mathbf{f}$ each step |
+| Durand--Kerner method | Find all roots of a polynomial simultaneously using Newton-like updates |
