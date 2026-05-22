@@ -17,7 +17,7 @@ Materials are organized by lecture number:
 | `020/` | Errors and Cancellation | [Slides](https://waseda-num-analysis-2026.github.io/materials/020/2nd.html) · [Handout](https://waseda-num-analysis-2026.github.io/materials/020/2nd-handout.html) · [Python Guidelines](https://waseda-num-analysis-2026.github.io/materials/020/python_guidelines/python_guidelines.html) | [Watch](https://youtu.be/SKz0dKh1vtI) |
 | `030/` | Floating-Point Numbers | [Slides](https://waseda-num-analysis-2026.github.io/materials/030/3rd.html) · [Handout](https://waseda-num-analysis-2026.github.io/materials/030/3rd-handout.html) | [Watch](https://youtu.be/9_d11bJozUY) |
 | `040/` | Vector Norms and Matrix Norms | [Slides](https://waseda-num-analysis-2026.github.io/materials/040/4th.html) · [Handout](https://waseda-num-analysis-2026.github.io/materials/040/4th-handout.html) | [Watch](https://youtu.be/pO3IbMeOQkk) |
-| `050/` | Linear Systems I: Introduction to Stationary Iterative Methods | [Slides](https://waseda-num-analysis-2026.github.io/materials/050/5th.html) · [Handout](https://waseda-num-analysis-2026.github.io/materials/050/linear-equations-handout.html) | [Watch](https://youtu.be/IQz3JCf-uL0) |
+| `050/` | Linear Systems I: Introduction to Stationary Iterative Methods | [Slides](https://waseda-num-analysis-2026.github.io/materials/050/5th.html) · [Handout](https://waseda-num-analysis-2026.github.io/materials/050/linear-equations-handout.html) *(shared with Lecture 6; section numbering updated in Lecture 6: formerly Sections 9 onward are now Sections 5 onward)* | [Watch](https://youtu.be/IQz3JCf-uL0) |
 | `060/` | Linear Systems II: Stationary Iteration Analysis and Conjugate Gradient | [Slides](https://waseda-num-analysis-2026.github.io/materials/060/6th.html) | TBA |
 | `past_exams/` | Past Exams | [2025 Midterm](https://waseda-num-analysis-2026.github.io/materials/past_exams/2025_midterm/2025_midterm.pdf) | — |
 | ...    | ... | ... | ... |
@@ -55,7 +55,7 @@ Short how-to videos to help you get started:
 | 5.1 | Understanding Matrix Condition Numbers | [Access](https://classroom.github.com/a/0oWVw7DP) | **May 21, 23:59** |
 | 5.2 | Direct Solvers: `solve` vs `inv` | same repo as 5.1 | **May 21, 23:59** |
 | 5.3 | Stationary Iterative Methods: Jacobi and Gauss-Seidel | same repo as 5.1 | **May 21, 23:59** |
-| 6.0 | Evolve the Shared Handout with AI (≥ 3 Q&A in `linear-equations-handout.qmd`, focused on Sections 5 onward, see [`AI_TUTOR.md`](AI_TUTOR.md)) | same repo as 6.1 | **May 28, 23:59** |
+| 6.0 | Evolve the Shared Handout with AI (≥ 3 Q&A in `linear-equations-handout.qmd`, focused on Sections 5 onward (formerly Sections 9 onward), see [`AI_TUTOR.md`](AI_TUTOR.md)) | same repo as 6.1 | **May 28, 23:59** |
 | 6.1 | Gauss-Seidel Convergence Proof | [Access](https://classroom.github.com/a/5mG6RAg1) | **May 28, 23:59** |
 | 6.2 | Stationary Iteration Convergence | same repo as 6.1 | **May 28, 23:59** |
 | 6.3 | Implement the Conjugate Gradient Method | same repo as 6.1 | **May 28, 23:59** |

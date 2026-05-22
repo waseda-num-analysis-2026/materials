@@ -26,7 +26,7 @@ jupyter: python3
 
 <script>
 window.__ANNOTATION_V4_AUTOLOAD__ = {
-  url: "lectures-5-6-linear-systems-and-iterative-methods__2026-05-20-06-27-58.json",
+  url: "lectures-5-6-linear-systems-and-iterative-methods__2026-05-22-01-21-25.json",
   enable: true,
   tool: "cursor",
 };
@@ -567,7 +567,7 @@ for name, A in matrices.items():
 ```
 
 ::: {.callout-tip collapse="true"}
-## 出力を表示
+## Show output
 
 ```{python}
 #| echo: false
@@ -762,7 +762,7 @@ $$
 
 This is more reliable, but it costs more because we must compute the
 residual $Ax^{(k)}-b$.
-::::
+:::
 
 ### Jacobi Implementation {#sec-jacobi-implementation}
 
@@ -1002,59 +1002,62 @@ The Gauss-Seidel proof is a little more involved, but it uses the same
 idea: strict diagonal dominance makes the error iteration contract, so
 errors are not amplified from one step to the next.
 
-:::: {.callout-note title="Remark: SPD matrices に対する Gauss-Seidel"}
-$A$ が symmetric positive definite (SPD) なら，Gauss-Seidel method も任意の initial vector
-$x^{(0)}$ に対して収束します。SPD の定義は次のセクション冒頭を参照してください。
+:::: {.callout-note title="Remark: Gauss-Seidel for SPD matrices"}
+If $A$ is symmetric positive definite (SPD), then the Gauss-Seidel method
+converges for any initial vector $x^{(0)}$. See the beginning of the next
+section for the definition of SPD.
 ::::
 
 :::: {.callout-warning title="Remark: normal equations"}
-$A$ が symmetric positive definite でないとき，normal equations
+When $A$ is not symmetric positive definite, one might try to solve the
+normal equations
 
 $$
 A^T A x = A^T b.
 $$
 
-を解こうとするかもしれません。これは matrix を symmetric にし，$A$ が full column rank を持つとき
-positive definite にします。しかし，これは conditioning を大きく悪化させることがあります：
+This makes the matrix symmetric and, when $A$ has full column rank, positive
+definite. However, it can severely worsen the conditioning:
 
 $$
 \operatorname{cond}_2(A^T A)=\operatorname{cond}_2(A)^2.
 $$
 
-したがって，normal equations は numerical computations では注意して使うべきです。
+Therefore, normal equations should be used with care in numerical computations.
 ::::
 
 ---
 
-## Conjugate Gradient Method（CG 法） {#sec-cg}
+## Conjugate Gradient Method (CG Method) {#sec-cg}
 
-ここでは，**stationary** iterative methods から，symmetric positive
-definite (SPD) systems のために設計された **nonstationary** method へ進みます。
-**conjugate gradient (CG)** method は，各 step で approximation
-$x^{(k)}$ と search direction の両方を更新します。
-$A$-conjugate directions を選ぶことで，CG は前の iterations で得た progress を打ち消すことを避け，
-SPD problems では通常 Jacobi や Gauss-Seidel よりかなり速く収束します。
+We now move from **stationary** iterative methods to a **nonstationary**
+method designed for symmetric positive definite (SPD) systems.
+The **conjugate gradient (CG)** method updates both the approximation
+$x^{(k)}$ and the search direction at each step.
+By choosing $A$-conjugate directions, CG avoids undoing progress made in
+previous iterations, and for SPD problems it usually converges much faster
+than Jacobi or Gauss-Seidel.
 
-CG を含む Krylov subspace iteration methods は，
-**Top 10 Algorithms of the 20th Century** の1つとして紹介されています
+Krylov subspace iteration methods, including CG, were selected as one of the
+**Top 10 Algorithms of the 20th Century**.
 ([Cipra, 2000](https://archive.siam.org/pdf/news/637.pdf)).
-完全な citation は Barry A. Cipra, "The Best of the 20th Century:
-Editors Name Top 10 Algorithms," *SIAM News*, **33**(4), pp. 1--2, 2000 です。
+The full citation is Barry A. Cipra, "The Best of the 20th Century:
+Editors Name Top 10 Algorithms," *SIAM News*, **33**(4), pp. 1--2, 2000.
 
 ### Symmetric Positive Definite Matrices {#sec-spd}
 
-CG は，coefficient matrix $A$ が **symmetric positive definite (SPD)** であるときに適用されます。
-SPD の定義は次に述べます。
+CG applies when the coefficient matrix $A$ is **symmetric positive definite (SPD)**.
+The definition of SPD is as follows.
 
 ::::: {.callout-note title="Definition: symmetric positive definite"}
-行列 $A\in\mathbb{R}^{n\times n}$ は，次を満たすとき **symmetric positive definite**
-(SPD) です：
+A matrix $A\in\mathbb{R}^{n\times n}$ is **symmetric positive definite**
+(SPD) if it satisfies
 
 $$
 A=A^T
 $$
 
-かつ
+and
 
 $$
 x^T A x > 0
@@ -1063,31 +1066,31 @@ x^T A x > 0
 $$
 :::::
 
-SPD matrices に対して，quadratic function
+For SPD matrices, the quadratic function
 
 $$
 \phi(x)=\frac12 x^T A x - b^T x
 $$
 
-は unique minimizer を持ち，その minimizer はちょうど $Ax=b$ の solution です。
+has a unique minimizer, and that minimizer is exactly the solution of $Ax=b$.
 
-実際，
+Indeed,
 
 $$
 \nabla \phi(x)=Ax-b.
 $$
 
-したがって，$Ax=b$ を解くことは $\phi(x)$ を最小化することと同値です。
+Therefore, solving $Ax=b$ is equivalent to minimizing $\phi(x)$.
 
-SPD $A$ に対して，algorithm は次の通りです：
+For SPD $A$, the algorithm is as follows.
 
 :::: {.callout-note title="Algorithm: Conjugate Gradient Method"}
 **Input:** SPD matrix $A$, vector $b$, initial guess $x_0$, tolerance
-`tol`。
+`tol`.
 
-**Output:** approximate solution $x$。
+**Output:** approximate solution $x$.
 
-1. 初期化します。
+1. Initialize.
 
 $$
 r_0=b-Ax_0,
@@ -1095,15 +1098,15 @@ r_0=b-Ax_0,
 p_0=r_0.
 $$
 
-2. $k=0,1,2,\ldots$ に対して，次の steps を繰り返します。
+2. For $k=0,1,2,\ldots$, repeat the following steps.
 
-   もし
+   If
 
    $$
    \|r_k\| < \texttt{tol}.
    $$
 
-   なら停止します。そうでなければ，次を計算します。
+   then stop. Otherwise, compute
 
    $$
    \alpha_k
@@ -1131,12 +1134,12 @@ $$
    r_{k+1}+\beta_k p_k.
    $$
 
-3. 最新の approximation $x$ を返します。
+3. Return the latest approximation $x$.
 ::::
 
-下の Python implementation はこの algorithm に従います。
+The Python implementation below follows this algorithm.
 
-::: {.callout-tip collapse="true" title="Python による conjugate gradient implementation"}
+::: {.callout-tip collapse="true" title="Python implementation of conjugate gradient"}
 ```{python}
 #| eval: false
 def conjugate_gradient(A, b, x0=None, tol=1e-10, max_iter=None):
@@ -1199,7 +1202,7 @@ plt.show()
 :::
 
 ::: {.callout-tip collapse="true"}
-## 出力を表示
+## Show output
 
 ```{python}
 #| echo: false
@@ -1263,49 +1266,49 @@ plt.show()
 ```
 :::
 
-:::: {.callout-tip collapse="true" title="Optional reading: CG が働く理由"}
-approximation $x^{(k)}$ に対して，**residual**
+:::: {.callout-tip collapse="true" title="Optional reading: why CG works"}
+For an approximation $x^{(k)}$, the **residual**
 
 $$
 r^{(k)}=b-Ax^{(k)}
 $$
 
-は，現在の approximation が equation をどれだけ満たしていないかを測ります。
-quadratic minimization viewpoint では，residual は negative gradient です：
+measures how far the current approximation is from satisfying the equation.
+From the quadratic minimization viewpoint, the residual is the negative gradient:
 
 $$
 r^{(k)} = -\nabla \phi(x^{(k)}),
 $$
 
-したがって，**steepest descent** method は residual direction に動きます。
-CG method は，previous directions で作った progress を打ち消さない search directions を選ぶことで，
-この idea を改善します。
+Thus, the **steepest descent** method moves in the residual direction.
+The CG method improves this idea by choosing search directions that do not
+undo progress made by previous directions.
 
-2つの vectors $p$ と $q$ は，もし
+Two vectors $p$ and $q$ are called **$A$-conjugate** if
 
 $$
 p^T A q = 0,
 $$
 
-を満たすなら **$A$-conjugate** と呼ばれます。
-これは inner product $\langle p,q\rangle_A = p^T A q$ に関する orthogonality です。
+This is orthogonality with respect to the inner product
+$\langle p,q\rangle_A = p^T A q$.
 
-$p_0,\ldots,p_{n-1}$ が mutually $A$-conjugate な nonzero directions なら，
-各 direction で1回の exact line search を行うことで，exact arithmetic では高々 $n$ steps で
-exact solution を回復できます。これが，CG が SPD systems に対して有限 step で停止する
-key geometric reason です。
+If $p_0,\ldots,p_{n-1}$ are mutually $A$-conjugate nonzero directions, then
+one exact line search along each direction recovers the exact solution in at
+most $n$ steps in exact arithmetic. This is the key geometric reason why CG
+terminates in finitely many steps for SPD systems.
 ::::
 
-### CG の収束と Condition Number {#sec-cg-convergence}
+### CG Convergence and the Condition Number {#sec-cg-convergence}
 
-SPD matrices に対して，CG には2つの classical convergence results があります。
-1つ目は，exact arithmetic では method が *finite* であることを述べます。
-2つ目は，condition number に依存する quantitative error bound を与えます。
+For SPD matrices, CG has two classical convergence results.
+The first says that the method is *finite* in exact arithmetic.
+The second gives a quantitative error bound that depends on the condition number.
 
-:::: {.callout-important title="Theorem: CG の finite termination"}
-$A\in\mathbb{R}^{n\times n}$ を symmetric positive definite とします。
-このとき，exact arithmetic において，$Ax=b$ に適用された conjugate gradient method は，
-高々 $n$ iterations で exact solution $x^*=A^{-1}b$ を生成します。つまり，
+:::: {.callout-important title="Theorem: finite termination of CG"}
+Let $A\in\mathbb{R}^{n\times n}$ be symmetric positive definite.
+In exact arithmetic, the conjugate gradient method applied to $Ax=b$
+produces the exact solution $x^*=A^{-1}b$ in at most $n$ iterations. That is,
 
 $$
 x^{(m)}=x^*
@@ -1314,25 +1317,26 @@ x^{(m)}=x^*
 $$
 ::::
 
-floating-point arithmetic では，この finite termination は一般に失われます。
-そして，実際の convergence rate は condition number
+In floating-point arithmetic, this finite termination is generally lost.
+The practical convergence rate depends on the condition number
 
 $$
 \kappa_2(A)=\|A\|_2\,\|A^{-1}\|_2.
 $$
 
-quantitative bound を述べるために，**$A$-norm**
+To state a quantitative bound, we use the **$A$-norm**
 
 $$
 \|z\|_A = \sqrt{z^T A z},
 $$
 
-を使います。これは $A$ が SPD なので well-defined です。
+This is well-defined because $A$ is SPD.
 
 :::: {.callout-important title="Theorem: CG error bound"}
-$A\in\mathbb{R}^{n\times n}$ を symmetric positive definite とし，
-$x^*$ を $Ax=b$ の exact solution とします。また，$x^{(k)}$ を任意の initial guess
-$x^{(0)}$ から始めた conjugate gradient method の $k$-th iterate とします。このとき，
+Let $A\in\mathbb{R}^{n\times n}$ be symmetric positive definite, and let
+$x^*$ be the exact solution of $Ax=b$. Let $x^{(k)}$ be the $k$-th iterate
+of the conjugate gradient method starting from any initial guess $x^{(0)}$.
+Then
 
 $$
 \frac{\|x^{(k)}-x^*\|_A}{\|x^{(0)}-x^*\|_A}
@@ -1344,8 +1348,9 @@ $$
 $$
 ::::
 
-key message は，$A$ が well-conditioned であるとき CG は速い，ということです。
-小さい $\kappa_2(A)$ は，bound の contraction factor を $1$ よりずっと小さくします。
+The key message is that CG is fast when $A$ is well-conditioned.
+A small $\kappa_2(A)$ makes the contraction factor in the bound much smaller
+than $1$.
 
 ```{python}
 #| eval: false
@@ -1380,7 +1385,7 @@ plt.show()
 ```
 
 ::: {.callout-tip collapse="true"}
-## 出力を表示
+## Show output
 
 ```{python}
 #| echo: false
@@ -1418,59 +1423,63 @@ plt.show()
 
 ---
 
-## 前条件付け {#sec-preconditioning}
+## Preconditioning {#sec-preconditioning}
 
-CG 法の収束評価は condition number に強く依存するため，
-condition number が大きい問題では収束が遅くなることがあります。
-**前条件付け (preconditioning)** とは，$A$ に近いが，$A$ よりずっと安く扱える **前処理行列** $P$ を使って，
-CG 法の収束を速める手法です。
+Because convergence estimates for CG depend strongly on the condition number,
+problems with large condition numbers can converge slowly.
+**Preconditioning** is a technique for accelerating CG by using a
+**preconditioner** $P$ that is close to $A$ but much cheaper to work with.
 
-ここでは $A$ が SPD の場合を考えます。標準的な前条件付き CG 法では，
-前条件子 $P$ も SPD であり，かつ $Pz=r$ が安く解けるように選びます。
+Here we consider the case where $A$ is SPD. In the standard preconditioned CG
+method, the preconditioner $P$ is also SPD and is chosen so that $Pz=r$ can be
+solved cheaply.
 
-::: {.callout-important title="まず押さえる3つの量"}
-| 記号 | 意味 |
+::: {.callout-important title="Three quantities to keep in mind"}
+| Symbol | Meaning |
 |---|---|
-| $x_k$ | 第 $k$ 反復での近似解 |
-| $r_k=b-Ax_k$ | **残差** — 今の $x_k$ が方程式をどれだけ満たしていないか |
-| $z_k=P^{-1}r_k$ | **前条件付き残差** — $P$ で「前処理した」残差 |
+| $x_k$ | approximate solution at the $k$-th iteration |
+| $r_k=b-Ax_k$ | **residual** - how far the current $x_k$ is from satisfying the equation |
+| $z_k=P^{-1}r_k$ | **preconditioned residual** - the residual "preprocessed" by $P$ |
 
-1反復の流れは次のとおりです。
+One iteration has the following flow.
 
 $$
 x_k \;\longrightarrow\; r_k=b-Ax_k \;\longrightarrow\; Pz_k=r_k \;\longrightarrow\; z_k \;\longrightarrow\; p_k \;\longrightarrow\; x_{k+1}.
 $$
 
-ここで重要なのは，求めている未知数はずっと **$x$** であり，
-$z$ は解の別名ではない，という点です。
-$Pz=r$ の右辺は常に **$b$ ではなく，その反復の残差 $r_k$** です。
-$P\approx A$ なら $z_k\approx A^{-1}(b-Ax_k)=x^*-x_k$ となり，
-$z_k$ は「真の解 $x^*$ への修正方向の近似」と解釈できます。
+The important point is that the unknown we seek is always **$x$**;
+$z$ is not another name for the solution.
+The right-hand side of $Pz=r$ is always **the residual $r_k$ at that iteration,
+not $b$**.
+If $P\approx A$, then $z_k\approx A^{-1}(b-Ax_k)=x^*-x_k$, so $z_k$ can be
+interpreted as an approximation to the correction direction toward the true
+solution $x^*$.
 :::
 
-### なぜ $P$ が必要か {#sec-why-preconditioner}
+### Why Do We Need $P$? {#sec-why-preconditioner}
 
-CG 法の収束速度は条件数や固有値分布に強く依存します。
-前条件付けの目的は，$A$ そのものを解く代わりに，
+The convergence speed of CG depends strongly on the condition number and the
+eigenvalue distribution. The goal of preconditioning is to choose $P$ so that,
+instead of solving with $A$ directly,
 
-- $P$ に関する方程式 $Pz=r$ は **安く解ける**
-- CG が見ている実効的な問題は **収束しやすい**
+- equations of the form $Pz=r$ are **cheap to solve**,
+- the effective problem seen by CG is **easier to converge on**.
 
-という $P$ を選ぶことです。
+Both properties are needed.
 
-### 前条件付き CG 法の形
+### Form of the Preconditioned CG Method
 
-通常の CG 法では，残差 $r_k$ から探索方向 $p_k$ を作りました。
-前条件付き CG 法では，残差 $r_k$ をそのまま使う代わりに，
+In the ordinary CG method, the search direction $p_k$ is built from the
+residual $r_k$. In preconditioned CG, instead of using $r_k$ directly, we solve
 
 $$
 Pz_k=r_k
 $$
 
-を解いて得られる $z_k=P^{-1}r_k$ を使います。
+and use $z_k=P^{-1}r_k$.
 
 :::: {.callout-note title="Algorithm: preconditioned CG"}
-**初期化**
+**Initialization**
 
 $$
 r_0=b-Ax_0,\qquad
@@ -1478,7 +1487,7 @@ Pz_0=r_0,\qquad
 p_0=z_0.
 $$
 
-**反復**
+**Iteration**
 
 $$
 \alpha_k=\frac{r_k^Tz_k}{p_k^TAp_k},
@@ -1499,90 +1508,100 @@ p_{k+1}=z_{k+1}+\beta_kp_k.
 $$
 ::::
 
-### 代表的な前条件子
+### Common Preconditioners
 
-ここでは代表例として，Jacobi 前条件子と不完全 Cholesky 前条件子だけを紹介します。
+Here we introduce only two representative examples: the Jacobi preconditioner
+and the incomplete Cholesky preconditioner.
 
-#### Jacobi 前条件子
+#### Jacobi Preconditioner
 
-最も単純な前条件子は
+The simplest preconditioner is
 
 $$
 P=\operatorname{diag}(A)
 $$
 
-です。このとき $Pz=r$ は成分ごとに
+In this case, $Pz=r$ can be solved componentwise as
 
 $$
 z_i=\frac{r_i}{a_{ii}}
 $$
 
-として解けるので，非常に安いです。
+so it is very cheap.
 
-Jacobi 法は反復法としても出てきましたが，ここでは
-$P=\operatorname{diag}(A)$ という **前条件子** として使っています。
-Jacobi 前条件子は，行列の対角成分だけを使って各変数のスケールをそろえる方法です。
-実装は簡単ですが，非対角成分の影響が大きい問題では効果は限定的です。
+The Jacobi method appeared earlier as an iterative method, but here we use
+$P=\operatorname{diag}(A)$ as a **preconditioner**.
+The Jacobi preconditioner uses only the diagonal entries of the matrix to
+rescale the variables. It is easy to implement, but its effect is limited when
+off-diagonal entries are important.
 
-#### 不完全 Cholesky 前条件子
+#### Incomplete Cholesky Preconditioner
 
 ::: {#def-cholesky .definition}
 
-## Cholesky 分解
+## Cholesky Factorization
 
-行列 $A\in\mathbb{R}^{n\times n}$ の **Cholesky 分解**とは，下三角行列 $L$（対角成分はすべて正）を用いて
+The **Cholesky factorization** of a matrix $A\in\mathbb{R}^{n\times n}$ means
+writing $A$ using a lower triangular matrix $L$ whose diagonal entries are all
+positive:
 
 $$
 A=LL^T
 $$
 
-と書き表すことです。
-
-**存在条件:** $A$ が **symmetric positive definite (SPD)** であるときに限りこの分解が存在し，そのとき $L$ は一意に定まります（SPD の定義は @sec-spd を参照）。
+This factorization exists if and only if $A$ is **symmetric positive definite
+(SPD)**, and in that case $L$ is unique. See @sec-spd for the definition of SPD.
 :::
 
-Cholesky 分解が取れれば，まず $Ly=b$ を解き，続けて $L^T x=y$ とすれば $Ax=b$ の解 $x$ が得られます。Gaussian elimination や LU 分解と同様，これは **直接法** の1つです。
+Once the Cholesky factorization is available, we can solve $Ly=b$ first and
+then $L^T x=y$ to obtain the solution $x$ of $Ax=b$. Like Gaussian elimination
+and LU factorization, this is a **direct method**.
 
-大規模疎行列では fill-in や計算コストが大きく，$A$ そのものの完全 Cholesky 分解だけでは現実的でないことが多いです。そのため前条件付けでは，次に述べるように $A$ の安い近似を使います。
+For large sparse matrices, fill-in and computational cost can be large, so the
+complete Cholesky factorization of $A$ itself is often impractical. Therefore,
+preconditioning uses a cheap approximation to $A$, as described next.
 
-**前条件付け** では，$A$ そのものではなく **$A$ の安い近似**
+In **preconditioning**, we use a **cheap approximation to $A$** rather than $A$
+itself:
 
 $$
 P \approx A
 $$
 
-を使います。**不完全 Cholesky (IC)** はその典型例で，
+The **incomplete Cholesky (IC)** preconditioner is a typical example:
 
 $$
 A \approx \widetilde{L}\widetilde{L}^T =: P
 $$
 
-のように，fill-in の一部だけを残した近似分解を $P$ として使います。
-$P$ は $A$ ほど正確ではないが，$Pz=r$ はずっと安く解ける，というトレードオフです。
-各反復では
+Here, an approximate factorization that keeps only some of the fill-in is used
+as $P$. The tradeoff is that $P$ is less accurate than $A$, but $Pz=r$ is much
+cheaper to solve. In each iteration,
 
 $$
 Pz=r
 $$
 
-を
+is solved as
 
 $$
 \widetilde{L}\widetilde{L}^Tz=r
 $$
 
-として，前進代入・後退代入により解きます。
+using forward and backward substitution.
 
-Jacobi 前条件子より構成と適用は重いですが，うまくいけば条件数を大きく改善し，
-CG の反復回数を大幅に減らせます。
+Compared with the Jacobi preconditioner, it is more expensive to construct and
+apply, but when it works well it can greatly improve the condition number and
+substantially reduce the number of CG iterations.
 
-:::: {.callout-warning title="注意: 不完全 Cholesky は常に成功するとは限らない"}
-不完全 Cholesky 分解は常に安定に構成できるとは限りません。
-問題によっては正のピボットが失われ，PCG に必要な正定値性が壊れることがあります。
-その場合は，shifted incomplete Cholesky などの安定化版を使うことがあります。
+:::: {.callout-warning title="Caution: incomplete Cholesky does not always succeed"}
+An incomplete Cholesky factorization cannot always be constructed stably.
+For some problems, positive pivots can be lost, breaking the positive
+definiteness required by PCG. In such cases, stabilized variants such as
+shifted incomplete Cholesky are sometimes used.
 ::::
 
-別の見方として，$P=\widetilde{L}\widetilde{L}^T$ のとき
+Another viewpoint is that, when $P=\widetilde{L}\widetilde{L}^T$,
 
 $$
 \widetilde{x}=\widetilde{L}^T x,
@@ -1592,31 +1611,36 @@ $$
 \widetilde{b}=\widetilde{L}^{-1}b
 $$
 
-と変換した系 $\widetilde{A}\widetilde{x}=\widetilde{b}$ に普通の CG を回した、とも解釈できます。
-数学的には上で述べた「各反復で $Pz=r$ を解く」前条件付き CG と同じです。
-実装では変換後の $\widetilde{A}$ を明示的に作るより，先に紹介した $\widetilde{L}\widetilde{L}^Tz=r$ の三角代入のほうが効率的です。
+we can also interpret the method as applying ordinary CG to the transformed
+system $\widetilde{A}\widetilde{x}=\widetilde{b}$.
+Mathematically, this is the same as the preconditioned CG method described
+above, where $Pz=r$ is solved at each iteration.
+In implementation, it is more efficient to solve
+$\widetilde{L}\widetilde{L}^Tz=r$ by triangular substitution, as introduced
+above, than to form the transformed matrix $\widetilde{A}$ explicitly.
 
-実用的な前条件子 $P$ は問題依存です。よい $P$ とは，
+Practical preconditioners $P$ are problem-dependent. A good $P$ balances the
+following three requirements:
 
-- $Pz=r$ が **安く** 解ける，
-- 変換後の SPD 系の条件数や固有値分布が **大幅に改善** される，
-- **メモリコスト** が現実的，
+- $Pz=r$ is **cheap** to solve,
+- the condition number or eigenvalue distribution of the transformed SPD system
+  is **substantially improved**,
+- the **memory cost** is realistic.
 
-の3点をバランスよく満たすものです。
 
 ---
 
-## まとめ {#sec-summary}
+## Summary {#sec-summary}
 
 | Topic | Key idea |
 |---|---|
-| Conditioning | $\operatorname{cond}(A)=\|A\|\|A^{-1}\|$ は $Ax=b$ の sensitivity を測る |
-| Direct methods | robust だが，dense methods では通常 cost はおよそ $O(n^3)$ |
-| Iterative methods | approximations を生成する；large sparse problems に有用 |
-| Jacobi | old components だけを使う：$x^{(k+1)}=D^{-1}(b-(L+U)x^{(k)})$ |
-| Gauss-Seidel | 新しく計算された components をすぐに再利用する |
-| Stationary convergence | $x^{(k+1)}=Mx^{(k)}+c$ は，すべての starts に対して $\rho(M)<1$ のとき，かつそのときに限り収束する |
-| Diagonal dominance | Jacobi と Gauss-Seidel convergence のための simple sufficient condition |
-| CG | SPD systems のための efficient method；$A$-conjugate directions に基づく |
-| Condition number in CG | より小さい $\kappa_2(A)$ は通常より速い convergence を意味する |
-| Preconditioning | $P\approx A$ として各 step で $Pz_k=r_k$ を安く解きながら conditioning を改善する |
+| Conditioning | $\operatorname{cond}(A)=\|A\|\|A^{-1}\|$ measures the sensitivity of $Ax=b$ |
+| Direct methods | robust, but for dense methods the cost is usually about $O(n^3)$ |
+| Iterative methods | generate approximations; useful for large sparse problems |
+| Jacobi | uses only old components: $x^{(k+1)}=D^{-1}(b-(L+U)x^{(k)})$ |
+| Gauss-Seidel | immediately reuses newly computed components |
+| Stationary convergence | $x^{(k+1)}=Mx^{(k)}+c$ converges for all starts if and only if $\rho(M)<1$ |
+| Diagonal dominance | a simple sufficient condition for Jacobi and Gauss-Seidel convergence |
+| CG | an efficient method for SPD systems, based on $A$-conjugate directions |
+| Condition number in CG | smaller $\kappa_2(A)$ usually means faster convergence |
+| Preconditioning | improves conditioning while keeping each step cheap by solving $Pz_k=r_k$ with $P\approx A$ |
