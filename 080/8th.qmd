@@ -73,16 +73,21 @@ git pull</code></pre>
 
 <div style="padding-left: 2em; margin-top: 0.5em; margin-bottom: 0.4em;">
   <strong>Repository:</strong> Ex 8 — <a href="https://classroom.github.com/a/vsuagkPV">GitHub Classroom</a>
+  &nbsp;&nbsp;|&nbsp;&nbsp; <strong>Submit:</strong> <code>nonlinear-equations-handout.qmd</code> (your edited copy)
   &nbsp;&nbsp;|&nbsp;&nbsp; <strong style="color: #d84315;">Deadline: June 11 (Thu), 23:59 JST</strong>
 </div>
 
 While studying the shared Lectures 7--8 handout, insert at least
-**3 Q&A blocks** of your own using the protocol in
+**3 additional Q&A blocks** of your own using the protocol in
 [`AI_TUTOR.md`](https://github.com/waseda-num-analysis-2026/materials/blob/main/AI_TUTOR.md).
 
-For Ex 8.0, focus on Sections 4--5.
-The handout lives in the `materials` repository — you do not need to copy
-it into your Ex 8 repository.
+For Ex 8.0, focus on **Sections 4--5** (the Lecture 8 part:
+multi-dimensional Newton and the DK method). Reuse the
+`nonlinear-equations-handout.qmd` copy you submitted for **Ex 7.0**, add
+your new Q&A blocks for Sections 4--5, and place the file in your **Ex 8**
+repository. If you did not do Ex 7.0, first copy
+[`070/nonlinear-equations-handout.qmd`](https://github.com/waseda-num-analysis-2026/materials/blob/main/070/nonlinear-equations-handout.qmd)
+from the `materials` repository into your Ex 8 repository.
 
 ## Exercise 8.1 — Multi-Dimensional Newton's Method {.smaller .exercise-slide}
 
