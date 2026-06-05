@@ -61,11 +61,13 @@ Short how-to videos to help you get started:
 | 6.2 | Stationary Iteration Convergence | same repo as 6.1 | **May 28, 23:59** |
 | 6.3 | Implement the Conjugate Gradient Method | same repo as 6.1 | **May 28, 23:59** |
 | 6.4 | CG Mini Report | same repo as 6.1 | **May 28, 23:59** |
+| 7.0 | Evolve the Shared Handout with AI (≥ 3 Q&A in `nonlinear-equations-handout.qmd`, focused on the Lecture 7 part: fixed-point iteration and 1D Newton, see [`AI_TUTOR.md`](AI_TUTOR.md)) | same repo as 7.1 | **June 4, 23:59** |
 | 7.1 | Fixed-Point Iteration on a Cubic | [Access](https://classroom.github.com/a/j3EgKp5b) | **June 4, 23:59** |
 | 7.2 | Comparing Root-Finding Methods | same repo as 7.1 | **June 4, 23:59** |
 | 8.0 | Evolve the Shared Handout with AI (≥ 3 Q&A in `nonlinear-equations-handout.qmd`, focused on Sections 4--5, see [`AI_TUTOR.md`](AI_TUTOR.md)) | same repo as 8.1 | **June 11, 23:59** |
 | 8.1 | Multi-Dimensional Newton's Method | [Access](https://classroom.github.com/a/vsuagkPV) | **June 11, 23:59** |
 | 8.2 | DK Method | same repo as 8.1 | **June 14, 23:59** |
+| Advanced Challenge 1 | DK Method Research Challenge (optional, advanced; free-form, no upper limit on extra points) | [Access](https://classroom.github.com/a/nEoZCh1-) | **July 31, 23:59** |
 
 ## Past Exams
 
