@@ -169,7 +169,7 @@ window.Quarto = {
 
 <script>
 window.__ANNOTATION_V4_AUTOLOAD__ = {
-  url: "lectures-7-8-nonlinear-equations__2026-05-29-04-19-00.json",
+  url: "lectures-7-8-nonlinear-equations__2026-06-05-02-45-48.json",
   enable: true,
   tool: "cursor",
 };
@@ -291,7 +291,7 @@ g_3(x) = \sqrt[3]{3x + 1}.
 \]</span></li>
 </ul>
 <p>Different choices of <span class="math inline">\(g\)</span> can converge to different roots, or fail to converge at all, even for the same equation <span class="math inline">\(f(x)=0\)</span>.</p>
-<div id="5689d5e8" class="cell" data-execution_count="1">
+<div id="f8b38d4c" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> fixed_point_iteration(g, x0, max_iter<span class="op">=</span><span class="dv">50</span>, tol<span class="op">=</span><span class="fl">1e-10</span>):</span>
@@ -407,7 +407,7 @@ x_{k+1} = x_k - \frac{x_k - x_{k-1}}{f(x_k)-f(x_{k-1})}\,f(x_k),
 \]</span> The secant slope approximates <span class="math inline">\(f'(x_k)\)</span> without an explicit derivative.</p></li>
 <li><p><strong>Bisection method</strong> (needs <span class="math inline">\(f(a)f(b)&lt;0\)</span>) Repeatedly halve a bracketing interval <span class="math inline">\([a,b]\)</span>. It is robust and always converges (linear rate), but it is hard to extend directly to many dimensions.</p></li>
 </ul>
-<div id="e16cde5e" class="cell" data-execution_count="2">
+<div id="791f3dbe" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> newton_method(f, df, x0, max_iter<span class="op">=</span><span class="dv">50</span>, tol<span class="op">=</span><span class="fl">1e-12</span>):</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Newton's method for f(x)=0."""</span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    x_history <span class="op">=</span> [<span class="bu">float</span>(x0)]</span>
@@ -513,7 +513,7 @@ x_{k+1}-x^*
 \]</span> <span class="math inline">\(\square\)</span></p>
 <p>So, near a simple root, Newton’s method typically converges <strong>much faster</strong> than a plain contraction (<span class="math inline">\(|g'|&lt;1\)</span>): errors often behave like the square of the previous error once close enough.</p>
 <p>Note: This code is long because it uses HTML to make the output easier to read. Therefore, the code is collapsed in a toggle.</p>
-<div id="225d2acf" class="cell" data-execution_count="3">
+<div id="e33f9840" class="cell" data-execution_count="3">
 <details class="code-fold">
 <summary>Show display code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> IPython.display <span class="im">import</span> HTML, display</span>
@@ -719,7 +719,7 @@ J_{\mathbf{f}}(\mathbf{x}_k)\,\Delta\mathbf{x}_k = -\mathbf{f}(\mathbf{x}_k),
 \mathbf{x}_{k+1} = \mathbf{x}_k + \Delta\mathbf{x}_k,
 \]</span></p>
 <p>which is exactly the kind of linear algebra step studied in Lectures 5–6.</p>
-<div id="2772f81a" class="cell" data-execution_count="4">
+<div id="ab3077cc" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> newton_method_nd(f_vec, jacobian, x0, max_iter<span class="op">=</span><span class="dv">50</span>, tol<span class="op">=</span><span class="fl">1e-10</span>):</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Newton's method for f(x)=0 in R^n."""</span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    x_history <span class="op">=</span> [np.array(x0, dtype<span class="op">=</span><span class="bu">float</span>)]</span>
@@ -888,7 +888,7 @@ z_j^{(0)}
 \right),
 \qquad j=1,\ldots,20.
 \]</span></p>
-<div id="f8e4d84a" class="cell" data-execution_count="5">
+<div id="454f0b8a" class="cell" data-execution_count="5">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -5516,7 +5516,7 @@ z_j^{(0)}
 <span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">script</span><span class="dt">&gt;</span></span>
 <span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a><span class="bu">window</span><span class="op">.</span><span class="at">__ANNOTATION_V4_AUTOLOAD__</span> <span class="op">=</span> {</span>
-<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>  <span class="dt">url</span><span class="op">:</span> <span class="st">"lectures-7-8-nonlinear-equations__2026-05-29-04-19-00.json"</span><span class="op">,</span></span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>  <span class="dt">url</span><span class="op">:</span> <span class="st">"lectures-7-8-nonlinear-equations__2026-06-05-02-45-48.json"</span><span class="op">,</span></span>
 <span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>  <span class="dt">enable</span><span class="op">:</span> <span class="kw">true</span><span class="op">,</span></span>
 <span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>  <span class="dt">tool</span><span class="op">:</span> <span class="st">"cursor"</span><span class="op">,</span></span>
 <span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a>}<span class="op">;</span></span>
