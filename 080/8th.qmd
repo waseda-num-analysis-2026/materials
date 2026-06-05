@@ -1,0 +1,183 @@
+---
+title: "Numerical Analysis"
+subtitle: "Foundations and Exercises"
+author:
+  - name: "TANAKA, Kazuaki (田中 一成)"
+    email: "k.tanaka@aoni.waseda.jp"
+    affiliations:
+      - name: "Global Center for Science and Engineering, Waseda University"
+format:
+  revealjs:
+    theme: [default, ../030/custom.scss]
+    slide-number: true
+    html-math-method: mathjax
+    chalkboard:
+      storage: chalkboardData_8th
+    title-slide-attributes:
+      data-background-image: "../030/images/image1.png"
+      data-background-size: "contain"
+      data-background-opacity: "0.15"
+---
+
+## Before We Start {.smaller}
+
+```{=html}
+<div class="mission-tip" style="margin-top:0.6em; margin-bottom:0.8em;">
+  <div class="mission-tip-icon">📥</div>
+  <div class="mission-tip-content">
+    <strong>Please pull the latest course materials repository.</strong>
+  </div>
+</div>
+
+<div style="display:flex; flex-direction:column; gap:0.5em; margin-bottom:0.8em;">
+  <div>
+    <div style="font-size:0.78em; color:#888; margin-bottom:0.2em;">Already cloned</div>
+    <pre style="margin:0; background:#1e1e2e; color:#cdd6f4; border-radius:8px; padding:0.5em 1em; font-size:0.78em; line-height:1.5;"><code>cd materials
+git pull</code></pre>
+  </div>
+</div>
+
+<div style="background:#f0f4ff; border-left:3px solid #4472C4; border-radius:6px; padding:0.6em 1em; font-size:0.82em;">
+  <strong>Today's materials</strong>:
+  <table style="margin-top:0.4em; border-collapse:collapse; width:100%;">
+    <tr><td style="padding:0.15em 0.6em 0.15em 0;"><code>080/8th.qmd</code></td><td style="color:#555;">slides — logistics and assignments</td></tr>
+    <tr><td style="padding:0.15em 0.6em 0.15em 0;"><code>070/nonlinear-equations-handout.qmd</code></td><td style="color:#555;">📘 <strong>shared handout with Lecture 7</strong></td></tr>
+    <tr><td style="padding:0.15em 0.6em 0.15em 0;"><code>070/nonlinear-equations-handout.html</code></td><td style="color:#555;">rendered shared handout</td></tr>
+  </table>
+</div>
+```
+
+## Today's Main Material {.smaller}
+
+```{=html}
+<div style="background:#e8f5e9; border-left:4px solid #2e7d32; border-radius:8px; padding:0.8em 1em; margin-bottom:0.7em;">
+  <div style="font-size:0.82em; color:#1b5e20; font-weight:700; letter-spacing:0.04em;">Lecture 8</div>
+  <div style="font-size:1.05em; margin-top:0.2em;"><strong>Nonlinear Equations II: Multi-Dimensional Newton and Root-Finding Comparisons</strong></div>
+  <div style="font-size:0.84em; color:#455a64; margin-top:0.25em;">
+    Use the shared handout for Lectures 7--8. Today we focus on Sections 4--5.
+  </div>
+</div>
+
+<div style="display:grid; grid-template-columns:1fr; gap:0.8em;">
+  <div style="background:#fff8e1; border:1px solid #ffe082; border-radius:10px; padding:0.75em 0.9em;">
+    <div style="font-size:0.8em; color:#e65100; font-weight:700;">Today's scope</div>
+    <ul style="font-size:0.83em; line-height:1.55; margin:0.4em 0 0 1.2em;">
+      <li>multi-dimensional Newton's method</li>
+      <li>simultaneous polynomial root-finding by the DK method</li>
+    </ul>
+  </div>
+</div>
+```
+
+## Exercise 8.0 — Evolve the Shared Handout with AI {.smaller .exercise-slide}
+
+<div style="padding-left: 2em; margin-top: 0.5em; margin-bottom: 0.4em;">
+  <strong>Repository:</strong> Ex 8 — <a href="https://classroom.github.com/a/vsuagkPV">GitHub Classroom</a>
+  &nbsp;&nbsp;|&nbsp;&nbsp; <strong style="color: #d84315;">Deadline: June 11 (Thu), 23:59 JST</strong>
+</div>
+
+While studying the shared Lectures 7--8 handout, insert at least
+**3 Q&A blocks** of your own using the protocol in
+[`AI_TUTOR.md`](https://github.com/waseda-num-analysis-2026/materials/blob/main/AI_TUTOR.md).
+
+For Ex 8.0, focus on Sections 4--5.
+The handout lives in the `materials` repository — you do not need to copy
+it into your Ex 8 repository.
+
+## Exercise 8.1 — Multi-Dimensional Newton's Method {.smaller .exercise-slide}
+
+<div style="padding-left: 2em; margin-top: 0.5em; margin-bottom: 0.4em;">
+  <strong>Format:</strong> Individual Work
+  &nbsp;&nbsp;|&nbsp;&nbsp; <strong>Repository:</strong> Ex 8 — <a href="https://classroom.github.com/a/vsuagkPV">GitHub Classroom</a>
+  &nbsp;&nbsp;|&nbsp;&nbsp; <strong>Edit:</strong> <code>ex8-1.qmd</code>
+  &nbsp;&nbsp;|&nbsp;&nbsp; <strong style="color: #d84315;">Deadline: June 11 (Thu), 23:59 JST</strong>
+</div>
+
+Create a program that solves a **2D or higher-dimensional** system of nonlinear equations using **Newton's method**.
+
+- Solve a total of **3 examples**.
+- Choose **2 examples** yourself.
+- Ask AI to choose the remaining **1 example**.
+- Choose problems **other than** the circle and parabola example in the handout.
+
+## Exercise 8.2 — DK Method {.smaller .exercise-slide}
+
+<div style="padding-left: 2em; margin-top: 0.5em; margin-bottom: 0.4em;">
+  <strong>Format:</strong> Individual Work
+  &nbsp;&nbsp;|&nbsp;&nbsp; <strong>Repository:</strong> same as Ex 8.1
+  &nbsp;&nbsp;|&nbsp;&nbsp; <strong>Edit:</strong> <code>ex8-2.qmd</code>
+  &nbsp;&nbsp;|&nbsp;&nbsp; <strong style="color: #d84315;">Deadline: June 14 (Sun), 23:59 JST</strong>
+</div>
+
+Implement the **DK method** and reproduce the same experimental results as in the handout.
+
+- Use the same polynomial examples as in Section 5.2 of the handout.
+- Use the same simple circle-based initial values as in the handout.
+- Show the convergence behavior with plots, and report final approximations / residuals in tables.
+
+## Exercise 8.2 (Optional) — Aberth-type Initial Values {.smaller .exercise-slide}
+
+- If you can implement Aberth-type initial values, compare them with the original simple circle-based initial values.
+- In the comparison, use iterations, residuals, convergence plots, etc., and briefly discuss the differences.
+- For Aberth-type initial values, see Section 4 of
+  [Aberth (1973), *Math. Comp.* 27(122), 339--344](https://www.ams.org/journals/mcom/1973-27-122/S0025-5718-1973-0329236-7/).
+
+## Advanced Challenge 1 — DK Method Research Challenge {.smaller .exercise-slide}
+
+<div style="padding-left: 2em; margin-top: 0.5em; margin-bottom: 0.4em;">
+  <strong>Format:</strong> Optional, Advanced
+  &nbsp;&nbsp;|&nbsp;&nbsp; <strong>Repository:</strong> <a href="https://classroom.github.com/a/nEoZCh1-">separate GitHub Classroom repository</a>
+  &nbsp;&nbsp;|&nbsp;&nbsp; <strong>Edit:</strong> <code>dk-research-challenge.qmd</code>
+  &nbsp;&nbsp;|&nbsp;&nbsp; <strong style="color: #d84315;">Deadline: July 31 (Fri), 23:59 JST</strong>
+</div>
+
+Summarize recent research trends on the DK method, including what is known and what remains open.
+Then try to solve one of the open problems.
+
+- There is no upper limit on additional points for this assignment.
+- The `dk-research-challenge.qmd` template contains only a title; the content and format are completely free.
+- Example references:
+  - [Reinke--Schleicher--Stoll (2023), *The Weierstrass--Durand--Kerner root finder is not generally convergent*](https://doi.org/10.1090/mcom/3783)
+    - If the DOI link does not open, search by the title.
+  - [Sanjoyo--Yunus--Hidayat (2025), *Modified of Roots Finding Algorithm of High Degree Polynomials*](https://ejournal.uin-malang.ac.id/index.php/Math/article/view/37278/0)
+
+## Assignments and Preparation {.smaller}
+
+```{=html}
+<div class="assign-list">
+  <div class="assign-card">
+    <div class="assign-num">1</div>
+    <div class="assign-body">
+      <p>Accept the <a href="https://classroom.github.com/a/vsuagkPV"><strong>Ex 8 GitHub Classroom</strong></a> link to get your repository.</p>
+      <ul>
+        <li><strong>IMPORTANT:</strong> render each submission file and push the rendered output together with any <code>*_files/</code> directories</li>
+        <li><strong>IMPORTANT:</strong> after pushing, open your GitHub repository in a browser and confirm the rendered output is visible</li>
+        <li>Report AI use as instructed in the assignment template</li>
+        <li><strong>Deadline:</strong> Ex 8.1 <span class="assign-due">June 11 (Thu), 23:59 JST</span>; Ex 8.2 <span class="assign-due">June 14 (Sun), 23:59 JST</span></li>
+        <li><strong>Advanced Challenge 1:</strong> separate repository; deadline <span class="assign-due">July 31 (Fri), 23:59 JST</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+```
+
+## Midterm Examination {.smaller}
+
+```{=html}
+<div style="background:#ffebee; border-left:4px solid #c62828; border-radius:8px; padding:0.8em 1em; margin-bottom:0.7em;">
+  <div style="font-size:0.78em; color:#455a64; margin-top:0.35em; line-height:1.5;">
+    <ul style="margin:0.3em 0 0 1.2em; padding:0;">
+      <li><strong>Venue:</strong> Room G (Building 63, 3F) — in-person only; remote attendance not permitted</li>
+      <li><strong>Seating:</strong> Sit in your assigned seat</li>
+      <li><strong>Bring:</strong> Student ID, pencil or mechanical pencil, eraser (ballpoint pens not permitted)</li>
+      <li><strong>Clock policy:</strong> Silent, non-communicating clock only (digital OK). Smartwatches not permitted even with all functions disabled. No clock in room — do not use smartphone to check the time</li>
+      <li><strong>All other items:</strong> Everything not listed above (drinks, pencil cases, etc.) must be stored in your bag</li>
+      <li><strong>Exam duration:</strong> Approx. 90 min (starting 10:40) — please be seated 5 min before start</li>
+      <li><strong>Time remaining:</strong> Individual time-remaining questions will generally not be answered (except for general announcements). Manage your time with your own clock</li>
+      <li><strong>Electronic devices:</strong> All electronic devices (laptops, smartphones, tablets, calculators, etc.) are prohibited</li>
+      <li><strong>Reference materials:</strong> None permitted, including lecture notes — closed book</li>
+      <li><strong>Scope:</strong> All content from Lectures 1 through 8</li>
+    </ul>
+  </div>
+</div>
+```
