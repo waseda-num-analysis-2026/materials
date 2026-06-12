@@ -1,0 +1,85 @@
+---
+title: "Midterm Examination 2026 — Scoring Scheme"
+subtitle: "Numerical Analysis"
+format:
+  html:
+    toc: true
+    toc-depth: 2
+    toc-title: "Contents"
+    number-sections: false
+    html-math-method: mathjax
+    theme: cosmo
+---
+
+## Overview
+
+This page lists the **point allocation** for the Midterm Examination 2026 (June 12, 2026).
+The exam is scored out of **100 points** (Q.1-1 through Q.3-5).
+The optional Bonus Question is **not** included in this total.
+
+## Part Totals
+
+| Part | Topic | Questions | Points |
+|------|-------|-----------|--------|
+| Part 1 | Floating-Point & Error Analysis | Q.1-1 to Q.1-7 | 32 |
+| Part 2 | Norms, Linear Systems & Iterative Methods | Q.2-1 to Q.2-7 | 40 |
+| Part 3 | Nonlinear Equations | Q.3-1 to Q.3-5 | 28 |
+| | | **Total** | **100** |
+
+## Question Points
+
+### Part 1 — Floating-Point & Error Analysis
+
+| Question | Points | Breakdown |
+|----------|--------|-----------|
+| Q.1-1 | 6 | (a) 2 pts + (b) 2 pts + (c) 2 pts |
+| Q.1-2 | 5 | — |
+| Q.1-3 | 5 | 5×T/F: 1 pt each |
+| Q.1-4 | 2 | (a) 1 pt + (b) 1 pt |
+| Q.1-5 | 4 | — |
+| Q.1-6 | 6 | — |
+| Q.1-7 | 4 | — |
+| **Subtotal** | **32** | |
+
+### Part 2 — Norms, Linear Systems & Iterative Methods
+
+| Question | Points | Breakdown |
+|----------|--------|-----------|
+| Q.2-1 | 6 | (a) 2 pts + (b) 2 pts + (c) 2 pts |
+| Q.2-2 | 6 | (a) 2 pts + (b) 2 pts + (c) 2 pts |
+| Q.2-3 | 6 | 6×T/F: 1 pt each |
+| Q.2-4 | 5 | 5×T/F: 1 pt each |
+| Q.2-5 | 4 | — |
+| Q.2-6 | 9 | (a) 3 pts + (b) 3 pts + (c) 3 pts |
+| Q.2-7 | 4 | (a) 3 pts + (b) 1 pt |
+| **Subtotal** | **40** | |
+
+### Part 3 — Nonlinear Equations
+
+| Question | Points | Breakdown |
+|----------|--------|-----------|
+| Q.3-1 | 4 | — |
+| Q.3-2 | 4 | — |
+| Q.3-3 | 5 | 5×T/F: 1 pt each |
+| Q.3-4 | 8 | (a) 4 pts + (b) 4 pts |
+| Q.3-5 | 7 | — |
+| **Subtotal** | **28** | |
+
+## How to Check Your Score
+
+Your **individual midterm score** is **not** published on this page.
+It is posted as a **GitHub Issue** in your personal **Ex 9** repository.
+
+1. Accept the [Ex 9 GitHub Classroom](https://classroom.github.com/a/7XdGlSPT) assignment if you have not already done so.
+
+2. Open your Ex 9 repository on GitHub and go to the **Issues** tab.
+
+3. Find the issue titled for your midterm grading result. It lists your score for each question (Q.1-1 through Q.3-5) and your total out of 100.
+
+4. Use this scoring scheme to understand how points are allocated. If you have a question about your score, reply in your GitHub Issue thread. To make sure I notice it, also notify me on Mattermost.
+
+::: {.callout-note}
+## Note
+
+- The optional **Bonus Question** may receive partial credit but is separate from the 100-point total above.
+:::
