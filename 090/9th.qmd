@@ -202,6 +202,61 @@ git push
 - Your **Ex 9.1 grading result and feedback** will also be posted as a **GitHub Issue** in the same repository.
 - Check the **Issues** tab regularly — this is the standard feedback channel for both the midterm result and Ex 9.1.
 
+## Ex 9.1 — Scoring Formula {.smaller}
+
+Your Ex 9.1 score combines your midterm result with your correction report:
+
+$$S = \sum_i \left( S_{1,i} + C_i \left( S_{2,i} - S_{1,i} \right) \right)$$
+
+```{=html}
+<table style="margin:0.45em 0 0.6em; border-collapse:collapse; width:100%; font-size:0.86em; line-height:1.45;">
+  <tr style="background:#f0f4ff;">
+    <th style="padding:0.3em 0.55em; text-align:left; border:1px solid #c5cae9; width:18%;">Symbol</th>
+    <th style="padding:0.3em 0.55em; text-align:left; border:1px solid #c5cae9;">Meaning</th>
+  </tr>
+  <tr>
+    <td style="padding:0.25em 0.55em; border:1px solid #ddd;"><em>i</em></td>
+    <td style="padding:0.25em 0.55em; border:1px solid #ddd;">Problem index — includes the <strong>Bonus Question</strong> when applicable</td>
+  </tr>
+  <tr>
+    <td style="padding:0.25em 0.55em; border:1px solid #ddd;"><em>S</em><sub>1,<em>i</em></sub></td>
+    <td style="padding:0.25em 0.55em; border:1px solid #ddd;">Your <strong>original midterm score</strong> for problem <em>i</em></td>
+  </tr>
+  <tr>
+    <td style="padding:0.25em 0.55em; border:1px solid #ddd;"><em>S</em><sub>2,<em>i</em></sub></td>
+    <td style="padding:0.25em 0.55em; border:1px solid #ddd;"><strong>Full score</strong> for problem <em>i</em> (maximum points available)</td>
+  </tr>
+  <tr>
+    <td style="padding:0.25em 0.55em; border:1px solid #ddd;"><em>C</em><sub><em>i</em></sub></td>
+    <td style="padding:0.25em 0.55em; border:1px solid #ddd;">Quality factor from your <strong>correction report</strong> for problem <em>i</em> (see next slide)</td>
+  </tr>
+</table>
+```
+
+## Ex 9.1 — Correction Quality (C_i) {.smaller}
+
+$C_i$ reflects how well you corrected each problem. Higher $C_i$ recovers more of the gap $S_{2,i} - S_{1,i}$.
+
+```{=html}
+<table style="margin:0.45em 0; border-collapse:collapse; width:100%; font-size:0.86em; line-height:1.45;">
+  <tr style="background:#f0f4ff;">
+    <th style="padding:0.3em 0.55em; text-align:left; border:1px solid #c5cae9;">Problem type</th>
+    <th style="padding:0.3em 0.55em; text-align:left; border:1px solid #c5cae9;">Full-credit quality</th>
+    <th style="padding:0.3em 0.55em; text-align:left; border:1px solid #c5cae9;">Excellent (upper limit)</th>
+  </tr>
+  <tr>
+    <td style="padding:0.25em 0.55em; border:1px solid #ddd;">Regular problems<br><span style="color:#555;">Q.1-1 through Q.3-5</span></td>
+    <td style="padding:0.25em 0.55em; border:1px solid #ddd;"><strong>C<sub>i</sub> = 0.4</strong></td>
+    <td style="padding:0.25em 0.55em; border:1px solid #ddd;"><strong>C<sub>i</sub> = 0.5</strong></td>
+  </tr>
+  <tr>
+    <td style="padding:0.25em 0.55em; border:1px solid #ddd;"><strong>Bonus Question</strong><br><span style="color:#555;">stricter grading (bonus problem)</span></td>
+    <td style="padding:0.25em 0.55em; border:1px solid #ddd;"><strong>C<sub>i</sub> = 0.2</strong><br><span style="color:#555;">ordinary full-credit-quality work</span></td>
+    <td style="padding:0.25em 0.55em; border:1px solid #ddd; color:#777;">—</td>
+  </tr>
+</table>
+```
+
 ## Academic Integrity and AI Use {.smaller}
 
 **Permitted AI assistance:**
