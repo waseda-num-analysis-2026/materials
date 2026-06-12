@@ -1,0 +1,260 @@
+---
+title: "Numerical Analysis"
+subtitle: "Foundations and Exercises"
+author:
+  - name: "TANAKA, Kazuaki (田中 一成)"
+    email: "k.tanaka@aoni.waseda.jp"
+    affiliations:
+      - name: "Global Center for Science and Engineering, Waseda University"
+format:
+  revealjs:
+    theme: [default, ../030/custom.scss]
+    slide-number: true
+    html-math-method: mathjax
+    chalkboard:
+      storage: chalkboardData_9th
+    title-slide-attributes:
+      data-background-image: "../030/images/image1.png"
+      data-background-size: "contain"
+      data-background-opacity: "0.15"
+---
+
+## Before We Start {.smaller}
+
+```{=html}
+<div class="mission-tip" style="margin-top:0.6em; margin-bottom:0.8em;">
+  <div class="mission-tip-icon">📥</div>
+  <div class="mission-tip-content">
+    <strong>Please pull the latest course materials repository.</strong>
+  </div>
+</div>
+
+<div style="display:flex; flex-direction:column; gap:0.5em; margin-bottom:0.8em;">
+  <div>
+    <div style="font-size:0.78em; color:#888; margin-bottom:0.2em;">Already cloned</div>
+    <pre style="margin:0; background:#1e1e2e; color:#cdd6f4; border-radius:8px; padding:0.5em 1em; font-size:0.78em; line-height:1.5;"><code>cd materials
+git pull</code></pre>
+  </div>
+</div>
+
+<div style="background:#f0f4ff; border-left:3px solid #4472C4; border-radius:6px; padding:0.6em 1em; font-size:0.82em;">
+  <strong>Today's materials</strong>:
+  <table style="margin-top:0.4em; border-collapse:collapse; width:100%;">
+    <tr><td style="padding:0.15em 0.6em 0.15em 0;"><code>090/9th.qmd</code></td><td style="color:#555;">slides — midterm follow-up and Ex 9.1</td></tr>
+  </table>
+</div>
+```
+
+## Today's Session {.smaller}
+
+```{=html}
+<div style="background:#fce4ec; border-left:4px solid #c2185b; border-radius:8px; padding:0.8em 1em; margin-bottom:0.7em;">
+  <div style="font-size:0.82em; color:#880e4f; font-weight:700; letter-spacing:0.04em;">LECTURE 9</div>
+  <div style="font-size:1.05em; margin-top:0.2em;"><strong>Midterm Follow-up — Ex 9.1 Corrections Report</strong></div>
+  <div style="font-size:0.84em; color:#455a64; margin-top:0.25em;">
+    This is <strong>not</strong> a regular content lecture. Today we review the midterm and explain the correction report assignment.
+  </div>
+</div>
+
+<div style="display:grid; grid-template-columns:1fr; gap:0.8em;">
+  <div style="background:#fff8e1; border:1px solid #ffe082; border-radius:10px; padding:0.75em 0.9em;">
+    <div style="font-size:0.8em; color:#e65100; font-weight:700;">Today's focus</div>
+    <ul style="font-size:0.83em; line-height:1.55; margin:0.4em 0 0 1.2em;">
+      <li>reflect on the Midterm Examination 2026</li>
+      <li>understand what Ex 9.1 asks you to submit</li>
+      <li>learn the workflow: template, AI assistance, render, push</li>
+    </ul>
+  </div>
+</div>
+```
+
+## Accept Ex 9 Repository — Do This First {.smaller}
+
+```{=html}
+<div style="background:#e3f2fd; border-left:4px solid #1565c0; border-radius:8px; padding:0.8em 1em; font-size:0.86em; line-height:1.55;">
+  <p style="margin:0 0 0.5em 0;">Accept the <a href="https://classroom.github.com/a/7XdGlSPT"><strong>Ex 9 GitHub Classroom</strong></a> assignment <strong>as soon as possible</strong> — ideally today, before you start work.</p>
+  <ul style="margin:0.2em 0 0 1.2em; padding:0;">
+    <li>This creates your personal submission repository with the Ex 9.1 template.</li>
+    <li><strong>Your Midterm Examination grading result</strong> and <strong>Ex 9.1 feedback</strong> will be posted as <strong>GitHub Issues</strong> in that repository.</li>
+    <li>Click the link early so your repository exists when midterm results are released. Check the <strong>Issues</strong> tab regularly.</li>
+  </ul>
+</div>
+```
+
+## Purpose of Ex 9.1 {.smaller}
+
+**Exercise 9.1 — Midterm Examination Corrections Report** (Individual Work)
+
+Review every midterm problem you answered **incorrectly** or **left blank**, and write a structured correction report that shows:
+
+- what went wrong in your reasoning
+- the relevant theory you should have used
+- a correct solution with clear steps
+- what you learned for future exams
+
+The goal is **understanding**, not just copying model answers.
+
+## Scope — Which Problems? {.smaller}
+
+The midterm covers **Q.1-1 through Q.3-5** and the **Bonus Question**.
+
+For Ex 9.1, include a correction section for **each problem you missed**:
+
+- any sub-question from **Q.1-1** through **Q.3-5** that you answered incorrectly
+- the **Bonus Question** if you answered it incorrectly or left it blank / did not answer it
+
+You do **not** need to write corrections for problems you answered correctly.
+
+Use your own exam result to decide which sections to include.
+
+## Files in Your Ex 9 Repository {.smaller}
+
+Your GitHub Classroom repository for Ex 9 provides:
+
+| File | Role |
+|------|------|
+| `midterm2026_questions.pdf` | **Primary reference** — full question paper |
+| `midterm2026_questions.tex` | Supplementary LaTeX source (copy wording or verify formulas) |
+| `ex9-1.qmd` | Correction report template — **edit this file** |
+
+**IMPORTANT:** When copying problem text, verify it against the **PDF**. The PDF is authoritative.
+
+## What to Write for Each Problem {.smaller}
+
+Copy the template in `ex9-1.qmd` once per missed problem. Each section should include:
+
+1. **Problem** — optional or a short quote from the question paper
+2. **My Error Analysis** — what you misunderstood or calculated wrongly
+3. **Relevant Theory** — definitions, theorems, or formulas needed
+4. **Correct Solution** — step-by-step correct reasoning
+5. **Key Learning Points** — concise takeaways for future work
+
+After all problem sections, complete the **Overall Reflection** part at the end of the template.
+
+## Workflow — VS Code, Copilot, or Cursor {.smaller}
+
+Recommended editing workflow:
+
+1. Accept the [Ex 9 GitHub Classroom](https://classroom.github.com/a/7XdGlSPT) assignment **as soon as possible**, then clone your repository.
+2. Open **`midterm2026_questions.tex`** and **`ex9-1.qmd`** in the same workspace.
+3. Ask AI (Copilot Chat, Cursor Composer, etc.) to **copy and format** selected problem statements into the template.
+4. **You** write your own error analysis, theory, solutions, and learning points.
+5. Compare copied text with **`midterm2026_questions.pdf`** before submitting.
+
+Example prompt (one problem):
+
+```
+Open midterm2026_questions.tex and my ex9-1.qmd in this repository.
+Find Q.2-3 and insert a new correction section using the template structure.
+Copy only the problem statement. Leave placeholders for My Error Analysis,
+Relevant Theory, Correct Solution, and Key Learning Points — I will fill
+those in myself. Preserve all formulas when converting LaTeX to Quarto Markdown.
+```
+
+More prompt examples are in `ex9-1.qmd`.
+
+## Exercise 9.1 — Midterm Corrections Report {.smaller .exercise-slide}
+
+<div style="padding-left: 2em; margin-top: 0.5em; margin-bottom: 0.4em;">
+  <strong>Format:</strong> Individual Work
+  &nbsp;&nbsp;|&nbsp;&nbsp; <strong>Repository:</strong> Ex 9 — <a href="https://classroom.github.com/a/7XdGlSPT">GitHub Classroom</a>
+  &nbsp;&nbsp;|&nbsp;&nbsp; <strong>Edit:</strong> <code>ex9-1.qmd</code>
+  &nbsp;&nbsp;|&nbsp;&nbsp; <strong style="color: #d84315;">Deadline: TBA</strong>
+</div>
+
+Markdown + LaTeX only — **no Python code** is required for this exercise.
+
+Install [Quarto](https://quarto.org/docs/get-started/) if needed:
+
+```
+quarto check
+```
+
+## Render and Submit {.smaller .exercise-slide}
+
+Render your report:
+
+```
+quarto render ex9-1.qmd
+```
+
+This creates `ex9-1.html` and the `ex9-1_files/` directory.
+
+Then commit and push:
+
+```
+git add ex9-1.qmd ex9-1.html ex9-1_files
+git commit -m "Submit Ex 9.1"
+git push
+```
+
+**IMPORTANT:**
+
+- Push before the deadline; the **last commit before the deadline** is graded.
+- After pushing, open your repository on GitHub and confirm the rendered HTML is visible in the browser.
+
+## Grading and Feedback {.smaller}
+
+- Accept the [Ex 9 GitHub Classroom](https://classroom.github.com/a/7XdGlSPT) link **early** so your repository exists before midterm results are released.
+- Your **Midterm Examination grading result** will be posted as a **GitHub Issue** in this repository.
+- Your **Ex 9.1 grading result and feedback** will also be posted as a **GitHub Issue** in the same repository.
+- Check the **Issues** tab regularly — this is the standard feedback channel for both the midterm result and Ex 9.1.
+
+## Academic Integrity and AI Use {.smaller}
+
+**Permitted AI assistance:**
+
+- formatting Markdown and LaTeX
+- copying problem statements from `midterm2026_questions.tex` into the template
+- syntax help for mathematical notation
+
+**You must do yourself:**
+
+- decide **which** problems you missed (do not ask AI to invent your exam result)
+- write your own error analysis, correct solutions, and reflections
+- verify that copied problem text matches the PDF
+
+The report must reflect **your own understanding**.
+
+## Checklist Before You Submit {.smaller}
+
+```{=html}
+<div style="background:#e8f5e9; border-left:4px solid #2e7d32; border-radius:8px; padding:0.8em 1em; font-size:0.84em; line-height:1.55;">
+  <ul style="margin:0.2em 0 0 1.2em; padding:0;">
+    <li>I included every midterm problem I answered incorrectly (Q.1-1 through Q.3-5).</li>
+    <li>If I missed the Bonus Question, I included a correction section for it.</li>
+    <li>Each problem section has My Error Analysis, Relevant Theory, Correct Solution, and Key Learning Points.</li>
+    <li>I completed the Overall Reflection section.</li>
+    <li>Problem statements match <code>midterm2026_questions.pdf</code>.</li>
+    <li>I ran <code>quarto render ex9-1.qmd</code> successfully.</li>
+    <li>I pushed <code>ex9-1.qmd</code>, <code>ex9-1.html</code>, and <code>ex9-1_files/</code>.</li>
+    <li>I opened my GitHub repo in a browser and confirmed the HTML renders correctly.</li>
+  </ul>
+</div>
+```
+
+## Assignments and Preparation {.smaller}
+
+```{=html}
+<div class="assign-list">
+  <div class="assign-card">
+    <div class="assign-num">1</div>
+    <div class="assign-body">
+      <p>Accept the <a href="https://classroom.github.com/a/7XdGlSPT"><strong>Ex 9 GitHub Classroom</strong></a> link <strong>as soon as possible</strong> to get your repository.</p>
+      <ul>
+        <li><strong>IMPORTANT:</strong> both your Midterm Examination grading result and Ex 9.1 feedback are posted as <strong>GitHub Issues</strong> in your repo — check the <strong>Issues</strong> tab regularly</li>
+        <li><strong>IMPORTANT:</strong> render <code>ex9-1.qmd</code> and push the rendered output together with <code>ex9-1_files/</code></li>
+        <li><strong>IMPORTANT:</strong> after pushing, open your GitHub repository in a browser and confirm the rendered output is visible</li>
+        <li>Use AI only as permitted — your analysis and solutions must be your own work</li>
+        <li><strong>Deadline:</strong> <span class="assign-due">TBA</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+```
+
+## Need Help? {.smaller}
+
+- Mattermost: <https://class.s-top.dev/numerical-analysis-2026/channels/question>
+- Materials repo: <https://github.com/waseda-num-analysis-2026/materials>
+- Ex 9 template README: see your GitHub Classroom repository after acceptance

@@ -21,6 +21,7 @@ Materials are organized by lecture number:
 | `060/` | Linear Systems II: Stationary Iteration Analysis and Conjugate Gradient | [Slides](https://waseda-num-analysis-2026.github.io/materials/060/6th.html) | [Watch](https://youtu.be/TZi5rjMUX2U) |
 | `070/` | Nonlinear Equations I: Fixed-Point Iteration and Newton's Method | [Slides](https://waseda-num-analysis-2026.github.io/materials/070/7th.html) · [Handout](https://waseda-num-analysis-2026.github.io/materials/070/nonlinear-equations-handout.html) | [Zoom recording](https://list-waseda-jp.zoom.us/rec/share/Fkxr3ovLlFru2T4qiDoRqAJGcDdZ247TUrt71CVqTnQTelVdAfoDshmZYk_8Ww_-.9Yb_CeQfffoLZu6D) (passcode: `lEq?0Cm0`) |
 | `080/` | Nonlinear Equations II: Multi-Dimensional Newton and Root-Finding Comparisons | [Slides](https://waseda-num-analysis-2026.github.io/materials/080/8th.html) · [Handout](https://waseda-num-analysis-2026.github.io/materials/070/nonlinear-equations-handout.html) *(shared with Lecture 7)* | [Watch](https://youtu.be/QDSGrXRyjII) |
+| `090/` | Midterm Follow-up and Corrections Report | [Slides](https://waseda-num-analysis-2026.github.io/materials/090/9th.html) | — |
 | `past_exams/` | Past Exams | [2025 Midterm](https://waseda-num-analysis-2026.github.io/materials/past_exams/2025_midterm/2025_midterm.pdf) | — |
 
 ## Tutorial Videos
@@ -67,6 +68,7 @@ Short how-to videos to help you get started:
 | 8.0 | Evolve the Shared Handout with AI (≥ 3 Q&A in `nonlinear-equations-handout.qmd`, focused on Sections 4--5, see [`AI_TUTOR.md`](AI_TUTOR.md)) | same repo as 8.1 | **June 11, 23:59** |
 | 8.1 | Multi-Dimensional Newton's Method | [Access](https://classroom.github.com/a/vsuagkPV) | **June 11, 23:59** |
 | 8.2 | DK Method | same repo as 8.1 | **June 14, 23:59** |
+| 9.1 | Midterm Examination Corrections Report | [Access](https://classroom.github.com/a/7XdGlSPT) | TBA |
 | Advanced Challenge 1 | DK Method Research Challenge (optional, advanced; free-form, no upper limit on extra points) | [Access](https://classroom.github.com/a/nEoZCh1-) | **July 31, 23:59** |
 
 ## Past Exams
