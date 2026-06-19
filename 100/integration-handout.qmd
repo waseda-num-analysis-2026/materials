@@ -1,0 +1,827 @@
+---
+title: "Lectures 10--12 — Numerical Integration"
+subtitle: "Handout: Foundations of and Exercises in Numerical Analysis"
+date: today
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    toc-title: "Contents"
+    number-sections: true
+    html-math-method: mathjax
+    theme: cosmo
+    code-fold: false
+    code-tools: true
+    highlight-style: github
+    include-after-body:
+      - ../annotation-v4.html
+execute:
+  echo: true
+  eval: true
+jupyter: python3
+---
+
+<script>
+window.__ANNOTATION_V4_AUTOLOAD__ = {
+  url: "lectures-10-12-integration__placeholder.json",
+  enable: false,
+  tool: "cursor",
+};
+</script>
+
+::: {.callout-tip collapse="true"}
+## How to use this handout — Evolving Study Notes with an AI Tutor
+
+This handout is the **shared main material for Lectures 10--12**.
+The companion slides (`10th.html`, `11th.html`, `12th.html`) are only for
+class logistics and assignment instructions.
+
+Like the previous handouts, this file is designed to grow with you.
+Whenever a line confuses you, ask the AI tutor and insert a Q&A block
+following [`AI_TUTOR.md`](../AI_TUTOR.md).
+:::
+
+## Roadmap {.unnumbered}
+
+This handout is spread across three lectures:
+
+| Lecture | Main topics |
+|---|---|
+| Lecture 10 | §1 Rectangular/Midpoint Rule, §2 Trapezoidal Rule, §3 Error Analysis |
+| Lecture 11 | §4 Simpson's Rule (quadratic interpolation), §5 Lagrange Interpolation and Newton-Cotes Formulas |
+| Lecture 12 | §6 Hermite Interpolation, §7 Gaussian Quadrature (inner products, orthogonal polynomials, Gauss-Chebyshev, Gauss-Legendre) |
+
+---
+
+## Introduction {.unnumbered #sec-intro}
+
+For $f \in C([a,b])$, we wish to evaluate the integral
+
+$$
+I = \int_{a}^{b} f(x)\,dx = F(b) - F(a), \qquad F' = f
+$$
+
+numerically. When the antiderivative $F$ can be found explicitly, the above
+formula gives the answer directly. In many practical cases, however, $F$
+cannot be expressed in closed form. This is precisely where **numerical
+integration methods** are indispensable.
+
+---
+
+# Rectangular Rule, Trapezoidal Rule, and Error Analysis
+
+## Rectangular Rule (Midpoint Rule) {#sec-midpoint}
+
+Divide $[a, b]$ into $n$ equal subintervals, each of width $h = (b-a)/n$.
+On each subinterval $[a_i, b_i]$, approximate the integral by the function
+value at the **midpoint $x_i = \dfrac{a_i + b_i}{2}$**:
+
+$$
+\int_{a_i}^{b_i} f(x)\,dx \approx f\!\left(\frac{a_i+b_i}{2}\right) h.
+$$
+
+The approximation for the total integral is
+
+$$
+I \approx \sum_{i=0}^{n-1} f(x_i)\,h, \qquad
+x_i = a + \left(i + \tfrac{1}{2}\right)h, \quad
+a_i = a + ih.
+$$
+
+::: {.callout-note title="In-class sketch"}
+<div style="height: 220px; border: 1px dashed #bbb; border-radius: 6px; margin-top: 0.75rem;"></div>
+:::
+
+```{python}
+import numpy as np
+import matplotlib.pyplot as plt
+
+def rectangular_rule(f, a, b, n):
+    """Numerical integration by the rectangular (midpoint) rule."""
+    h = (b - a) / n
+    integral = 0.0
+    for i in range(n):
+        x_mid = a + (i + 0.5) * h
+        integral += f(x_mid) * h
+    return integral
+```
+
+```{python}
+# Integrate f(x) = sin(x) over [0, 2]: exact value = 1 - cos(2) ≈ 1.416147
+f = np.sin
+exact = 1 - np.cos(2)
+a, b = 0.0, 2.0
+
+print(f"Exact value: {exact:.6f}")
+print(f"{'n':<8} {'Approximation':<15} {'Error':<15}")
+for n in [4, 8, 16, 32, 64]:
+    approx = rectangular_rule(f, a, b, n)
+    print(f"{n:<8} {approx:<15.8f} {abs(approx - exact):<15.2e}")
+```
+
+---
+
+## Trapezoidal Rule {#sec-trapezoid}
+
+On each subinterval $[a_i, b_i]$ of width $h$, approximate the integral by
+the **area of a trapezoid**:
+
+$$
+\int_{a_i}^{b_i} f(x)\,dx \approx \frac{h}{2}\bigl[f(a_i)+f(b_i)\bigr].
+$$
+
+The approximation for the total integral is
+
+$$
+I \approx \sum_{i=0}^{n-1} \frac{h}{2}\bigl[f(a_i)+f(b_i)\bigr],
+\qquad a_i = a + ih,\quad b_i = a + (i+1)h.
+$$
+
+::: {.callout-note title="In-class sketch"}
+<div style="height: 220px; border: 1px dashed #bbb; border-radius: 6px; margin-top: 0.75rem;"></div>
+:::
+
+```{python}
+def trapezoidal_rule(f, a, b, n):
+    """Numerical integration by the trapezoidal rule."""
+    h = (b - a) / n
+    integral = 0.0
+    for i in range(n):
+        x_left  = a + i * h
+        x_right = a + (i + 1) * h
+        integral += (h / 2) * (f(x_left) + f(x_right))
+    return integral
+```
+
+```{python}
+print(f"Exact value: {exact:.6f}")
+print(f"{'n':<8} {'Approximation':<15} {'Error':<15}")
+for n in [4, 8, 16, 32, 64]:
+    approx = trapezoidal_rule(f, a, b, n)
+    print(f"{n:<8} {approx:<15.8f} {abs(approx - exact):<15.2e}")
+```
+
+---
+
+## Error Analysis {#sec-error-analysis}
+
+### Comparison of the Rectangular and Trapezoidal Rules {#sec-error-comparison}
+
+We examine the error behavior for $f(x) = \sin x$ on $[0, 2]$.
+
+```{python}
+print(f"{'n':<8} {'Rectangular error':<20} {'Trapezoidal error':<20}")
+for n in [32, 64, 128, 256]:
+    e_rect = abs(rectangular_rule(f, a, b, n) - exact)
+    e_trap = abs(trapezoidal_rule(f, a, b, n) - exact)
+    print(f"{n:<8} {e_rect:<20.2e} {e_trap:<20.2e}")
+```
+
+For both rules, halving $h$ reduces the error by a factor of approximately
+$1/4$, confirming $O(h^2)$ convergence.
+
+### Error Analysis for the Rectangular Rule {#sec-error-midpoint}
+
+We bound the error
+
+$$
+E := \left| \int_{a}^{b} f(x)\,dx - h\sum_{i=0}^{n-1} f(x_i) \right|.
+$$
+
+By the triangle inequality, $E \le \sum_{i=0}^{n-1} |E_i|$, where
+$E_i = \int_{a_i}^{b_i} f(x)\,dx - h f(x_i)$.
+
+By Taylor's theorem, with $x_i$ as the midpoint,
+
+$$
+f(x) = f(x_i) + f'(x_i)(x-x_i) + \frac{1}{2}f''(t)(x-x_i)^2
+$$
+
+for some $t$ between $x$ and $x_i$. Integrating over $[a_i, b_i]$, the
+linear term vanishes since $\int_{a_i}^{b_i}(x-x_i)\,dx = 0$ (as $x_i$ is
+the midpoint), so
+
+$$
+\int_{a_i}^{b_i} f(x)\,dx = h f(x_i) + \frac{1}{2}\int_{a_i}^{b_i}f''(t)(x-x_i)^2\,dx,
+$$
+
+$$
+E_i = \frac{1}{2}\int_{a_i}^{b_i}f''(t)(x-x_i)^2\,dx.
+$$
+
+Using $\int_{a_i}^{b_i}(x-x_i)^2\,dx = \dfrac{h^3}{12}$,
+
+$$
+|E_i| \le \frac{h^3}{24}\max_{t\in[a_i,b_i]}|f''(t)|.
+$$
+
+Summing over all subintervals and using $nh = b-a$,
+
+$$
+\boxed{E \le \frac{(b-a)}{24}\,h^2\,\|f''\|_{\infty,[a,b]}}.
+$$
+
+This is an $O(h^2)$ error bound.
+
+### Summary of Error Bounds {#sec-error-summary}
+
+With $h = (b-a)/n$:
+
+| Rule | Error bound | Exact when |
+|---|---|---|
+| Rectangular (Midpoint) | $\dfrac{b-a}{24}h^2\|f''\|_\infty$ | $f$ at most linear ($f''=0$) |
+| Trapezoidal | $\dfrac{b-a}{12}h^2\|f''\|_\infty$ | $f$ at most linear ($f''=0$) |
+| Simpson's | $\dfrac{b-a}{180}h^4\|f''''\|_\infty$ | $f$ at most cubic ($f''''=0$) |
+
+Both rules are $O(h^2)$, but the constant for the rectangular rule is
+**half** that of the trapezoidal rule.
+
+---
+
+# Simpson's Rule, Lagrange Interpolation, and Newton-Cotes Formulas
+
+## Simpson's Rule (Quadratic Interpolation) {#sec-simpson}
+
+Using three points $x_0,\,x_1=x_0+h,\,x_2=x_0+2h$, approximate $f$ by a
+quadratic polynomial $p(x)$ and integrate it exactly:
+
+$$
+p(x) = \alpha x^2 + \beta x + \gamma, \qquad
+\begin{cases}
+p(x_0) = f(x_0),\\
+p(x_1) = f(x_1),\\
+p(x_2) = f(x_2).
+\end{cases}
+$$
+
+Rather than solving this system directly, we use **Lagrange basis
+polynomials**.
+
+### Expression via Lagrange Basis Polynomials {#sec-simpson-lagrange}
+
+The Lagrange basis polynomials for three points are
+
+$$
+L_0(x)=\frac{(x-x_1)(x-x_2)}{(x_0-x_1)(x_0-x_2)},\quad
+L_1(x)=\frac{(x-x_0)(x-x_2)}{(x_1-x_0)(x_1-x_2)},\quad
+L_2(x)=\frac{(x-x_0)(x-x_1)}{(x_2-x_0)(x_2-x_1)}.
+$$
+
+Integrating over $[x_0, x_2]$ (width $2h$) gives
+
+$$
+\int_{x_0}^{x_2}L_0(x)\,dx = \frac{h}{3},\quad
+\int_{x_0}^{x_2}L_1(x)\,dx = \frac{4h}{3},\quad
+\int_{x_0}^{x_2}L_2(x)\,dx = \frac{h}{3}.
+$$
+
+Hence **Simpson's rule** is
+
+$$
+\int_{x_0}^{x_2} f(x)\,dx \approx \frac{h}{3}\bigl[f(x_0) + 4f(x_1) + f(x_2)\bigr].
+$$
+
+($h$ is the spacing between adjacent nodes; the integration interval has
+width $2h$.)
+
+```{python}
+def simpsons_rule(f, a, b, n):
+    """
+    Numerical integration by Simpson's rule.
+    n must be even (each 'panel' consists of two subintervals).
+    """
+    if n % 2 != 0:
+        raise ValueError("n must be even for Simpson's rule.")
+    h = (b - a) / n
+    integral = 0.0
+    for i in range(0, n, 2):
+        x0 = a + i * h
+        x1 = a + (i + 1) * h
+        x2 = a + (i + 2) * h
+        integral += (h / 3) * (f(x0) + 4 * f(x1) + f(x2))
+    return integral
+```
+
+```{python}
+print(f"f(x) = sin(x), [0, 2],  exact = {exact:.8f}")
+print(f"{'n':<8} {'Rectangular err':<18} {'Trapezoidal err':<18} {'Simpson err':<15}")
+for n in [4, 8, 16, 32, 64]:
+    e_r = abs(rectangular_rule(f, a, b, n) - exact)
+    e_t = abs(trapezoidal_rule(f, a, b, n) - exact)
+    e_s = abs(simpsons_rule(f, a, b, n) - exact)
+    print(f"{n:<8} {e_r:<18.2e} {e_t:<18.2e} {e_s:<15.2e}")
+```
+
+```{python}
+#| code-fold: true
+#| code-summary: "Show convergence plot code"
+n_vals = np.array([4, 8, 16, 32, 64, 128])
+h_vals = 2.0 / n_vals
+e_rect = [abs(rectangular_rule(f, a, b, n) - exact) for n in n_vals]
+e_trap = [abs(trapezoidal_rule(f, a, b, n) - exact) for n in n_vals]
+e_simp = [abs(simpsons_rule(f, a, b, n) - exact) for n in n_vals]
+
+plt.figure(figsize=(7, 4))
+plt.loglog(h_vals, e_rect, 'bo-', label='Rectangular (Midpoint)')
+plt.loglog(h_vals, e_trap, 'rs-', label='Trapezoidal')
+plt.loglog(h_vals, e_simp, 'g^-', label="Simpson's")
+plt.loglog(h_vals, h_vals**2 * 0.5, 'k--', alpha=0.5, label=r'$O(h^2)$')
+plt.loglog(h_vals, h_vals**4 * 0.5, 'k:',  alpha=0.5, label=r'$O(h^4)$')
+plt.xlabel('Step size $h$')
+plt.ylabel('Absolute error')
+plt.title('Convergence comparison of numerical integration rules')
+plt.legend()
+plt.grid(True, alpha=0.3)
+plt.tight_layout()
+plt.show()
+```
+
+Simpson's rule achieves $O(h^4)$ convergence (halving $h$ reduces the error
+by a factor of approximately $1/16$), a significant improvement over the
+$O(h^2)$ convergence of the rectangular and trapezoidal rules.
+
+---
+
+## Lagrange Interpolation (Generalization of Simpson's Rule) {#sec-lagrange}
+
+Simpson's rule is based on quadratic interpolation. Using higher-degree
+interpolating polynomials yields even more accurate quadrature formulas.
+
+::: {.callout-note title="Lagrange interpolating polynomial"}
+Given $n+1$ points $(x_0, f(x_0)), \ldots, (x_n, f(x_n))$, the degree-$n$
+interpolating polynomial is defined by
+
+$$
+p_n(x) = \sum_{j=0}^{n} f(x_j)\,L_j(x),
+$$
+
+where the **Lagrange basis polynomials** $L_k(x)$ are
+
+$$
+L_k(x) := \prod_{\substack{j=0\\j\neq k}}^{n} \frac{x-x_j}{x_k-x_j} \quad (k=0,1,\ldots,n)
+$$
+
+and satisfy $L_k(x_j) = \delta_{kj}$ (Kronecker delta).
+:::
+
+---
+
+## Newton-Cotes Formulas {#sec-newton-cotes}
+
+Using equally spaced nodes $x_j = a + jh$ ($h = (b-a)/n$), the formula
+
+$$
+\int_{a}^{b} p_n(x)\,dx = \sum_{i=0}^{n} \alpha_i\,f(x_i), \qquad
+\alpha_i := \int_{a}^{b} L_i(x)\,dx
+$$
+
+is called a **Newton-Cotes formula**. With uniform spacing $h$, the weights
+$\alpha_i$ are given by
+
+$$
+\alpha_i = (-1)^{n-i}\frac{h}{i!(n-i)!}\int_{0}^{n}\prod_{\substack{j=0\\j\neq i}}^{n}(s-j)\,ds.
+$$
+
+::: {.callout-warning title="Pitfall of high-order Newton-Cotes formulas"}
+As the degree $n$ increases, the weights $\alpha_i$ can oscillate wildly,
+leading to **Runge's phenomenon** (large oscillations near the endpoints of
+equally-spaced high-degree interpolation). High-order Newton-Cotes formulas
+are therefore not always useful in practice. **Gaussian quadrature** (§7)
+provides much higher accuracy with fewer nodes and avoids this issue.
+:::
+
+```{python}
+# Visualization of Lagrange interpolation and interpolation error (n=5, equally spaced nodes)
+def lagrange_interp(x_nodes, f_nodes, x):
+    """Evaluate the Lagrange interpolating polynomial at x."""
+    n = len(x_nodes) - 1
+    result = 0.0
+    for k in range(n + 1):
+        Lk = 1.0
+        for j in range(n + 1):
+            if j != k:
+                Lk *= (x - x_nodes[j]) / (x_nodes[k] - x_nodes[j])
+        result += f_nodes[k] * Lk
+    return result
+
+x_fine = np.linspace(0, 2, 300)
+y_true = np.sin(x_fine)
+
+fig, axes = plt.subplots(1, 2, figsize=(11, 4))
+for ax, n_nodes in zip(axes, [4, 8]):
+    x_nodes = np.linspace(0, 2, n_nodes + 1)
+    f_nodes = np.sin(x_nodes)
+    y_interp = np.array([lagrange_interp(x_nodes, f_nodes, xi) for xi in x_fine])
+    ax.plot(x_fine, y_true, 'b-', linewidth=2, label=r'$f(x)=\sin x$')
+    ax.plot(x_fine, y_interp, 'r--', linewidth=1.5, label=f'$p_{n_nodes}(x)$')
+    ax.plot(x_nodes, f_nodes, 'ko', markersize=5, label='nodes')
+    ax.set_title(f'Lagrange interpolation ($n={n_nodes}$, equally spaced)')
+    ax.set_xlabel('$x$')
+    ax.legend(fontsize=9)
+    ax.grid(True, alpha=0.3)
+plt.tight_layout()
+plt.show()
+```
+
+---
+
+# Hermite Interpolation and Gaussian Quadrature
+
+## Hermite Interpolation {#sec-hermite}
+
+Lagrange interpolation uses only the function values $f(x_j)$ at the nodes.
+**Hermite interpolation** also incorporates the **derivative values
+$f'(x_j)$** at the nodes, yielding a more accurate approximation.
+
+::: {.callout-note title="Hermite interpolating polynomial"}
+Given $n+1$ nodes $x_0, x_1, \ldots, x_n$, the degree-$(2n+1)$ polynomial
+$q_{2n+1}(x)$ satisfying
+
+$$
+\begin{cases}
+q_{2n+1}(x_j) = f(x_j),\\
+q'_{2n+1}(x_j) = f'(x_j)
+\end{cases}
+\quad (j=0,1,\ldots,n)
+$$
+
+is called the **Hermite interpolating polynomial**.
+:::
+
+### Hermite Basis Polynomials {#sec-hermite-basis}
+
+Using the Lagrange basis polynomials $L_k(x)$ (degree $n$), define the
+degree-$(2n+1)$ basis functions
+
+$$
+\begin{cases}
+H_k(x) := L_k(x)^2\bigl[1 - 2L'_k(x_k)(x-x_k)\bigr],\\
+K_k(x) := L_k(x)^2(x-x_k).
+\end{cases}
+$$
+
+These satisfy
+
+$$
+\begin{cases}
+H_k(x_j) = \delta_{kj}, & H'_k(x_j) = 0,\\
+K_k(x_j) = 0, & K'_k(x_j) = \delta_{kj}
+\end{cases}
+\quad (j,k=0,1,\ldots,n)
+$$
+
+(where $\delta_{kj}$ is the Kronecker delta). The Hermite interpolating
+polynomial is
+
+$$
+q_{2n+1}(x) = \sum_{j=0}^{n}\bigl[f(x_j)H_j(x) + f'(x_j)K_j(x)\bigr],
+$$
+
+and the corresponding quadrature formula over $[a,b]$ is
+
+$$
+\int_{a}^{b} q_{2n+1}(x)\,dx
+= \sum_{i=0}^{n}\bigl[\alpha_i f(x_i) + \beta_i f'(x_i)\bigr],
+\qquad
+\alpha_i = \int_a^b H_i(x)\,dx,\quad \beta_i = \int_a^b K_i(x)\,dx.
+$$
+
+**Key idea for Gaussian quadrature:** By choosing the nodes
+$x_0, \ldots, x_n$ appropriately, we can achieve $\beta_i = 0$ for all $i$,
+eliminating the need for derivative values $f'(x_i)$.
+
+---
+
+## Foundations of Gaussian Quadrature {#sec-gaussian}
+
+### Inner Products and Orthogonal Polynomials {#sec-inner-product}
+
+::: {.callout-note title="Inner product"}
+A map $(\cdot, \cdot): V \times V \to \mathbb{R}$ on a real vector space $V$
+is called an **inner product** if it satisfies:
+
+1. **Positive definiteness**: $(x, x) \ge 0$ and $(x, x) = 0 \Leftrightarrow x = 0$
+2. **Symmetry**: $(x, y) = (y, x)$
+3. **Bilinearity**: $(ax+by, z) = a(x,z) + b(y,z)$, $(x, ay+bz) = a(x,y) + b(x,z)$
+
+If $(x, y) = 0$ (and $x, y \neq 0$), we say $x$ and $y$ are **orthogonal**
+($x \perp y$).
+:::
+
+On $V = C([a,b])$, we adopt the weighted inner product
+
+$$
+(p, q)_w := \int_a^b p(x)\,q(x)\,w(x)\,dx
+$$
+
+for a weight function $w(x) > 0$ on $(a,b)$.
+
+::: {.callout-note title="System of orthogonal polynomials"}
+A sequence of polynomials $\{\phi_0, \phi_1, \ldots\}$ on $[a,b]$ with
+respect to the weight $w(x)$ is called a **system of orthogonal
+polynomials** if:
+
+1. $\phi_k(x)$ is exactly of degree $k$ ($\phi_0$ is a nonzero constant),
+2. $(\phi_i, \phi_j)_w = \int_a^b \phi_i(x)\phi_j(x)w(x)\,dx = 0$ for
+   $i \neq j$.
+:::
+
+#### Representative Orthogonal Polynomials {#sec-orthogonal-polys}
+
+**Chebyshev polynomials** (of the first kind) $T_k(x)$: interval $[-1,1]$,
+weight $w(x) = \dfrac{1}{\sqrt{1-x^2}}$
+
+$$
+T_0(x) = 1, \quad T_1(x) = x, \quad T_{k+1}(x) = 2xT_k(x) - T_{k-1}(x) \quad (k \ge 1).
+$$
+
+$$
+(T_i, T_j)_w = \int_{-1}^{1} T_i(x)T_j(x)\frac{dx}{\sqrt{1-x^2}} =
+\begin{cases}
+0 & (i \neq j),\\
+\pi/2 & (i = j \neq 0),\\
+\pi & (i = j = 0).
+\end{cases}
+$$
+
+**Legendre polynomials** $P_k(x)$: interval $[-1,1]$, weight $w(x) = 1$
+
+$$
+P_0(x) = 1, \quad
+P_k(x) = \frac{1}{2^k k!}\frac{d^k}{dx^k}(x^2-1)^k \quad (k \ge 1).
+$$
+
+$$
+(P_i, P_j)_{w=1} = \int_{-1}^{1} P_i(x)P_j(x)\,dx =
+\begin{cases}
+0 & (i \neq j),\\
+\dfrac{2}{2i+1} & (i = j).
+\end{cases}
+$$
+
+```{python}
+def chebyshev_poly(n, x):
+    """Compute the Chebyshev polynomial T_n(x) via the recurrence relation."""
+    if n == 0:
+        return np.ones_like(x, dtype=float)
+    if n == 1:
+        return np.array(x, dtype=float)
+    T_prev2 = np.ones_like(x, dtype=float)
+    T_prev1 = np.array(x, dtype=float)
+    for _ in range(2, n + 1):
+        T_curr = 2 * x * T_prev1 - T_prev2
+        T_prev2, T_prev1 = T_prev1, T_curr
+    return T_curr
+
+def legendre_poly(n, x):
+    """Compute the Legendre polynomial P_n(x) via the recurrence relation."""
+    if n == 0:
+        return np.ones_like(x, dtype=float)
+    if n == 1:
+        return np.array(x, dtype=float)
+    P_prev2 = np.ones_like(x, dtype=float)
+    P_prev1 = np.array(x, dtype=float)
+    for k in range(1, n):
+        P_curr = ((2 * k + 1) * x * P_prev1 - k * P_prev2) / (k + 1)
+        P_prev2, P_prev1 = P_prev1, P_curr
+    return P_curr
+
+x_plot = np.linspace(-1, 1, 400)
+fig, axes = plt.subplots(1, 2, figsize=(11, 4))
+
+ax = axes[0]
+for k in range(5):
+    ax.plot(x_plot, chebyshev_poly(k, x_plot), label=f'$T_{k}(x)$')
+ax.set_title('Chebyshev polynomials $T_k(x)$')
+ax.set_xlabel('$x$'); ax.legend(fontsize=8); ax.grid(True, alpha=0.3)
+ax.set_ylim(-1.5, 1.5)
+
+ax = axes[1]
+for k in range(5):
+    ax.plot(x_plot, legendre_poly(k, x_plot), label=f'$P_{k}(x)$')
+ax.set_title('Legendre polynomials $P_k(x)$')
+ax.set_xlabel('$x$'); ax.legend(fontsize=8); ax.grid(True, alpha=0.3)
+ax.set_ylim(-1.5, 1.5)
+
+plt.tight_layout()
+plt.show()
+```
+
+---
+
+### Gaussian Quadrature Theorem {#sec-gauss-theorem}
+
+::: {.callout-note title="Theorem 7.1 (Properties of orthogonal polynomials)"}
+For a system of orthogonal polynomials $\{\phi_0, \phi_1, \ldots\}$ with
+weight $w(x)$:
+
+1. Any degree-$n$ polynomial $q_n(x)$ can be written as
+   $q_n = c_0\phi_0 + \cdots + c_n\phi_n$.
+2. For any polynomial $q_k$ of degree $k < n$, $(\phi_n, q_k)_w = 0$.
+3. For $n \ge 1$, $\phi_n(x)$ has $n$ distinct real zeros in $(a, b)$.
+:::
+
+::: {.callout-note title="Theorem 7.2 (Node selection for Gaussian quadrature)"}
+In the system $\{\phi_0, \ldots, \phi_{n+1}\}$, choosing $n+1$ nodes
+$x_0, \ldots, x_n$ as the **zeros of $\phi_{n+1}(x)$** implies
+$V_i = 0$ for $i = 0, \ldots, n$.
+:::
+
+**Proof sketch.** Since $\phi_{n+1}(x) = \lambda\prod_{j=0}^{n}(x-x_j)$,
+we have $L_i(x)(x-x_i) = \phi_{n+1}(x)/C_i$ for some constant $C_i$.
+Therefore
+
+$$
+V_i = \int_a^b K_i(x)\,w(x)\,dx
+= \frac{1}{C_i}\int_a^b \phi_{n+1}(x)\,L_i(x)\,w(x)\,dx
+= \frac{1}{C_i}(\phi_{n+1},\,L_i)_w = 0.
+$$
+
+Since $L_i(x)$ is a degree-$n$ polynomial and $\phi_{n+1}$ is orthogonal
+to all polynomials of degree $\le n$, we have $(\phi_{n+1}, L_i)_w = 0$.
+$\square$
+
+When $V_i = 0$, the weight $W_i$ simplifies to
+
+$$
+W_i = \int_a^b L_i(x)\,w(x)\,dx \quad (> 0)
+$$
+
+(positivity of $W_i$ guarantees the stability of Gaussian quadrature).
+
+::: {.callout-note title="Gaussian quadrature formula"}
+$$
+\int_a^b f(x)\,w(x)\,dx \approx \sum_{i=0}^{n} W_i\,f(x_i),
+$$
+
+where $x_i$ are the zeros of $\phi_{n+1}(x)$ and
+$W_i = \int_a^b L_i(x)\,w(x)\,dx$.
+
+This formula is **exact** whenever $f$ is a polynomial of degree $\le 2n+1$.
+:::
+
+::: {.callout-note title="Theorem 7.3 (Convergence of Gaussian quadrature)"}
+For $f \in C([a,b])$,
+
+$$
+\lim_{n\to\infty}\sum_{i=0}^{n} W_i^{(n)}\,f(x_i^{(n)}) = \int_a^b f(x)\,w(x)\,dx.
+$$
+:::
+
+---
+
+### Gauss-Chebyshev Quadrature {#sec-gauss-chebyshev}
+
+For the interval $[-1, 1]$ with weight $w(x) = \dfrac{1}{\sqrt{1-x^2}}$:
+
+- **Nodes**: zeros of $T_{n+1}(x)$: $\displaystyle x_i = \cos\!\left(\frac{(2i+1)\pi}{2(n+1)}\right)$, $i = 0, \ldots, n$
+- **Weights**: $W_i = \dfrac{\pi}{n+1}$ (all equal)
+
+$$
+\int_{-1}^{1} f(x)\,\frac{dx}{\sqrt{1-x^2}}
+\approx \frac{\pi}{n+1}\sum_{i=0}^{n} f\!\left(\cos\!\left(\frac{(2i+1)\pi}{2(n+1)}\right)\right).
+$$
+
+```{python}
+def gauss_chebyshev(f, n_nodes):
+    """
+    Gauss-Chebyshev quadrature: compute ∫_{-1}^{1} f(x)/√(1-x²) dx.
+    n_nodes: number of nodes (= n+1 in the formula above)
+    """
+    n = n_nodes - 1
+    W = np.pi / n_nodes
+    xi = np.cos((np.arange(n_nodes) + 0.5) * np.pi / n_nodes)
+    return W * np.sum(f(xi)), xi
+
+# Example: ∫_{-1}^{1} (1-x²)² / √(1-x²) dx = ∫_{-1}^{1} (1-x²)^{3/2} dx = 3π/8
+f_cheby = lambda x: (1 - x**2)**2
+exact_cheby = 3 * np.pi / 8
+
+print(f"Exact value 3π/8 = {exact_cheby:.10f}")
+print(f"{'# nodes':<10} {'Approximation':<20} {'Error':<15}")
+for n_nodes in [2, 3, 4, 5, 6]:
+    approx, _ = gauss_chebyshev(f_cheby, n_nodes)
+    print(f"{n_nodes:<10} {approx:<20.10f} {abs(approx - exact_cheby):<15.2e}")
+```
+
+Since $f(x) = (1-x^2)^2$ is a degree-4 polynomial, three nodes
+($2\times3-1=5$, so exact for polynomials up to degree 5) achieves machine
+precision.
+
+---
+
+### Gauss-Legendre Quadrature {#sec-gauss-legendre}
+
+For the interval $[-1, 1]$ with weight $w(x) = 1$:
+
+- **Nodes**: zeros $x_i$ of $P_{n+1}(x)$
+- **Weights**: $\displaystyle W_i = \frac{2}{(1-x_i^2)\bigl[P'_{n+1}(x_i)\bigr]^2}$
+
+$$
+\int_{-1}^{1} f(x)\,dx \approx \sum_{i=0}^{n} W_i\,f(x_i).
+$$
+
+For a general interval $[a, b]$, use the change of variables
+$x = \dfrac{(b-a)t + (a+b)}{2}$:
+
+$$
+\int_a^b g(x)\,dx = \frac{b-a}{2}\int_{-1}^{1} g\!\left(\frac{(b-a)t+(a+b)}{2}\right)dt.
+$$
+
+```{python}
+def legendre_poly_and_deriv(n, x):
+    """Return P_n(x) and P'_n(x) via the recurrence relation."""
+    if n == 0:
+        return np.ones_like(x, dtype=float), np.zeros_like(x, dtype=float)
+    if n == 1:
+        return np.array(x, dtype=float), np.ones_like(x, dtype=float)
+    P_prev2, dP_prev2 = np.ones_like(x, dtype=float), np.zeros_like(x, dtype=float)
+    P_prev1, dP_prev1 = np.array(x, dtype=float), np.ones_like(x, dtype=float)
+    for k in range(1, n):
+        P_curr  = ((2*k+1)*x*P_prev1 - k*P_prev2) / (k+1)
+        dP_curr = ((2*k+1)*(P_prev1 + x*dP_prev1) - k*dP_prev2) / (k+1)
+        P_prev2,  P_prev1  = P_prev1,  P_curr
+        dP_prev2, dP_prev1 = dP_prev1, dP_curr
+    return P_curr, dP_curr
+
+def gauss_legendre_nodes_weights(n_nodes):
+    """
+    Compute Gauss-Legendre nodes and weights via Newton's method.
+    n_nodes: number of nodes to use
+    """
+    n = n_nodes
+    nodes = np.zeros(n)
+    weights = np.zeros(n)
+    # Initial guess: cosine approximation
+    for i in range((n + 1) // 2):
+        xi = np.cos(np.pi * (i + 0.75) / (n + 0.5))
+        for _ in range(100):  # Newton iterations
+            Pn, dPn = legendre_poly_and_deriv(n, np.array([xi]))
+            xi_new = xi - float(Pn[0]) / float(dPn[0])
+            if abs(xi_new - xi) < 1e-15:
+                break
+            xi = xi_new
+        nodes[i] = xi
+        nodes[n - 1 - i] = -xi
+        _, dPn_val = legendre_poly_and_deriv(n, np.array([xi]))
+        weights[i] = 2.0 / ((1 - xi**2) * float(dPn_val[0])**2)
+        weights[n - 1 - i] = weights[i]
+    return nodes, weights
+
+def gauss_legendre(f, a, b, n_nodes):
+    """Gauss-Legendre quadrature: compute ∫_a^b f(x) dx."""
+    nodes, weights = gauss_legendre_nodes_weights(n_nodes)
+    # Change of variables [-1,1] → [a,b]
+    x_transformed = 0.5 * (b - a) * nodes + 0.5 * (a + b)
+    return 0.5 * (b - a) * np.dot(weights, f(x_transformed))
+```
+
+```{python}
+# Verify with f(x) = sin(x) on [0, 2]
+print(f"f(x) = sin(x), [0, 2],  exact = {exact:.10f}")
+print(f"{'# nodes':<10} {'Approximation':<22} {'Error':<15}")
+for n_nodes in [2, 3, 4, 5, 6, 8]:
+    approx = gauss_legendre(np.sin, 0.0, 2.0, n_nodes)
+    print(f"{n_nodes:<10} {approx:<22.12f} {abs(approx - exact):<15.2e}")
+```
+
+Gauss-Legendre quadrature achieves very high accuracy with very few nodes.
+For example, with 5 nodes ($2\times5-1=9$, exact for polynomials up to
+degree 9), the result is near machine precision.
+
+```{python}
+# Change-of-variables example: ∫_0^1 y² dy via Gauss-Legendre
+# Substituting y = (x+1)/2 gives ∫_{-1}^{1} ((x+1)/2)² * (1/2) dx
+f_transformed = lambda x: ((x + 1) / 2)**2 * 0.5
+exact_y2 = 1.0 / 3.0
+approx_y2 = gauss_legendre(lambda x: x**2, 0.0, 1.0, 3)
+print(f"∫_0^1 y² dy = {exact_y2:.10f}")
+print(f"Gauss-Legendre (3 nodes): {approx_y2:.10f}")
+print(f"Error: {abs(approx_y2 - exact_y2):.2e}")
+```
+
+---
+
+## Summary {#sec-summary}
+
+| Rule | Exactness (polynomial degree) | Error order | Notes |
+|---|---|---|---|
+| Rectangular (Midpoint) | exact up to degree 1 | $O(h^2)$ | midpoint of each subinterval |
+| Trapezoidal | exact up to degree 1 | $O(h^2)$ | average of endpoint values |
+| Simpson's | exact up to degree 3 | $O(h^4)$ | quadratic interpolation, weights $1:4:1$ |
+| Newton-Cotes (degree $n$) | exact up to degree $n$ | $O(h^{n+2})$ or $O(h^{n+1})$ | equally spaced nodes; Runge's phenomenon at high order |
+| Gauss-Chebyshev | exact up to degree $2n+1$ | exponential | nodes = Chebyshev zeros; equal weights |
+| Gauss-Legendre | exact up to degree $2n+1$ | exponential | nodes = Legendre zeros; optimal node placement |
+
+::: {.callout-tip}
+## Practical guidelines
+
+- For general smooth integrands, **Gauss-Legendre** quadrature is the most
+  efficient choice.
+- When the integrand has a singularity of the form $1/\sqrt{1-x^2}$,
+  **Gauss-Chebyshev** quadrature is appropriate.
+- When only equally-spaced function values are available, **Simpson's rule
+  or the trapezoidal rule** are convenient.
+- **Adaptive quadrature** (recursively subdividing the interval) balances
+  accuracy and computational cost effectively.
+:::

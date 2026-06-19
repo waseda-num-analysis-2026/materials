@@ -22,6 +22,7 @@ Materials are organized by lecture number:
 | `070/` | Nonlinear Equations I: Fixed-Point Iteration and Newton's Method | [Slides](https://waseda-num-analysis-2026.github.io/materials/070/7th.html) · [Handout](https://waseda-num-analysis-2026.github.io/materials/070/nonlinear-equations-handout.html) | [Zoom recording](https://list-waseda-jp.zoom.us/rec/share/Fkxr3ovLlFru2T4qiDoRqAJGcDdZ247TUrt71CVqTnQTelVdAfoDshmZYk_8Ww_-.9Yb_CeQfffoLZu6D) (passcode: `lEq?0Cm0`) |
 | `080/` | Nonlinear Equations II: Multi-Dimensional Newton and Root-Finding Comparisons | [Slides](https://waseda-num-analysis-2026.github.io/materials/080/8th.html) · [Handout](https://waseda-num-analysis-2026.github.io/materials/070/nonlinear-equations-handout.html) *(shared with Lecture 7)* | [Watch](https://youtu.be/QDSGrXRyjII) |
 | `090/` | Midterm Follow-up and Corrections Report | [Slides](https://waseda-num-analysis-2026.github.io/materials/090/9th.html) · [Scoring Scheme](https://waseda-num-analysis-2026.github.io/materials/090/midterm2026_scoring_scheme.html) | — |
+| `100/` | Numerical Integration (Lectures 10–12) | [Handout](https://waseda-num-analysis-2026.github.io/materials/100/integration-handout.html) · [Final Presentation & Report](https://waseda-num-analysis-2026.github.io/materials/100/final-presentation-and-report.html) · Slides: TBA | — |
 | `past_exams/` | Past Exams | [2025 Midterm](https://waseda-num-analysis-2026.github.io/materials/past_exams/2025_midterm/2025_midterm.pdf) | — |
 
 ## Tutorial Videos
@@ -69,6 +70,8 @@ Short how-to videos to help you get started:
 | 8.1 | Multi-Dimensional Newton's Method | [Access](https://classroom.github.com/a/vsuagkPV) | **June 11, 23:59** |
 | 8.2 | DK Method | same repo as 8.1 | **June 14, 23:59** |
 | 9.1 | Midterm Examination Corrections Report | [Access](https://classroom.github.com/a/7XdGlSPT) | TBA |
+| 10.0 | Evolve the Shared Handout with AI (≥ 3 Q&A in `integration-handout-jp.qmd`, §1–3, see [`AI_TUTOR.md`](AI_TUTOR.md)) | same repo as 10.1 | **Jun 25, 23:59** |
+| 10.1 | Trapezoidal Rule | [Access](TBA) | **Jun 25, 23:59** |
 | Advanced Challenge 1 | DK Method Research Challenge (optional, advanced; free-form, no upper limit on extra points) | [Access](https://classroom.github.com/a/nEoZCh1-) | **July 31, 23:59** |
 
 ## Past Exams

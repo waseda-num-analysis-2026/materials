@@ -1,0 +1,121 @@
+---
+format:
+  html:
+    html-math-method: mathjax
+---
+
+<div style="text-align: center;">
+<div style="font-size: 1.9em; font-weight: bold; line-height: 1.35;">
+Final Presentation and Report<br>
+Numerical Analysis
+</div>
+<div style="font-size: 1.35em; font-weight: bold; color: red; margin-top: 0.5em;">
+Presentation Date: July 17th, 2026<br>
+Report Submission Deadline: July 31st, 2026
+</div>
+</div>
+
+# Group Presentation
+
+The guidelines for our group presentation on Numerical Analysis are as follows:
+
+## Overview
+
+- **Topic Selection:** As a team, engage in a discussion to select a single topic related to Numerical Analysis. Ensure that all members participate in this decision-making process.
+- **Task Allocation:** Allocate research tasks related to your chosen topic among the group members. All research work should be distributed fairly, with clear responsibilities. The research work must be completed by July 17th, 2026 in preparation for presentation.
+- **Teamwork:** The success of this project hinges on the collective effort of all group members, so effective communication and mutual support are essential throughout the process.
+
+## Requirements
+
+- **Duration:** The total duration of the presentation should not exceed 20 minutes. The presentation should be concise and engaging to effectively communicate your findings.
+- **Presentation Format:** The presentation can be delivered by a single representative or multiple members of the group. However, it is vital to clearly indicate each member's contribution to the presentation.
+- **Utilization of Generative AI:** We recommend strategically utilizing generative AI in research and presentation preparation. Include in your presentation content the innovations that led to improved outcomes through AI utilization, such as prompt design, model selection, and automation scripts. Additionally, maintain dialogue logs and environmental information, and appropriately implement copyright and hallucination countermeasures (verification of primary sources).
+- **Reflection Section:** Include a "Reflection" section at the end of your presentation using 1--2 slides. In this section, share your thoughts on unique experiences in group work, challenging aspects, lessons learned, and growth as a team.
+
+## Roles and Workflow
+
+**Always keep your own role within the group clear as you work.** However, because this project runs over a short period, we recommend not fixing rigid assignments: shift roles by phase and work in parallel as much as possible. The following is only one example.
+
+- **Phase 1 (Research and Design):** As a team, divide the survey of prior work and standard methods/experimental settings, and agree on the evaluation metrics, experimental conditions, comparison targets, and the number of figures to present. Use of generative AI is encouraged (beware of misinformation and hallucinations, and always verify primary sources).
+- **Phase 2 (Parallel Work):** Proceed in parallel with organizing the theory, implementing code and running experiments, and analyzing and visualizing results. Share results frequently, even at intermediate stages, so that no one has to wait for the implementation to be finished.
+- **Phase 3 (Integration and Presentation Preparation):** Once the experiments settle down, some members move on to the slides and reproducibility write-ups, while those responsible for analysis move on to integrating the conclusions. The AI usage log and the Reflection are organized and shared by everyone, and the presentation is delivered by all members together.
+
+## Evaluation
+
+The presentations will be evaluated based on the following criteria:
+
+<div style="overflow-x: auto;">
+<table class="table table-bordered" style="font-size: 0.9em;">
+  <thead>
+    <tr>
+      <th>Major Category</th>
+      <th>Item (5 points each)</th>
+      <th>Evaluation Criteria (Examples)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td rowspan="2"><strong>1. Technical Understanding</strong></td>
+      <td><strong>1-A. Problem Setting Accuracy</strong></td>
+      <td>Are the background, purpose, and significance clearly stated and connected to prior research or practical needs?</td>
+    </tr>
+    <tr>
+      <td><strong>1-B. Accuracy</strong></td>
+      <td>Are both theoretical and implementation explanations correct and error-free?</td>
+    </tr>
+    <tr>
+      <td rowspan="2"><strong>2. AI Utilization</strong></td>
+      <td><strong>2-A. Strategic AI Use</strong></td>
+      <td>Are there innovations that connect AI to improved outcomes, such as prompt design, model selection, and automation scripts?</td>
+    </tr>
+    <tr>
+      <td><strong>2-B. Reproducibility, Ethics, and Hallucination Countermeasures</strong></td>
+      <td>Are dialogue logs and environment information maintained? Are copyright and hallucination countermeasures (verification of primary sources) implemented?</td>
+    </tr>
+    <tr>
+      <td rowspan="2"><strong>3. Experimental Rigor</strong></td>
+      <td><strong>3-A. Experimental Design</strong></td>
+      <td>Are comparison conditions appropriately set and evaluation metrics valid?</td>
+    </tr>
+    <tr>
+      <td><strong>3-B. Results Analysis</strong></td>
+      <td>Are graphs, statistics, and error analysis used to interpret results from multiple perspectives?</td>
+    </tr>
+    <tr>
+      <td rowspan="2"><strong>4. Presentation</strong></td>
+      <td><strong>4-A. Clarity</strong></td>
+      <td>Are the structure, language, and time allocation audience-friendly?</td>
+    </tr>
+    <tr>
+      <td><strong>4-B. Visuals &amp; Demo</strong></td>
+      <td>Are slide design, live demos, or video quality high, making results intuitively understandable?</td>
+    </tr>
+    <tr>
+      <td rowspan="2"><strong>5. Interaction &amp; Professionalism</strong></td>
+      <td><strong>5-A. Q&amp;A &amp; Engagement</strong></td>
+      <td>Are answers to questions accurate and is there active dialogue with the audience?</td>
+    </tr>
+    <tr>
+      <td><strong>5-B. Teamwork</strong></td>
+      <td>Is role distribution fair and do all members contribute to both presentation and Q&amp;A?</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+**Important Notes on Evaluation:**
+
+- Presentations will be evaluated by everyone present in the room.
+- Conversely, students are obligated to participate in presentations and evaluate all group presentations.
+- Skipping evaluations or doing them carelessly will result in point deductions.
+- Participation in post-presentation discussions is subject to bonus points. Active participation here is a significant bonus opportunity, so please participate actively.
+
+# Final Report
+
+Each group member is required to consolidate their research findings into a report. These reports should not only summarize the content of the presentation but also include a detailed analysis of the findings, the member's personal opinions, perspectives on the topic, and any additional relevant content that supports or enhances the understanding of the subject matter. The reports, providing a comprehensive overview of the presentation content, must be submitted by July 31st, 2026. The format and style guidelines for the reports are as follows:
+
+- **Format:** Reports should be prepared either in a Jupyter notebook (ipynb) format or as an A4-sized PDF. If you opt for the PDF format, any associated code used in your research can be submitted separately as supplementary material.
+- **Title Page:** The title of your chosen topic in numerical analysis, your name, and your ID should be clearly stated at the beginning of the first page of each report.
+- **Content Requirements:** Each report should include a summary of the findings related to the chosen topic, a detailed analysis, and personal reflections or opinions on the matter. Any additional content that is deemed necessary or insightful for understanding the topic can also be included. The aim is to create a report that provides a clear, detailed, and comprehensive overview of your chosen topic in numerical analysis.
+- **AI Utilization Documentation:** Document your use of generative AI in your report preparation and research process. Include details about prompt engineering strategies, model selection rationale, automation scripts developed, and how AI tools contributed to your research outcomes. Provide evidence of proper source verification and cite all AI-assisted work appropriately. Maintain logs of your AI interactions and describe measures taken to address potential hallucinations or inaccuracies.
+- **Reflections Section:** Include a final section titled "Reflections" in your report. This should contain your overall impressions of the course, your experiences with the final group work, the good and bad aspects of the group work, and what you learned from this experience. Reflecting on the course and the group work will not only demonstrate your understanding of the subject matter but also showcase your capacity for self-assessment and growth.

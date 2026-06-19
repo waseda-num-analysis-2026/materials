@@ -13,6 +13,16 @@
 050/linear-equations-handout-full.qmd
 050/linear-equations-handout-full.html
 
+# Japanese draft materials (-jp): preparation-stage intermediates; publish English versions without -jp
+**/*-jp.qmd
+**/*-jp.html
+**/*-jp_files/
+
+# Lecture 10 slides — not yet released (TBA)
+100/10th.qmd
+100/10th.html
+100/10th_files/
+
 # Python virtual environments
 .venv/
 venv/
@@ -20,6 +30,12 @@ __pycache__/
 
 # OS files
 .DS_Store
+
+# Midterm exam materials (confidential — NEVER commit)
+../040_midterm_exam/
+040_midterm_exam/
+**/omr_answer_sheet.pdf
+**/omr_*.pdf
 
 /.quarto/
 **/*.quarto_ipynb
