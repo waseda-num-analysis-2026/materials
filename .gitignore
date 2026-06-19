@@ -18,10 +18,8 @@
 **/*-jp.html
 **/*-jp_files/
 
-# Lecture 10 slides — not yet released (TBA)
-100/10th.qmd
-100/10th.html
-100/10th_files/
+# Lecture 10 slides (JP version excluded per -jp rule above)
+# 100/10th.qmd and 100/10th.html are now published
 
 # Python virtual environments
 .venv/

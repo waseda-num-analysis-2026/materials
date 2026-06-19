@@ -1,0 +1,127 @@
+---
+title: "Numerical Analysis"
+subtitle: "Foundations and Exercises"
+author:
+  - name: "TANAKA, Kazuaki (田中 一成)"
+    email: "k.tanaka@aoni.waseda.jp"
+    affiliations:
+      - name: "Global Center for Science and Engineering, Waseda University"
+format:
+  revealjs:
+    theme: [default, ../030/custom.scss]
+    slide-number: true
+    html-math-method: mathjax
+    chalkboard:
+      storage: chalkboardData_10th
+    title-slide-attributes:
+      data-background-image: "../030/images/image1.png"
+      data-background-size: "contain"
+      data-background-opacity: "0.15"
+---
+
+## Before We Start {.smaller}
+
+```{=html}
+<div class="mission-tip" style="margin-top:0.6em; margin-bottom:0.8em;">
+  <div class="mission-tip-icon">📥</div>
+  <div class="mission-tip-content">
+    <strong>Please pull the latest course materials repository.</strong>
+  </div>
+</div>
+
+<div style="display:flex; flex-direction:column; gap:0.5em; margin-bottom:0.8em;">
+  <div>
+    <div style="font-size:0.78em; color:#888; margin-bottom:0.2em;">Already cloned</div>
+    <pre style="margin:0; background:#1e1e2e; color:#cdd6f4; border-radius:8px; padding:0.5em 1em; font-size:0.78em; line-height:1.5;"><code>cd materials
+git pull</code></pre>
+  </div>
+</div>
+
+<div style="background:#f0f4ff; border-left:3px solid #4472C4; border-radius:6px; padding:0.6em 1em; font-size:0.82em;">
+  <strong>Today's materials</strong>:
+  <table style="margin-top:0.4em; border-collapse:collapse; width:100%;">
+    <tr><td style="padding:0.15em 0.6em 0.15em 0;"><code>100/10th.qmd</code></td><td style="color:#555;">slides — logistics and assignments</td></tr>
+    <tr><td style="padding:0.15em 0.6em 0.15em 0;"><code>100/integration-handout.qmd</code></td><td style="color:#555;">📘 <strong>shared handout for Lectures 10--12</strong></td></tr>
+    <tr><td style="padding:0.15em 0.6em 0.15em 0;"><code>100/integration-handout.html</code></td><td style="color:#555;">rendered shared handout</td></tr>
+  </table>
+</div>
+```
+
+## Today's Main Material {.smaller}
+
+```{=html}
+<div style="background:#e8f5e9; border-left:4px solid #2e7d32; border-radius:8px; padding:0.8em 1em; margin-bottom:0.7em;">
+  <div style="font-size:0.82em; color:#1b5e20; font-weight:700; letter-spacing:0.04em;">Lecture 10</div>
+  <div style="font-size:1.05em; margin-top:0.2em;"><strong>Numerical Integration I: Midpoint Rule, Trapezoidal Rule, and Error Analysis</strong></div>
+  <div style="font-size:0.84em; color:#455a64; margin-top:0.25em;">
+    Use the shared Lectures 10--12 handout. Today we focus on the Introduction and Sections 1--3.
+  </div>
+</div>
+
+<div style="display:grid; grid-template-columns:1fr; gap:0.8em;">
+  <div style="background:#fff8e1; border:1px solid #ffe082; border-radius:10px; padding:0.75em 0.9em;">
+    <div style="font-size:0.8em; color:#e65100; font-weight:700;">Today's scope</div>
+    <ul style="font-size:0.83em; line-height:1.55; margin:0.4em 0 0 1.2em;">
+      <li>why numerical integration is needed</li>
+      <li>rectangular (midpoint) rule and trapezoidal rule</li>
+      <li>error analysis and \(O(h^2)\) bounds</li>
+    </ul>
+  </div>
+</div>
+```
+
+## Exercise 10.0 — Evolve the Shared Handout with AI {.smaller .exercise-slide}
+
+<div style="padding-left: 2em; margin-top: 0.5em; margin-bottom: 0.4em;">
+  <strong>Repository:</strong> <a href="https://classroom.github.com/a/lbBXM8pn">Ex 10 — GitHub Classroom</a>
+  &nbsp;&nbsp;|&nbsp;&nbsp; <strong>Submit:</strong> <code>integration-handout-jp.qmd</code> (your edited copy)
+  &nbsp;&nbsp;|&nbsp;&nbsp; <strong style="color: #d84315;">Deadline: 6/25</strong>
+</div>
+
+While studying the shared Lectures 10--12 handout, copy
+[`100/integration-handout-jp.qmd`](https://github.com/waseda-num-analysis-2026/materials/blob/main/100/integration-handout-jp.qmd)
+from the `materials` repository into your Ex 10 repository, then insert at least
+**3 additional Q&A blocks** of your own using the protocol in
+[`AI_TUTOR.md`](https://github.com/waseda-num-analysis-2026/materials/blob/main/AI_TUTOR.md).
+
+For Ex 10.0, focus on **§1--3** (midpoint rule, trapezoidal rule, error analysis).
+
+## Exercise 10.1 — Trapezoidal Rule {.smaller .exercise-slide}
+
+<div style="padding-left: 2em; margin-top: 0.5em; margin-bottom: 0.4em;">
+  <strong>Format:</strong> Individual Work
+  &nbsp;&nbsp;|&nbsp;&nbsp; <strong>Repository:</strong> same as Ex 10.0
+  &nbsp;&nbsp;|&nbsp;&nbsp; <strong>Edit:</strong> <code>ex10-1.qmd</code>
+  &nbsp;&nbsp;|&nbsp;&nbsp; <strong style="color: #d84315;">Deadline: 6/25</strong>
+</div>
+
+Implement the **trapezoidal rule** for numerical integration.
+
+**Tasks:**
+
+- Complete the `trapezoidal_rule` function in `ex10-1.qmd`
+- Test on $f(x)=x^2$ on $[0,1]$ (exact $=1/3$) and $f(x)=\sin x$ on $[0,\pi]$ (exact $=2$)
+- For $n = 4, 8, 16, 32, 64$, report approximations and errors
+- Plot error vs. step size $h$ and verify **$O(h^2)$** convergence
+- Brief discussion: does the observed rate match theory? How many subdivisions are needed for error $<10^{-6}$?
+
+## Assignments and Preparation {.smaller}
+
+```{=html}
+<div class="assign-list">
+  <div class="assign-card">
+    <div class="assign-num">1</div>
+    <div class="assign-body">
+      <p>Accept the <a href="https://classroom.github.com/a/lbBXM8pn"><strong>Ex 10 GitHub Classroom</strong></a> link to get your repository.</p>
+      <ul>
+        <li>For <strong>Ex 10.0</strong>: copy <code>100/integration-handout-jp.qmd</code> from the <code>materials</code> repository into your Ex 10 repository, add &ge; 3 Q&amp;A blocks on &sect;1--3, and push it together with your other files</li>
+        <li><strong>IMPORTANT:</strong> render each submission file and push the rendered output together with any <code>*_files/</code> directories</li>
+        <li><strong>IMPORTANT:</strong> after pushing, open your GitHub repository in a browser and confirm the rendered files are visible</li>
+        <li>Report AI use as instructed in the assignment template</li>
+        <li><strong>Deadline:</strong> Ex 10.0 and Ex 10.1 — <span class="assign-due">6/25</span></li>
+        <li>This repository will also be used for <strong>Ex 11--12</strong>; check the README for multiple deadlines</li>
+      </ul>
+    </div>
+  </div>
+</div>
+```

@@ -71,7 +71,7 @@ Short how-to videos to help you get started:
 | 8.2 | DK Method | same repo as 8.1 | **June 14, 23:59** |
 | 9.1 | Midterm Examination Corrections Report | [Access](https://classroom.github.com/a/7XdGlSPT) | TBA |
 | 10.0 | Evolve the Shared Handout with AI (≥ 3 Q&A in `integration-handout-jp.qmd`, §1–3, see [`AI_TUTOR.md`](AI_TUTOR.md)) | same repo as 10.1 | **Jun 25, 23:59** |
-| 10.1 | Trapezoidal Rule | [Access](TBA) | **Jun 25, 23:59** |
+| 10.1 | Trapezoidal Rule | [Access](https://classroom.github.com/a/lbBXM8pn) | **Jun 25, 23:59** |
 | Advanced Challenge 1 | DK Method Research Challenge (optional, advanced; free-form, no upper limit on extra points) | [Access](https://classroom.github.com/a/nEoZCh1-) | **July 31, 23:59** |
 
 ## Past Exams
