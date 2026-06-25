@@ -1,0 +1,186 @@
+---
+title: "Exercise 11.2 — Runge's Phenomenon: AI Comparison and Fact-Checking"
+subtitle: "Numerical Analysis 2026 — Lecture 11"
+author: "Global Center for Science and Engineering, Waseda University"
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    code-tools: true
+    highlight-style: github
+execute:
+  echo: true
+  warning: false
+jupyter: python3
+---
+
+## Problem
+
+::: {.callout-tip}
+## AI Recommended
+
+AI use is **strongly recommended** for this exercise.  You will consult
+two different AI models, compare their responses, and fact-check them
+against academic sources.
+:::
+
+**Runge's phenomenon** is a classical result in numerical analysis
+demonstrating that high-degree polynomial interpolation with equally
+spaced nodes can diverge near the endpoints of an interval.
+
+**Your tasks:**
+
+1. Ask **two different** generative AI models (e.g., ChatGPT, Gemini,
+   Claude, Copilot, …) the **same** prompt about Runge's phenomenon.
+2. Compare the responses in a structured way.
+3. Verify the accuracy of both responses using academic sources.
+4. Write your own synthesis and reflection.
+
+---
+
+## Part 1 — AI Model Consultation
+
+Use the prompt below (or write your own, but use the **same** prompt for
+both models and include it here).
+
+**Suggested prompt:**
+
+> Please explain Runge's phenomenon in numerical analysis.  Include:
+> (1) the mathematical definition and context,
+> (2) why it occurs,
+> (3) a specific example — preferably Runge's original function
+>     $f(x) = \frac{1}{1 + 25x^2}$ on $[-1, 1]$,
+> (4) methods to mitigate this problem, and
+> (5) its practical implications in numerical computing.
+
+### 1.1 Actual Prompt Used
+
+*[Paste the exact prompt you used here — required if different from above.]*
+
+### 1.2 AI Model 1 Response
+
+**AI Tool:** [Name and version, e.g., ChatGPT (GPT-4o), 2026-xx-xx]
+
+**Response:**
+
+*[Paste or summarise the complete response from Model 1 here.]*
+
+### 1.3 AI Model 2 Response
+
+**AI Tool:** [Name and version, e.g., Gemini 2.0 Flash, 2026-xx-xx]
+
+**Response:**
+
+*[Paste or summarise the complete response from Model 2 here.]*
+
+---
+
+## Part 2 — Fact-Checking with Academic Sources
+
+List at least **two** credible references (textbook or journal article)
+you used to verify the AI responses.
+
+**References:**
+
+1. *[Author, Year. Title. Publisher / Journal.]*
+2. *[Author, Year. Title. Publisher / Journal.]*
+
+**Citation format examples:**
+
+- *Book:* Trefethen, L. N. (2019). *Approximation Theory and
+  Approximation Practice* (Extended ed.). SIAM.
+- *Paper:* Platte, R. B., Trefethen, L. N., & Kuijlaars, A. B. J. (2011).
+  Impossibility of fast stable approximation of analytic functions from
+  equispaced samples. *SIAM Review*, 53(2), 308–318.
+- *Book:* Burden, R. L., & Faires, J. D. (2011). *Numerical Analysis*
+  (9th ed.). Brooks/Cole.
+- *Book:* Süli, E., & Mayers, D. (2003). *An Introduction to Numerical
+  Analysis*. Cambridge University Press.
+
+::: {.callout-important}
+## Choosing credible academic sources
+
+Your references should be **journal articles** or **published books** —
+not Wikipedia, blogs, or course notes on their own.  Standard numerical
+analysis textbooks and peer-reviewed papers (e.g., in *SIAM Review*) are
+appropriate.
+
+**Finding sources on campus:** [Springer Nature Link](https://link.springer.com/)
+provides access to many books and papers while you are on campus.  Try
+searching for "Numerical Analysis" to locate standard textbooks and
+related articles.
+
+**AI-provided citations:** Modern AI models often list sources in their
+responses.  Treat these as **starting points only** — confirm that each
+citation is real, that the authors and title match, and that the quoted
+content is accurate before you rely on it.
+:::
+
+**Fact-checking findings:**
+
+*[For each key claim in the AI responses, note whether it was confirmed,
+partially wrong, or missing according to your references.]*
+
+---
+
+## Part 3 — Comparative Analysis
+
+| Aspect | AI Model 1 | AI Model 2 | Notes |
+|---|---|---|---|
+| Mathematical definition | | | |
+| Explanation of cause | | | |
+| Quality of example | | | |
+| Remedies presented | | | |
+| Practical implications | | | |
+| Errors / omissions | | | |
+
+**Detailed comparison:**
+
+*[Provide a narrative analysis of the similarities and key differences
+between the two responses.]*
+
+---
+
+## Part 4 — Synthesis and Reflection
+
+### What the AI models got right
+
+*[Summarise accurate information found in both responses.]*
+
+### What the AI models missed or got wrong
+
+*[Highlight errors, misconceptions, or important omissions.]*
+
+### Lessons learned about AI reliability
+
+*[Reflect on the reliability of AI for mathematical explanations.  When
+should you trust AI output and when should you verify it?]*
+
+---
+
+## AI Usage
+
+**Note:** If you used AI, change `[ ]` to `[x]` for the applicable items.
+
+- [ ] I did **not** use AI assistance for this exercise.
+- [ ] I used AI assistance for this exercise.
+
+If you used AI, please specify:
+
+**AI Tool(s) Used:**
+
+```
+[Name of AI tool(s)]
+```
+
+**Prompt(s) Used:**
+
+```
+[Copy the prompt(s) here — the prompts from Part 1 count here too]
+```
+
+**How AI was used:**
+
+```
+[Consultation for Parts 1–4, etc.]
+```

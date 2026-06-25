@@ -1,0 +1,207 @@
+---
+title: "Exercise 11.1 — Simpson's Rule and Convergence Comparison"
+subtitle: "Numerical Analysis 2026 — Lecture 11"
+author: "Global Center for Science and Engineering, Waseda University"
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    code-tools: true
+    highlight-style: github
+execute:
+  echo: true
+  warning: false
+jupyter: python3
+---
+
+## Problem
+
+Two integration rules (midpoint and trapezoidal) are provided as
+references.  Your tasks are:
+
+1. **Complete** the `simpsons_rule` function.
+2. **Choose** a test function $f(x)$ of your own (not $f(x) = x^2$) and
+   specify its exact integral or a high-precision approximation.
+3. **Compare** the absolute errors of all three methods across several
+   values of $n$.
+4. **Plot** the convergence curves and confirm the expected rates:
+   $O(h^2)$ for midpoint/trapezoidal and $O(h^4)$ for Simpson's rule.
+
+AI is permitted.  AI is **recommended** for choosing the test function and
+generating convergence plots.
+
+---
+
+## 1. Three Integration Rules
+
+The midpoint and trapezoidal implementations are provided.  Complete
+the `simpsons_rule` function.
+
+```{python}
+import numpy as np
+import matplotlib.pyplot as plt
+
+
+def midpoint_rule(f, a, b, n):
+    """Midpoint (rectangular) rule."""
+    h = (b - a) / n
+    integral = 0.0
+    for i in range(n):
+        x_mid = a + (i + 0.5) * h
+        integral += f(x_mid) * h
+    return integral
+
+
+def trapezoidal_rule(f, a, b, n):
+    """Trapezoidal rule."""
+    h = (b - a) / n
+    integral = 0.0
+    for i in range(n):
+        x_left  = a + i * h
+        x_right = a + (i + 1) * h
+        integral += (h / 2) * (f(x_left) + f(x_right))
+    return integral
+
+
+def simpsons_rule(f, a, b, n):
+    """Composite Simpson's rule.
+
+    Parameters
+    ----------
+    f : callable
+    a, b : float  — integration limits
+    n : int       — number of sub-intervals (must be even)
+
+    Returns
+    -------
+    float — approximate integral
+    """
+    if n % 2 != 0:
+        raise ValueError("n must be even for Simpson's rule.")
+    h = (b - a) / n
+    integral = 0.0
+
+    for i in range(0, n, 2):   # step by 2 to process pairs of intervals
+        x0 = a + i * h
+        x1 = a + (i + 1) * h
+        x2 = a + (i + 2) * h
+
+        # TODO: apply Simpson's 1/3 rule for the pair [x0, x2] and add to integral
+        pass  # replace with: integral += (h / 3) * (f(x0) + 4*f(x1) + f(x2))
+
+    return integral
+```
+
+---
+
+## 2. Your Test Function
+
+Choose a function $f(x)$ and an interval $[a, b]$ whose integral you can
+compute exactly (or to high precision).  Examples that work well:
+
+| Function | Interval | Exact value |
+|---|---|---|
+| $e^x$ | $[0, 1]$ | $e - 1 \approx 1.71828\ldots$ |
+| $\cos x$ | $[0, \pi/2]$ | $1$ |
+| $\frac{1}{1+x^2}$ | $[0, 1]$ | $\pi/4 \approx 0.78540\ldots$ |
+
+```{python}
+# TODO: define your test function and exact value
+def test_function(x):
+    return  # your choice — replace this line
+
+
+# TODO: set the integration limits and exact integral
+a, b = 0, 1          # adjust as needed
+exact_value = None   # replace None with the exact value (float)
+
+print(f"Test function: f(x) = ???  on [{a}, {b}]")
+print(f"Exact integral: {exact_value}")
+```
+
+---
+
+## 3. Error Comparison Table
+
+```{python}
+n_list = [4, 8, 16, 32, 64]
+
+print(f"\n{'n':<6} {'Midpoint error':<18} {'Trapezoid error':<18} {'Simpson error':<18}")
+print("=" * 62)
+
+for n in n_list:
+    e_mid  = abs(midpoint_rule(test_function, a, b, n)     - exact_value)
+    e_trap = abs(trapezoidal_rule(test_function, a, b, n)  - exact_value)
+    e_simp = abs(simpsons_rule(test_function, a, b, n)     - exact_value)
+    print(f"{n:<6} {e_mid:<18.2e} {e_trap:<18.2e} {e_simp:<18.2e}")
+```
+
+---
+
+## 4. Convergence Plot
+
+```{python}
+n_values = np.array([4, 8, 16, 32, 64, 128])
+h_values = (b - a) / n_values
+
+errors_mid  = [abs(midpoint_rule(test_function, a, b, n)    - exact_value) for n in n_values]
+errors_trap = [abs(trapezoidal_rule(test_function, a, b, n) - exact_value) for n in n_values]
+errors_simp = [abs(simpsons_rule(test_function, a, b, n)    - exact_value) for n in n_values]
+
+plt.figure(figsize=(8, 5))
+plt.loglog(h_values, errors_mid,  "bo-",  label="Midpoint rule")
+plt.loglog(h_values, errors_trap, "rs-",  label="Trapezoidal rule")
+plt.loglog(h_values, errors_simp, "g^-",  label="Simpson's rule")
+plt.loglog(h_values, h_values**2, "k--",  alpha=0.5, label=r"$O(h^2)$")
+plt.loglog(h_values, h_values**4, "k:",   alpha=0.5, label=r"$O(h^4)$")
+plt.xlabel("Step size $h$")
+plt.ylabel("Absolute error")
+plt.title("Convergence of Three Numerical Integration Methods")
+plt.legend()
+plt.grid(True, alpha=0.3)
+plt.tight_layout()
+plt.show()
+```
+
+---
+
+## 5. Discussion
+
+Answer the following questions below.
+
+1. Does the convergence plot confirm the theoretical rates $O(h^2)$ and
+   $O(h^4)$?  If not, suggest a reason.
+2. At $n = 16$, approximately how much more accurate is Simpson's rule
+   compared to the trapezoidal rule?
+3. What choice of $f$ did you make, and why?
+
+*[Write your discussion here.]*
+
+---
+
+## AI Usage
+
+**Note:** If you used AI, change `[ ]` to `[x]` for the applicable items.
+
+- [ ] I did **not** use AI assistance for this exercise.
+- [ ] I used AI assistance for this exercise.
+
+If you used AI, please specify:
+
+**AI Tool(s) Used:**
+
+```
+[Name of AI tool(s), e.g., ChatGPT (GPT-4o), Gemini 2.0 Flash, Claude 3.7 Sonnet]
+```
+
+**Prompt(s) Used:**
+
+```
+[Copy the prompt(s) here]
+```
+
+**How AI was used:**
+
+```
+[Briefly describe how you used AI: choosing test function, debugging, plotting, etc.]
+```

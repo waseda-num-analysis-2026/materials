@@ -1,0 +1,257 @@
+---
+title: "Exercise 12.2 — Numerical Integration of Your Chosen Function"
+subtitle: "Numerical Analysis 2026 — Lecture 12"
+author: "Global Center for Science and Engineering, Waseda University"
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    code-tools: true
+    highlight-style: github
+execute:
+  echo: true
+  warning: false
+jupyter: python3
+---
+
+## Problem
+
+Choose **any** smooth function $f(x)$ you like and compute its integral
+numerically using multiple methods.  The highlight of this exercise is
+**Gauss-Legendre quadrature**: a highly accurate method where you will use
+an AI assistant to help you obtain the nodes and weights.
+
+**Tasks:**
+
+1. Choose $f(x)$ and an integration interval $[a, b]$.
+   Compute (or look up) the exact value of $\int_a^b f(x)\,dx$.
+2. Implement and apply the **trapezoidal rule** and **Simpson's rule**
+   from previous exercises.
+3. Apply **Gauss-Legendre quadrature** using nodes and weights obtained
+   with AI assistance (details in §3).
+4. Compare all three methods in a table and convergence plot.
+5. Write a short discussion.
+
+AI is **permitted and recommended**, especially for Step 3.
+
+---
+
+## 1. Your Choice of Function
+
+Describe the integral you will compute.
+
+| Item | Value |
+|---|---|
+| Integrand $f(x)$ | *[your choice — write the formula here]* |
+| Interval $[a, b]$ | *[e.g., $[0, 1]$ or $[-1, 1]$]* |
+| Exact / reference value | *[analytical result or `scipy.integrate.quad` value]* |
+| Reason for this choice | *[one sentence]* |
+
+```{python}
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.special import roots_legendre  # for Gauss-Legendre nodes & weights
+
+
+# TODO: define your function and exact value
+def f(x):
+    return  # your choice
+
+
+a, b = 0, 1          # adjust to your interval
+exact = None         # set to the known exact value
+
+# Quick sanity check with scipy
+from scipy.integrate import quad
+scipy_val, _ = quad(f, a, b)
+print(f"scipy.integrate.quad  : {scipy_val:.12f}")
+print(f"Your exact value      : {exact}")
+```
+
+---
+
+## 2. Reference Methods (from earlier exercises)
+
+```{python}
+def trapezoidal_rule(f, a, b, n):
+    h = (b - a) / n
+    return sum((h / 2) * (f(a + i*h) + f(a + (i+1)*h)) for i in range(n))
+
+
+def simpsons_rule(f, a, b, n):
+    if n % 2 != 0:
+        raise ValueError("n must be even.")
+    h = (b - a) / n
+    total = 0.0
+    for i in range(0, n, 2):
+        x0, x1, x2 = a + i*h, a + (i+1)*h, a + (i+2)*h
+        total += (h / 3) * (f(x0) + 4*f(x1) + f(x2))
+    return total
+```
+
+---
+
+## 3. Gauss-Legendre Quadrature
+
+**What is Gauss-Legendre quadrature?**  
+An $n$-point Gauss-Legendre rule approximates $\int_{-1}^{1} h(t)\,dt$ as
+
+$$
+\int_{-1}^{1} h(t)\,dt \;\approx\; \sum_{k=1}^{n} w_k\, h(t_k),
+$$
+
+where $t_1, \ldots, t_n$ (nodes) and $w_1, \ldots, w_n$ (weights) are
+determined by requiring the formula to be exact for all polynomials of
+degree $< 2n$.  The nodes and weights can be obtained from
+`scipy.special.roots_legendre(n)`.
+
+To integrate $f$ over $[a, b]$ instead of $[-1, 1]$, apply the linear
+change of variables $x = \frac{b-a}{2}t + \frac{a+b}{2}$:
+
+$$
+\int_a^b f(x)\,dx = \frac{b-a}{2}\int_{-1}^{1} f\!\left(\frac{b-a}{2}t + \frac{a+b}{2}\right)dt.
+$$
+
+::: {.callout-tip}
+## AI task
+
+Use an AI assistant to help you:
+
+1. Obtain the Gauss-Legendre nodes and weights for $n = 5$ points
+   (you may use `scipy.special.roots_legendre` or a table from a
+   textbook / Wikipedia).
+2. Write (or verify) the change-of-variables formula above.
+3. Implement `gauss_legendre` below and test it on a simple case.
+
+Record your prompt and the AI response in the **AI Usage** section.
+:::
+
+```{python}
+def gauss_legendre(f, a, b, n):
+    """n-point Gauss-Legendre quadrature over [a, b].
+
+    Parameters
+    ----------
+    f : callable
+    a, b : float  — integration limits
+    n : int       — number of quadrature points
+
+    Returns
+    -------
+    float — approximate integral
+    """
+    # Obtain nodes (t_k in [-1,1]) and weights from scipy
+    nodes, weights = roots_legendre(n)
+
+    # TODO: transform nodes to [a, b] and evaluate the weighted sum
+    # x_k = (b - a) / 2 * t_k + (a + b) / 2
+    # result = (b - a) / 2 * sum(w_k * f(x_k))
+    pass  # replace with your implementation
+
+
+# Quick test: ∫₀¹ x² dx = 1/3 (should be very accurate for n ≥ 2)
+test_val = gauss_legendre(lambda x: x**2, 0, 1, 5)
+print(f"GL test (∫₀¹ x² dx): {test_val:.10f}  (exact: {1/3:.10f})")
+```
+
+---
+
+## 4. Comparison
+
+### 4.1 Error table (fixed n)
+
+```{python}
+n_fixed = 16   # number of panels for trapezoidal / Simpson
+
+print(f"Method              | n = {n_fixed} | Abs. error")
+print("-" * 50)
+for label, approx in [
+    ("Trapezoidal", trapezoidal_rule(f, a, b, n_fixed)),
+    ("Simpson    ", simpsons_rule(f, a, b, n_fixed)),
+    ("Gauss-Legendre (n=5) ", gauss_legendre(f, a, b, 5)),
+    ("Gauss-Legendre (n=10)", gauss_legendre(f, a, b, 10)),
+]:
+    err = abs(approx - exact)
+    print(f"{label:<22}: {approx:.10f}  error = {err:.2e}")
+```
+
+### 4.2 Convergence plot
+
+```{python}
+n_panel_values = np.array([4, 8, 16, 32, 64, 128])
+n_gl_values    = np.array([2, 4, 6, 8, 10, 12, 16])
+
+trap_errors = [abs(trapezoidal_rule(f, a, b, n) - exact) for n in n_panel_values]
+simp_errors = [abs(simpsons_rule(f, a, b, n)    - exact) for n in n_panel_values]
+gl_errors   = [abs(gauss_legendre(f, a, b, n)   - exact) for n in n_gl_values]
+
+h_vals = (b - a) / n_panel_values
+
+fig, axes = plt.subplots(1, 2, figsize=(13, 5))
+
+# Left: trapezoidal and Simpson vs step size h
+axes[0].loglog(h_vals, trap_errors, "rs-", label="Trapezoidal")
+axes[0].loglog(h_vals, simp_errors, "g^-", label="Simpson")
+axes[0].loglog(h_vals, h_vals**2,   "k--", alpha=0.5, label=r"$O(h^2)$")
+axes[0].loglog(h_vals, h_vals**4,   "k:",  alpha=0.5, label=r"$O(h^4)$")
+axes[0].set_xlabel("Step size $h$")
+axes[0].set_ylabel("Absolute error")
+axes[0].set_title("Trapezoidal and Simpson convergence")
+axes[0].legend()
+axes[0].grid(True, alpha=0.3)
+
+# Right: Gauss-Legendre vs number of nodes
+axes[1].semilogy(n_gl_values, gl_errors, "bo-", label="Gauss-Legendre")
+axes[1].set_xlabel("Number of GL nodes $n$")
+axes[1].set_ylabel("Absolute error")
+axes[1].set_title("Gauss-Legendre convergence")
+axes[1].legend()
+axes[1].grid(True, alpha=0.3)
+
+plt.tight_layout()
+plt.show()
+```
+
+---
+
+## 5. Discussion
+
+Answer the following questions.
+
+1. How many function evaluations does each method need to reach an error
+   below $10^{-8}$?  Compare Gauss-Legendre with Simpson's rule.
+2. What property of your chosen $f(x)$ makes Gauss-Legendre especially
+   effective (or less effective)?
+3. If you had to recommend **one** method to a colleague for a practical
+   engineering calculation, which would you choose and why?
+
+*[Write your discussion here.]*
+
+---
+
+## AI Usage
+
+**Note:** If you used AI, change `[ ]` to `[x]` for the applicable items.
+
+- [ ] I did **not** use AI assistance for this exercise.
+- [ ] I used AI assistance for this exercise.
+
+If you used AI, please specify:
+
+**AI Tool(s) Used:**
+
+```
+[Name of AI tool(s), e.g., ChatGPT (GPT-4o), Gemini 2.0 Flash, Claude 3.7 Sonnet]
+```
+
+**Prompt(s) Used:**
+
+```
+[Copy the prompt(s) here — include the Gauss-Legendre prompt from §3]
+```
+
+**How AI was used:**
+
+```
+[Obtaining GL nodes/weights, implementing the quadrature, choosing test function, debugging, etc.]
+```

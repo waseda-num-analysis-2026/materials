@@ -23,6 +23,8 @@ Materials are organized by lecture number:
 | `080/` | Nonlinear Equations II: Multi-Dimensional Newton and Root-Finding Comparisons | [Slides](https://waseda-num-analysis-2026.github.io/materials/080/8th.html) · [Handout](https://waseda-num-analysis-2026.github.io/materials/070/nonlinear-equations-handout.html) *(shared with Lecture 7)* | [Watch](https://youtu.be/QDSGrXRyjII) |
 | `090/` | Midterm Follow-up and Corrections Report | [Slides](https://waseda-num-analysis-2026.github.io/materials/090/9th.html) · [Scoring Scheme](https://waseda-num-analysis-2026.github.io/materials/090/midterm2026_scoring_scheme.html) | — |
 | `100/` | Numerical Integration (Lectures 10–12) | [Slides](https://waseda-num-analysis-2026.github.io/materials/100/10th.html) · [Handout](https://waseda-num-analysis-2026.github.io/materials/100/integration-handout.html) · [Final Presentation & Report](https://waseda-num-analysis-2026.github.io/materials/100/final-presentation-and-report.html) | [Watch](https://youtu.be/mUJ0acSKcyk) |
+| `110/` | Lecture 11 — Simpson's Rule, Lagrange, Newton-Cotes | [Slides](https://waseda-num-analysis-2026.github.io/materials/110/11th.html) · [Assignment](110/assignment/) (copy `README.md`, `ex11-1.qmd`, `ex11-2.qmd` to Ex 10–12 repo root; overwrite `README.md`) | — |
+| `120/` | Lecture 12 — Hermite, Gauss Quadrature | [Slides](https://waseda-num-analysis-2026.github.io/materials/120/12th.html) · [Assignment](120/assignment/) (copy `README.md`, `ex12-1.qmd`, `ex12-2.qmd` to Ex 10–12 repo root; overwrite `README.md`) | — |
 | `past_exams/` | Past Exams | [2025 Midterm](https://waseda-num-analysis-2026.github.io/materials/past_exams/2025_midterm/2025_midterm.pdf) | — |
 
 ## Tutorial Videos
@@ -72,6 +74,12 @@ Short how-to videos to help you get started:
 | 9.1 | Midterm Examination Corrections Report | [Access](https://classroom.github.com/a/7XdGlSPT) | TBA |
 | 10.0 | Evolve the Shared Handout with AI (≥ 3 Q&A in `integration-handout-jp.qmd`, §1–3, see [`AI_TUTOR.md`](AI_TUTOR.md)) | same repo as 10.1 | **Jun 25, 23:59** |
 | 10.1 | Trapezoidal Rule | [Access](https://classroom.github.com/a/lbBXM8pn) | **Jun 25, 23:59** |
+| 11.0 | Evolve handout §4–5 (≥ 3 Q&A) | same repo as 10.1 | **Jun 25, 23:59** |
+| 11.1 | Simpson's Rule — after `git pull`, copy `110/assignment/` (`README.md`, `ex11-1.qmd`, `ex11-2.qmd`) to Ex 10 repo root; overwrite `README.md` | same repo as 10.1 | **Jun 25, 23:59** |
+| 11.2 | Runge's Phenomenon AI comparison — same `110/assignment/` copy step as 11.1 | same repo as 10.1 | **Jun 25, 23:59** |
+| 12.0 | Evolve handout §6–7 (≥ 3 Q&A) | same repo as 10.1 | **Jul 9, 23:59** |
+| 12.1 | Gauss-Chebyshev — after `git pull`, copy `120/assignment/` (`README.md`, `ex12-1.qmd`, `ex12-2.qmd`) to repo root; overwrite `README.md` | same repo as 10.1 | **Jul 9, 23:59** |
+| 12.2 | Gauss-Legendre comparison — same `120/assignment/` copy step as 12.1 | same repo as 10.1 | **Jul 9, 23:59** |
 | Advanced Challenge 1 | DK Method Research Challenge (optional, advanced; free-form, no upper limit on extra points) | [Access](https://classroom.github.com/a/nEoZCh1-) | **July 31, 23:59** |
 
 ## Past Exams

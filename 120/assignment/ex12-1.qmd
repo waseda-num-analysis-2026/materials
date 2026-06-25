@@ -1,0 +1,196 @@
+---
+title: "Exercise 12.1 — Gauss-Chebyshev Quadrature"
+subtitle: "Numerical Analysis 2026 — Lecture 12"
+author: "Global Center for Science and Engineering, Waseda University"
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    code-tools: true
+    highlight-style: github
+execute:
+  echo: true
+  warning: false
+jupyter: python3
+---
+
+## Problem
+
+Implement **Gauss-Chebyshev quadrature** and investigate how the
+approximation improves as the number of sampling points $n$ increases.
+
+**Background:**  
+For an integral of the form
+
+$$
+\int_{-1}^{1} \frac{g(x)}{\sqrt{1 - x^2}}\,dx,
+$$
+
+the $n$-point **Gauss-Chebyshev quadrature** (first kind) uses nodes
+
+$$
+x_k = \cos\!\left(\frac{(2k-1)\pi}{2n}\right), \quad k = 1, 2, \ldots, n,
+$$
+
+and equal weights $w_k = \pi / n$, giving the approximation
+
+$$
+\int_{-1}^{1} \frac{g(x)}{\sqrt{1-x^2}}\,dx \;\approx\; \frac{\pi}{n}\sum_{k=1}^{n} g(x_k).
+$$
+
+To approximate a **general smooth integral**
+
+$$
+\int_{-1}^{1} f(x)\,dx,
+$$
+
+write $f(x) = (1/\sqrt{1-x^2}) \cdot \bigl(f(x)\sqrt{1-x^2}\bigr)$ and define the
+**Chebyshev numerator**
+
+$$
+g(x) = f(x)\sqrt{1-x^2}.
+$$
+
+You choose $f(x)$; $g(x)$ is an auxiliary function used only to apply the
+Gauss-Chebyshev formula above (which approximates
+$\int_{-1}^{1} g(x)/\sqrt{1-x^2}\,dx = \int_{-1}^{1} f(x)\,dx$).
+
+**Tasks:**
+
+1. Choose an original integrand $f(x)$ (your own choice — any smooth
+   function is fine).  State the problem clearly in §1.
+2. Implement `gauss_chebyshev` in §2.
+3. Execute the quadrature for $n = 1, 2, 4, 8, 16, 32$ and plot the
+   error versus $n$ in §3.
+
+AI is permitted.
+
+---
+
+## 1. Problem Statement
+
+Describe the integral you want to compute.
+
+| Item | Value |
+|---|---|
+| Original integrand $f(x)$ | *[your choice, e.g., $f(x) = e^x$]* |
+| Chebyshev numerator $g(x) = f(x)\sqrt{1-x^2}$ | *[define from your $f$]* |
+| Interval | $[-1, 1]$ |
+| Exact / reference value of $\int_{-1}^{1} f(x)\,dx$ | *[compute analytically or use `scipy.integrate.quad`]* |
+
+*[Write a brief description of your chosen problem here.]*
+
+---
+
+## 2. Implementation
+
+```{python}
+import numpy as np
+import matplotlib.pyplot as plt
+
+
+def gauss_chebyshev(g, n):
+    """n-point Gauss-Chebyshev quadrature of the first kind.
+
+    Approximates ∫_{-1}^{1} g(x) / sqrt(1 - x²) dx.
+    If g(x) = f(x) sqrt(1 - x²), this equals ∫_{-1}^{1} f(x) dx.
+
+    Parameters
+    ----------
+    g : callable   — Chebyshev numerator (without the 1/sqrt(1-x²) weight)
+    n : int        — number of quadrature points
+
+    Returns
+    -------
+    float — approximate value of ∫_{-1}^{1} g(x)/sqrt(1-x²) dx
+            (equals ∫_{-1}^{1} f(x) dx when g = f sqrt(1-x²))
+    """
+    # TODO: compute the n Chebyshev nodes x_k = cos((2k-1)π / (2n))
+    # TODO: evaluate g at each node and sum with weight π/n
+    pass  # replace with your implementation
+
+
+# TODO: define your original integrand f(x) and the exact value of ∫_{-1}^{1} f(x) dx
+def f(x):
+    return  # replace with your choice
+
+
+def g(x):
+    return f(x) * np.sqrt(1 - x**2)
+
+
+exact = None  # exact value of ∫_{-1}^{1} f(x) dx
+
+print("Gauss-Chebyshev quadrature")
+print(f"{'n':<6} {'Approximation':<18} {'Absolute error':<18}")
+print("-" * 44)
+for n in [1, 2, 4, 8, 16, 32]:
+    approx = gauss_chebyshev(g, n)
+    error  = abs(approx - exact)
+    print(f"{n:<6} {approx:<18.10f} {error:<18.2e}")
+```
+
+---
+
+## 3. Convergence Plot
+
+```{python}
+n_values = np.array([1, 2, 4, 8, 16, 32, 64])
+errors = []
+
+for n in n_values:
+    approx = gauss_chebyshev(g, n)
+    errors.append(abs(approx - exact))
+
+plt.figure(figsize=(7, 5))
+plt.semilogy(n_values, errors, "bo-", label="Gauss-Chebyshev error")
+plt.xlabel("Number of nodes $n$")
+plt.ylabel("Absolute error")
+plt.title("Convergence of Gauss-Chebyshev Quadrature")
+plt.legend()
+plt.grid(True, alpha=0.3)
+plt.tight_layout()
+plt.show()
+```
+
+---
+
+## 4. Discussion
+
+1. How quickly does the error decrease as $n$ grows?  Does it appear to
+   converge exponentially?
+2. Compare this convergence behaviour to the $O(h^4)$ rate of Simpson's
+   rule from Ex 11.1.  Which rule is more efficient for smooth
+   integrands?
+3. What happens if $f(x)$ has a singularity or is not smooth?
+
+*[Write your discussion here.]*
+
+---
+
+## AI Usage
+
+**Note:** If you used AI, change `[ ]` to `[x]` for the applicable items.
+
+- [ ] I did **not** use AI assistance for this exercise.
+- [ ] I used AI assistance for this exercise.
+
+If you used AI, please specify:
+
+**AI Tool(s) Used:**
+
+```
+[Name of AI tool(s)]
+```
+
+**Prompt(s) Used:**
+
+```
+[Copy the prompt(s) here]
+```
+
+**How AI was used:**
+
+```
+[Briefly describe how you used AI: derivation of nodes/weights, debugging, plotting, etc.]
+```
