@@ -78,12 +78,12 @@ git pull</code></pre>
 
 <div style="padding-left: 2em; margin-top: 0.5em; margin-bottom: 0.4em;">
   <strong>Repository:</strong> <a href="https://classroom.github.com/a/lbBXM8pn">Ex 10 — GitHub Classroom</a>
-  &nbsp;&nbsp;|&nbsp;&nbsp; <strong>Submit:</strong> <code>integration-handout-jp.qmd</code> (your edited copy)
+  &nbsp;&nbsp;|&nbsp;&nbsp; <strong>Submit:</strong> <code>integration-handout.qmd</code> (your edited copy)
   &nbsp;&nbsp;|&nbsp;&nbsp; <strong style="color: #d84315;">Deadline: 7/9</strong>
 </div>
 
 Continue from your Ex 10.0 / Ex 11.0 work on
-<code>integration-handout-jp.qmd</code> in the same repository.
+<code>integration-handout.qmd</code> in the same repository.
 Add at least **3 additional Q&A blocks** on **§6--7** (Hermite interpolation,
 Gaussian quadrature) using the protocol in
 [`AI_TUTOR.md`](https://github.com/waseda-num-analysis-2026/materials/blob/main/AI_TUTOR.md),
@@ -142,7 +142,7 @@ Choose any smooth $f(x)$; compare **trapezoidal**, **Simpson**, and **Gauss-Lege
       <p>Use the same <a href="https://classroom.github.com/a/lbBXM8pn"><strong>Ex 10 GitHub Classroom</strong></a> repository from Lectures 10--11.</p>
       <ul>
         <li>After <code>git pull</code>, copy <code>120/assignment/README.md</code>, <code>ex12-1.qmd</code>, and <code>ex12-2.qmd</code> to your repo root — <strong>overwrite</strong> <code>README.md</code> (<code>cp 120/assignment/{README.md,ex12-1.qmd,ex12-2.qmd} /path/to/your-ex10-12-repo/</code>)</li>
-        <li>For <strong>Ex 12.0</strong>: continue editing <code>integration-handout-jp.qmd</code>, add &ge; 3 Q&amp;A blocks on &sect;6--7, and keep your prior Q&amp;A from Ex 10.0 / Ex 11.0</li>
+        <li>For <strong>Ex 12.0</strong>: continue editing <code>integration-handout.qmd</code>, add &ge; 3 Q&amp;A blocks on &sect;6--7, and keep your prior Q&amp;A from Ex 10.0 / Ex 11.0</li>
         <li>For <strong>Ex 12.1</strong> and <strong>Ex 12.2</strong>: edit the copied <code>ex12-1.qmd</code> and <code>ex12-2.qmd</code> (details in repo <code>README.md</code>)</li>
         <li><strong>IMPORTANT:</strong> render each submission file and push the rendered output together with any <code>*_files/</code> directories</li>
         <li><strong>IMPORTANT:</strong> after pushing, open your GitHub repository in a browser and confirm the rendered files are visible</li>

@@ -72,11 +72,11 @@ Short how-to videos to help you get started:
 | 8.1 | Multi-Dimensional Newton's Method | [Access](https://classroom.github.com/a/vsuagkPV) | **June 11, 23:59** |
 | 8.2 | DK Method | same repo as 8.1 | **June 14, 23:59** |
 | 9.1 | Midterm Examination Corrections Report | [Access](https://classroom.github.com/a/7XdGlSPT) | TBA |
-| 10.0 | Evolve the Shared Handout with AI (≥ 3 Q&A in `integration-handout-jp.qmd`, §1–3, see [`AI_TUTOR.md`](AI_TUTOR.md)) | same repo as 10.1 | **Jun 25, 23:59** |
+| 10.0 | Evolve the Shared Handout with AI (≥ 3 Q&A in `integration-handout.qmd`, §1–3, see [`AI_TUTOR.md`](AI_TUTOR.md)) | same repo as 10.1 | **Jun 25, 23:59** |
 | 10.1 | Trapezoidal Rule | [Access](https://classroom.github.com/a/lbBXM8pn) | **Jun 25, 23:59** |
-| 11.0 | Evolve handout §4–5 (≥ 3 Q&A) | same repo as 10.1 | **Jun 25, 23:59** |
-| 11.1 | Simpson's Rule — after `git pull`, copy `110/assignment/` (`README.md`, `ex11-1.qmd`, `ex11-2.qmd`) to Ex 10 repo root; overwrite `README.md` | same repo as 10.1 | **Jun 25, 23:59** |
-| 11.2 | Runge's Phenomenon AI comparison — same `110/assignment/` copy step as 11.1 | same repo as 10.1 | **Jun 25, 23:59** |
+| 11.0 | Evolve handout §4–5 (≥ 3 Q&A) | same repo as 10.1 | **Jul 2, 23:59** |
+| 11.1 | Simpson's Rule — after `git pull`, copy `110/assignment/` (`README.md`, `ex11-1.qmd`, `ex11-2.qmd`) to Ex 10 repo root; overwrite `README.md` | same repo as 10.1 | **Jul 2, 23:59** |
+| 11.2 | Runge's Phenomenon AI comparison — same `110/assignment/` copy step as 11.1 | same repo as 10.1 | **Jul 2, 23:59** |
 | 12.0 | Evolve handout §6–7 (≥ 3 Q&A) | same repo as 10.1 | **Jul 9, 23:59** |
 | 12.1 | Gauss-Chebyshev — after `git pull`, copy `120/assignment/` (`README.md`, `ex12-1.qmd`, `ex12-2.qmd`) to repo root; overwrite `README.md` | same repo as 10.1 | **Jul 9, 23:59** |
 | 12.2 | Gauss-Legendre comparison — same `120/assignment/` copy step as 12.1 | same repo as 10.1 | **Jul 9, 23:59** |

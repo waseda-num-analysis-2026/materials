@@ -28,12 +28,12 @@ Or download from GitHub:
 
 | Exercise | File | What to do |
 |---|---|---|
-| **Ex 12.0** | `integration-handout-jp.qmd` | Continue editing your copy. Add **≥ 3 Q&A blocks** on handout **§6–7** (Hermite interpolation, Gauss quadrature). **Do not delete** prior Q&A from Ex 10.0 / Ex 11.0. |
+| **Ex 12.0** | `integration-handout.qmd` | Continue editing your copy. Add **≥ 3 Q&A blocks** on handout **§6–7** (Hermite interpolation, Gauss quadrature). **Do not delete** prior Q&A from Ex 10.0 / Ex 11.0. |
 | **Ex 12.1** | `ex12-1.qmd` | Complete Gauss-Chebyshev quadrature. |
 | **Ex 12.2** | `ex12-2.qmd` | Complete comparison of trapezoidal, Simpson, and Gauss-Legendre methods. |
 
 Handout reference:
-[`100/integration-handout-jp.qmd`](https://github.com/waseda-num-analysis-2026/materials/blob/main/100/integration-handout-jp.qmd)
+[`100/integration-handout.qmd`](https://github.com/waseda-num-analysis-2026/materials/blob/main/100/integration-handout.qmd)
 · Q&A protocol:
 [`AI_TUTOR.md`](https://github.com/waseda-num-analysis-2026/materials/blob/main/AI_TUTOR.md)
 
@@ -71,7 +71,7 @@ quarto render ex12-2.qmd
 You may push as many times as you like before the deadline; the **last commit before the deadline** will be graded.
 
 ```bash
-git add integration-handout-jp.qmd
+git add integration-handout.qmd
 git add ex12-1.qmd ex12-2.qmd
 git add ex12-1.html ex12-2.html ex12-1_files ex12-2_files
 git commit -m "Submit Ex 12"
