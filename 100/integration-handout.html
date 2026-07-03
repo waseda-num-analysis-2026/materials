@@ -6,7 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2026-06-19">
+<meta name="dcterms.date" content="2026-07-03">
 
 <title>Lectures 10–12 — Numerical Integration</title>
 <style>
@@ -170,7 +170,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">June 19, 2026</p>
+      <p class="date">July 3, 2026</p>
     </div>
   </div>
   
@@ -275,7 +275,7 @@ a_i = a + ih.
 </div>
 </div>
 </div>
-<div id="887df83b" class="cell" data-execution_count="1">
+<div id="4efa1fc4" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -288,7 +288,7 @@ a_i = a + ih.
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>        integral <span class="op">+=</span> f(x_mid) <span class="op">*</span> h</span>
 <span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> integral</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="4e862b61" class="cell" data-execution_count="2">
+<div id="115c8d4b" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Integrate f(x) = sin(x) over [0, 2]: exact value = 1 - cos(2) ≈ 1.416147</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>f <span class="op">=</span> np.sin</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>exact <span class="op">=</span> <span class="dv">1</span> <span class="op">-</span> np.cos(<span class="dv">2</span>)</span>
@@ -337,7 +337,7 @@ I \approx \sum_{i=0}^{n-1} \frac{h}{2}\bigl[f(a_i)+f(b_i)\bigr],
 </div>
 </div>
 </div>
-<div id="83fca2a6" class="cell" data-execution_count="3">
+<div id="602d3469" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> trapezoidal_rule(f, a, b, n):</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Numerical integration by the trapezoidal rule."""</span></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    h <span class="op">=</span> (b <span class="op">-</span> a) <span class="op">/</span> n</span>
@@ -348,7 +348,7 @@ I \approx \sum_{i=0}^{n-1} \frac{h}{2}\bigl[f(a_i)+f(b_i)\bigr],
 <span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>        integral <span class="op">+=</span> (h <span class="op">/</span> <span class="dv">2</span>) <span class="op">*</span> (f(x_left) <span class="op">+</span> f(x_right))</span>
 <span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> integral</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="85a65ff0" class="cell" data-execution_count="4">
+<div id="fc55ed03" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Exact value: </span><span class="sc">{</span>exact<span class="sc">:.6f}</span><span class="ss">"</span>)</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span><span class="st">'n'</span><span class="sc">:&lt;8}</span><span class="ss"> </span><span class="sc">{</span><span class="st">'Approximation'</span><span class="sc">:&lt;15}</span><span class="ss"> </span><span class="sc">{</span><span class="st">'Error'</span><span class="sc">:&lt;15}</span><span class="ss">"</span>)</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> n <span class="kw">in</span> [<span class="dv">4</span>, <span class="dv">8</span>, <span class="dv">16</span>, <span class="dv">32</span>, <span class="dv">64</span>]:</span>
@@ -371,7 +371,7 @@ n        Approximation   Error
 <section id="sec-error-comparison" class="level3" data-number="1.3.1">
 <h3 data-number="1.3.1" class="anchored" data-anchor-id="sec-error-comparison"><span class="header-section-number">1.3.1</span> Comparison of the Rectangular and Trapezoidal Rules</h3>
 <p>We examine the error behavior for <span class="math inline">\(f(x) = \sin x\)</span> on <span class="math inline">\([0, 2]\)</span>.</p>
-<div id="b17cc7ed" class="cell" data-execution_count="5">
+<div id="925c9ef9" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span><span class="st">'n'</span><span class="sc">:&lt;8}</span><span class="ss"> </span><span class="sc">{</span><span class="st">'Rectangular error'</span><span class="sc">:&lt;20}</span><span class="ss"> </span><span class="sc">{</span><span class="st">'Trapezoidal error'</span><span class="sc">:&lt;20}</span><span class="ss">"</span>)</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> n <span class="kw">in</span> [<span class="dv">32</span>, <span class="dv">64</span>, <span class="dv">128</span>, <span class="dv">256</span>]:</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    e_rect <span class="op">=</span> <span class="bu">abs</span>(rectangular_rule(f, a, b, n) <span class="op">-</span> exact)</span>
@@ -487,7 +487,7 @@ L_2(x)=\frac{(x-x_0)(x-x_1)}{(x_2-x_0)(x_2-x_1)}.
 \int_{x_0}^{x_2} f(x)\,dx \approx \frac{h}{3}\bigl[f(x_0) + 4f(x_1) + f(x_2)\bigr].
 \]</span></p>
 <p>(<span class="math inline">\(h\)</span> is the spacing between adjacent nodes; the integration interval has width <span class="math inline">\(2h\)</span>.)</p>
-<div id="41ae60e3" class="cell" data-execution_count="6">
+<div id="3ea6f225" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> simpsons_rule(f, a, b, n):</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co">    Numerical integration by Simpson's rule.</span></span>
@@ -504,7 +504,7 @@ L_2(x)=\frac{(x-x_0)(x-x_1)}{(x_2-x_0)(x_2-x_1)}.
 <span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>        integral <span class="op">+=</span> (h <span class="op">/</span> <span class="dv">3</span>) <span class="op">*</span> (f(x0) <span class="op">+</span> <span class="dv">4</span> <span class="op">*</span> f(x1) <span class="op">+</span> f(x2))</span>
 <span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> integral</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="f31e9659" class="cell" data-execution_count="7">
+<div id="4626936e" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"f(x) = sin(x), [0, 2],  exact = </span><span class="sc">{</span>exact<span class="sc">:.8f}</span><span class="ss">"</span>)</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span><span class="st">'n'</span><span class="sc">:&lt;8}</span><span class="ss"> </span><span class="sc">{</span><span class="st">'Rectangular err'</span><span class="sc">:&lt;18}</span><span class="ss"> </span><span class="sc">{</span><span class="st">'Trapezoidal err'</span><span class="sc">:&lt;18}</span><span class="ss"> </span><span class="sc">{</span><span class="st">'Simpson err'</span><span class="sc">:&lt;15}</span><span class="ss">"</span>)</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> n <span class="kw">in</span> [<span class="dv">4</span>, <span class="dv">8</span>, <span class="dv">16</span>, <span class="dv">32</span>, <span class="dv">64</span>]:</span>
@@ -522,7 +522,7 @@ n        Rectangular err    Trapezoidal err    Simpson err
 64       5.76e-05           1.15e-04           7.50e-09       </code></pre>
 </div>
 </div>
-<div id="af0889d5" class="cell" data-execution_count="8">
+<div id="228e3052" class="cell" data-execution_count="8">
 <details class="code-fold">
 <summary>Show convergence plot code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>n_vals <span class="op">=</span> np.array([<span class="dv">4</span>, <span class="dv">8</span>, <span class="dv">16</span>, <span class="dv">32</span>, <span class="dv">64</span>, <span class="dv">128</span>])</span>
@@ -607,7 +607,7 @@ L_k(x) := \prod_{\substack{j=0\\j\neq k}}^{n} \frac{x-x_j}{x_k-x_j} \quad (k=0,1
 <p>As the degree <span class="math inline">\(n\)</span> increases, the weights <span class="math inline">\(\alpha_i\)</span> can oscillate wildly, leading to <strong>Runge’s phenomenon</strong> (large oscillations near the endpoints of equally-spaced high-degree interpolation). High-order Newton-Cotes formulas are therefore not always useful in practice. <strong>Gaussian quadrature</strong> (§7) provides much higher accuracy with fewer nodes and avoids this issue.</p>
 </div>
 </div>
-<div id="2a76b9d2" class="cell" data-execution_count="9">
+<div id="1aca24b7" class="cell" data-execution_count="9">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Visualization of Lagrange interpolation and interpolation error (n=5, equally spaced nodes)</span></span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> lagrange_interp(x_nodes, f_nodes, x):</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Evaluate the Lagrange interpolating polynomial at x."""</span></span>
@@ -734,7 +734,11 @@ q_{2n+1}(x) = \sum_{j=0}^{n}\bigl[f(x_j)H_j(x) + f'(x_j)K_j(x)\bigr],
 <p><span class="math display">\[
 (p, q)_w := \int_a^b p(x)\,q(x)\,w(x)\,dx
 \]</span></p>
-<p>for a weight function <span class="math inline">\(w(x) &gt; 0\)</span> on <span class="math inline">\((a,b)\)</span>.</p>
+<p>for a <strong>weight function</strong> <span class="math inline">\(w(x)\)</span> satisfying:</p>
+<ol type="1">
+<li><span class="math inline">\(w(x) &gt; 0\)</span> for <span class="math inline">\(x \in (a,b)\)</span> (positivity),</li>
+<li><span class="math inline">\(\int_a^b |x|^k\,w(x)\,dx &lt; \infty\)</span> for all integers <span class="math inline">\(k \ge 0\)</span> (integrability of moments).</li>
+</ol>
 <div class="callout callout-style-default callout-note callout-titled" title="System of orthogonal polynomials">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -778,7 +782,7 @@ P_k(x) = \frac{1}{2^k k!}\frac{d^k}{dx^k}(x^2-1)^k \quad (k \ge 1).
 \dfrac{2}{2i+1} &amp; (i = j).
 \end{cases}
 \]</span></p>
-<div id="f35715c7" class="cell" data-execution_count="10">
+<div id="20a48a0e" class="cell" data-execution_count="10">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> chebyshev_poly(n, x):</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Compute the Chebyshev polynomial T_n(x) via the recurrence relation."""</span></span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> n <span class="op">==</span> <span class="dv">0</span>:</span>
@@ -855,6 +859,47 @@ P_k(x) = \frac{1}{2^k k!}\frac{d^k}{dx^k}(x^2-1)^k \quad (k \ge 1).
 </ol>
 </div>
 </div>
+<p>We now return to the quadrature formula based on Hermite interpolation (<a href="#sec-hermite" class="quarto-xref">Section&nbsp;3.1</a>), this time for the <strong>weighted</strong> integral. Approximating</p>
+<p><span class="math display">\[
+\int_a^b f(x)\,w(x)\,dx \approx \int_a^b q_{2n+1}(x)\,w(x)\,dx,
+\]</span></p>
+<p>where <span class="math inline">\(q_{2n+1}\)</span> is the Hermite interpolating polynomial of <span class="math inline">\(f\)</span> at the <span class="math inline">\(n+1\)</span> nodes <span class="math inline">\(x_0, \ldots, x_n\)</span>, gives the <strong>weighted Hermite quadrature formula</strong></p>
+<p><span class="math display">\[
+\int_a^b q_{2n+1}(x)\,w(x)\,dx
+= \sum_{i=0}^{n}\bigl[W_i\,f(x_i) + V_i\,f'(x_i)\bigr],
+\]</span></p>
+<p><span class="math display">\[
+W_i := \int_a^b H_i(x)\,w(x)\,dx, \qquad
+V_i := \int_a^b K_i(x)\,w(x)\,dx.
+\]</span></p>
+<p>These are the weighted counterparts of the <span class="math inline">\(\alpha_i\)</span> and <span class="math inline">\(\beta_i\)</span> in <a href="#sec-hermite-basis" class="quarto-xref">Section&nbsp;3.1.1</a> (they coincide when <span class="math inline">\(w \equiv 1\)</span>).</p>
+<div class="callout callout-style-default callout-note callout-titled" title="Remark: integrals without an explicit weight">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Remark: integrals without an explicit weight
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>To approximate <span class="math inline">\(\int_a^b g(x)\,dx\)</span> with no explicit weight, simply take <span class="math inline">\(f = g\)</span> and <span class="math inline">\(w \equiv 1\)</span> (as in Gauss-Legendre quadrature). Conversely, to exploit a non-unity weight <span class="math inline">\(w^*(x)\)</span>, define <span class="math inline">\(f(x) = g(x)/w^*(x)\)</span> so that the integral becomes <span class="math inline">\(\int_a^b f(x)\,w^*(x)\,dx\)</span>.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-important callout-titled" title="Key question">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>Key question
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>How do we choose the nodes <span class="math inline">\(x_i\)</span> so that <span class="math inline">\(V_i = 0\)</span> for all <span class="math inline">\(i\)</span>?</strong></p>
+<p>If we can achieve <span class="math inline">\(V_i = 0\)</span>, the derivative values <span class="math inline">\(f'(x_i)\)</span> are no longer needed, and the formula simplifies dramatically. The next theorem answers this question.</p>
+</div>
+</div>
 <div class="callout callout-style-default callout-note callout-titled" title="Theorem 7.2 (Node selection for Gaussian quadrature)">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -875,11 +920,25 @@ V_i = \int_a^b K_i(x)\,w(x)\,dx
 = \frac{1}{C_i}(\phi_{n+1},\,L_i)_w = 0.
 \]</span></p>
 <p>Since <span class="math inline">\(L_i(x)\)</span> is a degree-<span class="math inline">\(n\)</span> polynomial and <span class="math inline">\(\phi_{n+1}\)</span> is orthogonal to all polynomials of degree <span class="math inline">\(\le n\)</span>, we have <span class="math inline">\((\phi_{n+1}, L_i)_w = 0\)</span>. <span class="math inline">\(\square\)</span></p>
-<p>When <span class="math inline">\(V_i = 0\)</span>, the weight <span class="math inline">\(W_i\)</span> simplifies to</p>
+<p>When <span class="math inline">\(V_i = 0\)</span>, the formula involves only the function values <span class="math inline">\(f(x_i)\)</span>:</p>
 <p><span class="math display">\[
-W_i = \int_a^b L_i(x)\,w(x)\,dx \quad (&gt; 0)
+\int_a^b f(x)\,w(x)\,dx \approx \sum_{i=0}^{n} W_i\,f(x_i).
 \]</span></p>
-<p>(positivity of <span class="math inline">\(W_i\)</span> guarantees the stability of Gaussian quadrature).</p>
+<p><strong>Exactness for polynomials of degree <span class="math inline">\(\le 2n+1\)</span>.</strong> If <span class="math inline">\(f\)</span> is a polynomial of degree <span class="math inline">\(\le 2n+1\)</span>, then by the uniqueness of Hermite interpolation <span class="math inline">\(q_{2n+1} \equiv f\)</span>, so the quadrature formula is <strong>exact</strong>: <span class="math inline">\(\int_a^b f(x)\,w(x)\,dx = \sum_{i=0}^{n} W_i\,f(x_i)\)</span>.</p>
+<p><strong>A simpler expression for <span class="math inline">\(W_i\)</span>.</strong> Apply this exactness to <span class="math inline">\(f = L_k\)</span> (a polynomial of degree <span class="math inline">\(n \le 2n+1\)</span>). Since <span class="math inline">\(L_k(x_i) = \delta_{ki}\)</span>,</p>
+<p><span class="math display">\[
+\int_a^b L_k(x)\,w(x)\,dx = \sum_{i=0}^{n} W_i\,L_k(x_i) = W_k.
+\]</span></p>
+<p>Hence</p>
+<p><span class="math display">\[
+W_i = \int_a^b L_i(x)\,w(x)\,dx,
+\]</span></p>
+<p>which no longer involves the Hermite basis <span class="math inline">\(H_i\)</span>.</p>
+<p><strong>Positivity of <span class="math inline">\(W_i\)</span>.</strong> Applying the exactness to <span class="math inline">\(f = L_k^2\)</span> (a polynomial of degree <span class="math inline">\(2n \le 2n+1\)</span>) gives</p>
+<p><span class="math display">\[
+W_k = \sum_{i=0}^{n} W_i\,L_k(x_i)^2 = \int_a^b L_k(x)^2\,w(x)\,dx &gt; 0.
+\]</span></p>
+<p>Positivity of the weights guarantees the numerical stability of Gaussian quadrature.</p>
 <div class="callout callout-style-default callout-note callout-titled" title="Gaussian quadrature formula">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -926,7 +985,7 @@ W_i = \int_a^b L_i(x)\,w(x)\,dx \quad (&gt; 0)
 \int_{-1}^{1} f(x)\,\frac{dx}{\sqrt{1-x^2}}
 \approx \frac{\pi}{n+1}\sum_{i=0}^{n} f\!\left(\cos\!\left(\frac{(2i+1)\pi}{2(n+1)}\right)\right).
 \]</span></p>
-<div id="62b5e4b4" class="cell" data-execution_count="11">
+<div id="32bf9d46" class="cell" data-execution_count="11">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> gauss_chebyshev(f, n_nodes):</span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="co">    Gauss-Chebyshev quadrature: compute ∫_{-1}^{1} f(x)/√(1-x²) dx.</span></span>
@@ -973,7 +1032,7 @@ W_i = \int_a^b L_i(x)\,w(x)\,dx \quad (&gt; 0)
 <p><span class="math display">\[
 \int_a^b g(x)\,dx = \frac{b-a}{2}\int_{-1}^{1} g\!\left(\frac{(b-a)t+(a+b)}{2}\right)dt.
 \]</span></p>
-<div id="9f16a2ff" class="cell" data-execution_count="12">
+<div id="0c8c3310" class="cell" data-execution_count="12">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> legendre_poly_and_deriv(n, x):</span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Return P_n(x) and P'_n(x) via the recurrence relation."""</span></span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> n <span class="op">==</span> <span class="dv">0</span>:</span>
@@ -1020,7 +1079,7 @@ W_i = \int_a^b L_i(x)\,w(x)\,dx \quad (&gt; 0)
 <span id="cb17-44"><a href="#cb17-44" aria-hidden="true" tabindex="-1"></a>    x_transformed <span class="op">=</span> <span class="fl">0.5</span> <span class="op">*</span> (b <span class="op">-</span> a) <span class="op">*</span> nodes <span class="op">+</span> <span class="fl">0.5</span> <span class="op">*</span> (a <span class="op">+</span> b)</span>
 <span id="cb17-45"><a href="#cb17-45" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="fl">0.5</span> <span class="op">*</span> (b <span class="op">-</span> a) <span class="op">*</span> np.dot(weights, f(x_transformed))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="709347bd" class="cell" data-execution_count="13">
+<div id="b4b63b2f" class="cell" data-execution_count="13">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Verify with f(x) = sin(x) on [0, 2]</span></span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"f(x) = sin(x), [0, 2],  exact = </span><span class="sc">{</span>exact<span class="sc">:.10f}</span><span class="ss">"</span>)</span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span><span class="st">'# nodes'</span><span class="sc">:&lt;10}</span><span class="ss"> </span><span class="sc">{</span><span class="st">'Approximation'</span><span class="sc">:&lt;22}</span><span class="ss"> </span><span class="sc">{</span><span class="st">'Error'</span><span class="sc">:&lt;15}</span><span class="ss">"</span>)</span>
@@ -1035,11 +1094,11 @@ W_i = \int_a^b L_i(x)\,w(x)\,dx \quad (&gt; 0)
 4          1.416146600161         2.36e-07       
 5          1.416146837213         6.66e-10       
 6          1.416146836546         1.27e-12       
-8          1.416146836547         0.00e+00       </code></pre>
+8          1.416146836547         2.22e-16       </code></pre>
 </div>
 </div>
 <p>Gauss-Legendre quadrature achieves very high accuracy with very few nodes. For example, with 5 nodes (<span class="math inline">\(2\times5-1=9\)</span>, exact for polynomials up to degree 9), the result is near machine precision.</p>
-<div id="5d086233" class="cell" data-execution_count="14">
+<div id="a661e87e" class="cell" data-execution_count="14">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Change-of-variables example: ∫_0^1 y² dy via Gauss-Legendre</span></span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Substituting y = (x+1)/2 gives ∫_{-1}^{1} ((x+1)/2)² * (1/2) dx</span></span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>f_transformed <span class="op">=</span> <span class="kw">lambda</span> x: ((x <span class="op">+</span> <span class="dv">1</span>) <span class="op">/</span> <span class="dv">2</span>)<span class="op">**</span><span class="dv">2</span> <span class="op">*</span> <span class="fl">0.5</span></span>
@@ -1051,7 +1110,7 @@ W_i = \int_a^b L_i(x)\,w(x)\,dx \quad (&gt; 0)
 <div class="cell-output cell-output-stdout">
 <pre><code>∫_0^1 y² dy = 0.3333333333
 Gauss-Legendre (3 nodes): 0.3333333333
-Error: 3.89e-16</code></pre>
+Error: 3.33e-16</code></pre>
 </div>
 </div>
 <hr>
@@ -5661,8 +5720,8 @@ Error: 3.89e-16</code></pre>
 <span id="cb22-23"><a href="#cb22-23" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb22-24"><a href="#cb22-24" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">script</span><span class="dt">&gt;</span></span>
 <span id="cb22-25"><a href="#cb22-25" aria-hidden="true" tabindex="-1"></a><span class="bu">window</span><span class="op">.</span><span class="at">__ANNOTATION_V4_AUTOLOAD__</span> <span class="op">=</span> {</span>
-<span id="cb22-26"><a href="#cb22-26" aria-hidden="true" tabindex="-1"></a>  <span class="dt">url</span><span class="op">:</span> <span class="st">"lectures-10-12-integration__placeholder.json"</span><span class="op">,</span></span>
-<span id="cb22-27"><a href="#cb22-27" aria-hidden="true" tabindex="-1"></a>  <span class="dt">enable</span><span class="op">:</span> <span class="kw">false</span><span class="op">,</span></span>
+<span id="cb22-26"><a href="#cb22-26" aria-hidden="true" tabindex="-1"></a>  <span class="dt">url</span><span class="op">:</span> <span class="st">"https://waseda-num-analysis-2026.github.io/materials/100/lectures-10-12-numerical-integration__2026-06-25-16-53-31.json"</span><span class="op">,</span></span>
+<span id="cb22-27"><a href="#cb22-27" aria-hidden="true" tabindex="-1"></a>  <span class="dt">enable</span><span class="op">:</span> <span class="kw">true</span><span class="op">,</span></span>
 <span id="cb22-28"><a href="#cb22-28" aria-hidden="true" tabindex="-1"></a>  <span class="dt">tool</span><span class="op">:</span> <span class="st">"cursor"</span><span class="op">,</span></span>
 <span id="cb22-29"><a href="#cb22-29" aria-hidden="true" tabindex="-1"></a>}<span class="op">;</span></span>
 <span id="cb22-30"><a href="#cb22-30" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;/</span><span class="kw">script</span><span class="dt">&gt;</span></span>
@@ -6152,317 +6211,387 @@ Error: 3.89e-16</code></pre>
 <span id="cb22-532"><a href="#cb22-532" aria-hidden="true" tabindex="-1"></a>(p, q)_w := \int_a^b p(x)\,q(x)\,w(x)\,dx</span>
 <span id="cb22-533"><a href="#cb22-533" aria-hidden="true" tabindex="-1"></a>$$</span>
 <span id="cb22-534"><a href="#cb22-534" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-535"><a href="#cb22-535" aria-hidden="true" tabindex="-1"></a>for a weight function $w(x) &gt; 0$ on $(a,b)$.</span>
+<span id="cb22-535"><a href="#cb22-535" aria-hidden="true" tabindex="-1"></a>for a **weight function** $w(x)$ satisfying:</span>
 <span id="cb22-536"><a href="#cb22-536" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-537"><a href="#cb22-537" aria-hidden="true" tabindex="-1"></a>::: {.callout-note title="System of orthogonal polynomials"}</span>
-<span id="cb22-538"><a href="#cb22-538" aria-hidden="true" tabindex="-1"></a>A sequence of polynomials $<span class="sc">\{</span>\phi_0, \phi_1, \ldots<span class="sc">\}</span>$ on $<span class="co">[</span><span class="ot">a,b</span><span class="co">]</span>$ with</span>
-<span id="cb22-539"><a href="#cb22-539" aria-hidden="true" tabindex="-1"></a>respect to the weight $w(x)$ is called a **system of orthogonal</span>
-<span id="cb22-540"><a href="#cb22-540" aria-hidden="true" tabindex="-1"></a>polynomials** if:</span>
-<span id="cb22-541"><a href="#cb22-541" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-542"><a href="#cb22-542" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>$\phi_k(x)$ is exactly of degree $k$ ($\phi_0$ is a nonzero constant),</span>
-<span id="cb22-543"><a href="#cb22-543" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>$(\phi_i, \phi_j)_w = \int_a^b \phi_i(x)\phi_j(x)w(x)\,dx = 0$ for</span>
-<span id="cb22-544"><a href="#cb22-544" aria-hidden="true" tabindex="-1"></a>   $i \neq j$.</span>
-<span id="cb22-545"><a href="#cb22-545" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb22-546"><a href="#cb22-546" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-547"><a href="#cb22-547" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Representative Orthogonal Polynomials {#sec-orthogonal-polys}</span></span>
-<span id="cb22-548"><a href="#cb22-548" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-549"><a href="#cb22-549" aria-hidden="true" tabindex="-1"></a>**Chebyshev polynomials** (of the first kind) $T_k(x)$: interval $<span class="co">[</span><span class="ot">-1,1</span><span class="co">]</span>$,</span>
-<span id="cb22-550"><a href="#cb22-550" aria-hidden="true" tabindex="-1"></a>weight $w(x) = \dfrac{1}{\sqrt{1-x^2}}$</span>
+<span id="cb22-537"><a href="#cb22-537" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>$w(x) &gt; 0$ for $x \in (a,b)$ (positivity),</span>
+<span id="cb22-538"><a href="#cb22-538" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>$\int_a^b |x|^k\,w(x)\,dx &lt; \infty$ for all integers $k \ge 0$ (integrability of moments).</span>
+<span id="cb22-539"><a href="#cb22-539" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-540"><a href="#cb22-540" aria-hidden="true" tabindex="-1"></a>::: {.callout-note title="System of orthogonal polynomials"}</span>
+<span id="cb22-541"><a href="#cb22-541" aria-hidden="true" tabindex="-1"></a>A sequence of polynomials $<span class="sc">\{</span>\phi_0, \phi_1, \ldots<span class="sc">\}</span>$ on $<span class="co">[</span><span class="ot">a,b</span><span class="co">]</span>$ with</span>
+<span id="cb22-542"><a href="#cb22-542" aria-hidden="true" tabindex="-1"></a>respect to the weight $w(x)$ is called a **system of orthogonal</span>
+<span id="cb22-543"><a href="#cb22-543" aria-hidden="true" tabindex="-1"></a>polynomials** if:</span>
+<span id="cb22-544"><a href="#cb22-544" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-545"><a href="#cb22-545" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>$\phi_k(x)$ is exactly of degree $k$ ($\phi_0$ is a nonzero constant),</span>
+<span id="cb22-546"><a href="#cb22-546" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>$(\phi_i, \phi_j)_w = \int_a^b \phi_i(x)\phi_j(x)w(x)\,dx = 0$ for</span>
+<span id="cb22-547"><a href="#cb22-547" aria-hidden="true" tabindex="-1"></a>   $i \neq j$.</span>
+<span id="cb22-548"><a href="#cb22-548" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb22-549"><a href="#cb22-549" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-550"><a href="#cb22-550" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Representative Orthogonal Polynomials {#sec-orthogonal-polys}</span></span>
 <span id="cb22-551"><a href="#cb22-551" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-552"><a href="#cb22-552" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb22-553"><a href="#cb22-553" aria-hidden="true" tabindex="-1"></a>T_0(x) = 1, \quad T_1(x) = x, \quad T_{k+1}(x) = 2xT_k(x) - T_{k-1}(x) \quad (k \ge 1).</span>
-<span id="cb22-554"><a href="#cb22-554" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb22-555"><a href="#cb22-555" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-556"><a href="#cb22-556" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb22-557"><a href="#cb22-557" aria-hidden="true" tabindex="-1"></a>(T_i, T_j)_w = \int_{-1}^{1} T_i(x)T_j(x)\frac{dx}{\sqrt{1-x^2}} =</span>
-<span id="cb22-558"><a href="#cb22-558" aria-hidden="true" tabindex="-1"></a>\begin{cases}</span>
-<span id="cb22-559"><a href="#cb22-559" aria-hidden="true" tabindex="-1"></a>0 &amp; (i \neq j),<span class="sc">\\</span></span>
-<span id="cb22-560"><a href="#cb22-560" aria-hidden="true" tabindex="-1"></a>\pi/2 &amp; (i = j \neq 0),<span class="sc">\\</span></span>
-<span id="cb22-561"><a href="#cb22-561" aria-hidden="true" tabindex="-1"></a>\pi &amp; (i = j = 0).</span>
-<span id="cb22-562"><a href="#cb22-562" aria-hidden="true" tabindex="-1"></a>\end{cases}</span>
-<span id="cb22-563"><a href="#cb22-563" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb22-564"><a href="#cb22-564" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-565"><a href="#cb22-565" aria-hidden="true" tabindex="-1"></a>**Legendre polynomials** $P_k(x)$: interval $<span class="co">[</span><span class="ot">-1,1</span><span class="co">]</span>$, weight $w(x) = 1$</span>
-<span id="cb22-566"><a href="#cb22-566" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-567"><a href="#cb22-567" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb22-568"><a href="#cb22-568" aria-hidden="true" tabindex="-1"></a>P_0(x) = 1, \quad</span>
-<span id="cb22-569"><a href="#cb22-569" aria-hidden="true" tabindex="-1"></a>P_k(x) = \frac{1}{2^k k!}\frac{d^k}{dx^k}(x^2-1)^k \quad (k \ge 1).</span>
+<span id="cb22-552"><a href="#cb22-552" aria-hidden="true" tabindex="-1"></a>**Chebyshev polynomials** (of the first kind) $T_k(x)$: interval $<span class="co">[</span><span class="ot">-1,1</span><span class="co">]</span>$,</span>
+<span id="cb22-553"><a href="#cb22-553" aria-hidden="true" tabindex="-1"></a>weight $w(x) = \dfrac{1}{\sqrt{1-x^2}}$</span>
+<span id="cb22-554"><a href="#cb22-554" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-555"><a href="#cb22-555" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb22-556"><a href="#cb22-556" aria-hidden="true" tabindex="-1"></a>T_0(x) = 1, \quad T_1(x) = x, \quad T_{k+1}(x) = 2xT_k(x) - T_{k-1}(x) \quad (k \ge 1).</span>
+<span id="cb22-557"><a href="#cb22-557" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb22-558"><a href="#cb22-558" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-559"><a href="#cb22-559" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb22-560"><a href="#cb22-560" aria-hidden="true" tabindex="-1"></a>(T_i, T_j)_w = \int_{-1}^{1} T_i(x)T_j(x)\frac{dx}{\sqrt{1-x^2}} =</span>
+<span id="cb22-561"><a href="#cb22-561" aria-hidden="true" tabindex="-1"></a>\begin{cases}</span>
+<span id="cb22-562"><a href="#cb22-562" aria-hidden="true" tabindex="-1"></a>0 &amp; (i \neq j),<span class="sc">\\</span></span>
+<span id="cb22-563"><a href="#cb22-563" aria-hidden="true" tabindex="-1"></a>\pi/2 &amp; (i = j \neq 0),<span class="sc">\\</span></span>
+<span id="cb22-564"><a href="#cb22-564" aria-hidden="true" tabindex="-1"></a>\pi &amp; (i = j = 0).</span>
+<span id="cb22-565"><a href="#cb22-565" aria-hidden="true" tabindex="-1"></a>\end{cases}</span>
+<span id="cb22-566"><a href="#cb22-566" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb22-567"><a href="#cb22-567" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-568"><a href="#cb22-568" aria-hidden="true" tabindex="-1"></a>**Legendre polynomials** $P_k(x)$: interval $<span class="co">[</span><span class="ot">-1,1</span><span class="co">]</span>$, weight $w(x) = 1$</span>
+<span id="cb22-569"><a href="#cb22-569" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb22-570"><a href="#cb22-570" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb22-571"><a href="#cb22-571" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-572"><a href="#cb22-572" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb22-573"><a href="#cb22-573" aria-hidden="true" tabindex="-1"></a>(P_i, P_j)_{w=1} = \int_{-1}^{1} P_i(x)P_j(x)\,dx =</span>
-<span id="cb22-574"><a href="#cb22-574" aria-hidden="true" tabindex="-1"></a>\begin{cases}</span>
-<span id="cb22-575"><a href="#cb22-575" aria-hidden="true" tabindex="-1"></a>0 &amp; (i \neq j),<span class="sc">\\</span></span>
-<span id="cb22-576"><a href="#cb22-576" aria-hidden="true" tabindex="-1"></a>\dfrac{2}{2i+1} &amp; (i = j).</span>
-<span id="cb22-577"><a href="#cb22-577" aria-hidden="true" tabindex="-1"></a>\end{cases}</span>
-<span id="cb22-578"><a href="#cb22-578" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb22-579"><a href="#cb22-579" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-582"><a href="#cb22-582" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb22-583"><a href="#cb22-583" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> chebyshev_poly(n, x):</span>
-<span id="cb22-584"><a href="#cb22-584" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Compute the Chebyshev polynomial T_n(x) via the recurrence relation."""</span></span>
-<span id="cb22-585"><a href="#cb22-585" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> n <span class="op">==</span> <span class="dv">0</span>:</span>
-<span id="cb22-586"><a href="#cb22-586" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> np.ones_like(x, dtype<span class="op">=</span><span class="bu">float</span>)</span>
-<span id="cb22-587"><a href="#cb22-587" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> n <span class="op">==</span> <span class="dv">1</span>:</span>
-<span id="cb22-588"><a href="#cb22-588" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> np.array(x, dtype<span class="op">=</span><span class="bu">float</span>)</span>
-<span id="cb22-589"><a href="#cb22-589" aria-hidden="true" tabindex="-1"></a>    T_prev2 <span class="op">=</span> np.ones_like(x, dtype<span class="op">=</span><span class="bu">float</span>)</span>
-<span id="cb22-590"><a href="#cb22-590" aria-hidden="true" tabindex="-1"></a>    T_prev1 <span class="op">=</span> np.array(x, dtype<span class="op">=</span><span class="bu">float</span>)</span>
-<span id="cb22-591"><a href="#cb22-591" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">2</span>, n <span class="op">+</span> <span class="dv">1</span>):</span>
-<span id="cb22-592"><a href="#cb22-592" aria-hidden="true" tabindex="-1"></a>        T_curr <span class="op">=</span> <span class="dv">2</span> <span class="op">*</span> x <span class="op">*</span> T_prev1 <span class="op">-</span> T_prev2</span>
-<span id="cb22-593"><a href="#cb22-593" aria-hidden="true" tabindex="-1"></a>        T_prev2, T_prev1 <span class="op">=</span> T_prev1, T_curr</span>
-<span id="cb22-594"><a href="#cb22-594" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> T_curr</span>
-<span id="cb22-595"><a href="#cb22-595" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-596"><a href="#cb22-596" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> legendre_poly(n, x):</span>
-<span id="cb22-597"><a href="#cb22-597" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Compute the Legendre polynomial P_n(x) via the recurrence relation."""</span></span>
-<span id="cb22-598"><a href="#cb22-598" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> n <span class="op">==</span> <span class="dv">0</span>:</span>
-<span id="cb22-599"><a href="#cb22-599" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> np.ones_like(x, dtype<span class="op">=</span><span class="bu">float</span>)</span>
-<span id="cb22-600"><a href="#cb22-600" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> n <span class="op">==</span> <span class="dv">1</span>:</span>
-<span id="cb22-601"><a href="#cb22-601" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> np.array(x, dtype<span class="op">=</span><span class="bu">float</span>)</span>
-<span id="cb22-602"><a href="#cb22-602" aria-hidden="true" tabindex="-1"></a>    P_prev2 <span class="op">=</span> np.ones_like(x, dtype<span class="op">=</span><span class="bu">float</span>)</span>
-<span id="cb22-603"><a href="#cb22-603" aria-hidden="true" tabindex="-1"></a>    P_prev1 <span class="op">=</span> np.array(x, dtype<span class="op">=</span><span class="bu">float</span>)</span>
-<span id="cb22-604"><a href="#cb22-604" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> k <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, n):</span>
-<span id="cb22-605"><a href="#cb22-605" aria-hidden="true" tabindex="-1"></a>        P_curr <span class="op">=</span> ((<span class="dv">2</span> <span class="op">*</span> k <span class="op">+</span> <span class="dv">1</span>) <span class="op">*</span> x <span class="op">*</span> P_prev1 <span class="op">-</span> k <span class="op">*</span> P_prev2) <span class="op">/</span> (k <span class="op">+</span> <span class="dv">1</span>)</span>
-<span id="cb22-606"><a href="#cb22-606" aria-hidden="true" tabindex="-1"></a>        P_prev2, P_prev1 <span class="op">=</span> P_prev1, P_curr</span>
-<span id="cb22-607"><a href="#cb22-607" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> P_curr</span>
-<span id="cb22-608"><a href="#cb22-608" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-609"><a href="#cb22-609" aria-hidden="true" tabindex="-1"></a>x_plot <span class="op">=</span> np.linspace(<span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">400</span>)</span>
-<span id="cb22-610"><a href="#cb22-610" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">11</span>, <span class="dv">4</span>))</span>
+<span id="cb22-571"><a href="#cb22-571" aria-hidden="true" tabindex="-1"></a>P_0(x) = 1, \quad</span>
+<span id="cb22-572"><a href="#cb22-572" aria-hidden="true" tabindex="-1"></a>P_k(x) = \frac{1}{2^k k!}\frac{d^k}{dx^k}(x^2-1)^k \quad (k \ge 1).</span>
+<span id="cb22-573"><a href="#cb22-573" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb22-574"><a href="#cb22-574" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-575"><a href="#cb22-575" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb22-576"><a href="#cb22-576" aria-hidden="true" tabindex="-1"></a>(P_i, P_j)_{w=1} = \int_{-1}^{1} P_i(x)P_j(x)\,dx =</span>
+<span id="cb22-577"><a href="#cb22-577" aria-hidden="true" tabindex="-1"></a>\begin{cases}</span>
+<span id="cb22-578"><a href="#cb22-578" aria-hidden="true" tabindex="-1"></a>0 &amp; (i \neq j),<span class="sc">\\</span></span>
+<span id="cb22-579"><a href="#cb22-579" aria-hidden="true" tabindex="-1"></a>\dfrac{2}{2i+1} &amp; (i = j).</span>
+<span id="cb22-580"><a href="#cb22-580" aria-hidden="true" tabindex="-1"></a>\end{cases}</span>
+<span id="cb22-581"><a href="#cb22-581" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb22-582"><a href="#cb22-582" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-585"><a href="#cb22-585" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb22-586"><a href="#cb22-586" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> chebyshev_poly(n, x):</span>
+<span id="cb22-587"><a href="#cb22-587" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Compute the Chebyshev polynomial T_n(x) via the recurrence relation."""</span></span>
+<span id="cb22-588"><a href="#cb22-588" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> n <span class="op">==</span> <span class="dv">0</span>:</span>
+<span id="cb22-589"><a href="#cb22-589" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> np.ones_like(x, dtype<span class="op">=</span><span class="bu">float</span>)</span>
+<span id="cb22-590"><a href="#cb22-590" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> n <span class="op">==</span> <span class="dv">1</span>:</span>
+<span id="cb22-591"><a href="#cb22-591" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> np.array(x, dtype<span class="op">=</span><span class="bu">float</span>)</span>
+<span id="cb22-592"><a href="#cb22-592" aria-hidden="true" tabindex="-1"></a>    T_prev2 <span class="op">=</span> np.ones_like(x, dtype<span class="op">=</span><span class="bu">float</span>)</span>
+<span id="cb22-593"><a href="#cb22-593" aria-hidden="true" tabindex="-1"></a>    T_prev1 <span class="op">=</span> np.array(x, dtype<span class="op">=</span><span class="bu">float</span>)</span>
+<span id="cb22-594"><a href="#cb22-594" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">2</span>, n <span class="op">+</span> <span class="dv">1</span>):</span>
+<span id="cb22-595"><a href="#cb22-595" aria-hidden="true" tabindex="-1"></a>        T_curr <span class="op">=</span> <span class="dv">2</span> <span class="op">*</span> x <span class="op">*</span> T_prev1 <span class="op">-</span> T_prev2</span>
+<span id="cb22-596"><a href="#cb22-596" aria-hidden="true" tabindex="-1"></a>        T_prev2, T_prev1 <span class="op">=</span> T_prev1, T_curr</span>
+<span id="cb22-597"><a href="#cb22-597" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> T_curr</span>
+<span id="cb22-598"><a href="#cb22-598" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-599"><a href="#cb22-599" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> legendre_poly(n, x):</span>
+<span id="cb22-600"><a href="#cb22-600" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Compute the Legendre polynomial P_n(x) via the recurrence relation."""</span></span>
+<span id="cb22-601"><a href="#cb22-601" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> n <span class="op">==</span> <span class="dv">0</span>:</span>
+<span id="cb22-602"><a href="#cb22-602" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> np.ones_like(x, dtype<span class="op">=</span><span class="bu">float</span>)</span>
+<span id="cb22-603"><a href="#cb22-603" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> n <span class="op">==</span> <span class="dv">1</span>:</span>
+<span id="cb22-604"><a href="#cb22-604" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> np.array(x, dtype<span class="op">=</span><span class="bu">float</span>)</span>
+<span id="cb22-605"><a href="#cb22-605" aria-hidden="true" tabindex="-1"></a>    P_prev2 <span class="op">=</span> np.ones_like(x, dtype<span class="op">=</span><span class="bu">float</span>)</span>
+<span id="cb22-606"><a href="#cb22-606" aria-hidden="true" tabindex="-1"></a>    P_prev1 <span class="op">=</span> np.array(x, dtype<span class="op">=</span><span class="bu">float</span>)</span>
+<span id="cb22-607"><a href="#cb22-607" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> k <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, n):</span>
+<span id="cb22-608"><a href="#cb22-608" aria-hidden="true" tabindex="-1"></a>        P_curr <span class="op">=</span> ((<span class="dv">2</span> <span class="op">*</span> k <span class="op">+</span> <span class="dv">1</span>) <span class="op">*</span> x <span class="op">*</span> P_prev1 <span class="op">-</span> k <span class="op">*</span> P_prev2) <span class="op">/</span> (k <span class="op">+</span> <span class="dv">1</span>)</span>
+<span id="cb22-609"><a href="#cb22-609" aria-hidden="true" tabindex="-1"></a>        P_prev2, P_prev1 <span class="op">=</span> P_prev1, P_curr</span>
+<span id="cb22-610"><a href="#cb22-610" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> P_curr</span>
 <span id="cb22-611"><a href="#cb22-611" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-612"><a href="#cb22-612" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> axes[<span class="dv">0</span>]</span>
-<span id="cb22-613"><a href="#cb22-613" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> k <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">5</span>):</span>
-<span id="cb22-614"><a href="#cb22-614" aria-hidden="true" tabindex="-1"></a>    ax.plot(x_plot, chebyshev_poly(k, x_plot), label<span class="op">=</span><span class="ss">f'$T_</span><span class="sc">{</span>k<span class="sc">}</span><span class="ss">(x)$'</span>)</span>
-<span id="cb22-615"><a href="#cb22-615" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">'Chebyshev polynomials $T_k(x)$'</span>)</span>
-<span id="cb22-616"><a href="#cb22-616" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">'$x$'</span>)<span class="op">;</span> ax.legend(fontsize<span class="op">=</span><span class="dv">8</span>)<span class="op">;</span> ax.grid(<span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
-<span id="cb22-617"><a href="#cb22-617" aria-hidden="true" tabindex="-1"></a>ax.set_ylim(<span class="op">-</span><span class="fl">1.5</span>, <span class="fl">1.5</span>)</span>
-<span id="cb22-618"><a href="#cb22-618" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-619"><a href="#cb22-619" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> axes[<span class="dv">1</span>]</span>
-<span id="cb22-620"><a href="#cb22-620" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> k <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">5</span>):</span>
-<span id="cb22-621"><a href="#cb22-621" aria-hidden="true" tabindex="-1"></a>    ax.plot(x_plot, legendre_poly(k, x_plot), label<span class="op">=</span><span class="ss">f'$P_</span><span class="sc">{</span>k<span class="sc">}</span><span class="ss">(x)$'</span>)</span>
-<span id="cb22-622"><a href="#cb22-622" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">'Legendre polynomials $P_k(x)$'</span>)</span>
-<span id="cb22-623"><a href="#cb22-623" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">'$x$'</span>)<span class="op">;</span> ax.legend(fontsize<span class="op">=</span><span class="dv">8</span>)<span class="op">;</span> ax.grid(<span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
-<span id="cb22-624"><a href="#cb22-624" aria-hidden="true" tabindex="-1"></a>ax.set_ylim(<span class="op">-</span><span class="fl">1.5</span>, <span class="fl">1.5</span>)</span>
-<span id="cb22-625"><a href="#cb22-625" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-626"><a href="#cb22-626" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
-<span id="cb22-627"><a href="#cb22-627" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
-<span id="cb22-628"><a href="#cb22-628" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb22-629"><a href="#cb22-629" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-630"><a href="#cb22-630" aria-hidden="true" tabindex="-1"></a>---</span>
-<span id="cb22-631"><a href="#cb22-631" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-632"><a href="#cb22-632" aria-hidden="true" tabindex="-1"></a><span class="fu">### Gaussian Quadrature Theorem {#sec-gauss-theorem}</span></span>
-<span id="cb22-633"><a href="#cb22-633" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-634"><a href="#cb22-634" aria-hidden="true" tabindex="-1"></a>::: {.callout-note title="Theorem 7.1 (Properties of orthogonal polynomials)"}</span>
-<span id="cb22-635"><a href="#cb22-635" aria-hidden="true" tabindex="-1"></a>For a system of orthogonal polynomials $<span class="sc">\{</span>\phi_0, \phi_1, \ldots<span class="sc">\}</span>$ with</span>
-<span id="cb22-636"><a href="#cb22-636" aria-hidden="true" tabindex="-1"></a>weight $w(x)$:</span>
-<span id="cb22-637"><a href="#cb22-637" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-638"><a href="#cb22-638" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>Any degree-$n$ polynomial $q_n(x)$ can be written as</span>
-<span id="cb22-639"><a href="#cb22-639" aria-hidden="true" tabindex="-1"></a>   $q_n = c_0\phi_0 + \cdots + c_n\phi_n$.</span>
-<span id="cb22-640"><a href="#cb22-640" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>For any polynomial $q_k$ of degree $k &lt; n$, $(\phi_n, q_k)_w = 0$.</span>
-<span id="cb22-641"><a href="#cb22-641" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>For $n \ge 1$, $\phi_n(x)$ has $n$ distinct real zeros in $(a, b)$.</span>
-<span id="cb22-642"><a href="#cb22-642" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb22-643"><a href="#cb22-643" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-644"><a href="#cb22-644" aria-hidden="true" tabindex="-1"></a>::: {.callout-note title="Theorem 7.2 (Node selection for Gaussian quadrature)"}</span>
-<span id="cb22-645"><a href="#cb22-645" aria-hidden="true" tabindex="-1"></a>In the system $<span class="sc">\{</span>\phi_0, \ldots, \phi_{n+1}<span class="sc">\}</span>$, choosing $n+1$ nodes</span>
-<span id="cb22-646"><a href="#cb22-646" aria-hidden="true" tabindex="-1"></a>$x_0, \ldots, x_n$ as the **zeros of $\phi_{n+1}(x)$** implies</span>
-<span id="cb22-647"><a href="#cb22-647" aria-hidden="true" tabindex="-1"></a>$V_i = 0$ for $i = 0, \ldots, n$.</span>
-<span id="cb22-648"><a href="#cb22-648" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb22-612"><a href="#cb22-612" aria-hidden="true" tabindex="-1"></a>x_plot <span class="op">=</span> np.linspace(<span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">400</span>)</span>
+<span id="cb22-613"><a href="#cb22-613" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">11</span>, <span class="dv">4</span>))</span>
+<span id="cb22-614"><a href="#cb22-614" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-615"><a href="#cb22-615" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> axes[<span class="dv">0</span>]</span>
+<span id="cb22-616"><a href="#cb22-616" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> k <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">5</span>):</span>
+<span id="cb22-617"><a href="#cb22-617" aria-hidden="true" tabindex="-1"></a>    ax.plot(x_plot, chebyshev_poly(k, x_plot), label<span class="op">=</span><span class="ss">f'$T_</span><span class="sc">{</span>k<span class="sc">}</span><span class="ss">(x)$'</span>)</span>
+<span id="cb22-618"><a href="#cb22-618" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">'Chebyshev polynomials $T_k(x)$'</span>)</span>
+<span id="cb22-619"><a href="#cb22-619" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">'$x$'</span>)<span class="op">;</span> ax.legend(fontsize<span class="op">=</span><span class="dv">8</span>)<span class="op">;</span> ax.grid(<span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
+<span id="cb22-620"><a href="#cb22-620" aria-hidden="true" tabindex="-1"></a>ax.set_ylim(<span class="op">-</span><span class="fl">1.5</span>, <span class="fl">1.5</span>)</span>
+<span id="cb22-621"><a href="#cb22-621" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-622"><a href="#cb22-622" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> axes[<span class="dv">1</span>]</span>
+<span id="cb22-623"><a href="#cb22-623" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> k <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">5</span>):</span>
+<span id="cb22-624"><a href="#cb22-624" aria-hidden="true" tabindex="-1"></a>    ax.plot(x_plot, legendre_poly(k, x_plot), label<span class="op">=</span><span class="ss">f'$P_</span><span class="sc">{</span>k<span class="sc">}</span><span class="ss">(x)$'</span>)</span>
+<span id="cb22-625"><a href="#cb22-625" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">'Legendre polynomials $P_k(x)$'</span>)</span>
+<span id="cb22-626"><a href="#cb22-626" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">'$x$'</span>)<span class="op">;</span> ax.legend(fontsize<span class="op">=</span><span class="dv">8</span>)<span class="op">;</span> ax.grid(<span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
+<span id="cb22-627"><a href="#cb22-627" aria-hidden="true" tabindex="-1"></a>ax.set_ylim(<span class="op">-</span><span class="fl">1.5</span>, <span class="fl">1.5</span>)</span>
+<span id="cb22-628"><a href="#cb22-628" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-629"><a href="#cb22-629" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb22-630"><a href="#cb22-630" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb22-631"><a href="#cb22-631" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb22-632"><a href="#cb22-632" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-633"><a href="#cb22-633" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb22-634"><a href="#cb22-634" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-635"><a href="#cb22-635" aria-hidden="true" tabindex="-1"></a><span class="fu">### Gaussian Quadrature Theorem {#sec-gauss-theorem}</span></span>
+<span id="cb22-636"><a href="#cb22-636" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-637"><a href="#cb22-637" aria-hidden="true" tabindex="-1"></a>::: {.callout-note title="Theorem 7.1 (Properties of orthogonal polynomials)"}</span>
+<span id="cb22-638"><a href="#cb22-638" aria-hidden="true" tabindex="-1"></a>For a system of orthogonal polynomials $<span class="sc">\{</span>\phi_0, \phi_1, \ldots<span class="sc">\}</span>$ with</span>
+<span id="cb22-639"><a href="#cb22-639" aria-hidden="true" tabindex="-1"></a>weight $w(x)$:</span>
+<span id="cb22-640"><a href="#cb22-640" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-641"><a href="#cb22-641" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>Any degree-$n$ polynomial $q_n(x)$ can be written as</span>
+<span id="cb22-642"><a href="#cb22-642" aria-hidden="true" tabindex="-1"></a>   $q_n = c_0\phi_0 + \cdots + c_n\phi_n$.</span>
+<span id="cb22-643"><a href="#cb22-643" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>For any polynomial $q_k$ of degree $k &lt; n$, $(\phi_n, q_k)_w = 0$.</span>
+<span id="cb22-644"><a href="#cb22-644" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>For $n \ge 1$, $\phi_n(x)$ has $n$ distinct real zeros in $(a, b)$.</span>
+<span id="cb22-645"><a href="#cb22-645" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb22-646"><a href="#cb22-646" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-647"><a href="#cb22-647" aria-hidden="true" tabindex="-1"></a>We now return to the quadrature formula based on Hermite interpolation</span>
+<span id="cb22-648"><a href="#cb22-648" aria-hidden="true" tabindex="-1"></a>(@sec-hermite), this time for the **weighted** integral. Approximating</span>
 <span id="cb22-649"><a href="#cb22-649" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-650"><a href="#cb22-650" aria-hidden="true" tabindex="-1"></a>**Proof sketch.** Since $\phi_{n+1}(x) = \lambda\prod_{j=0}^{n}(x-x_j)$,</span>
-<span id="cb22-651"><a href="#cb22-651" aria-hidden="true" tabindex="-1"></a>we have $L_i(x)(x-x_i) = \phi_{n+1}(x)/C_i$ for some constant $C_i$.</span>
-<span id="cb22-652"><a href="#cb22-652" aria-hidden="true" tabindex="-1"></a>Therefore</span>
+<span id="cb22-650"><a href="#cb22-650" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb22-651"><a href="#cb22-651" aria-hidden="true" tabindex="-1"></a>\int_a^b f(x)\,w(x)\,dx \approx \int_a^b q_{2n+1}(x)\,w(x)\,dx,</span>
+<span id="cb22-652"><a href="#cb22-652" aria-hidden="true" tabindex="-1"></a>$$</span>
 <span id="cb22-653"><a href="#cb22-653" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-654"><a href="#cb22-654" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb22-655"><a href="#cb22-655" aria-hidden="true" tabindex="-1"></a>V_i = \int_a^b K_i(x)\,w(x)\,dx</span>
-<span id="cb22-656"><a href="#cb22-656" aria-hidden="true" tabindex="-1"></a>= \frac{1}{C_i}\int_a^b \phi_{n+1}(x)\,L_i(x)\,w(x)\,dx</span>
-<span id="cb22-657"><a href="#cb22-657" aria-hidden="true" tabindex="-1"></a>= \frac{1}{C_i}(\phi_{n+1},\,L_i)_w = 0.</span>
+<span id="cb22-654"><a href="#cb22-654" aria-hidden="true" tabindex="-1"></a>where $q_{2n+1}$ is the Hermite interpolating polynomial of $f$ at the</span>
+<span id="cb22-655"><a href="#cb22-655" aria-hidden="true" tabindex="-1"></a>$n+1$ nodes $x_0, \ldots, x_n$, gives the **weighted Hermite quadrature</span>
+<span id="cb22-656"><a href="#cb22-656" aria-hidden="true" tabindex="-1"></a>formula**</span>
+<span id="cb22-657"><a href="#cb22-657" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb22-658"><a href="#cb22-658" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb22-659"><a href="#cb22-659" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-660"><a href="#cb22-660" aria-hidden="true" tabindex="-1"></a>Since $L_i(x)$ is a degree-$n$ polynomial and $\phi_{n+1}$ is orthogonal</span>
-<span id="cb22-661"><a href="#cb22-661" aria-hidden="true" tabindex="-1"></a>to all polynomials of degree $\le n$, we have $(\phi_{n+1}, L_i)_w = 0$.</span>
-<span id="cb22-662"><a href="#cb22-662" aria-hidden="true" tabindex="-1"></a>$\square$</span>
-<span id="cb22-663"><a href="#cb22-663" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-664"><a href="#cb22-664" aria-hidden="true" tabindex="-1"></a>When $V_i = 0$, the weight $W_i$ simplifies to</span>
-<span id="cb22-665"><a href="#cb22-665" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-659"><a href="#cb22-659" aria-hidden="true" tabindex="-1"></a>\int_a^b q_{2n+1}(x)\,w(x)\,dx</span>
+<span id="cb22-660"><a href="#cb22-660" aria-hidden="true" tabindex="-1"></a>= \sum_{i=0}^{n}\bigl<span class="co">[</span><span class="ot">W_i\,f(x_i) + V_i\,f'(x_i)\bigr</span><span class="co">]</span>,</span>
+<span id="cb22-661"><a href="#cb22-661" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb22-662"><a href="#cb22-662" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-663"><a href="#cb22-663" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb22-664"><a href="#cb22-664" aria-hidden="true" tabindex="-1"></a>W_i := \int_a^b H_i(x)\,w(x)\,dx, \qquad</span>
+<span id="cb22-665"><a href="#cb22-665" aria-hidden="true" tabindex="-1"></a>V_i := \int_a^b K_i(x)\,w(x)\,dx.</span>
 <span id="cb22-666"><a href="#cb22-666" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb22-667"><a href="#cb22-667" aria-hidden="true" tabindex="-1"></a>W_i = \int_a^b L_i(x)\,w(x)\,dx \quad (&gt; 0)</span>
-<span id="cb22-668"><a href="#cb22-668" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb22-669"><a href="#cb22-669" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-670"><a href="#cb22-670" aria-hidden="true" tabindex="-1"></a>(positivity of $W_i$ guarantees the stability of Gaussian quadrature).</span>
-<span id="cb22-671"><a href="#cb22-671" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-672"><a href="#cb22-672" aria-hidden="true" tabindex="-1"></a>::: {.callout-note title="Gaussian quadrature formula"}</span>
-<span id="cb22-673"><a href="#cb22-673" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb22-674"><a href="#cb22-674" aria-hidden="true" tabindex="-1"></a>\int_a^b f(x)\,w(x)\,dx \approx \sum_{i=0}^{n} W_i\,f(x_i),</span>
-<span id="cb22-675"><a href="#cb22-675" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb22-676"><a href="#cb22-676" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-677"><a href="#cb22-677" aria-hidden="true" tabindex="-1"></a>where $x_i$ are the zeros of $\phi_{n+1}(x)$ and</span>
-<span id="cb22-678"><a href="#cb22-678" aria-hidden="true" tabindex="-1"></a>$W_i = \int_a^b L_i(x)\,w(x)\,dx$.</span>
-<span id="cb22-679"><a href="#cb22-679" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-680"><a href="#cb22-680" aria-hidden="true" tabindex="-1"></a>This formula is **exact** whenever $f$ is a polynomial of degree $\le 2n+1$.</span>
-<span id="cb22-681"><a href="#cb22-681" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb22-682"><a href="#cb22-682" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-683"><a href="#cb22-683" aria-hidden="true" tabindex="-1"></a>::: {.callout-note title="Theorem 7.3 (Convergence of Gaussian quadrature)"}</span>
-<span id="cb22-684"><a href="#cb22-684" aria-hidden="true" tabindex="-1"></a>For $f \in C(<span class="co">[</span><span class="ot">a,b</span><span class="co">]</span>)$,</span>
+<span id="cb22-667"><a href="#cb22-667" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-668"><a href="#cb22-668" aria-hidden="true" tabindex="-1"></a>These are the weighted counterparts of the $\alpha_i$ and $\beta_i$ in</span>
+<span id="cb22-669"><a href="#cb22-669" aria-hidden="true" tabindex="-1"></a>@sec-hermite-basis (they coincide when $w \equiv 1$).</span>
+<span id="cb22-670"><a href="#cb22-670" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-671"><a href="#cb22-671" aria-hidden="true" tabindex="-1"></a>::: {.callout-note title="Remark: integrals without an explicit weight"}</span>
+<span id="cb22-672"><a href="#cb22-672" aria-hidden="true" tabindex="-1"></a>To approximate $\int_a^b g(x)\,dx$ with no explicit weight, simply take</span>
+<span id="cb22-673"><a href="#cb22-673" aria-hidden="true" tabindex="-1"></a>$f = g$ and $w \equiv 1$ (as in Gauss-Legendre quadrature). Conversely, to</span>
+<span id="cb22-674"><a href="#cb22-674" aria-hidden="true" tabindex="-1"></a>exploit a non-unity weight $w^*(x)$, define $f(x) = g(x)/w^*(x)$ so that</span>
+<span id="cb22-675"><a href="#cb22-675" aria-hidden="true" tabindex="-1"></a>the integral becomes $\int_a^b f(x)\,w^*(x)\,dx$.</span>
+<span id="cb22-676"><a href="#cb22-676" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb22-677"><a href="#cb22-677" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-678"><a href="#cb22-678" aria-hidden="true" tabindex="-1"></a>::: {.callout-important title="Key question"}</span>
+<span id="cb22-679"><a href="#cb22-679" aria-hidden="true" tabindex="-1"></a>**How do we choose the nodes $x_i$ so that $V_i = 0$ for all $i$?**</span>
+<span id="cb22-680"><a href="#cb22-680" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-681"><a href="#cb22-681" aria-hidden="true" tabindex="-1"></a>If we can achieve $V_i = 0$, the derivative values $f'(x_i)$ are no longer</span>
+<span id="cb22-682"><a href="#cb22-682" aria-hidden="true" tabindex="-1"></a>needed, and the formula simplifies dramatically. The next theorem answers</span>
+<span id="cb22-683"><a href="#cb22-683" aria-hidden="true" tabindex="-1"></a>this question.</span>
+<span id="cb22-684"><a href="#cb22-684" aria-hidden="true" tabindex="-1"></a>:::</span>
 <span id="cb22-685"><a href="#cb22-685" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-686"><a href="#cb22-686" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb22-687"><a href="#cb22-687" aria-hidden="true" tabindex="-1"></a>\lim_{n\to\infty}\sum_{i=0}^{n} W_i^{(n)}\,f(x_i^{(n)}) = \int_a^b f(x)\,w(x)\,dx.</span>
-<span id="cb22-688"><a href="#cb22-688" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb22-689"><a href="#cb22-689" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb22-690"><a href="#cb22-690" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-691"><a href="#cb22-691" aria-hidden="true" tabindex="-1"></a>---</span>
-<span id="cb22-692"><a href="#cb22-692" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-693"><a href="#cb22-693" aria-hidden="true" tabindex="-1"></a><span class="fu">### Gauss-Chebyshev Quadrature {#sec-gauss-chebyshev}</span></span>
-<span id="cb22-694"><a href="#cb22-694" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-695"><a href="#cb22-695" aria-hidden="true" tabindex="-1"></a>For the interval $<span class="co">[</span><span class="ot">-1, 1</span><span class="co">]</span>$ with weight $w(x) = \dfrac{1}{\sqrt{1-x^2}}$:</span>
-<span id="cb22-696"><a href="#cb22-696" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-697"><a href="#cb22-697" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Nodes**: zeros of $T_{n+1}(x)$: $\displaystyle x_i = \cos<span class="sc">\!</span>\left(\frac{(2i+1)\pi}{2(n+1)}\right)$, $i = 0, \ldots, n$</span>
-<span id="cb22-698"><a href="#cb22-698" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Weights**: $W_i = \dfrac{\pi}{n+1}$ (all equal)</span>
-<span id="cb22-699"><a href="#cb22-699" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-686"><a href="#cb22-686" aria-hidden="true" tabindex="-1"></a>::: {.callout-note title="Theorem 7.2 (Node selection for Gaussian quadrature)"}</span>
+<span id="cb22-687"><a href="#cb22-687" aria-hidden="true" tabindex="-1"></a>In the system $<span class="sc">\{</span>\phi_0, \ldots, \phi_{n+1}<span class="sc">\}</span>$, choosing $n+1$ nodes</span>
+<span id="cb22-688"><a href="#cb22-688" aria-hidden="true" tabindex="-1"></a>$x_0, \ldots, x_n$ as the **zeros of $\phi_{n+1}(x)$** implies</span>
+<span id="cb22-689"><a href="#cb22-689" aria-hidden="true" tabindex="-1"></a>$V_i = 0$ for $i = 0, \ldots, n$.</span>
+<span id="cb22-690"><a href="#cb22-690" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb22-691"><a href="#cb22-691" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-692"><a href="#cb22-692" aria-hidden="true" tabindex="-1"></a>**Proof sketch.** Since $\phi_{n+1}(x) = \lambda\prod_{j=0}^{n}(x-x_j)$,</span>
+<span id="cb22-693"><a href="#cb22-693" aria-hidden="true" tabindex="-1"></a>we have $L_i(x)(x-x_i) = \phi_{n+1}(x)/C_i$ for some constant $C_i$.</span>
+<span id="cb22-694"><a href="#cb22-694" aria-hidden="true" tabindex="-1"></a>Therefore</span>
+<span id="cb22-695"><a href="#cb22-695" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-696"><a href="#cb22-696" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb22-697"><a href="#cb22-697" aria-hidden="true" tabindex="-1"></a>V_i = \int_a^b K_i(x)\,w(x)\,dx</span>
+<span id="cb22-698"><a href="#cb22-698" aria-hidden="true" tabindex="-1"></a>= \frac{1}{C_i}\int_a^b \phi_{n+1}(x)\,L_i(x)\,w(x)\,dx</span>
+<span id="cb22-699"><a href="#cb22-699" aria-hidden="true" tabindex="-1"></a>= \frac{1}{C_i}(\phi_{n+1},\,L_i)_w = 0.</span>
 <span id="cb22-700"><a href="#cb22-700" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb22-701"><a href="#cb22-701" aria-hidden="true" tabindex="-1"></a>\int_{-1}^{1} f(x)\,\frac{dx}{\sqrt{1-x^2}}</span>
-<span id="cb22-702"><a href="#cb22-702" aria-hidden="true" tabindex="-1"></a>\approx \frac{\pi}{n+1}\sum_{i=0}^{n} f<span class="sc">\!</span>\left(\cos<span class="sc">\!</span>\left(\frac{(2i+1)\pi}{2(n+1)}\right)\right).</span>
-<span id="cb22-703"><a href="#cb22-703" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb22-704"><a href="#cb22-704" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-707"><a href="#cb22-707" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb22-708"><a href="#cb22-708" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> gauss_chebyshev(f, n_nodes):</span>
-<span id="cb22-709"><a href="#cb22-709" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
-<span id="cb22-710"><a href="#cb22-710" aria-hidden="true" tabindex="-1"></a><span class="co">    Gauss-Chebyshev quadrature: compute ∫_{-1}^{1} f(x)/√(1-x²) dx.</span></span>
-<span id="cb22-711"><a href="#cb22-711" aria-hidden="true" tabindex="-1"></a><span class="co">    n_nodes: number of nodes (= n+1 in the formula above)</span></span>
-<span id="cb22-712"><a href="#cb22-712" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
-<span id="cb22-713"><a href="#cb22-713" aria-hidden="true" tabindex="-1"></a>    n <span class="op">=</span> n_nodes <span class="op">-</span> <span class="dv">1</span></span>
-<span id="cb22-714"><a href="#cb22-714" aria-hidden="true" tabindex="-1"></a>    W <span class="op">=</span> np.pi <span class="op">/</span> n_nodes</span>
-<span id="cb22-715"><a href="#cb22-715" aria-hidden="true" tabindex="-1"></a>    xi <span class="op">=</span> np.cos((np.arange(n_nodes) <span class="op">+</span> <span class="fl">0.5</span>) <span class="op">*</span> np.pi <span class="op">/</span> n_nodes)</span>
-<span id="cb22-716"><a href="#cb22-716" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> W <span class="op">*</span> np.<span class="bu">sum</span>(f(xi)), xi</span>
-<span id="cb22-717"><a href="#cb22-717" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-718"><a href="#cb22-718" aria-hidden="true" tabindex="-1"></a><span class="co"># Example: ∫_{-1}^{1} (1-x²)² / √(1-x²) dx = ∫_{-1}^{1} (1-x²)^{3/2} dx = 3π/8</span></span>
-<span id="cb22-719"><a href="#cb22-719" aria-hidden="true" tabindex="-1"></a>f_cheby <span class="op">=</span> <span class="kw">lambda</span> x: (<span class="dv">1</span> <span class="op">-</span> x<span class="op">**</span><span class="dv">2</span>)<span class="op">**</span><span class="dv">2</span></span>
-<span id="cb22-720"><a href="#cb22-720" aria-hidden="true" tabindex="-1"></a>exact_cheby <span class="op">=</span> <span class="dv">3</span> <span class="op">*</span> np.pi <span class="op">/</span> <span class="dv">8</span></span>
-<span id="cb22-721"><a href="#cb22-721" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-722"><a href="#cb22-722" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Exact value 3π/8 = </span><span class="sc">{</span>exact_cheby<span class="sc">:.10f}</span><span class="ss">"</span>)</span>
-<span id="cb22-723"><a href="#cb22-723" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span><span class="st">'# nodes'</span><span class="sc">:&lt;10}</span><span class="ss"> </span><span class="sc">{</span><span class="st">'Approximation'</span><span class="sc">:&lt;20}</span><span class="ss"> </span><span class="sc">{</span><span class="st">'Error'</span><span class="sc">:&lt;15}</span><span class="ss">"</span>)</span>
-<span id="cb22-724"><a href="#cb22-724" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> n_nodes <span class="kw">in</span> [<span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">6</span>]:</span>
-<span id="cb22-725"><a href="#cb22-725" aria-hidden="true" tabindex="-1"></a>    approx, _ <span class="op">=</span> gauss_chebyshev(f_cheby, n_nodes)</span>
-<span id="cb22-726"><a href="#cb22-726" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>n_nodes<span class="sc">:&lt;10}</span><span class="ss"> </span><span class="sc">{</span>approx<span class="sc">:&lt;20.10f}</span><span class="ss"> </span><span class="sc">{</span><span class="bu">abs</span>(approx <span class="op">-</span> exact_cheby)<span class="sc">:&lt;15.2e}</span><span class="ss">"</span>)</span>
-<span id="cb22-727"><a href="#cb22-727" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb22-728"><a href="#cb22-728" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-729"><a href="#cb22-729" aria-hidden="true" tabindex="-1"></a>Since $f(x) = (1-x^2)^2$ is a degree-4 polynomial, three nodes</span>
-<span id="cb22-730"><a href="#cb22-730" aria-hidden="true" tabindex="-1"></a>($2\times3-1=5$, so exact for polynomials up to degree 5) achieves machine</span>
-<span id="cb22-731"><a href="#cb22-731" aria-hidden="true" tabindex="-1"></a>precision.</span>
-<span id="cb22-732"><a href="#cb22-732" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-733"><a href="#cb22-733" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb22-701"><a href="#cb22-701" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-702"><a href="#cb22-702" aria-hidden="true" tabindex="-1"></a>Since $L_i(x)$ is a degree-$n$ polynomial and $\phi_{n+1}$ is orthogonal</span>
+<span id="cb22-703"><a href="#cb22-703" aria-hidden="true" tabindex="-1"></a>to all polynomials of degree $\le n$, we have $(\phi_{n+1}, L_i)_w = 0$.</span>
+<span id="cb22-704"><a href="#cb22-704" aria-hidden="true" tabindex="-1"></a>$\square$</span>
+<span id="cb22-705"><a href="#cb22-705" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-706"><a href="#cb22-706" aria-hidden="true" tabindex="-1"></a>When $V_i = 0$, the formula involves only the function values $f(x_i)$:</span>
+<span id="cb22-707"><a href="#cb22-707" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-708"><a href="#cb22-708" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb22-709"><a href="#cb22-709" aria-hidden="true" tabindex="-1"></a>\int_a^b f(x)\,w(x)\,dx \approx \sum_{i=0}^{n} W_i\,f(x_i).</span>
+<span id="cb22-710"><a href="#cb22-710" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb22-711"><a href="#cb22-711" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-712"><a href="#cb22-712" aria-hidden="true" tabindex="-1"></a>**Exactness for polynomials of degree $\le 2n+1$.** If $f$ is a polynomial</span>
+<span id="cb22-713"><a href="#cb22-713" aria-hidden="true" tabindex="-1"></a>of degree $\le 2n+1$, then by the uniqueness of Hermite interpolation</span>
+<span id="cb22-714"><a href="#cb22-714" aria-hidden="true" tabindex="-1"></a>$q_{2n+1} \equiv f$, so the quadrature formula is **exact**:</span>
+<span id="cb22-715"><a href="#cb22-715" aria-hidden="true" tabindex="-1"></a>$\int_a^b f(x)\,w(x)\,dx = \sum_{i=0}^{n} W_i\,f(x_i)$.</span>
+<span id="cb22-716"><a href="#cb22-716" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-717"><a href="#cb22-717" aria-hidden="true" tabindex="-1"></a>**A simpler expression for $W_i$.** Apply this exactness to $f = L_k$</span>
+<span id="cb22-718"><a href="#cb22-718" aria-hidden="true" tabindex="-1"></a>(a polynomial of degree $n \le 2n+1$). Since $L_k(x_i) = \delta_{ki}$,</span>
+<span id="cb22-719"><a href="#cb22-719" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-720"><a href="#cb22-720" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb22-721"><a href="#cb22-721" aria-hidden="true" tabindex="-1"></a>\int_a^b L_k(x)\,w(x)\,dx = \sum_{i=0}^{n} W_i\,L_k(x_i) = W_k.</span>
+<span id="cb22-722"><a href="#cb22-722" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb22-723"><a href="#cb22-723" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-724"><a href="#cb22-724" aria-hidden="true" tabindex="-1"></a>Hence</span>
+<span id="cb22-725"><a href="#cb22-725" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-726"><a href="#cb22-726" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb22-727"><a href="#cb22-727" aria-hidden="true" tabindex="-1"></a>W_i = \int_a^b L_i(x)\,w(x)\,dx,</span>
+<span id="cb22-728"><a href="#cb22-728" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb22-729"><a href="#cb22-729" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-730"><a href="#cb22-730" aria-hidden="true" tabindex="-1"></a>which no longer involves the Hermite basis $H_i$.</span>
+<span id="cb22-731"><a href="#cb22-731" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-732"><a href="#cb22-732" aria-hidden="true" tabindex="-1"></a>**Positivity of $W_i$.** Applying the exactness to $f = L_k^2$ (a</span>
+<span id="cb22-733"><a href="#cb22-733" aria-hidden="true" tabindex="-1"></a>polynomial of degree $2n \le 2n+1$) gives</span>
 <span id="cb22-734"><a href="#cb22-734" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-735"><a href="#cb22-735" aria-hidden="true" tabindex="-1"></a><span class="fu">### Gauss-Legendre Quadrature {#sec-gauss-legendre}</span></span>
-<span id="cb22-736"><a href="#cb22-736" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-737"><a href="#cb22-737" aria-hidden="true" tabindex="-1"></a>For the interval $<span class="co">[</span><span class="ot">-1, 1</span><span class="co">]</span>$ with weight $w(x) = 1$:</span>
+<span id="cb22-735"><a href="#cb22-735" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb22-736"><a href="#cb22-736" aria-hidden="true" tabindex="-1"></a>W_k = \sum_{i=0}^{n} W_i\,L_k(x_i)^2 = \int_a^b L_k(x)^2\,w(x)\,dx &gt; 0.</span>
+<span id="cb22-737"><a href="#cb22-737" aria-hidden="true" tabindex="-1"></a>$$</span>
 <span id="cb22-738"><a href="#cb22-738" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-739"><a href="#cb22-739" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Nodes**: zeros $x_i$ of $P_{n+1}(x)$</span>
-<span id="cb22-740"><a href="#cb22-740" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Weights**: $\displaystyle W_i = \frac{2}{(1-x_i^2)\bigl[P'_{n+1}(x_i)\bigr]^2}$</span>
+<span id="cb22-739"><a href="#cb22-739" aria-hidden="true" tabindex="-1"></a>Positivity of the weights guarantees the numerical stability of Gaussian</span>
+<span id="cb22-740"><a href="#cb22-740" aria-hidden="true" tabindex="-1"></a>quadrature.</span>
 <span id="cb22-741"><a href="#cb22-741" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-742"><a href="#cb22-742" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb22-743"><a href="#cb22-743" aria-hidden="true" tabindex="-1"></a>\int_{-1}^{1} f(x)\,dx \approx \sum_{i=0}^{n} W_i\,f(x_i).</span>
-<span id="cb22-744"><a href="#cb22-744" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb22-745"><a href="#cb22-745" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-746"><a href="#cb22-746" aria-hidden="true" tabindex="-1"></a>For a general interval $<span class="co">[</span><span class="ot">a, b</span><span class="co">]</span>$, use the change of variables</span>
-<span id="cb22-747"><a href="#cb22-747" aria-hidden="true" tabindex="-1"></a>$x = \dfrac{(b-a)t + (a+b)}{2}$:</span>
-<span id="cb22-748"><a href="#cb22-748" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-749"><a href="#cb22-749" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb22-750"><a href="#cb22-750" aria-hidden="true" tabindex="-1"></a>\int_a^b g(x)\,dx = \frac{b-a}{2}\int_{-1}^{1} g<span class="sc">\!</span>\left(\frac{(b-a)t+(a+b)}{2}\right)dt.</span>
-<span id="cb22-751"><a href="#cb22-751" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb22-742"><a href="#cb22-742" aria-hidden="true" tabindex="-1"></a>::: {.callout-note title="Gaussian quadrature formula"}</span>
+<span id="cb22-743"><a href="#cb22-743" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb22-744"><a href="#cb22-744" aria-hidden="true" tabindex="-1"></a>\int_a^b f(x)\,w(x)\,dx \approx \sum_{i=0}^{n} W_i\,f(x_i),</span>
+<span id="cb22-745"><a href="#cb22-745" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb22-746"><a href="#cb22-746" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-747"><a href="#cb22-747" aria-hidden="true" tabindex="-1"></a>where $x_i$ are the zeros of $\phi_{n+1}(x)$ and</span>
+<span id="cb22-748"><a href="#cb22-748" aria-hidden="true" tabindex="-1"></a>$W_i = \int_a^b L_i(x)\,w(x)\,dx$.</span>
+<span id="cb22-749"><a href="#cb22-749" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-750"><a href="#cb22-750" aria-hidden="true" tabindex="-1"></a>This formula is **exact** whenever $f$ is a polynomial of degree $\le 2n+1$.</span>
+<span id="cb22-751"><a href="#cb22-751" aria-hidden="true" tabindex="-1"></a>:::</span>
 <span id="cb22-752"><a href="#cb22-752" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-755"><a href="#cb22-755" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb22-756"><a href="#cb22-756" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> legendre_poly_and_deriv(n, x):</span>
-<span id="cb22-757"><a href="#cb22-757" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Return P_n(x) and P'_n(x) via the recurrence relation."""</span></span>
-<span id="cb22-758"><a href="#cb22-758" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> n <span class="op">==</span> <span class="dv">0</span>:</span>
-<span id="cb22-759"><a href="#cb22-759" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> np.ones_like(x, dtype<span class="op">=</span><span class="bu">float</span>), np.zeros_like(x, dtype<span class="op">=</span><span class="bu">float</span>)</span>
-<span id="cb22-760"><a href="#cb22-760" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> n <span class="op">==</span> <span class="dv">1</span>:</span>
-<span id="cb22-761"><a href="#cb22-761" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> np.array(x, dtype<span class="op">=</span><span class="bu">float</span>), np.ones_like(x, dtype<span class="op">=</span><span class="bu">float</span>)</span>
-<span id="cb22-762"><a href="#cb22-762" aria-hidden="true" tabindex="-1"></a>    P_prev2, dP_prev2 <span class="op">=</span> np.ones_like(x, dtype<span class="op">=</span><span class="bu">float</span>), np.zeros_like(x, dtype<span class="op">=</span><span class="bu">float</span>)</span>
-<span id="cb22-763"><a href="#cb22-763" aria-hidden="true" tabindex="-1"></a>    P_prev1, dP_prev1 <span class="op">=</span> np.array(x, dtype<span class="op">=</span><span class="bu">float</span>), np.ones_like(x, dtype<span class="op">=</span><span class="bu">float</span>)</span>
-<span id="cb22-764"><a href="#cb22-764" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> k <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, n):</span>
-<span id="cb22-765"><a href="#cb22-765" aria-hidden="true" tabindex="-1"></a>        P_curr  <span class="op">=</span> ((<span class="dv">2</span><span class="op">*</span>k<span class="op">+</span><span class="dv">1</span>)<span class="op">*</span>x<span class="op">*</span>P_prev1 <span class="op">-</span> k<span class="op">*</span>P_prev2) <span class="op">/</span> (k<span class="op">+</span><span class="dv">1</span>)</span>
-<span id="cb22-766"><a href="#cb22-766" aria-hidden="true" tabindex="-1"></a>        dP_curr <span class="op">=</span> ((<span class="dv">2</span><span class="op">*</span>k<span class="op">+</span><span class="dv">1</span>)<span class="op">*</span>(P_prev1 <span class="op">+</span> x<span class="op">*</span>dP_prev1) <span class="op">-</span> k<span class="op">*</span>dP_prev2) <span class="op">/</span> (k<span class="op">+</span><span class="dv">1</span>)</span>
-<span id="cb22-767"><a href="#cb22-767" aria-hidden="true" tabindex="-1"></a>        P_prev2,  P_prev1  <span class="op">=</span> P_prev1,  P_curr</span>
-<span id="cb22-768"><a href="#cb22-768" aria-hidden="true" tabindex="-1"></a>        dP_prev2, dP_prev1 <span class="op">=</span> dP_prev1, dP_curr</span>
-<span id="cb22-769"><a href="#cb22-769" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> P_curr, dP_curr</span>
-<span id="cb22-770"><a href="#cb22-770" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-771"><a href="#cb22-771" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> gauss_legendre_nodes_weights(n_nodes):</span>
-<span id="cb22-772"><a href="#cb22-772" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
-<span id="cb22-773"><a href="#cb22-773" aria-hidden="true" tabindex="-1"></a><span class="co">    Compute Gauss-Legendre nodes and weights via Newton's method.</span></span>
-<span id="cb22-774"><a href="#cb22-774" aria-hidden="true" tabindex="-1"></a><span class="co">    n_nodes: number of nodes to use</span></span>
-<span id="cb22-775"><a href="#cb22-775" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
-<span id="cb22-776"><a href="#cb22-776" aria-hidden="true" tabindex="-1"></a>    n <span class="op">=</span> n_nodes</span>
-<span id="cb22-777"><a href="#cb22-777" aria-hidden="true" tabindex="-1"></a>    nodes <span class="op">=</span> np.zeros(n)</span>
-<span id="cb22-778"><a href="#cb22-778" aria-hidden="true" tabindex="-1"></a>    weights <span class="op">=</span> np.zeros(n)</span>
-<span id="cb22-779"><a href="#cb22-779" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Initial guess: cosine approximation</span></span>
-<span id="cb22-780"><a href="#cb22-780" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>((n <span class="op">+</span> <span class="dv">1</span>) <span class="op">//</span> <span class="dv">2</span>):</span>
-<span id="cb22-781"><a href="#cb22-781" aria-hidden="true" tabindex="-1"></a>        xi <span class="op">=</span> np.cos(np.pi <span class="op">*</span> (i <span class="op">+</span> <span class="fl">0.75</span>) <span class="op">/</span> (n <span class="op">+</span> <span class="fl">0.5</span>))</span>
-<span id="cb22-782"><a href="#cb22-782" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">100</span>):  <span class="co"># Newton iterations</span></span>
-<span id="cb22-783"><a href="#cb22-783" aria-hidden="true" tabindex="-1"></a>            Pn, dPn <span class="op">=</span> legendre_poly_and_deriv(n, np.array([xi]))</span>
-<span id="cb22-784"><a href="#cb22-784" aria-hidden="true" tabindex="-1"></a>            xi_new <span class="op">=</span> xi <span class="op">-</span> <span class="bu">float</span>(Pn[<span class="dv">0</span>]) <span class="op">/</span> <span class="bu">float</span>(dPn[<span class="dv">0</span>])</span>
-<span id="cb22-785"><a href="#cb22-785" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> <span class="bu">abs</span>(xi_new <span class="op">-</span> xi) <span class="op">&lt;</span> <span class="fl">1e-15</span>:</span>
-<span id="cb22-786"><a href="#cb22-786" aria-hidden="true" tabindex="-1"></a>                <span class="cf">break</span></span>
-<span id="cb22-787"><a href="#cb22-787" aria-hidden="true" tabindex="-1"></a>            xi <span class="op">=</span> xi_new</span>
-<span id="cb22-788"><a href="#cb22-788" aria-hidden="true" tabindex="-1"></a>        nodes[i] <span class="op">=</span> xi</span>
-<span id="cb22-789"><a href="#cb22-789" aria-hidden="true" tabindex="-1"></a>        nodes[n <span class="op">-</span> <span class="dv">1</span> <span class="op">-</span> i] <span class="op">=</span> <span class="op">-</span>xi</span>
-<span id="cb22-790"><a href="#cb22-790" aria-hidden="true" tabindex="-1"></a>        _, dPn_val <span class="op">=</span> legendre_poly_and_deriv(n, np.array([xi]))</span>
-<span id="cb22-791"><a href="#cb22-791" aria-hidden="true" tabindex="-1"></a>        weights[i] <span class="op">=</span> <span class="fl">2.0</span> <span class="op">/</span> ((<span class="dv">1</span> <span class="op">-</span> xi<span class="op">**</span><span class="dv">2</span>) <span class="op">*</span> <span class="bu">float</span>(dPn_val[<span class="dv">0</span>])<span class="op">**</span><span class="dv">2</span>)</span>
-<span id="cb22-792"><a href="#cb22-792" aria-hidden="true" tabindex="-1"></a>        weights[n <span class="op">-</span> <span class="dv">1</span> <span class="op">-</span> i] <span class="op">=</span> weights[i]</span>
-<span id="cb22-793"><a href="#cb22-793" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> nodes, weights</span>
-<span id="cb22-794"><a href="#cb22-794" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-795"><a href="#cb22-795" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> gauss_legendre(f, a, b, n_nodes):</span>
-<span id="cb22-796"><a href="#cb22-796" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Gauss-Legendre quadrature: compute ∫_a^b f(x) dx."""</span></span>
-<span id="cb22-797"><a href="#cb22-797" aria-hidden="true" tabindex="-1"></a>    nodes, weights <span class="op">=</span> gauss_legendre_nodes_weights(n_nodes)</span>
-<span id="cb22-798"><a href="#cb22-798" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Change of variables [-1,1] → [a,b]</span></span>
-<span id="cb22-799"><a href="#cb22-799" aria-hidden="true" tabindex="-1"></a>    x_transformed <span class="op">=</span> <span class="fl">0.5</span> <span class="op">*</span> (b <span class="op">-</span> a) <span class="op">*</span> nodes <span class="op">+</span> <span class="fl">0.5</span> <span class="op">*</span> (a <span class="op">+</span> b)</span>
-<span id="cb22-800"><a href="#cb22-800" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="fl">0.5</span> <span class="op">*</span> (b <span class="op">-</span> a) <span class="op">*</span> np.dot(weights, f(x_transformed))</span>
-<span id="cb22-801"><a href="#cb22-801" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb22-753"><a href="#cb22-753" aria-hidden="true" tabindex="-1"></a>::: {.callout-note title="Theorem 7.3 (Convergence of Gaussian quadrature)"}</span>
+<span id="cb22-754"><a href="#cb22-754" aria-hidden="true" tabindex="-1"></a>For $f \in C(<span class="co">[</span><span class="ot">a,b</span><span class="co">]</span>)$,</span>
+<span id="cb22-755"><a href="#cb22-755" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-756"><a href="#cb22-756" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb22-757"><a href="#cb22-757" aria-hidden="true" tabindex="-1"></a>\lim_{n\to\infty}\sum_{i=0}^{n} W_i^{(n)}\,f(x_i^{(n)}) = \int_a^b f(x)\,w(x)\,dx.</span>
+<span id="cb22-758"><a href="#cb22-758" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb22-759"><a href="#cb22-759" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb22-760"><a href="#cb22-760" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-761"><a href="#cb22-761" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb22-762"><a href="#cb22-762" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-763"><a href="#cb22-763" aria-hidden="true" tabindex="-1"></a><span class="fu">### Gauss-Chebyshev Quadrature {#sec-gauss-chebyshev}</span></span>
+<span id="cb22-764"><a href="#cb22-764" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-765"><a href="#cb22-765" aria-hidden="true" tabindex="-1"></a>For the interval $<span class="co">[</span><span class="ot">-1, 1</span><span class="co">]</span>$ with weight $w(x) = \dfrac{1}{\sqrt{1-x^2}}$:</span>
+<span id="cb22-766"><a href="#cb22-766" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-767"><a href="#cb22-767" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Nodes**: zeros of $T_{n+1}(x)$: $\displaystyle x_i = \cos<span class="sc">\!</span>\left(\frac{(2i+1)\pi}{2(n+1)}\right)$, $i = 0, \ldots, n$</span>
+<span id="cb22-768"><a href="#cb22-768" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Weights**: $W_i = \dfrac{\pi}{n+1}$ (all equal)</span>
+<span id="cb22-769"><a href="#cb22-769" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-770"><a href="#cb22-770" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb22-771"><a href="#cb22-771" aria-hidden="true" tabindex="-1"></a>\int_{-1}^{1} f(x)\,\frac{dx}{\sqrt{1-x^2}}</span>
+<span id="cb22-772"><a href="#cb22-772" aria-hidden="true" tabindex="-1"></a>\approx \frac{\pi}{n+1}\sum_{i=0}^{n} f<span class="sc">\!</span>\left(\cos<span class="sc">\!</span>\left(\frac{(2i+1)\pi}{2(n+1)}\right)\right).</span>
+<span id="cb22-773"><a href="#cb22-773" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb22-774"><a href="#cb22-774" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-777"><a href="#cb22-777" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb22-778"><a href="#cb22-778" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> gauss_chebyshev(f, n_nodes):</span>
+<span id="cb22-779"><a href="#cb22-779" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb22-780"><a href="#cb22-780" aria-hidden="true" tabindex="-1"></a><span class="co">    Gauss-Chebyshev quadrature: compute ∫_{-1}^{1} f(x)/√(1-x²) dx.</span></span>
+<span id="cb22-781"><a href="#cb22-781" aria-hidden="true" tabindex="-1"></a><span class="co">    n_nodes: number of nodes (= n+1 in the formula above)</span></span>
+<span id="cb22-782"><a href="#cb22-782" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb22-783"><a href="#cb22-783" aria-hidden="true" tabindex="-1"></a>    n <span class="op">=</span> n_nodes <span class="op">-</span> <span class="dv">1</span></span>
+<span id="cb22-784"><a href="#cb22-784" aria-hidden="true" tabindex="-1"></a>    W <span class="op">=</span> np.pi <span class="op">/</span> n_nodes</span>
+<span id="cb22-785"><a href="#cb22-785" aria-hidden="true" tabindex="-1"></a>    xi <span class="op">=</span> np.cos((np.arange(n_nodes) <span class="op">+</span> <span class="fl">0.5</span>) <span class="op">*</span> np.pi <span class="op">/</span> n_nodes)</span>
+<span id="cb22-786"><a href="#cb22-786" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> W <span class="op">*</span> np.<span class="bu">sum</span>(f(xi)), xi</span>
+<span id="cb22-787"><a href="#cb22-787" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-788"><a href="#cb22-788" aria-hidden="true" tabindex="-1"></a><span class="co"># Example: ∫_{-1}^{1} (1-x²)² / √(1-x²) dx = ∫_{-1}^{1} (1-x²)^{3/2} dx = 3π/8</span></span>
+<span id="cb22-789"><a href="#cb22-789" aria-hidden="true" tabindex="-1"></a>f_cheby <span class="op">=</span> <span class="kw">lambda</span> x: (<span class="dv">1</span> <span class="op">-</span> x<span class="op">**</span><span class="dv">2</span>)<span class="op">**</span><span class="dv">2</span></span>
+<span id="cb22-790"><a href="#cb22-790" aria-hidden="true" tabindex="-1"></a>exact_cheby <span class="op">=</span> <span class="dv">3</span> <span class="op">*</span> np.pi <span class="op">/</span> <span class="dv">8</span></span>
+<span id="cb22-791"><a href="#cb22-791" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-792"><a href="#cb22-792" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Exact value 3π/8 = </span><span class="sc">{</span>exact_cheby<span class="sc">:.10f}</span><span class="ss">"</span>)</span>
+<span id="cb22-793"><a href="#cb22-793" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span><span class="st">'# nodes'</span><span class="sc">:&lt;10}</span><span class="ss"> </span><span class="sc">{</span><span class="st">'Approximation'</span><span class="sc">:&lt;20}</span><span class="ss"> </span><span class="sc">{</span><span class="st">'Error'</span><span class="sc">:&lt;15}</span><span class="ss">"</span>)</span>
+<span id="cb22-794"><a href="#cb22-794" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> n_nodes <span class="kw">in</span> [<span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">6</span>]:</span>
+<span id="cb22-795"><a href="#cb22-795" aria-hidden="true" tabindex="-1"></a>    approx, _ <span class="op">=</span> gauss_chebyshev(f_cheby, n_nodes)</span>
+<span id="cb22-796"><a href="#cb22-796" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>n_nodes<span class="sc">:&lt;10}</span><span class="ss"> </span><span class="sc">{</span>approx<span class="sc">:&lt;20.10f}</span><span class="ss"> </span><span class="sc">{</span><span class="bu">abs</span>(approx <span class="op">-</span> exact_cheby)<span class="sc">:&lt;15.2e}</span><span class="ss">"</span>)</span>
+<span id="cb22-797"><a href="#cb22-797" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb22-798"><a href="#cb22-798" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-799"><a href="#cb22-799" aria-hidden="true" tabindex="-1"></a>Since $f(x) = (1-x^2)^2$ is a degree-4 polynomial, three nodes</span>
+<span id="cb22-800"><a href="#cb22-800" aria-hidden="true" tabindex="-1"></a>($2\times3-1=5$, so exact for polynomials up to degree 5) achieves machine</span>
+<span id="cb22-801"><a href="#cb22-801" aria-hidden="true" tabindex="-1"></a>precision.</span>
 <span id="cb22-802"><a href="#cb22-802" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-805"><a href="#cb22-805" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb22-806"><a href="#cb22-806" aria-hidden="true" tabindex="-1"></a><span class="co"># Verify with f(x) = sin(x) on [0, 2]</span></span>
-<span id="cb22-807"><a href="#cb22-807" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"f(x) = sin(x), [0, 2],  exact = </span><span class="sc">{</span>exact<span class="sc">:.10f}</span><span class="ss">"</span>)</span>
-<span id="cb22-808"><a href="#cb22-808" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span><span class="st">'# nodes'</span><span class="sc">:&lt;10}</span><span class="ss"> </span><span class="sc">{</span><span class="st">'Approximation'</span><span class="sc">:&lt;22}</span><span class="ss"> </span><span class="sc">{</span><span class="st">'Error'</span><span class="sc">:&lt;15}</span><span class="ss">"</span>)</span>
-<span id="cb22-809"><a href="#cb22-809" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> n_nodes <span class="kw">in</span> [<span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">6</span>, <span class="dv">8</span>]:</span>
-<span id="cb22-810"><a href="#cb22-810" aria-hidden="true" tabindex="-1"></a>    approx <span class="op">=</span> gauss_legendre(np.sin, <span class="fl">0.0</span>, <span class="fl">2.0</span>, n_nodes)</span>
-<span id="cb22-811"><a href="#cb22-811" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>n_nodes<span class="sc">:&lt;10}</span><span class="ss"> </span><span class="sc">{</span>approx<span class="sc">:&lt;22.12f}</span><span class="ss"> </span><span class="sc">{</span><span class="bu">abs</span>(approx <span class="op">-</span> exact)<span class="sc">:&lt;15.2e}</span><span class="ss">"</span>)</span>
-<span id="cb22-812"><a href="#cb22-812" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb22-813"><a href="#cb22-813" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-814"><a href="#cb22-814" aria-hidden="true" tabindex="-1"></a>Gauss-Legendre quadrature achieves very high accuracy with very few nodes.</span>
-<span id="cb22-815"><a href="#cb22-815" aria-hidden="true" tabindex="-1"></a>For example, with 5 nodes ($2\times5-1=9$, exact for polynomials up to</span>
-<span id="cb22-816"><a href="#cb22-816" aria-hidden="true" tabindex="-1"></a>degree 9), the result is near machine precision.</span>
-<span id="cb22-817"><a href="#cb22-817" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-820"><a href="#cb22-820" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb22-821"><a href="#cb22-821" aria-hidden="true" tabindex="-1"></a><span class="co"># Change-of-variables example: ∫_0^1 y² dy via Gauss-Legendre</span></span>
-<span id="cb22-822"><a href="#cb22-822" aria-hidden="true" tabindex="-1"></a><span class="co"># Substituting y = (x+1)/2 gives ∫_{-1}^{1} ((x+1)/2)² * (1/2) dx</span></span>
-<span id="cb22-823"><a href="#cb22-823" aria-hidden="true" tabindex="-1"></a>f_transformed <span class="op">=</span> <span class="kw">lambda</span> x: ((x <span class="op">+</span> <span class="dv">1</span>) <span class="op">/</span> <span class="dv">2</span>)<span class="op">**</span><span class="dv">2</span> <span class="op">*</span> <span class="fl">0.5</span></span>
-<span id="cb22-824"><a href="#cb22-824" aria-hidden="true" tabindex="-1"></a>exact_y2 <span class="op">=</span> <span class="fl">1.0</span> <span class="op">/</span> <span class="fl">3.0</span></span>
-<span id="cb22-825"><a href="#cb22-825" aria-hidden="true" tabindex="-1"></a>approx_y2 <span class="op">=</span> gauss_legendre(<span class="kw">lambda</span> x: x<span class="op">**</span><span class="dv">2</span>, <span class="fl">0.0</span>, <span class="fl">1.0</span>, <span class="dv">3</span>)</span>
-<span id="cb22-826"><a href="#cb22-826" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"∫_0^1 y² dy = </span><span class="sc">{</span>exact_y2<span class="sc">:.10f}</span><span class="ss">"</span>)</span>
-<span id="cb22-827"><a href="#cb22-827" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Gauss-Legendre (3 nodes): </span><span class="sc">{</span>approx_y2<span class="sc">:.10f}</span><span class="ss">"</span>)</span>
-<span id="cb22-828"><a href="#cb22-828" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Error: </span><span class="sc">{</span><span class="bu">abs</span>(approx_y2 <span class="op">-</span> exact_y2)<span class="sc">:.2e}</span><span class="ss">"</span>)</span>
-<span id="cb22-829"><a href="#cb22-829" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb22-830"><a href="#cb22-830" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-831"><a href="#cb22-831" aria-hidden="true" tabindex="-1"></a>---</span>
-<span id="cb22-832"><a href="#cb22-832" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-833"><a href="#cb22-833" aria-hidden="true" tabindex="-1"></a><span class="fu">## Summary {#sec-summary}</span></span>
-<span id="cb22-834"><a href="#cb22-834" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-835"><a href="#cb22-835" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Rule <span class="pp">|</span> Exactness (polynomial degree) <span class="pp">|</span> Error order <span class="pp">|</span> Notes <span class="pp">|</span></span>
-<span id="cb22-836"><a href="#cb22-836" aria-hidden="true" tabindex="-1"></a><span class="pp">|---|---|---|---|</span></span>
-<span id="cb22-837"><a href="#cb22-837" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Rectangular (Midpoint) <span class="pp">|</span> exact up to degree 1 <span class="pp">|</span> $O(h^2)$ <span class="pp">|</span> midpoint of each subinterval <span class="pp">|</span></span>
-<span id="cb22-838"><a href="#cb22-838" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Trapezoidal <span class="pp">|</span> exact up to degree 1 <span class="pp">|</span> $O(h^2)$ <span class="pp">|</span> average of endpoint values <span class="pp">|</span></span>
-<span id="cb22-839"><a href="#cb22-839" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Simpson's <span class="pp">|</span> exact up to degree 3 <span class="pp">|</span> $O(h^4)$ <span class="pp">|</span> quadratic interpolation, weights $1<span class="sc">:4:</span>1$ <span class="pp">|</span></span>
-<span id="cb22-840"><a href="#cb22-840" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Newton-Cotes (degree $n$) <span class="pp">|</span> exact up to degree $n$ <span class="pp">|</span> $O(h^{n+2})$ or $O(h^{n+1})$ <span class="pp">|</span> equally spaced nodes; Runge's phenomenon at high order <span class="pp">|</span></span>
-<span id="cb22-841"><a href="#cb22-841" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Gauss-Chebyshev <span class="pp">|</span> exact up to degree $2n+1$ <span class="pp">|</span> exponential <span class="pp">|</span> nodes = Chebyshev zeros; equal weights <span class="pp">|</span></span>
-<span id="cb22-842"><a href="#cb22-842" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Gauss-Legendre <span class="pp">|</span> exact up to degree $2n+1$ <span class="pp">|</span> exponential <span class="pp">|</span> nodes = Legendre zeros; optimal node placement <span class="pp">|</span></span>
-<span id="cb22-843"><a href="#cb22-843" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-844"><a href="#cb22-844" aria-hidden="true" tabindex="-1"></a>::: {.callout-tip}</span>
-<span id="cb22-845"><a href="#cb22-845" aria-hidden="true" tabindex="-1"></a><span class="fu">## Practical guidelines</span></span>
-<span id="cb22-846"><a href="#cb22-846" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-847"><a href="#cb22-847" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>For general smooth integrands, **Gauss-Legendre** quadrature is the most</span>
-<span id="cb22-848"><a href="#cb22-848" aria-hidden="true" tabindex="-1"></a>  efficient choice.</span>
-<span id="cb22-849"><a href="#cb22-849" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>When the integrand has a singularity of the form $1/\sqrt{1-x^2}$,</span>
-<span id="cb22-850"><a href="#cb22-850" aria-hidden="true" tabindex="-1"></a>  **Gauss-Chebyshev** quadrature is appropriate.</span>
-<span id="cb22-851"><a href="#cb22-851" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>When only equally-spaced function values are available, **Simpson's rule</span>
-<span id="cb22-852"><a href="#cb22-852" aria-hidden="true" tabindex="-1"></a>  or the trapezoidal rule** are convenient.</span>
-<span id="cb22-853"><a href="#cb22-853" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Adaptive quadrature** (recursively subdividing the interval) balances</span>
-<span id="cb22-854"><a href="#cb22-854" aria-hidden="true" tabindex="-1"></a>  accuracy and computational cost effectively.</span>
-<span id="cb22-855"><a href="#cb22-855" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb22-803"><a href="#cb22-803" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb22-804"><a href="#cb22-804" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-805"><a href="#cb22-805" aria-hidden="true" tabindex="-1"></a><span class="fu">### Gauss-Legendre Quadrature {#sec-gauss-legendre}</span></span>
+<span id="cb22-806"><a href="#cb22-806" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-807"><a href="#cb22-807" aria-hidden="true" tabindex="-1"></a>For the interval $<span class="co">[</span><span class="ot">-1, 1</span><span class="co">]</span>$ with weight $w(x) = 1$:</span>
+<span id="cb22-808"><a href="#cb22-808" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-809"><a href="#cb22-809" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Nodes**: zeros $x_i$ of $P_{n+1}(x)$</span>
+<span id="cb22-810"><a href="#cb22-810" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Weights**: $\displaystyle W_i = \frac{2}{(1-x_i^2)\bigl[P'_{n+1}(x_i)\bigr]^2}$</span>
+<span id="cb22-811"><a href="#cb22-811" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-812"><a href="#cb22-812" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb22-813"><a href="#cb22-813" aria-hidden="true" tabindex="-1"></a>\int_{-1}^{1} f(x)\,dx \approx \sum_{i=0}^{n} W_i\,f(x_i).</span>
+<span id="cb22-814"><a href="#cb22-814" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb22-815"><a href="#cb22-815" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-816"><a href="#cb22-816" aria-hidden="true" tabindex="-1"></a>For a general interval $<span class="co">[</span><span class="ot">a, b</span><span class="co">]</span>$, use the change of variables</span>
+<span id="cb22-817"><a href="#cb22-817" aria-hidden="true" tabindex="-1"></a>$x = \dfrac{(b-a)t + (a+b)}{2}$:</span>
+<span id="cb22-818"><a href="#cb22-818" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-819"><a href="#cb22-819" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb22-820"><a href="#cb22-820" aria-hidden="true" tabindex="-1"></a>\int_a^b g(x)\,dx = \frac{b-a}{2}\int_{-1}^{1} g<span class="sc">\!</span>\left(\frac{(b-a)t+(a+b)}{2}\right)dt.</span>
+<span id="cb22-821"><a href="#cb22-821" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb22-822"><a href="#cb22-822" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-825"><a href="#cb22-825" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb22-826"><a href="#cb22-826" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> legendre_poly_and_deriv(n, x):</span>
+<span id="cb22-827"><a href="#cb22-827" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Return P_n(x) and P'_n(x) via the recurrence relation."""</span></span>
+<span id="cb22-828"><a href="#cb22-828" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> n <span class="op">==</span> <span class="dv">0</span>:</span>
+<span id="cb22-829"><a href="#cb22-829" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> np.ones_like(x, dtype<span class="op">=</span><span class="bu">float</span>), np.zeros_like(x, dtype<span class="op">=</span><span class="bu">float</span>)</span>
+<span id="cb22-830"><a href="#cb22-830" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> n <span class="op">==</span> <span class="dv">1</span>:</span>
+<span id="cb22-831"><a href="#cb22-831" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> np.array(x, dtype<span class="op">=</span><span class="bu">float</span>), np.ones_like(x, dtype<span class="op">=</span><span class="bu">float</span>)</span>
+<span id="cb22-832"><a href="#cb22-832" aria-hidden="true" tabindex="-1"></a>    P_prev2, dP_prev2 <span class="op">=</span> np.ones_like(x, dtype<span class="op">=</span><span class="bu">float</span>), np.zeros_like(x, dtype<span class="op">=</span><span class="bu">float</span>)</span>
+<span id="cb22-833"><a href="#cb22-833" aria-hidden="true" tabindex="-1"></a>    P_prev1, dP_prev1 <span class="op">=</span> np.array(x, dtype<span class="op">=</span><span class="bu">float</span>), np.ones_like(x, dtype<span class="op">=</span><span class="bu">float</span>)</span>
+<span id="cb22-834"><a href="#cb22-834" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> k <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, n):</span>
+<span id="cb22-835"><a href="#cb22-835" aria-hidden="true" tabindex="-1"></a>        P_curr  <span class="op">=</span> ((<span class="dv">2</span><span class="op">*</span>k<span class="op">+</span><span class="dv">1</span>)<span class="op">*</span>x<span class="op">*</span>P_prev1 <span class="op">-</span> k<span class="op">*</span>P_prev2) <span class="op">/</span> (k<span class="op">+</span><span class="dv">1</span>)</span>
+<span id="cb22-836"><a href="#cb22-836" aria-hidden="true" tabindex="-1"></a>        dP_curr <span class="op">=</span> ((<span class="dv">2</span><span class="op">*</span>k<span class="op">+</span><span class="dv">1</span>)<span class="op">*</span>(P_prev1 <span class="op">+</span> x<span class="op">*</span>dP_prev1) <span class="op">-</span> k<span class="op">*</span>dP_prev2) <span class="op">/</span> (k<span class="op">+</span><span class="dv">1</span>)</span>
+<span id="cb22-837"><a href="#cb22-837" aria-hidden="true" tabindex="-1"></a>        P_prev2,  P_prev1  <span class="op">=</span> P_prev1,  P_curr</span>
+<span id="cb22-838"><a href="#cb22-838" aria-hidden="true" tabindex="-1"></a>        dP_prev2, dP_prev1 <span class="op">=</span> dP_prev1, dP_curr</span>
+<span id="cb22-839"><a href="#cb22-839" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> P_curr, dP_curr</span>
+<span id="cb22-840"><a href="#cb22-840" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-841"><a href="#cb22-841" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> gauss_legendre_nodes_weights(n_nodes):</span>
+<span id="cb22-842"><a href="#cb22-842" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb22-843"><a href="#cb22-843" aria-hidden="true" tabindex="-1"></a><span class="co">    Compute Gauss-Legendre nodes and weights via Newton's method.</span></span>
+<span id="cb22-844"><a href="#cb22-844" aria-hidden="true" tabindex="-1"></a><span class="co">    n_nodes: number of nodes to use</span></span>
+<span id="cb22-845"><a href="#cb22-845" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb22-846"><a href="#cb22-846" aria-hidden="true" tabindex="-1"></a>    n <span class="op">=</span> n_nodes</span>
+<span id="cb22-847"><a href="#cb22-847" aria-hidden="true" tabindex="-1"></a>    nodes <span class="op">=</span> np.zeros(n)</span>
+<span id="cb22-848"><a href="#cb22-848" aria-hidden="true" tabindex="-1"></a>    weights <span class="op">=</span> np.zeros(n)</span>
+<span id="cb22-849"><a href="#cb22-849" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Initial guess: cosine approximation</span></span>
+<span id="cb22-850"><a href="#cb22-850" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>((n <span class="op">+</span> <span class="dv">1</span>) <span class="op">//</span> <span class="dv">2</span>):</span>
+<span id="cb22-851"><a href="#cb22-851" aria-hidden="true" tabindex="-1"></a>        xi <span class="op">=</span> np.cos(np.pi <span class="op">*</span> (i <span class="op">+</span> <span class="fl">0.75</span>) <span class="op">/</span> (n <span class="op">+</span> <span class="fl">0.5</span>))</span>
+<span id="cb22-852"><a href="#cb22-852" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">100</span>):  <span class="co"># Newton iterations</span></span>
+<span id="cb22-853"><a href="#cb22-853" aria-hidden="true" tabindex="-1"></a>            Pn, dPn <span class="op">=</span> legendre_poly_and_deriv(n, np.array([xi]))</span>
+<span id="cb22-854"><a href="#cb22-854" aria-hidden="true" tabindex="-1"></a>            xi_new <span class="op">=</span> xi <span class="op">-</span> <span class="bu">float</span>(Pn[<span class="dv">0</span>]) <span class="op">/</span> <span class="bu">float</span>(dPn[<span class="dv">0</span>])</span>
+<span id="cb22-855"><a href="#cb22-855" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> <span class="bu">abs</span>(xi_new <span class="op">-</span> xi) <span class="op">&lt;</span> <span class="fl">1e-15</span>:</span>
+<span id="cb22-856"><a href="#cb22-856" aria-hidden="true" tabindex="-1"></a>                <span class="cf">break</span></span>
+<span id="cb22-857"><a href="#cb22-857" aria-hidden="true" tabindex="-1"></a>            xi <span class="op">=</span> xi_new</span>
+<span id="cb22-858"><a href="#cb22-858" aria-hidden="true" tabindex="-1"></a>        nodes[i] <span class="op">=</span> xi</span>
+<span id="cb22-859"><a href="#cb22-859" aria-hidden="true" tabindex="-1"></a>        nodes[n <span class="op">-</span> <span class="dv">1</span> <span class="op">-</span> i] <span class="op">=</span> <span class="op">-</span>xi</span>
+<span id="cb22-860"><a href="#cb22-860" aria-hidden="true" tabindex="-1"></a>        _, dPn_val <span class="op">=</span> legendre_poly_and_deriv(n, np.array([xi]))</span>
+<span id="cb22-861"><a href="#cb22-861" aria-hidden="true" tabindex="-1"></a>        weights[i] <span class="op">=</span> <span class="fl">2.0</span> <span class="op">/</span> ((<span class="dv">1</span> <span class="op">-</span> xi<span class="op">**</span><span class="dv">2</span>) <span class="op">*</span> <span class="bu">float</span>(dPn_val[<span class="dv">0</span>])<span class="op">**</span><span class="dv">2</span>)</span>
+<span id="cb22-862"><a href="#cb22-862" aria-hidden="true" tabindex="-1"></a>        weights[n <span class="op">-</span> <span class="dv">1</span> <span class="op">-</span> i] <span class="op">=</span> weights[i]</span>
+<span id="cb22-863"><a href="#cb22-863" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> nodes, weights</span>
+<span id="cb22-864"><a href="#cb22-864" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-865"><a href="#cb22-865" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> gauss_legendre(f, a, b, n_nodes):</span>
+<span id="cb22-866"><a href="#cb22-866" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Gauss-Legendre quadrature: compute ∫_a^b f(x) dx."""</span></span>
+<span id="cb22-867"><a href="#cb22-867" aria-hidden="true" tabindex="-1"></a>    nodes, weights <span class="op">=</span> gauss_legendre_nodes_weights(n_nodes)</span>
+<span id="cb22-868"><a href="#cb22-868" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Change of variables [-1,1] → [a,b]</span></span>
+<span id="cb22-869"><a href="#cb22-869" aria-hidden="true" tabindex="-1"></a>    x_transformed <span class="op">=</span> <span class="fl">0.5</span> <span class="op">*</span> (b <span class="op">-</span> a) <span class="op">*</span> nodes <span class="op">+</span> <span class="fl">0.5</span> <span class="op">*</span> (a <span class="op">+</span> b)</span>
+<span id="cb22-870"><a href="#cb22-870" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="fl">0.5</span> <span class="op">*</span> (b <span class="op">-</span> a) <span class="op">*</span> np.dot(weights, f(x_transformed))</span>
+<span id="cb22-871"><a href="#cb22-871" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb22-872"><a href="#cb22-872" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-875"><a href="#cb22-875" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb22-876"><a href="#cb22-876" aria-hidden="true" tabindex="-1"></a><span class="co"># Verify with f(x) = sin(x) on [0, 2]</span></span>
+<span id="cb22-877"><a href="#cb22-877" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"f(x) = sin(x), [0, 2],  exact = </span><span class="sc">{</span>exact<span class="sc">:.10f}</span><span class="ss">"</span>)</span>
+<span id="cb22-878"><a href="#cb22-878" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span><span class="st">'# nodes'</span><span class="sc">:&lt;10}</span><span class="ss"> </span><span class="sc">{</span><span class="st">'Approximation'</span><span class="sc">:&lt;22}</span><span class="ss"> </span><span class="sc">{</span><span class="st">'Error'</span><span class="sc">:&lt;15}</span><span class="ss">"</span>)</span>
+<span id="cb22-879"><a href="#cb22-879" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> n_nodes <span class="kw">in</span> [<span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">6</span>, <span class="dv">8</span>]:</span>
+<span id="cb22-880"><a href="#cb22-880" aria-hidden="true" tabindex="-1"></a>    approx <span class="op">=</span> gauss_legendre(np.sin, <span class="fl">0.0</span>, <span class="fl">2.0</span>, n_nodes)</span>
+<span id="cb22-881"><a href="#cb22-881" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>n_nodes<span class="sc">:&lt;10}</span><span class="ss"> </span><span class="sc">{</span>approx<span class="sc">:&lt;22.12f}</span><span class="ss"> </span><span class="sc">{</span><span class="bu">abs</span>(approx <span class="op">-</span> exact)<span class="sc">:&lt;15.2e}</span><span class="ss">"</span>)</span>
+<span id="cb22-882"><a href="#cb22-882" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb22-883"><a href="#cb22-883" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-884"><a href="#cb22-884" aria-hidden="true" tabindex="-1"></a>Gauss-Legendre quadrature achieves very high accuracy with very few nodes.</span>
+<span id="cb22-885"><a href="#cb22-885" aria-hidden="true" tabindex="-1"></a>For example, with 5 nodes ($2\times5-1=9$, exact for polynomials up to</span>
+<span id="cb22-886"><a href="#cb22-886" aria-hidden="true" tabindex="-1"></a>degree 9), the result is near machine precision.</span>
+<span id="cb22-887"><a href="#cb22-887" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-890"><a href="#cb22-890" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb22-891"><a href="#cb22-891" aria-hidden="true" tabindex="-1"></a><span class="co"># Change-of-variables example: ∫_0^1 y² dy via Gauss-Legendre</span></span>
+<span id="cb22-892"><a href="#cb22-892" aria-hidden="true" tabindex="-1"></a><span class="co"># Substituting y = (x+1)/2 gives ∫_{-1}^{1} ((x+1)/2)² * (1/2) dx</span></span>
+<span id="cb22-893"><a href="#cb22-893" aria-hidden="true" tabindex="-1"></a>f_transformed <span class="op">=</span> <span class="kw">lambda</span> x: ((x <span class="op">+</span> <span class="dv">1</span>) <span class="op">/</span> <span class="dv">2</span>)<span class="op">**</span><span class="dv">2</span> <span class="op">*</span> <span class="fl">0.5</span></span>
+<span id="cb22-894"><a href="#cb22-894" aria-hidden="true" tabindex="-1"></a>exact_y2 <span class="op">=</span> <span class="fl">1.0</span> <span class="op">/</span> <span class="fl">3.0</span></span>
+<span id="cb22-895"><a href="#cb22-895" aria-hidden="true" tabindex="-1"></a>approx_y2 <span class="op">=</span> gauss_legendre(<span class="kw">lambda</span> x: x<span class="op">**</span><span class="dv">2</span>, <span class="fl">0.0</span>, <span class="fl">1.0</span>, <span class="dv">3</span>)</span>
+<span id="cb22-896"><a href="#cb22-896" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"∫_0^1 y² dy = </span><span class="sc">{</span>exact_y2<span class="sc">:.10f}</span><span class="ss">"</span>)</span>
+<span id="cb22-897"><a href="#cb22-897" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Gauss-Legendre (3 nodes): </span><span class="sc">{</span>approx_y2<span class="sc">:.10f}</span><span class="ss">"</span>)</span>
+<span id="cb22-898"><a href="#cb22-898" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Error: </span><span class="sc">{</span><span class="bu">abs</span>(approx_y2 <span class="op">-</span> exact_y2)<span class="sc">:.2e}</span><span class="ss">"</span>)</span>
+<span id="cb22-899"><a href="#cb22-899" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb22-900"><a href="#cb22-900" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-901"><a href="#cb22-901" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb22-902"><a href="#cb22-902" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-903"><a href="#cb22-903" aria-hidden="true" tabindex="-1"></a><span class="fu">## Summary {#sec-summary}</span></span>
+<span id="cb22-904"><a href="#cb22-904" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-905"><a href="#cb22-905" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Rule <span class="pp">|</span> Exactness (polynomial degree) <span class="pp">|</span> Error order <span class="pp">|</span> Notes <span class="pp">|</span></span>
+<span id="cb22-906"><a href="#cb22-906" aria-hidden="true" tabindex="-1"></a><span class="pp">|---|---|---|---|</span></span>
+<span id="cb22-907"><a href="#cb22-907" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Rectangular (Midpoint) <span class="pp">|</span> exact up to degree 1 <span class="pp">|</span> $O(h^2)$ <span class="pp">|</span> midpoint of each subinterval <span class="pp">|</span></span>
+<span id="cb22-908"><a href="#cb22-908" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Trapezoidal <span class="pp">|</span> exact up to degree 1 <span class="pp">|</span> $O(h^2)$ <span class="pp">|</span> average of endpoint values <span class="pp">|</span></span>
+<span id="cb22-909"><a href="#cb22-909" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Simpson's <span class="pp">|</span> exact up to degree 3 <span class="pp">|</span> $O(h^4)$ <span class="pp">|</span> quadratic interpolation, weights $1<span class="sc">:4:</span>1$ <span class="pp">|</span></span>
+<span id="cb22-910"><a href="#cb22-910" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Newton-Cotes (degree $n$) <span class="pp">|</span> exact up to degree $n$ <span class="pp">|</span> $O(h^{n+2})$ or $O(h^{n+1})$ <span class="pp">|</span> equally spaced nodes; Runge's phenomenon at high order <span class="pp">|</span></span>
+<span id="cb22-911"><a href="#cb22-911" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Gauss-Chebyshev <span class="pp">|</span> exact up to degree $2n+1$ <span class="pp">|</span> exponential <span class="pp">|</span> nodes = Chebyshev zeros; equal weights <span class="pp">|</span></span>
+<span id="cb22-912"><a href="#cb22-912" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Gauss-Legendre <span class="pp">|</span> exact up to degree $2n+1$ <span class="pp">|</span> exponential <span class="pp">|</span> nodes = Legendre zeros; optimal node placement <span class="pp">|</span></span>
+<span id="cb22-913"><a href="#cb22-913" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-914"><a href="#cb22-914" aria-hidden="true" tabindex="-1"></a>::: {.callout-tip}</span>
+<span id="cb22-915"><a href="#cb22-915" aria-hidden="true" tabindex="-1"></a><span class="fu">## Practical guidelines</span></span>
+<span id="cb22-916"><a href="#cb22-916" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-917"><a href="#cb22-917" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>For general smooth integrands, **Gauss-Legendre** quadrature is the most</span>
+<span id="cb22-918"><a href="#cb22-918" aria-hidden="true" tabindex="-1"></a>  efficient choice.</span>
+<span id="cb22-919"><a href="#cb22-919" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>When the integrand has a singularity of the form $1/\sqrt{1-x^2}$,</span>
+<span id="cb22-920"><a href="#cb22-920" aria-hidden="true" tabindex="-1"></a>  **Gauss-Chebyshev** quadrature is appropriate.</span>
+<span id="cb22-921"><a href="#cb22-921" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>When only equally-spaced function values are available, **Simpson's rule</span>
+<span id="cb22-922"><a href="#cb22-922" aria-hidden="true" tabindex="-1"></a>  or the trapezoidal rule** are convenient.</span>
+<span id="cb22-923"><a href="#cb22-923" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Adaptive quadrature** (recursively subdividing the interval) balances</span>
+<span id="cb22-924"><a href="#cb22-924" aria-hidden="true" tabindex="-1"></a>  accuracy and computational cost effectively.</span>
+<span id="cb22-925"><a href="#cb22-925" aria-hidden="true" tabindex="-1"></a>:::</span>
 </code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->

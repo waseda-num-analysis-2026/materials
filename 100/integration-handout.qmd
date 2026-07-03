@@ -514,7 +514,10 @@ $$
 (p, q)_w := \int_a^b p(x)\,q(x)\,w(x)\,dx
 $$
 
-for a weight function $w(x) > 0$ on $(a,b)$.
+for a **weight function** $w(x)$ satisfying:
+
+1. $w(x) > 0$ for $x \in (a,b)$ (positivity),
+2. $\int_a^b |x|^k\,w(x)\,dx < \infty$ for all integers $k \ge 0$ (integrability of moments).
 
 ::: {.callout-note title="System of orthogonal polynomials"}
 A sequence of polynomials $\{\phi_0, \phi_1, \ldots\}$ on $[a,b]$ with
@@ -621,6 +624,45 @@ weight $w(x)$:
 3. For $n \ge 1$, $\phi_n(x)$ has $n$ distinct real zeros in $(a, b)$.
 :::
 
+We now return to the quadrature formula based on Hermite interpolation
+(@sec-hermite), this time for the **weighted** integral. Approximating
+
+$$
+\int_a^b f(x)\,w(x)\,dx \approx \int_a^b q_{2n+1}(x)\,w(x)\,dx,
+$$
+
+where $q_{2n+1}$ is the Hermite interpolating polynomial of $f$ at the
+$n+1$ nodes $x_0, \ldots, x_n$, gives the **weighted Hermite quadrature
+formula**
+
+$$
+\int_a^b q_{2n+1}(x)\,w(x)\,dx
+= \sum_{i=0}^{n}\bigl[W_i\,f(x_i) + V_i\,f'(x_i)\bigr],
+$$
+
+$$
+W_i := \int_a^b H_i(x)\,w(x)\,dx, \qquad
+V_i := \int_a^b K_i(x)\,w(x)\,dx.
+$$
+
+These are the weighted counterparts of the $\alpha_i$ and $\beta_i$ in
+@sec-hermite-basis (they coincide when $w \equiv 1$).
+
+::: {.callout-note title="Remark: integrals without an explicit weight"}
+To approximate $\int_a^b g(x)\,dx$ with no explicit weight, simply take
+$f = g$ and $w \equiv 1$ (as in Gauss-Legendre quadrature). Conversely, to
+exploit a non-unity weight $w^*(x)$, define $f(x) = g(x)/w^*(x)$ so that
+the integral becomes $\int_a^b f(x)\,w^*(x)\,dx$.
+:::
+
+::: {.callout-important title="Key question"}
+**How do we choose the nodes $x_i$ so that $V_i = 0$ for all $i$?**
+
+If we can achieve $V_i = 0$, the derivative values $f'(x_i)$ are no longer
+needed, and the formula simplifies dramatically. The next theorem answers
+this question.
+:::
+
 ::: {.callout-note title="Theorem 7.2 (Node selection for Gaussian quadrature)"}
 In the system $\{\phi_0, \ldots, \phi_{n+1}\}$, choosing $n+1$ nodes
 $x_0, \ldots, x_n$ as the **zeros of $\phi_{n+1}(x)$** implies
@@ -641,13 +683,41 @@ Since $L_i(x)$ is a degree-$n$ polynomial and $\phi_{n+1}$ is orthogonal
 to all polynomials of degree $\le n$, we have $(\phi_{n+1}, L_i)_w = 0$.
 $\square$
 
-When $V_i = 0$, the weight $W_i$ simplifies to
+When $V_i = 0$, the formula involves only the function values $f(x_i)$:
 
 $$
-W_i = \int_a^b L_i(x)\,w(x)\,dx \quad (> 0)
+\int_a^b f(x)\,w(x)\,dx \approx \sum_{i=0}^{n} W_i\,f(x_i).
 $$
 
-(positivity of $W_i$ guarantees the stability of Gaussian quadrature).
+**Exactness for polynomials of degree $\le 2n+1$.** If $f$ is a polynomial
+of degree $\le 2n+1$, then by the uniqueness of Hermite interpolation
+$q_{2n+1} \equiv f$, so the quadrature formula is **exact**:
+$\int_a^b f(x)\,w(x)\,dx = \sum_{i=0}^{n} W_i\,f(x_i)$.
+
+**A simpler expression for $W_i$.** Apply this exactness to $f = L_k$
+(a polynomial of degree $n \le 2n+1$). Since $L_k(x_i) = \delta_{ki}$,
+
+$$
+\int_a^b L_k(x)\,w(x)\,dx = \sum_{i=0}^{n} W_i\,L_k(x_i) = W_k.
+$$
+
+Hence
+
+$$
+W_i = \int_a^b L_i(x)\,w(x)\,dx,
+$$
+
+which no longer involves the Hermite basis $H_i$.
+
+**Positivity of $W_i$.** Applying the exactness to $f = L_k^2$ (a
+polynomial of degree $2n \le 2n+1$) gives
+
+$$
+W_k = \sum_{i=0}^{n} W_i\,L_k(x_i)^2 = \int_a^b L_k(x)^2\,w(x)\,dx > 0.
+$$
+
+Positivity of the weights guarantees the numerical stability of Gaussian
+quadrature.
 
 ::: {.callout-note title="Gaussian quadrature formula"}
 $$
