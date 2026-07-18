@@ -80,6 +80,7 @@ Short how-to videos to help you get started:
 | 12.0 | Evolve handout §6–7 (≥ 3 Q&A) | same repo as 10.1 | **Jul 9, 23:59** |
 | 12.1 | Gauss-Chebyshev — after `git pull`, copy `120/assignment/` (`README.md`, `ex12-1.qmd`, `ex12-2.qmd`) to repo root; overwrite `README.md` | same repo as 10.1 | **Jul 9, 23:59** |
 | 12.2 | Gauss-Legendre comparison — same `120/assignment/` copy step as 12.1 | same repo as 10.1 | **Jul 9, 23:59** |
+| Final Report | Individual final report after group presentation (see [handout](100/final-presentation-and-report.html)) | [Access](https://classroom.github.com/a/Q6i4ndEi) | **July 31, 23:59** |
 | Advanced Challenge 1 | DK Method Research Challenge (optional, advanced; free-form, no upper limit on extra points) | [Access](https://classroom.github.com/a/nEoZCh1-) | **July 31, 23:59** |
 
 ## Past Exams
